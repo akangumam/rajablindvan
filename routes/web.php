@@ -7,6 +7,9 @@ use App\Http\Controllers\FuelFillController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\ExpenseController;
 
+// Language Switcher
+Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
+
 // Test route
 Route::get('/test', function () {
     return 'Laravel is working!';

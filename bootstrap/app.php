@@ -11,6 +11,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Global middleware
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
+        ]);
+        
+        // Middleware aliases
         $middleware->alias([
             'user.type' => \App\Http\Middleware\CheckUserType::class,
             'vehicle.access' => \App\Http\Middleware\CheckVehicleAccess::class,

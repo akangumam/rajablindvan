@@ -377,7 +377,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('dashboard') }}" class="drivvo-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
+                        {{ __('common.dashboard') }}
                     </a>
                 </div>
 
@@ -385,7 +385,7 @@
                 <div class="drivvo-nav-item">
                     <button type="button" class="drivvo-add-btn" data-bs-toggle="modal" data-bs-target="#quickAddModal">
                         <i class="fas fa-plus"></i>
-                        Tambah baru
+                        {{ __('common.add_new') }}
                     </button>
                 </div>
 
@@ -393,14 +393,14 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('reminders.index') }}" class="drivvo-nav-link {{ request()->routeIs('reminders.*') ? 'active' : '' }}">
                         <i class="fas fa-bell"></i>
-                        Pengingat
+                        {{ __('common.reminders') }}
                     </a>
                 </div>
 
                 <div class="drivvo-nav-item">
                     <a href="{{ route('reports.financial') }}" class="drivvo-nav-link">
                         <i class="fas fa-chart-line"></i>
-                        Laporan
+                        {{ __('common.reports') }}
                     </a>
                 </div>
 
@@ -410,14 +410,14 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('vehicles.index') }}" class="drivvo-nav-link {{ request()->routeIs('vehicles.*') ? 'active' : '' }}">
                         <i class="fas fa-car"></i>
-                        Kendaraan
+                        {{ __('common.vehicles') }}
                     </a>
                 </div>
 
                 <div class="drivvo-nav-item">
                     <a href="{{ route('customers.index') }}" class="drivvo-nav-link {{ request()->routeIs('customers.*') ? 'active' : '' }}">
                         <i class="fas fa-users"></i>
-                        Pengguna
+                        {{ __('common.customers') }}
                     </a>
                 </div>
 
@@ -427,8 +427,29 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('settings.index') }}" class="drivvo-nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                         <i class="fas fa-cog"></i>
-                        Pengaturan
+                        {{ __('common.settings') }}
                     </a>
+                </div>
+
+                <div class="nav-divider"></div>
+
+                <!-- Language Switcher -->
+                <div class="drivvo-nav-item">
+                    <div style="padding: 0 16px;">
+                        <div style="color: rgba(255,255,255,0.5); font-size: 12px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Bahasa / Language</div>
+                        <div class="btn-group w-100" role="group">
+                            <a href="{{ route('locale.switch', 'id') }}" 
+                               class="btn btn-sm {{ app()->getLocale() == 'id' ? 'btn-light' : 'btn-outline-light' }}"
+                               style="flex: 1; font-size: 13px; font-weight: 600;">
+                                🇮🇩 ID
+                            </a>
+                            <a href="{{ route('locale.switch', 'en') }}" 
+                               class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-light' : 'btn-outline-light' }}"
+                               style="flex: 1; font-size: 13px; font-weight: 600;">
+                                🇬🇧 EN
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -452,7 +473,7 @@
                         <div class="quick-add-icon fuel">
                             <i class="fas fa-gas-pump"></i>
                         </div>
-                        <div class="quick-add-text">Pengisian</div>
+                        <div class="quick-add-text">{{ __('quick_add.fuel_fill') }}</div>
                     </a>
 
                     <!-- Layanan -->
@@ -460,7 +481,7 @@
                         <div class="quick-add-icon service">
                             <i class="fas fa-wrench"></i>
                         </div>
-                        <div class="quick-add-text">Layanan</div>
+                        <div class="quick-add-text">{{ __('quick_add.maintenance') }}</div>
                     </a>
 
                     <!-- Biaya -->
@@ -468,7 +489,7 @@
                         <div class="quick-add-icon expense">
                             <i class="fas fa-credit-card"></i>
                         </div>
-                        <div class="quick-add-text">Biaya</div>
+                        <div class="quick-add-text">{{ __('quick_add.expense') }}</div>
                     </a>
 
                     <!-- Pendapatan -->
@@ -476,7 +497,7 @@
                         <div class="quick-add-icon income">
                             <i class="fas fa-wallet"></i>
                         </div>
-                        <div class="quick-add-text">Pendapatan</div>
+                        <div class="quick-add-text">{{ __('quick_add.income') }}</div>
                     </a>
 
                     <!-- Rute -->
@@ -484,7 +505,7 @@
                         <div class="quick-add-icon route">
                             <i class="fas fa-map-marked-alt"></i>
                         </div>
-                        <div class="quick-add-text">Rute</div>
+                        <div class="quick-add-text">{{ __('quick_add.trip') }}</div>
                     </a>
 
                     <!-- Daftar cek -->
@@ -492,7 +513,7 @@
                         <div class="quick-add-icon checklist">
                             <i class="fas fa-tasks"></i>
                         </div>
-                        <div class="quick-add-text">Daftar cek</div>
+                        <div class="quick-add-text">{{ __('quick_add.checklist') }}</div>
                     </a>
 
                     <!-- Pengingat -->
@@ -500,7 +521,7 @@
                         <div class="quick-add-icon reminder">
                             <i class="fas fa-bell"></i>
                         </div>
-                        <div class="quick-add-text">Pengingat</div>
+                        <div class="quick-add-text">{{ __('quick_add.reminder') }}</div>
                     </a>
                 </div>
             </div>
