@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Daftar Kendaraan')
+@section('title', __('vehicle.title'))
 
 @section('content')
 <style>
@@ -480,10 +480,10 @@
 
 <div class="page-header">
     <h1 class="page-title">
-        Kendaraan
+        {{ __('common.vehicles') }}
     </h1>
     <a href="{{ route('vehicles.create') }}" class="btn btn-add-vehicle">
-        TAMBAH BARU
+        {{ strtoupper(__('common.add_new')) }}
     </a>
 </div>
 
@@ -507,7 +507,7 @@
         <input type="text" 
                name="search" 
                class="search-input" 
-               placeholder="Cari kendaraan (nama, brand, model, plat nomor)" 
+               placeholder="{{ __('vehicle.search_placeholder') }}" 
                value="{{ request('search') }}">
         <button type="submit" class="search-btn">
             <i class="fas fa-search"></i>
@@ -521,13 +521,13 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Tipe</th>
+                <th>{{ __('vehicle.type') }}</th>
                 <th>
                     <a href="{{ route('vehicles.index', array_merge(request()->except(['sort_by', 'sort_order', 'page']), [
                         'sort_by' => 'name',
                         'sort_order' => (request('sort_by') == 'name' && request('sort_order') == 'asc') ? 'desc' : 'asc'
                     ])) }}" class="sortable-header">
-                        Nama panggilan
+                        {{ __('vehicle.nickname') }}
                         @if(request('sort_by') == 'name' || !request('sort_by'))
                             <i class="fas fa-arrow-up sort-icon {{ request('sort_order') == 'desc' ? 'desc' : '' }}"></i>
                         @else
@@ -535,10 +535,10 @@
                         @endif
                     </a>
                 </th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Pembaruan terakhir</th>
-                <th>Status</th>
+                <th>{{ __('vehicle.brand') }}</th>
+                <th>{{ __('vehicle.model') }}</th>
+                <th>{{ __('vehicle.last_update') }}</th>
+                <th>{{ __('common.status') }}</th>
                 <th></th>
             </tr>
         </thead>
@@ -596,21 +596,21 @@
                 <td class="last-update">{{ $vehicle->updated_at->diffForHumans() }}</td>
                 <td>
                     <span class="status-badge {{ $vehicle->is_active ? 'status-aktif' : 'status-nonaktif' }}">
-                        {{ $vehicle->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                        {{ $vehicle->is_active ? __('common.active') : __('common.inactive') }}
                     </span>
                 </td>
                 <td>
                     <div class="action-buttons">
-                        <a href="{{ route('vehicles.export-pdf', $vehicle) }}" class="action-icon-btn btn-download" title="Download PDF" target="_blank">
+                        <a href="{{ route('vehicles.export-pdf', $vehicle) }}" class="action-icon-btn btn-download" title="{{ __('vehicle.export_pdf') }}" target="_blank">
                             <i class="fas fa-download"></i>
                         </a>
-                        <a href="{{ route('vehicles.edit', $vehicle) }}" class="action-icon-btn btn-edit" title="Edit Kendaraan">
+                        <a href="{{ route('vehicles.edit', $vehicle) }}" class="action-icon-btn btn-edit" title="{{ __('vehicle.edit_vehicle') }}">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
                         <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event, '{{ $vehicle->name }}')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="action-icon-btn btn-delete" title="Hapus Kendaraan">
+                            <button type="submit" class="action-icon-btn btn-delete" title="{{ __('common.delete') }} {{ __('common.vehicles') }}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -626,18 +626,18 @@
 @if($vehicles->hasPages())
 <div class="pagination-wrapper">
     <div class="pagination-info">
-        Showing {{ $vehicles->firstItem() }} to {{ $vehicles->lastItem() }} of {{ $vehicles->total() }} results
+        {{ __('pagination.showing') }} {{ $vehicles->firstItem() }} {{ __('pagination.to') }} {{ $vehicles->lastItem() }} {{ __('pagination.of') }} {{ $vehicles->total() }} {{ __('pagination.results') }}
     </div>
     
     <div class="pagination-controls">
         <!-- Previous Button -->
         @if($vehicles->onFirstPage())
             <span class="pagination-btn disabled">
-                <i class="fas fa-chevron-left"></i> Previous
+                <i class="fas fa-chevron-left"></i> {{ __('pagination.previous') }}
             </span>
         @else
             <a href="{{ $vehicles->previousPageUrl() }}" class="pagination-btn">
-                <i class="fas fa-chevron-left"></i> Previous
+                <i class="fas fa-chevron-left"></i> {{ __('pagination.previous') }}
             </a>
         @endif
         
@@ -655,11 +655,11 @@
         <!-- Next Button -->
         @if($vehicles->hasMorePages())
             <a href="{{ $vehicles->nextPageUrl() }}" class="pagination-btn">
-                Next <i class="fas fa-chevron-right"></i>
+                {{ __('pagination.next') }} <i class="fas fa-chevron-right"></i>
             </a>
         @else
             <span class="pagination-btn disabled">
-                Next <i class="fas fa-chevron-right"></i>
+                {{ __('pagination.next') }} <i class="fas fa-chevron-right"></i>
             </span>
         @endif
     </div>
@@ -671,25 +671,25 @@
     <div class="empty-icon">🚗</div>
     <h3 class="empty-title">
         @if(request('search'))
-            Tidak Ada Hasil
+            {{ __('vehicle.no_results') }}
         @else
-            Belum Ada Kendaraan
+            {{ __('vehicle.no_vehicles') }}
         @endif
     </h3>
     <p class="empty-description">
         @if(request('search'))
-            Tidak ditemukan kendaraan dengan kata kunci "{{ request('search') }}". Coba kata kunci lain.
+            {{ __('vehicle.no_results_message', ['keyword' => request('search')]) }}
         @else
-            Mulai dengan menambahkan kendaraan pertama Anda untuk melacak pengeluaran dan perawatan kendaraan.
+            {{ __('vehicle.no_vehicles_message') }}
         @endif
     </p>
     @if(request('search'))
         <a href="{{ route('vehicles.index') }}" class="btn btn-secondary px-4">
-            <i class="fas fa-arrow-left me-2"></i>Kembali ke Semua Kendaraan
+            <i class="fas fa-arrow-left me-2"></i>{{ __('vehicle.back_to_all') }}
         </a>
     @else
         <a href="{{ route('vehicles.create') }}" class="btn btn-primary btn-lg px-4">
-            <i class="fas fa-plus me-2"></i>Tambah Kendaraan Pertama
+            <i class="fas fa-plus me-2"></i>{{ __('vehicle.add_first_vehicle') }}
         </a>
     @endif
 </div>
@@ -700,7 +700,7 @@
 function confirmDelete(event, vehicleName) {
     event.preventDefault();
     
-    if (confirm('Apakah Anda yakin ingin menghapus kendaraan "' + vehicleName + '"?\n\nPengingat: Kendaraan yang memiliki riwayat transaksi tidak dapat dihapus dan hanya bisa dinonaktifkan.')) {
+    if (confirm('{{ __("vehicle.confirm_delete") }}'.replace(':name', vehicleName))) {
         event.target.submit();
     }
     

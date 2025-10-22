@@ -25,6 +25,9 @@ return [
     'insurance_expiry' => 'Insurance Expiry',
     'registration_expiry' => 'Registration Expiry',
     'initial_odometer' => 'Initial Odometer',
+    'nickname' => 'Nickname',
+    'last_update' => 'Last Update',
+    'search_placeholder' => 'Search vehicles (name, brand, model, license plate)',
 
     // Vehicle Types
     'car' => 'Car',
@@ -66,4 +69,11 @@ return [
     'avg_fuel_consumption' => 'Average Fuel Consumption',
     'total_expenses' => 'Total Expenses',
     'total_income' => 'Total Income',
+
+    // Messages
+    'no_results' => 'No Results Found',
+    'no_results_message' => 'No vehicles found with keyword ":keyword". Try another keyword.',
+    'no_vehicles_message' => 'Start by adding your first vehicle to track expenses and vehicle maintenance.',
+    'back_to_all' => 'Back to All Vehicles',
+    'confirm_delete' => 'Are you sure you want to delete vehicle ":name"?\n\nReminder: Vehicles with transaction history cannot be deleted and can only be deactivated.',
 ];

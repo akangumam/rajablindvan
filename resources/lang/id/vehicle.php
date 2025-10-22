@@ -25,6 +25,9 @@ return [
     'insurance_expiry' => 'Tanggal Habis Asuransi',
     'registration_expiry' => 'Tanggal Habis STNK',
     'initial_odometer' => 'Odometer Awal',
+    'nickname' => 'Nama Panggilan',
+    'last_update' => 'Pembaruan Terakhir',
+    'search_placeholder' => 'Cari kendaraan (nama, brand, model, plat nomor)',
 
     // Vehicle Types
     'car' => 'Mobil',
@@ -66,4 +69,11 @@ return [
     'avg_fuel_consumption' => 'Rata-rata Konsumsi BBM',
     'total_expenses' => 'Total Biaya',
     'total_income' => 'Total Pemasukan',
+
+    // Messages
+    'no_results' => 'Tidak Ada Hasil',
+    'no_results_message' => 'Tidak ditemukan kendaraan dengan kata kunci ":keyword". Coba kata kunci lain.',
+    'no_vehicles_message' => 'Mulai dengan menambahkan kendaraan pertama Anda untuk melacak pengeluaran dan perawatan kendaraan.',
+    'back_to_all' => 'Kembali ke Semua Kendaraan',
+    'confirm_delete' => 'Apakah Anda yakin ingin menghapus kendaraan ":name"?\n\nPengingat: Kendaraan yang memiliki riwayat transaksi tidak dapat dihapus dan hanya bisa dinonaktifkan.',
 ];
