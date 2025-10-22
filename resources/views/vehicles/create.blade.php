@@ -1,6 +1,6 @@
 ﻿@extends('layouts.drivvo')
 
-@section('title', 'Tambah Kendaraan')
+@section('title', __('vehicle.add_vehicle'))
 
 @push('styles')
 <style>
@@ -192,17 +192,17 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4 class="mb-1">Tambah Kendaraan Baru</h4>
-            <p class="text-muted mb-0">Lengkapi informasi kendaraan yang akan didaftarkan</p>
+            <h4 class="mb-1">{{ __('vehicle.add_vehicle_new') }}</h4>
+            <p class="text-muted mb-0">{{ __('vehicle.fill_vehicle_info') }}</p>
         </div>
         <a href="{{ route('vehicles.index') }}" class="btn btn-cancel">
-            <i class="fas fa-arrow-left me-2"></i>Kembali
+            <i class="fas fa-arrow-left me-2"></i>{{ __('common.back') }}
         </a>
     </div>
 
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>Terjadi Kesalahan!</h6>
+            <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>{{ __('common.error_occurred') }}</h6>
             <ul class="mb-0 ps-3">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -218,45 +218,45 @@
         <!-- Informasi Dasar -->
         <div class="form-section mb-4">
             <h5 class="section-title">
-                <i class="fas fa-car me-2 text-primary"></i>Informasi Dasar
+                <i class="fas fa-car me-2 text-primary"></i>{{ __('vehicle.basic_info') }}
             </h5>
             
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Brand <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="brandInput" name="brand" value="{{ old('brand') }}" required readonly style="cursor: pointer;" placeholder="Klik untuk pilih brand">
-                    <small class="text-muted">Klik untuk memilih dari daftar brand</small>
+                    <label class="form-label">{{ __('vehicle.brand') }} <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="brandInput" name="brand" value="{{ old('brand') }}" required readonly style="cursor: pointer;" placeholder="{{ __('vehicle.click_to_select_brand') }}">
+                    <small class="text-muted">{{ __('vehicle.click_to_select_from_list') }}</small>
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Model <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="modelInput" name="model" value="{{ old('model') }}" required placeholder="Avanza, Jazz, dll">
+                    <label class="form-label">{{ __('vehicle.model') }} <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="modelInput" name="model" value="{{ old('model') }}" required placeholder="{{ __('vehicle.model_placeholder') }}">
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Nama Kendaraan</label>
-                    <input type="text" class="form-control" id="nameInput" name="name" value="{{ old('name') }}" placeholder="Auto-generate dari Brand + Model">
-                    <small class="text-muted">Kosongkan untuk auto-generate</small>
+                    <label class="form-label">{{ __('vehicle.vehicle_name') }}</label>
+                    <input type="text" class="form-control" id="nameInput" name="name" value="{{ old('name') }}" placeholder="{{ __('vehicle.auto_generate') }}">
+                    <small class="text-muted">{{ __('vehicle.leave_blank_auto') }}</small>
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Tahun</label>
+                    <label class="form-label">{{ __('vehicle.year') }}</label>
                     <input type="text" class="form-control" name="year" value="{{ old('year') }}" maxlength="4" pattern="[0-9]{4}" placeholder="2024">
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Plat Nomor</label>
+                    <label class="form-label">{{ __('vehicle.license_plate') }}</label>
                     <input type="text" class="form-control" name="license_plate" value="{{ old('license_plate') }}" placeholder="B 1234 ABC" style="text-transform: uppercase;">
-                    <small class="text-muted">Contoh: B 1234 ABC</small>
+                    <small class="text-muted">{{ __('vehicle.license_plate_example') }}</small>
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Warna</label>
-                    <input type="text" class="form-control" name="color" value="{{ old('color') }}" placeholder="Hitam, Putih, dll">
+                    <label class="form-label">{{ __('vehicle.color') }}</label>
+                    <input type="text" class="form-control" name="color" value="{{ old('color') }}" placeholder="{{ __('vehicle.color_placeholder') }}">
                 </div>
             </div>
         </div>
@@ -264,18 +264,18 @@
         <!-- Spesifikasi Teknis -->
         <div class="form-section mb-4">
             <h5 class="section-title">
-                <i class="fas fa-cog me-2 text-primary"></i>Spesifikasi Teknis
+                <i class="fas fa-cog me-2 text-primary"></i>{{ __('vehicle.technical_specs') }}
             </h5>
             
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Jenis Mesin <span class="text-danger">*</span></label>
+                    <label class="form-label">{{ __('vehicle.engine_type') }} <span class="text-danger">*</span></label>
                     <select class="form-select" name="engine_type" required>
-                        <option value="">Pilih...</option>
-                        <option value="Gasoline" {{ old('engine_type') == 'Gasoline' ? 'selected' : '' }}>Bensin</option>
-                        <option value="Diesel" {{ old('engine_type') == 'Diesel' ? 'selected' : '' }}>Diesel</option>
-                        <option value="Hybrid" {{ old('engine_type') == 'Hybrid' ? 'selected' : '' }}>Hybrid</option>
-                        <option value="Electric" {{ old('engine_type') == 'Electric' ? 'selected' : '' }}>Listrik</option>
+                        <option value="">{{ __('vehicle.select_option') }}</option>
+                        <option value="Gasoline" {{ old('engine_type') == 'Gasoline' ? 'selected' : '' }}>{{ __('vehicle.gasoline') }}</option>
+                        <option value="Diesel" {{ old('engine_type') == 'Diesel' ? 'selected' : '' }}>{{ __('vehicle.diesel') }}</option>
+                        <option value="Hybrid" {{ old('engine_type') == 'Hybrid' ? 'selected' : '' }}>{{ __('vehicle.hybrid') }}</option>
+                        <option value="Electric" {{ old('engine_type') == 'Electric' ? 'selected' : '' }}>{{ __('vehicle.electric') }}</option>
                     </select>
                 </div>
                 
