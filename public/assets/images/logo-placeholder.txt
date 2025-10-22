@@ -1,0 +1,8 @@
+# Placeholder untuk Radja-Blind-Van-Logo.png
+
+Silakan replace file ini dengan logo Radja Blind Van yang sesungguhnya.
+
+Format yang direkomendasikan:
+- PNG dengan background transparent
+- Ukuran optimal: 200x60px (atau sesuai aspect ratio)
+- Warna: Kontras baik dengan background gelap sidebar

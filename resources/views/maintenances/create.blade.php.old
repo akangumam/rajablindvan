@@ -1,0 +1,244 @@
+@extends('layouts.drivvo')
+
+@section('title', 'Tambah Data Service')
+
+@section('content')
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Tambah Data Service/Perawatan</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ route('maintenances.index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Kembali
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ route('maintenances.store') }}" method="POST">
+                    @csrf
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="vehicle_id" class="form-label">Kendaraan <span class="text-danger">*</span></label>
+                            @if(isset($vehicle))
+                                <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
+                                <input type="text" class="form-control" value="{{ $vehicle->name }} ({{ $vehicle->license_plate }})" readonly>
+                            @else
+                                <select class="form-select @error('vehicle_id') is-invalid @enderror" 
+                                        id="vehicle_id" name="vehicle_id">
+                                    <option value="">Pilih Kendaraan</option>
+                                    @foreach($vehicles as $vehicleOption)
+                                        <option value="{{ $vehicleOption->id }}" 
+                                                {{ old('vehicle_id') == $vehicleOption->id ? 'selected' : '' }}>
+                                            {{ $vehicleOption->name }} ({{ $vehicleOption->license_plate }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @endif
+                            @error('vehicle_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="maintenance_date" class="form-label">Tanggal Service <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control @error('maintenance_date') is-invalid @enderror" 
+                                   id="maintenance_date" name="maintenance_date" value="{{ old('maintenance_date', date('Y-m-d')) }}">
+                            @error('maintenance_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="odometer" class="form-label">Odometer (KM) <span class="text-danger">*</span></label>
+                            @if(isset($vehicle))
+                                <small class="text-info d-block mb-1">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Minimum: {{ number_format($vehicle->getMinimumOdometer()) }} km
+                                </small>
+                            @endif
+                            <input type="number" class="form-control @error('odometer') is-invalid @enderror" 
+                                   id="odometer" name="odometer" 
+                                   value="{{ old('odometer', isset($vehicle) ? $vehicle->getMinimumOdometer() : '') }}"
+                                   step="0.1" min="{{ isset($vehicle) ? $vehicle->getMinimumOdometer() : 0 }}"
+                                   placeholder="{{ isset($vehicle) ? number_format($vehicle->getMinimumOdometer()) : '75000' }}">
+                            @error('odometer')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label for="type" class="form-label">Jenis Service <span class="text-danger">*</span></label>
+                            <select class="form-select @error('type') is-invalid @enderror" id="type" name="type">
+                                <option value="">Pilih Jenis Service</option>
+                                <option value="Service Berkala" {{ old('type') == 'Service Berkala' ? 'selected' : '' }}>Service Berkala</option>
+                                <option value="Ganti Oli" {{ old('type') == 'Ganti Oli' ? 'selected' : '' }}>Ganti Oli</option>
+                                <option value="Tune Up" {{ old('type') == 'Tune Up' ? 'selected' : '' }}>Tune Up</option>
+                                <option value="Ganti Ban" {{ old('type') == 'Ganti Ban' ? 'selected' : '' }}>Ganti Ban</option>
+                                <option value="Service AC" {{ old('type') == 'Service AC' ? 'selected' : '' }}>Service AC</option>
+                                <option value="Ganti Aki" {{ old('type') == 'Ganti Aki' ? 'selected' : '' }}>Ganti Aki</option>
+                                <option value="Service Rem" {{ old('type') == 'Service Rem' ? 'selected' : '' }}>Service Rem</option>
+                                <option value="Lainnya" {{ old('type') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                            </select>
+                            @error('type')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label for="category" class="form-label">Kategori <span class="text-danger">*</span></label>
+                            <select class="form-select @error('category') is-invalid @enderror" id="category" name="category">
+                                <option value="">Pilih Kategori</option>
+                                <option value="Routine" {{ old('category') == 'Routine' ? 'selected' : '' }}>Rutin</option>
+                                <option value="Repair" {{ old('category') == 'Repair' ? 'selected' : '' }}>Perbaikan</option>
+                                <option value="Emergency" {{ old('category') == 'Emergency' ? 'selected' : '' }}>Darurat</option>
+                            </select>
+                            @error('category')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="workshop" class="form-label">Bengkel/Tempat Service</label>
+                            <input type="text" class="form-control @error('workshop') is-invalid @enderror" 
+                                   id="workshop" name="workshop" value="{{ old('workshop') }}"
+                                   placeholder="Honda Bintaro, Auto2000, dll">
+                            @error('workshop')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="cost" class="form-label">Biaya Service <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control @error('cost') is-invalid @enderror" 
+                                   id="cost" name="cost" value="{{ old('cost') }}"
+                                   step="1000" min="0" placeholder="500000">
+                            @error('cost')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Deskripsi Pekerjaan <span class="text-danger">*</span></label>
+                        <textarea class="form-control @error('description') is-invalid @enderror" 
+                                  id="description" name="description" rows="3" 
+                                  placeholder="Jelaskan detail pekerjaan yang dilakukan...">{{ old('description') }}</textarea>
+                        @error('description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="parts_replaced" class="form-label">Sparepart yang Diganti</label>
+                        <textarea class="form-control @error('parts_replaced') is-invalid @enderror" 
+                                  id="parts_replaced" name="parts_replaced" rows="2" 
+                                  placeholder="Oli mesin, filter oli, busi, dll...">{{ old('parts_replaced') }}</textarea>
+                        @error('parts_replaced')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="next_maintenance_date" class="form-label">Tanggal Service Berikutnya</label>
+                            <input type="date" class="form-control @error('next_maintenance_date') is-invalid @enderror" 
+                                   id="next_maintenance_date" name="next_maintenance_date" value="{{ old('next_maintenance_date') }}">
+                            @error('next_maintenance_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label for="next_maintenance_odometer" class="form-label">Odometer Service Berikutnya</label>
+                            <input type="number" class="form-control @error('next_maintenance_odometer') is-invalid @enderror" 
+                                   id="next_maintenance_odometer" name="next_maintenance_odometer" value="{{ old('next_maintenance_odometer') }}"
+                                   step="1000" min="0" placeholder="80000">
+                            @error('next_maintenance_odometer')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Catatan Tambahan</label>
+                        <textarea class="form-control @error('notes') is-invalid @enderror" 
+                                  id="notes" name="notes" rows="2" 
+                                  placeholder="Catatan tambahan...">{{ old('notes') }}</textarea>
+                        @error('notes')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ route('maintenances.index') }}" class="btn btn-secondary">Batal</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            Simpan Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informasi</h6>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted mb-2">
+                    <strong>Tips Service:</strong>
+                </p>
+                <ul class="list-unstyled small text-muted">
+                    <li class="mb-2">
+                        <i class="bi bi-check text-success me-2"></i>
+                        Catat semua detail pekerjaan yang dilakukan
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check text-success me-2"></i>
+                        Simpan nota/kwitansi sebagai bukti
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check text-success me-2"></i>
+                        Set reminder untuk service berikutnya
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check text-success me-2"></i>
+                        Catat sparepart yang diganti
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        @if(isset($vehicle))
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-car-front me-2"></i>Info Kendaraan</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <strong>{{ $vehicle->name }}</strong>
+                </div>
+                <div class="text-muted small">{{ $vehicle->full_name }}</div>
+                <div class="text-muted small">{{ $vehicle->license_plate }}</div>
+                <hr>
+                <div class="row text-center small">
+                    <div class="col">
+                        <div class="fw-bold">{{ number_format($vehicle->getLatestOdometer(), 0, ',', '.') }}</div>
+                        <div class="text-muted">KM Terakhir</div>
+                    </div>
+                    <div class="col">
+                        <div class="fw-bold">{{ $vehicle->maintenances->count() }}</div>
+                        <div class="text-muted">Total Service</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+</div>
+@endsection
