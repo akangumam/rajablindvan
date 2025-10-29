@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Pengaturan - Bahan bakar')
+@section('title', 'Settings - Fuel Types')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -11,18 +11,18 @@
                 <div class="card-header bg-white py-3">
                     <h5 class="mb-0">
                         <i class="bi bi-gear-fill text-primary me-2"></i>
-                        Pengaturan
+                        Settings
                     </h5>
                 </div>
                 <div class="list-group list-group-flush">
-                    <!-- Sub-menu Pengaturan -->
+                    <!-- Settings Sub-menu -->
                     <a href="{{ route('settings.units') }}" class="list-group-item list-group-item-action ps-4">
                         <i class="bi bi-speedometer2 text-muted me-2"></i>
-                        Satuan
+                        Units
                     </a>
                     <a href="{{ route('settings.reminders') }}" class="list-group-item list-group-item-action ps-4">
                         <i class="bi bi-bell text-muted me-2"></i>
-                        Pengingat
+                        Reminders
                     </a>
                     <a href="{{ route('settings.format') }}" class="list-group-item list-group-item-action ps-4">
                         <i class="bi bi-calendar3 text-muted me-2"></i>
@@ -34,47 +34,47 @@
                     
                     <a href="{{ route('settings.account') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-person-circle text-muted me-2"></i>
-                        Akun saya
+                        My Account
                     </a>
                     <a href="{{ route('settings.index') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-file-earmark-text text-muted me-2"></i>
-                        File dan penyimpanan
+                        Files and Storage
                     </a>
                     <a href="{{ route('settings.fuel-types') }}" class="list-group-item list-group-item-action active">
                         <i class="bi bi-fuel-pump text-primary me-2"></i>
-                        Bahan bakar
+                        Fuel Types
                     </a>
                     <a href="{{ route('settings.fuel-stations') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-shop text-muted me-2"></i>
-                        Spbu
+                        Gas Stations
                     </a>
                     <a href="{{ route('settings.locations') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-geo-alt text-muted me-2"></i>
-                        Lokasi
+                        Locations
                     </a>
                     <a href="{{ route('settings.service-types') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-wrench text-muted me-2"></i>
-                        Jenis layanan
+                        Service Types
                     </a>
                     <a href="{{ route('settings.expense-types') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-wallet2 text-muted me-2"></i>
-                        Jenis biaya
+                        Expense Types
                     </a>
                     <a href="{{ route('settings.income-types') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-cash-stack text-muted me-2"></i>
-                        Jenis pendapatan
+                        Income Types
                     </a>
                     <a href="{{ route('settings.reasons') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-briefcase text-muted me-2"></i>
-                        Alasan
+                        Reasons
                     </a>
                     <a href="{{ route('settings.payment-methods') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-credit-card text-muted me-2"></i>
-                        Cara Pembayaran
+                        Payment Methods
                     </a>
                     <a href="{{ route('settings.forms') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-file-earmark text-muted me-2"></i>
-                        Formulir
+                        Forms
                     </a>
                     <a href="{{ route('settings.contacts') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-envelope text-muted me-2"></i>
@@ -89,13 +89,13 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <h5 class="mb-0 me-3">Bahan bakar</h5>
+                        <h5 class="mb-0 me-3">fuel</h5>
                         <button type="button" class="btn btn-link text-primary p-0" id="toggleSearch">
                             <i class="bi bi-search fs-5"></i>
                         </button>
                     </div>
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addFuelTypeModal">
-                        TAMBAH BARU
+                        ADD NEW
                     </button>
                 </div>
                 
@@ -105,7 +105,7 @@
                         <span class="input-group-text bg-white">
                             <i class="bi bi-search"></i>
                         </span>
-                        <input type="text" class="form-control" id="searchInput" placeholder="Cari bahan bakar...">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search fuel...">
                     </div>
                 </div>
 
@@ -115,15 +115,15 @@
                             <thead class="table-light">
                                 <tr>
                                     <th style="width: 60px;">#</th>
-                                    <th>Nama <i class="bi bi-arrow-up-short"></i></th>
-                                    <th>Jenis bbm</th>
-                                    <th style="width: 120px;" class="text-end">Aksi</th>
+                                    <th>Name <i class="bi bi-arrow-up-short"></i></th>
+                                    <th>Type bbm</th>
+                                    <th style="width: 120px;" class="text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>1</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Bensin</a></td>
+                                    <td><a href="#" class="text-primary text-decoration-none">Gasoline</a></td>
                                     <td>Cairan</td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-link p-0 me-2" data-bs-toggle="modal" data-bs-target="#editFuelTypeModal1">
@@ -201,7 +201,7 @@
                                 </tr>
                                 <tr>
                                     <td>7</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Listrik</a></td>
+                                    <td><a href="#" class="text-primary text-decoration-none">Electric</a></td>
                                     <td>Kelistrikan</td>
                                     <td class="text-end">
                                         <button class="btn btn-sm btn-link p-0 me-2">
@@ -234,25 +234,25 @@
     </div>
 </div>
 
-<!-- Modal Tambah Bahan Bakar -->
+<!-- Modal Add Fuel Type -->
 <div class="modal fade" id="addFuelTypeModal" tabindex="-1" aria-labelledby="addFuelTypeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addFuelTypeModalLabel">Tambah Bahan Bakar</h5>
+                <h5 class="modal-title" id="addFuelTypeModalLabel">Add Fuel Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST" action="#">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="fuelName" class="form-label">Nama Bahan Bakar <span class="text-danger">*</span></label>
+                        <label for="fuelName" class="form-label">Name fuel <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="fuelName" name="name" required placeholder="Contoh: Pertalite">
                     </div>
                     <div class="mb-3">
-                        <label for="fuelType" class="form-label">Jenis BBM <span class="text-danger">*</span></label>
+                        <label for="fuelType" class="form-label">Type BBM <span class="text-danger">*</span></label>
                         <select class="form-select" id="fuelType" name="type" required>
-                            <option value="">Pilih Jenis BBM</option>
+                            <option value="">Select Type BBM</option>
                             <option value="liquid">Cairan</option>
                             <option value="gas">Gas</option>
                             <option value="electric">Kelistrikan</option>
@@ -262,20 +262,20 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal Edit Bahan Bakar (Example for first item) -->
+<!-- Modal Edit Fuel Type (Example for first item) -->
 <div class="modal fade" id="editFuelTypeModal1" tabindex="-1" aria-labelledby="editFuelTypeModalLabel1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editFuelTypeModalLabel1">Edit Bahan Bakar</h5>
+                <h5 class="modal-title" id="editFuelTypeModalLabel1">Edit Fuel Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST" action="#">
@@ -283,11 +283,11 @@
                 @method('PUT')
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="editFuelName1" class="form-label">Nama Bahan Bakar <span class="text-danger">*</span></label>
+                        <label for="editFuelName1" class="form-label">Name fuel <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="editFuelName1" name="name" value="Bensin" required>
                     </div>
                     <div class="mb-3">
-                        <label for="editFuelType1" class="form-label">Jenis BBM <span class="text-danger">*</span></label>
+                        <label for="editFuelType1" class="form-label">Type BBM <span class="text-danger">*</span></label>
                         <select class="form-select" id="editFuelType1" name="type" required>
                             <option value="liquid" selected>Cairan</option>
                             <option value="gas">Gas</option>
@@ -298,7 +298,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>
@@ -306,24 +306,24 @@
     </div>
 </div>
 
-<!-- Modal Hapus Bahan Bakar (Example for first item) -->
+<!-- Modal Delete fuel (Example for first item) -->
 <div class="modal fade" id="deleteFuelTypeModal1" tabindex="-1" aria-labelledby="deleteFuelTypeModalLabel1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteFuelTypeModalLabel1">Hapus Bahan Bakar</h5>
+                <h5 class="modal-title" id="deleteFuelTypeModalLabel1">Delete fuel</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Apakah Anda yakin ingin menghapus bahan bakar <strong>"Bensin"</strong>?</p>
-                <p class="text-muted small mb-0">Data yang sudah dihapus tidak dapat dikembalikan.</p>
+                <p>Are you sure want to delete fuel <strong>"Bensin"</strong>?</p>
+                <p class="text-muted small mb-0">Deleted data cannot be restored.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
                 <form method="POST" action="#" style="display: inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Hapus</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>
         </div>
@@ -390,3 +390,33 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

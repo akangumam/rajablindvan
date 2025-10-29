@@ -98,7 +98,7 @@
 <div class="page-header">
     <div>
         <h1 class="page-title">Riwayat Isi BBM</h1>
-        <p class="page-subtitle">Pantau konsumsi bahan bakar kendaraan Anda</p>
+        <p class="page-subtitle">Monitor Consumption bahan bakar Vehicle you</p>
     </div>
         </a>
     </div>
@@ -115,17 +115,17 @@
         </div>
         <div class="col-md-3 stat-item text-center border-start border-white border-opacity-25">
             <div class="stat-value" style="font-size: 28px; font-weight: 700;">{{ number_format($fuelFills->sum('liters'), 1) }} L</div>
-            <div class="stat-label" style="font-size: 13px; opacity: 0.9;">Total Liter</div>
+            <div class="stat-label" style="font-size: 13px; opacity: 0.9;">Total Liters</div>
         </div>
         <div class="col-md-3 stat-item text-center border-start border-white border-opacity-25">
             <div class="stat-value" style="font-size: 28px; font-weight: 700;">Rp {{ number_format($fuelFills->sum('total_cost'), 0, ',', '.') }}</div>
-            <div class="stat-label" style="font-size: 13px; opacity: 0.9;">Total Biaya</div>
+            <div class="stat-label" style="font-size: 13px; opacity: 0.9;">Total Cost</div>
         </div>
         <div class="col-md-3 stat-item text-center border-start border-white border-opacity-25">
             <div class="stat-value" style="font-size: 28px; font-weight: 700;">
                 {{ $fuelFills->whereNotNull('fuel_efficiency')->avg('fuel_efficiency') ? number_format($fuelFills->whereNotNull('fuel_efficiency')->avg('fuel_efficiency'), 1) : '-' }} km/L
             </div>
-            <div class="stat-label" style="font-size: 13px; opacity: 0.9;">Rata-rata Konsumsi</div>
+            <div class="stat-label" style="font-size: 13px; opacity: 0.9;">Average Consumption</div>
         </div>
     </div>
 </div>
@@ -204,11 +204,11 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="{{ route('fuel-fills.destroy', $fuel) }}" method="POST"
-                                              onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                              onsubmit="return confirm('Yakin want to delete data ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bi bi-trash me-2"></i>Hapus
+                                                <i class="bi bi-trash me-2"></i>Delete
                                             </button>
                                         </form>
                                     </li>
@@ -233,14 +233,41 @@
     <div style="width: 160px; height: 160px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: 0 12px 32px rgba(67, 233, 123, 0.3); margin: 0 auto 40px;">
         ⛽
     </div>
-    <h3 class="empty-title">Belum Ada Data Isi BBM</h3>
+    <h3 class="empty-title">No data yet Isi BBM</h3>
     <p class="empty-description">
-        Mulai mencatat setiap pengisian bahan bakar untuk
-        memantau konsumsi dan efisiensi kendaraan Anda.
+        Start recording every pengisian bahan bakar untuk
+        memantau Consumption dan efisiensi Vehicle you.
     </p>
     <a href="{{ route('fuel-fills.create') }}" class="btn btn-success btn-lg rounded-pill px-5 shadow">
-        <i class="bi bi-plus-lg me-2"></i>Tambah Data Pertama
+        <i class="bi bi-plus-lg me-2"></i>Add Data Pertama
     </a>
 </div>
 @endif
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

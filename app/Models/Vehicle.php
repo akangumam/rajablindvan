@@ -13,6 +13,8 @@ class Vehicle extends Model
         'model',
         'year',
         'license_plate',
+        'stnk_expiry_date',
+        'kir_expiry_date',
         'engine_type',
         'transmission',
         'tank_capacity',
@@ -31,7 +33,9 @@ class Vehicle extends Model
         'is_active' => 'boolean',
         'daily_rental_rate' => 'decimal:2',
         'weekly_rental_rate' => 'decimal:2',
-        'monthly_rental_rate' => 'decimal:2'
+        'monthly_rental_rate' => 'decimal:2',
+        'stnk_expiry_date' => 'date',
+        'kir_expiry_date' => 'date'
     ];
 
     // Relationships

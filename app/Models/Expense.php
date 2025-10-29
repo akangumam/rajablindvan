@@ -11,23 +11,34 @@ class Expense extends Model
         'location_id',
         'vehicle_id',
         'expense_date',
+        'expense_time',
+        'expense_type',
+        'place',
+        'user_id',
         'odometer',
         'category',
         'subcategory',
         'description',
         'amount',
+        'total_cost',
         'vendor',
         'payment_method',
         'receipt_number',
         'is_recurring',
         'recurring_period',
-        'notes'
+        'attachment',
+        'notes',
+        'stnk_expiry_date',
+        'kir_expiry_date'
     ];
 
     protected $casts = [
         'expense_date' => 'date',
+        'stnk_expiry_date' => 'date',
+        'kir_expiry_date' => 'date',
         'odometer' => 'decimal:2',
         'amount' => 'decimal:2',
+        'total_cost' => 'decimal:2',
         'is_recurring' => 'boolean'
     ];
 
@@ -40,6 +51,11 @@ class Expense extends Model
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     // Scopes

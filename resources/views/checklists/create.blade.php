@@ -1,5 +1,5 @@
 @extends('layouts.drivvo-form', [
-    'pageTitle' => 'Daftar Cek',
+    'pageTitle' => 'Checklist',
     'pageIcon' => 'fas fa-tasks',
     'formAction' => route('checklists.store'),
     'formId' => 'checklistForm',
@@ -9,9 +9,9 @@
 ])
 
 @section('form-fields')
-<!-- Tanggal -->
+<!-- Date -->
 <div class="field-group">
-    <label class="form-label">Tanggal pemeriksaan</label>
+    <label class="form-label">Date pemeriksaan</label>
     <input type="date" name="check_date" class="form-control" value="{{ old('check_date', date('Y-m-d')) }}" required>
 </div>
 
@@ -24,15 +24,15 @@
     </div>
 </div>
 
-<!-- Jenis Checklist -->
+<!-- Type Checklist -->
 <div class="field-group">
-    <label class="form-label">Jenis pemeriksaan</label>
+    <label class="form-label">Type pemeriksaan</label>
     <select name="checklist_type" class="form-select" required>
-        <option value="">Pilih jenis</option>
+        <option value="">Select Type</option>
         <option value="Pre-trip" {{ old('checklist_type') == 'Pre-trip' ? 'selected' : '' }}>Pre-trip</option>
         <option value="Post-trip" {{ old('checklist_type') == 'Post-trip' ? 'selected' : '' }}>Post-trip</option>
-        <option value="Weekly" {{ old('checklist_type') == 'Weekly' ? 'selected' : '' }}>Mingguan</option>
-        <option value="Monthly" {{ old('checklist_type') == 'Monthly' ? 'selected' : '' }}>Bulanan</option>
+        <option value="Weekly" {{ old('checklist_type') == 'Weekly' ? 'selected' : '' }}>Weekly</option>
+        <option value="Monthly" {{ old('checklist_type') == 'Monthly' ? 'selected' : '' }}>Monthly</option>
     </select>
 </div>
 
@@ -89,7 +89,7 @@
             </div>
             <div class="form-check mb-2">
                 <input class="form-check-input" type="checkbox" name="documents" value="1" id="documents">
-                <label class="form-check-label" for="documents">Dokumen kendaraan</label>
+                <label class="form-check-label" for="documents">Dokumen Vehicle</label>
             </div>
         </div>
     </div>
@@ -98,12 +98,40 @@
 <!-- Diperiksa Oleh -->
 <div class="field-group">
     <label class="form-label">Diperiksa oleh</label>
-    <input type="text" name="checked_by" class="form-control" value="{{ old('checked_by') }}" placeholder="Nama pemeriksa">
+    <input type="text" name="checked_by" class="form-control" value="{{ old('checked_by') }}" placeholder="Name pemeriksa">
 </div>
 
-<!-- Catatan -->
+<!-- Notes -->
 <div class="field-group">
-    <label class="form-label">Catatan</label>
-    <textarea name="notes" class="form-control" rows="3" placeholder="Catatan tambahan (opsional)">{{ old('notes') }}</textarea>
+    <label class="form-label">Notes</label>
+    <textarea name="notes" class="form-control" rows="3" placeholder="Notes tambahan (opsional)">{{ old('notes') }}</textarea>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

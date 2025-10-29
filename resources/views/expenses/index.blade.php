@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Data Pengeluaran')
+@section('title', 'Data Expenses')
 
 @section('content')
 <style>
@@ -123,8 +123,8 @@
 
 <div class="page-header">
     <div>
-        <h1 class="page-title">Pengeluaran Kendaraan</h1>
-        <p class="page-subtitle">Kelola semua pengeluaran kendaraan Anda</p>
+        <h1 class="page-title">Expenses Vehicle</h1>
+        <p class="page-subtitle">Manage All Expenses Vehicle you</p>
     </div>
 </div>
 
@@ -135,15 +135,15 @@
     <div class="row">
         <div class="col-md-4 stat-item">
             <div class="stat-value">{{ $expenses->count() }}</div>
-            <div class="stat-label">Total Transaksi</div>
+            <div class="stat-label">Total TransAction</div>
         </div>
         <div class="col-md-4 stat-item border-start border-end border-white border-opacity-25">
             <div class="stat-value">Rp {{ number_format($expenses->sum('amount'), 0, ',', '.') }}</div>
-            <div class="stat-label">Total Pengeluaran</div>
+            <div class="stat-label">Total Expenses</div>
         </div>
         <div class="col-md-4 stat-item">
             <div class="stat-value">Rp {{ number_format($expenses->avg('amount'), 0, ',', '.') }}</div>
-            <div class="stat-label">Rata-rata per Transaksi</div>
+            <div class="stat-label">Average per Transaction</div>
         </div>
     </div>
 </div>
@@ -228,11 +228,11 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="{{ route('expenses.destroy', $expense) }}" method="POST"
-                                              onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                              onsubmit="return confirm('Yakin want to delete data ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bi bi-trash me-2"></i>Hapus
+                                                <i class="bi bi-trash me-2"></i>Delete
                                             </button>
                                         </form>
                                     </li>
@@ -257,14 +257,41 @@
     <div style="width: 160px; height: 160px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3); margin: 0 auto 40px;">
         💰
     </div>
-    <h3 class="empty-title">Belum Ada Data Pengeluaran</h3>
+    <h3 class="empty-title">No expenses data yet</h3>
     <p class="empty-description">
-        Mulai mencatat pengeluaran kendaraan Anda seperti
-        asuransi, pajak, parkir, dan biaya lainnya.
+        Start record Expenses Vehicle you seperti
+        insurance, tax, parking, dan Cost Others.
     </p>
     <a href="{{ route('expenses.create') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow">
-        <i class="bi bi-plus-lg me-2"></i>Tambah Pengeluaran Pertama
+        <i class="bi bi-plus-lg me-2"></i>Tambah Expenses Pertama
     </a>
 </div>
 @endif
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

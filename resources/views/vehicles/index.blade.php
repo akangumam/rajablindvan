@@ -9,15 +9,29 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 24px;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     .page-title {
-        font-size: 28px;
+        font-size: 32px;
         font-weight: 700;
-        color: #333;
-        margin: 0;
+        color: #2c3e50;
+        margin: 0 0 8px 0;
         display: flex;
         align-items: center;
         gap: 12px;
+    }
+    .page-title i {
+        font-size: 28px;
+        color: #007bff;
+    }
+    .page-subtitle {
+        font-size: 15px;
+        color: #7f8c8d;
+        margin: 0;
+        font-weight: 400;
     }
     .search-icon {
         color: #3498db;
@@ -148,7 +162,7 @@
         color: #999;
         font-size: 13px;
     }
-    .status-badge {
+    .Status-badge {
         display: inline-block;
         padding: 6px 14px;
         border-radius: 20px;
@@ -156,11 +170,11 @@
         font-weight: 600;
         letter-spacing: 0.3px;
     }
-    .status-aktif {
+    .Status-Active {
         background: #d4edda;
         color: #155724;
     }
-    .status-nonaktif {
+    .Status-nonActive {
         background: #f8d7da;
         color: #721c24;
         letter-spacing: 0.5px;
@@ -479,9 +493,13 @@
 </style>
 
 <div class="page-header">
-    <h1 class="page-title">
-        {{ __('common.vehicles') }}
-    </h1>
+    <div>
+        <h1 class="page-title">
+            <i class="fas fa-car"></i>
+            {{ __('common.vehicles') }}
+        </h1>
+        <p class="page-subtitle">Manage your fleet vehicles and track their information</p>
+    </div>
     <a href="{{ route('vehicles.create') }}" class="btn btn-add-vehicle">
         {{ strtoupper(__('common.add_new')) }}
     </a>
@@ -538,7 +556,7 @@
                 <th>{{ __('vehicle.brand') }}</th>
                 <th>{{ __('vehicle.model') }}</th>
                 <th>{{ __('vehicle.last_update') }}</th>
-                <th>{{ __('common.status') }}</th>
+                <th>{{ __('common.Status') }}</th>
                 <th></th>
             </tr>
         </thead>
@@ -595,7 +613,7 @@
                 <td class="model-text">{{ $vehicle->model }}</td>
                 <td class="last-update">{{ $vehicle->updated_at->diffForHumans() }}</td>
                 <td>
-                    <span class="status-badge {{ $vehicle->is_active ? 'status-aktif' : 'status-nonaktif' }}">
+                    <span class="Status-badge {{ $vehicle->is_active ? 'Status-Active' : 'Status-nonActive' }}">
                         {{ $vehicle->is_active ? __('common.active') : __('common.inactive') }}
                     </span>
                 </td>
@@ -709,3 +727,30 @@ function confirmDelete(event, vehicleName) {
 </script>
 @endpush
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

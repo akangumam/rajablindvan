@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Detail Perawatan')
+@section('title', 'Detail Maintenance')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,29 +10,29 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="fas fa-tools text-primary me-2"></i>
-                        Detail Perawatan
+                        Detail Maintenance
                     </h5>
                     <div class="btn-group">
                         <a href="{{ route('maintenances.edit', $maintenance) }}" class="btn btn-warning btn-sm">
                             <i class="fas fa-edit me-1"></i>Edit
                         </a>
                         <a href="{{ route('maintenances.index') }}" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-arrow-left me-1"></i>Kembali
+                            <i class="fas fa-arrow-left me-1"></i>Back
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <!-- Informasi Kendaraan -->
+                        <!-- Vehicle Information -->
                         <div class="col-md-6">
                             <div class="card border-primary mb-4">
                                 <div class="card-header bg-primary text-white">
-                                    <h6 class="mb-0"><i class="fas fa-car me-2"></i>Informasi Kendaraan</h6>
+                                    <h6 class="mb-0"><i class="fas fa-car me-2"></i>Vehicle Information</h6>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-borderless mb-0">
                                         <tr>
-                                            <td class="fw-bold" width="40%">Kendaraan:</td>
+                                            <td class="fw-bold" width="40%">Vehicle:</td>
                                             <td>{{ $maintenance->vehicle->name }}</td>
                                         </tr>
                                         <tr>
@@ -40,7 +40,7 @@
                                             <td>{{ $maintenance->vehicle->license_plate }}</td>
                                         </tr>
                                         <tr>
-                                            <td class="fw-bold">Tahun:</td>
+                                            <td class="fw-bold">Year:</td>
                                             <td>{{ $maintenance->vehicle->year }}</td>
                                         </tr>
                                     </table>
@@ -48,11 +48,11 @@
                             </div>
                         </div>
 
-                        <!-- Status dan Tanggal -->
+                        <!-- Status dan Date -->
                         <div class="col-md-6">
                             <div class="card border-info mb-4">
                                 <div class="card-header bg-info text-white">
-                                    <h6 class="mb-0"><i class="fas fa-calendar me-2"></i>Status & Tanggal</h6>
+                                    <h6 class="mb-0"><i class="fas fa-calendar me-2"></i>Status & Date</h6>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-borderless mb-0">
@@ -60,18 +60,18 @@
                                             <td class="fw-bold" width="40%">Status:</td>
                                             <td>
                                                 @php
-                                                    $statusClass = match($maintenance->status) {
+                                                    $StatusClass = match($maintenance->Status) {
                                                         'Completed' => 'success',
                                                         'Scheduled' => 'warning',
                                                         'Overdue' => 'danger',
                                                         default => 'secondary'
                                                     };
                                                 @endphp
-                                                <span class="badge bg-{{ $statusClass }}">{{ $maintenance->status }}</span>
+                                                <span class="badge bg-{{ $StatusClass }}">{{ $maintenance->Status }}</span>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="fw-bold">Tanggal Perawatan:</td>
+                                            <td class="fw-bold">Date Maintenance:</td>
                                             <td>{{ \Carbon\Carbon::parse($maintenance->maintenance_date)->format('d/m/Y') }}</td>
                                         </tr>
                                         <tr>
@@ -85,16 +85,16 @@
                     </div>
 
                     <div class="row">
-                        <!-- Detail Perawatan -->
+                        <!-- Detail Maintenance -->
                         <div class="col-md-8">
                             <div class="card border-success mb-4">
                                 <div class="card-header bg-success text-white">
-                                    <h6 class="mb-0"><i class="fas fa-wrench me-2"></i>Detail Perawatan</h6>
+                                    <h6 class="mb-0"><i class="fas fa-wrench me-2"></i>Detail Maintenance</h6>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-borderless">
                                         <tr>
-                                            <td class="fw-bold" width="25%">Jenis:</td>
+                                            <td class="fw-bold" width="25%">Type:</td>
                                             <td>{{ $maintenance->type }}</td>
                                         </tr>
                                         <tr>
@@ -132,11 +132,11 @@
                             </div>
                         </div>
 
-                        <!-- Biaya -->
+                        <!-- Cost -->
                         <div class="col-md-4">
                             <div class="card border-warning mb-4">
                                 <div class="card-header bg-warning text-dark">
-                                    <h6 class="mb-0"><i class="fas fa-money-bill me-2"></i>Biaya</h6>
+                                    <h6 class="mb-0"><i class="fas fa-money-bill me-2"></i>Cost</h6>
                                 </div>
                                 <div class="card-body text-center">
                                     <h3 class="text-warning mb-0">Rp {{ number_format($maintenance->cost, 0, ',', '.') }}</h3>
@@ -150,13 +150,13 @@
                         <div class="col-12">
                             <div class="card border-info">
                                 <div class="card-header bg-info text-white">
-                                    <h6 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Perawatan Selanjutnya</h6>
+                                    <h6 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Maintenance Selanjutnya</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         @if($maintenance->next_maintenance_date)
                                         <div class="col-md-6">
-                                            <p class="mb-1"><strong>Tanggal:</strong></p>
+                                            <p class="mb-1"><strong>Date:</strong></p>
                                             <p class="text-info">{{ \Carbon\Carbon::parse($maintenance->next_maintenance_date)->format('d/m/Y') }}</p>
                                         </div>
                                         @endif
@@ -178,7 +178,7 @@
                         <div class="col-12">
                             <div class="card border-secondary">
                                 <div class="card-header bg-secondary text-white">
-                                    <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Catatan</h6>
+                                    <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Notes</h6>
                                 </div>
                                 <div class="card-body">
                                     <p class="mb-0">{{ $maintenance->notes }}</p>
@@ -193,3 +193,31 @@
     </div>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

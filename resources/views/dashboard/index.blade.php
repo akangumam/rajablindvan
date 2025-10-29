@@ -4,25 +4,25 @@
 
 @section('content')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Dashboard</h1>
+    <h1 class="h2">{{ __('common.dashboard') }}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                 <i class="bi bi-plus-circle me-1"></i>
-                Tambah Data
+                {{ __('common.add_data') }}
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ route('vehicles.create') }}">
-                    <i class="bi bi-car-front me-2"></i>Kendaraan Baru
+                    <i class="bi bi-car-front me-2"></i>{{ __('common.new_vehicle') }}
                 </a></li>
                 <li><a class="dropdown-item" href="{{ route('fuel-fills.create') }}">
-                    <i class="bi bi-fuel-pump me-2"></i>Isi Bensin
+                    <i class="bi bi-fuel-pump me-2"></i>{{ __('common.fuel_refill') }}
                 </a></li>
                 <li><a class="dropdown-item" href="{{ route('maintenances.create') }}">
-                    <i class="bi bi-tools me-2"></i>Service/Perawatan
+                    <i class="bi bi-tools me-2"></i>{{ __('common.service_maintenance') }}
                 </a></li>
                 <li><a class="dropdown-item" href="{{ route('expenses.create') }}">
-                    <i class="bi bi-wallet2 me-2"></i>Pengeluaran
+                    <i class="bi bi-wallet2 me-2"></i>{{ __('common.expense') }}
                 </a></li>
             </ul>
         </div>
@@ -36,7 +36,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-uppercase fw-bold small mb-1">Total Kendaraan</div>
+                        <div class="text-uppercase fw-bold small mb-1">{{ __('common.total_vehicles') }}</div>
                         <div class="h5 mb-0 fw-bold">{{ $totalVehicles }}</div>
                     </div>
                     <div class="col-auto">
@@ -52,7 +52,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-uppercase fw-bold small mb-1">Biaya Bulan Ini</div>
+                        <div class="text-uppercase fw-bold small mb-1">{{ __('common.cost_this_month') }}</div>
                         <div class="h5 mb-0 fw-bold">Rp {{ number_format($totalExpensesThisMonth, 0, ',', '.') }}</div>
                     </div>
                     <div class="col-auto">
@@ -68,7 +68,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-uppercase fw-bold small mb-1">Biaya Tahun Ini</div>
+                        <div class="text-uppercase fw-bold small mb-1">{{ __('common.cost_this_year') }}</div>
                         <div class="h5 mb-0 fw-bold">Rp {{ number_format($totalExpensesThisYear, 0, ',', '.') }}</div>
                     </div>
                     <div class="col-auto">
@@ -84,7 +84,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-uppercase fw-bold small mb-1">Service Menunggu</div>
+                        <div class="text-uppercase fw-bold small mb-1">{{ __('common.pending_service') }}</div>
                         <div class="h5 mb-0 fw-bold">
                             {{ $overdueMaintenances + $upcomingMaintenances }}
                             @if($overdueMaintenances > 0)
@@ -108,7 +108,7 @@
     <div class="col-lg-8 mb-4">
         <div class="card h-100">
             <div class="card-header bg-white">
-                <h6 class="m-0 fw-bold">Biaya Bahan Bakar (6 Bulan Terakhir)</h6>
+                <h6 class="m-0 fw-bold">{{ __('common.fuel_cost_6_months') }}</h6>
             </div>
             <div class="card-body">
                 <canvas id="fuelExpensesChart" width="400" height="200"></canvas>
@@ -120,9 +120,9 @@
     <div class="col-lg-4 mb-4">
         <div class="card h-100">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="m-0 fw-bold">Service Mendatang</h6>
+                <h6 class="m-0 fw-bold">{{ __('common.upcoming_service') }}</h6>
                 <a href="{{ route('maintenances.index') }}" class="btn btn-sm btn-outline-primary">
-                    Lihat Semua
+                    {{ __('common.view_all') }}
                 </a>
             </div>
             <div class="card-body p-0">
@@ -130,7 +130,7 @@
                     <div class="d-flex align-items-center p-3 border-bottom">
                         <div class="flex-shrink-0">
                             <div class="badge bg-warning text-dark">
-                                {{ $maintenance->daysUntilDue() }} hari
+                                {{ $maintenance->daysUntilDue() }} {{ __('common.days') }}
                             </div>
                         </div>
                         <div class="flex-grow-1 ms-3">
@@ -144,7 +144,7 @@
                 @empty
                     <div class="p-3 text-center text-muted">
                         <i class="bi bi-check-circle display-6"></i>
-                        <p class="mt-2 mb-0">Tidak ada service mendatang</p>
+                        <p class="mt-2 mb-0">{{ __('common.no_upcoming_service') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -158,9 +158,9 @@
     <div class="col-lg-4 mb-4">
         <div class="card">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="m-0 fw-bold">Isi Bensin Terakhir</h6>
+                <h6 class="m-0 fw-bold">{{ __('common.last_fuel_fill') }}</h6>
                 <a href="{{ route('fuel-fills.index') }}" class="btn btn-sm btn-outline-primary">
-                    Lihat Semua
+                    {{ __('common.view_all') }}
                 </a>
             </div>
             <div class="card-body p-0">
@@ -179,7 +179,7 @@
                     </div>
                 @empty
                     <div class="p-3 text-center text-muted">
-                        <p class="mb-0">Belum ada data isi bensin</p>
+                        <p class="mb-0">{{ __('common.no_fuel_data') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -190,9 +190,9 @@
     <div class="col-lg-4 mb-4">
         <div class="card">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="m-0 fw-bold">Service Terakhir</h6>
+                <h6 class="m-0 fw-bold">{{ __('common.last_service') }}</h6>
                 <a href="{{ route('maintenances.index') }}" class="btn btn-sm btn-outline-primary">
-                    Lihat Semua
+                    {{ __('common.view_all') }}
                 </a>
             </div>
             <div class="card-body p-0">
@@ -211,7 +211,7 @@
                     </div>
                 @empty
                     <div class="p-3 text-center text-muted">
-                        <p class="mb-0">Belum ada data service</p>
+                        <p class="mb-0">{{ __('common.no_service_data') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -222,9 +222,9 @@
     <div class="col-lg-4 mb-4">
         <div class="card">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h6 class="m-0 fw-bold">Pengeluaran Terakhir</h6>
+                <h6 class="m-0 fw-bold">{{ __('common.last_expense') }}</h6>
                 <a href="{{ route('expenses.index') }}" class="btn btn-sm btn-outline-primary">
-                    Lihat Semua
+                    {{ __('common.view_all') }}
                 </a>
             </div>
             <div class="card-body p-0">
@@ -243,7 +243,7 @@
                     </div>
                 @empty
                     <div class="p-3 text-center text-muted">
-                        <p class="mb-0">Belum ada data pengeluaran</p>
+                        <p class="mb-0">{{ __('common.no_expense_data') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -257,18 +257,18 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header bg-white">
-                <h6 class="m-0 fw-bold">Ringkasan Kendaraan</h6>
+                <h6 class="m-0 fw-bold">Ringkasan Vehicle</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Kendaraan</th>
-                                <th>Odometer Terakhir</th>
-                                <th>Total Pengeluaran</th>
-                                <th>Rata-rata Konsumsi</th>
-                                <th>Aksi</th>
+                                <th>Vehicle</th>
+                                <th>Latest Odometer</th>
+                                <th>{{ __('common.total_expense') }}</th>
+                                <th>Average Consumption</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data: {
             labels: @json($fuelExpensesChart['labels']),
             datasets: [{
-                label: 'Biaya Bahan Bakar',
+                label: '{{ __('common.fuel_cost') }}',
                 data: @json($fuelExpensesChart['data']),
                 borderColor: '#667eea',
                 backgroundColor: 'rgba(102, 126, 234, 0.1)',
@@ -357,3 +357,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

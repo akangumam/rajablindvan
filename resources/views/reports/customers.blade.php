@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Laporan Customer')
+@section('title', 'Customer Report')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,7 +10,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">
                     <i class="fas fa-users text-primary me-2"></i>
-                    Laporan Customer
+                    Report Customer
                 </h2>
                 <div class="d-flex gap-2">
                     <a href="{{ route('reports.customers.excel') }}" class="btn btn-success">
@@ -21,7 +21,7 @@
                         <i class="fas fa-file-pdf me-1"></i>Export PDF
                     </a>
                     <a href="{{ route('reports.dashboard') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-1"></i>Kembali
+                        <i class="fas fa-arrow-left me-1"></i>Back
                     </a>
                 </div>
             </div>
@@ -35,11 +35,11 @@
                 <div class="card-body">
                     <form method="GET" action="{{ route('reports.customers') }}" class="row g-3">
                         <div class="col-md-4">
-                            <label for="start_date" class="form-label">Tanggal Mulai</label>
+                            <label for="start_date" class="form-label">Date Start</label>
                             <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $startDate }}">
                         </div>
                         <div class="col-md-4">
-                            <label for="end_date" class="form-label">Tanggal Selesai</label>
+                            <label for="end_date" class="form-label">Date End</label>
                             <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $endDate }}">
                         </div>
                         <div class="col-md-4">
@@ -68,11 +68,11 @@
                                 <tr>
                                     <th>Customer</th>
                                     <th>Total Rental</th>
-                                    <th>Rental Selesai</th>
+                                    <th>Rental End</th>
                                     <th>Total Spent</th>
-                                    <th>Rata-rata Nilai Rental</th>
-                                    <th>Total Hari Sewa</th>
-                                    <th>Rental Terakhir</th>
+                                    <th>Average Rental Value</th>
+                                    <th>Total Rental Days</th>
+                                    <th>Last Rental</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -81,8 +81,8 @@
                                     <td>
                                         <div class="fw-bold">{{ $stat['customer']->name }}</div>
                                         <small class="text-muted">{{ $stat['customer']->phone }}</small><br>
-                                        @if($stat['customer']->email)
-                                            <small class="text-muted">{{ $stat['customer']->email }}</small>
+                                        @if($stat['customer']->Email)
+                                            <small class="text-muted">{{ $stat['customer']->Email }}</small>
                                         @endif
                                     </td>
                                     <td>
@@ -102,7 +102,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge bg-info">{{ $stat['total_days_rented'] }} hari</span>
+                                        <span class="badge bg-info">{{ $stat['total_days_rented'] }} days</span>
                                     </td>
                                     <td>
                                         @if($stat['last_rental_date'])
@@ -120,7 +120,7 @@
                                 <tr>
                                     <td colspan="7" class="text-center text-muted py-4">
                                         <i class="fas fa-users fa-3x mb-3"></i><br>
-                                        Tidak ada data customer ditemukan
+                                        No data available customer ditemukan
                                     </td>
                                 </tr>
                                 @endforelse
@@ -155,7 +155,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Customer Aktif</div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Customer Active</div>
                             <div class="h5 mb-0 font-weight-bold">
                                 {{ $customerStats->filter(function($stat) { return $stat['total_rentals'] > 0; })->count() }}
                             </div>
@@ -191,7 +191,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Rata-rata Spent</div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Average Spent</div>
                             <div class="h5 mb-0 font-weight-bold">
                                 Rp {{ number_format($customerStats->where('total_spent', '>', 0)->avg('total_spent'), 0, ',', '.') }}
                             </div>
@@ -263,3 +263,30 @@
 }
 </style>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

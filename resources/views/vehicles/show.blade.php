@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Detail Kendaraan')
+@section('title', 'Vehicle Detail')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,11 +10,11 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="fas fa-car text-primary me-2"></i>
-                        Detail Kendaraan - {{ $vehicle->name }}
+                        Vehicle Detail - {{ $vehicle->name }}
                     </h5>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-plus me-1"></i>Tambah Data
+                            <i class="fas fa-plus me-1"></i>Add Data
                         </button>
                         <ul class="dropdown-menu">
                             <li>
@@ -29,7 +29,7 @@
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('expenses.create-for-vehicle', $vehicle) }}">
-                                    <i class="fas fa-receipt me-2"></i>Pengeluaran
+                                    <i class="fas fa-receipt me-2"></i>Expenses
                                 </a>
                             </li>
                         </ul>
@@ -37,22 +37,22 @@
                             <i class="fas fa-edit me-1"></i>Edit
                         </a>
                         <a href="{{ route('vehicles.index') }}" class="btn btn-secondary btn-sm ms-1">
-                            <i class="fas fa-arrow-left me-1"></i>Kembali
+                            <i class="fas fa-arrow-left me-1"></i>Back
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <!-- Informasi Kendaraan -->
+                    <!-- Vehicle Information -->
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <div class="card border-primary">
                                 <div class="card-header bg-primary text-white">
-                                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informasi Kendaraan</h6>
+                                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Vehicle Information</h6>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-borderless mb-0">
                                         <tr>
-                                            <td class="fw-bold">Nama:</td>
+                                            <td class="fw-bold">Name:</td>
                                             <td>{{ $vehicle->name }}</td>
                                         </tr>
                                         <tr>
@@ -64,7 +64,7 @@
                                             <td>{{ $vehicle->model }}</td>
                                         </tr>
                                         <tr>
-                                            <td class="fw-bold">Tahun:</td>
+                                            <td class="fw-bold">Year:</td>
                                             <td>{{ $vehicle->year }}</td>
                                         </tr>
                                         <tr>
@@ -72,7 +72,7 @@
                                             <td><span class="badge bg-dark">{{ $vehicle->license_plate }}</span></td>
                                         </tr>
                                         <tr>
-                                            <td class="fw-bold">Jenis Mesin:</td>
+                                            <td class="fw-bold">Engine Type:</td>
                                             <td>{{ $vehicle->engine_type }}</td>
                                         </tr>
                                         <tr>
@@ -82,7 +82,7 @@
                                         @if($vehicle->tank_capacity)
                                         <tr>
                                             <td class="fw-bold">Kapasitas Tangki:</td>
-                                            <td>{{ $vehicle->tank_capacity }} Liter</td>
+                                            <td>{{ $vehicle->tank_capacity }} Liters</td>
                                         </tr>
                                         @endif
                                         @if($vehicle->color)
@@ -95,7 +95,7 @@
                                             <td class="fw-bold">Status:</td>
                                             <td>
                                                 <span class="badge {{ $vehicle->is_active ? 'bg-success' : 'bg-secondary' }}">
-                                                    {{ $vehicle->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                                                    {{ $vehicle->is_active ? 'Active' : 'Inactive' }}
                                                 </span>
                                             </td>
                                         </tr>
@@ -107,7 +107,7 @@
                         <div class="col-md-6">
                             <div class="card border-info">
                                 <div class="card-header bg-info text-white">
-                                    <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Statistik Kendaraan</h6>
+                                    <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Vehicle Statistics</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row text-center">
@@ -115,7 +115,7 @@
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
                                                     <h5 class="text-primary mb-0">{{ number_format($stats['latest_odometer']) }}</h5>
-                                                    <small class="text-muted">Odometer Terakhir (km)</small>
+                                                    <small class="text-muted">Latest Odometer (km)</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -123,7 +123,7 @@
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
                                                     <h5 class="text-success mb-0">{{ $stats['avg_fuel_efficiency'] ? number_format($stats['avg_fuel_efficiency'], 1) : '-' }}</h5>
-                                                    <small class="text-muted">Efisiensi BBM (km/L)</small>
+                                                    <small class="text-muted">Fuel Efficiency (km/L)</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -131,7 +131,7 @@
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
                                                     <h5 class="text-warning mb-0">{{ $stats['total_fuel_fills'] }}</h5>
-                                                    <small class="text-muted">Total Isi BBM</small>
+                                                    <small class="text-muted">Total Fuel Fills</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -139,7 +139,7 @@
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
                                                     <h5 class="text-danger mb-0">Rp {{ number_format($stats['total_expenses']) }}</h5>
-                                                    <small class="text-muted">Total Biaya</small>
+                                                    <small class="text-muted">Total Cost</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -154,7 +154,7 @@
                         <div class="col-12">
                             <div class="card border-secondary">
                                 <div class="card-header bg-secondary text-white">
-                                    <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Catatan</h6>
+                                    <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Notes</h6>
                                 </div>
                                 <div class="card-body">
                                     <p class="mb-0">{{ $vehicle->notes }}</p>
@@ -164,28 +164,28 @@
                     </div>
                     @endif
 
-                    <!-- Tabs untuk Riwayat -->
+                    <!-- History Tabs -->
                     <div class="row">
                         <div class="col-12">
                             <ul class="nav nav-tabs" id="vehicleTabs" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active" id="fuel-tab" data-bs-toggle="tab" data-bs-target="#fuel" type="button" role="tab">
-                                        <i class="fas fa-gas-pump me-1"></i>Riwayat BBM ({{ $vehicle->fuelFills->count() }})
+                                        <i class="fas fa-gas-pump me-1"></i>Fuel History ({{ $vehicle->fuelFills->count() }})
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="maintenance-tab" data-bs-toggle="tab" data-bs-target="#maintenance" type="button" role="tab">
-                                        <i class="fas fa-wrench me-1"></i>Riwayat Service ({{ $vehicle->maintenances->count() }})
+                                        <i class="fas fa-wrench me-1"></i>Maintenance History ({{ $vehicle->maintenances->count() }})
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="expenses-tab" data-bs-toggle="tab" data-bs-target="#expenses" type="button" role="tab">
-                                        <i class="fas fa-receipt me-1"></i>Riwayat Pengeluaran ({{ $vehicle->expenses->count() }})
+                                        <i class="fas fa-receipt me-1"></i>Expenses History ({{ $vehicle->expenses->count() }})
                                     </button>
                                 </li>
                             </ul>
                             <div class="tab-content" id="vehicleTabsContent">
-                                <!-- Tab BBM -->
+                                <!-- Fuel Tab -->
                                 <div class="tab-pane fade show active" id="fuel" role="tabpanel">
                                     <div class="card border-0">
                                         <div class="card-body">
@@ -194,13 +194,13 @@
                                                     <table class="table table-hover">
                                                         <thead class="table-light">
                                                             <tr>
-                                                                <th>Tanggal</th>
+                                                                <th>Date</th>
                                                                 <th>Odometer</th>
                                                                 <th>Liter</th>
-                                                                <th>Harga/L</th>
+                                                                <th>Price/L</th>
                                                                 <th>Total</th>
                                                                 <th>Efisiensi</th>
-                                                                <th>Aksi</th>
+                                                                <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -231,16 +231,16 @@
                                                 @if($vehicle->fuelFills->count() > 10)
                                                     <div class="text-center mt-3">
                                                         <a href="{{ route('fuel-fills.index') }}?vehicle={{ $vehicle->id }}" class="btn btn-outline-primary">
-                                                            Lihat Semua Riwayat BBM
+                                                            View All Fuel History
                                                         </a>
                                                     </div>
                                                 @endif
                                             @else
                                                 <div class="text-center py-4">
                                                     <i class="fas fa-gas-pump display-4 text-muted"></i>
-                                                    <h5 class="mt-3 text-muted">Belum Ada Data BBM</h5>
+                                                    <h5 class="mt-3 text-muted">No fuel data yet</h5>
                                                     <a href="{{ route('fuel-fills.create-for-vehicle', $vehicle) }}" class="btn btn-primary">
-                                                        <i class="fas fa-plus me-1"></i>Tambah Data BBM
+                                                        <i class="fas fa-plus me-1"></i>Add Fuel Data
                                                     </a>
                                                 </div>
                                             @endif
@@ -257,13 +257,13 @@
                                                     <table class="table table-hover">
                                                         <thead class="table-light">
                                                             <tr>
-                                                                <th>Tanggal</th>
-                                                                <th>Jenis</th>
+                                                                <th>Date</th>
+                                                                <th>Type</th>
                                                                 <th>Kategori</th>
                                                                 <th>Odometer</th>
-                                                                <th>Biaya</th>
+                                                                <th>Cost</th>
                                                                 <th>Status</th>
-                                                                <th>Aksi</th>
+                                                                <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -286,14 +286,14 @@
                                                                 <td class="fw-bold">Rp {{ number_format($maintenance->cost) }}</td>
                                                                 <td>
                                                                     @php
-                                                                        $statusClass = match($maintenance->status) {
+                                                                        $StatusClass = match($maintenance->Status) {
                                                                             'Completed' => 'success',
                                                                             'Scheduled' => 'warning',
                                                                             'Overdue' => 'danger',
                                                                             default => 'secondary'
                                                                         };
                                                                     @endphp
-                                                                    <span class="badge bg-{{ $statusClass }}">{{ $maintenance->status }}</span>
+                                                                    <span class="badge bg-{{ $StatusClass }}">{{ $maintenance->Status }}</span>
                                                                 </td>
                                                                 <td>
                                                                     <a href="{{ route('maintenances.show', $maintenance) }}" class="btn btn-sm btn-outline-primary">
@@ -308,16 +308,16 @@
                                                 @if($vehicle->maintenances->count() > 10)
                                                     <div class="text-center mt-3">
                                                         <a href="{{ route('maintenances.index') }}?vehicle={{ $vehicle->id }}" class="btn btn-outline-primary">
-                                                            Lihat Semua Riwayat Service
+                                                            View All Maintenance History
                                                         </a>
                                                     </div>
                                                 @endif
                                             @else
                                                 <div class="text-center py-4">
                                                     <i class="fas fa-wrench display-4 text-muted"></i>
-                                                    <h5 class="mt-3 text-muted">Belum Ada Data Service</h5>
+                                                    <h5 class="mt-3 text-muted">No maintenance data yet</h5>
                                                     <a href="{{ route('maintenances.create-for-vehicle', $vehicle) }}" class="btn btn-primary">
-                                                        <i class="fas fa-plus me-1"></i>Tambah Data Service
+                                                        <i class="fas fa-plus me-1"></i>Add Maintenance Data
                                                     </a>
                                                 </div>
                                             @endif
@@ -325,7 +325,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Tab Pengeluaran -->
+                                <!-- Tab Expenses -->
                                 <div class="tab-pane fade" id="expenses" role="tabpanel">
                                     <div class="card border-0">
                                         <div class="card-body">
@@ -334,11 +334,11 @@
                                                     <table class="table table-hover">
                                                         <thead class="table-light">
                                                             <tr>
-                                                                <th>Tanggal</th>
+                                                                <th>Date</th>
                                                                 <th>Kategori</th>
                                                                 <th>Deskripsi</th>
-                                                                <th>Jumlah</th>
-                                                                <th>Aksi</th>
+                                                                <th>Amount</th>
+                                                                <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -363,16 +363,16 @@
                                                 @if($vehicle->expenses->count() > 10)
                                                     <div class="text-center mt-3">
                                                         <a href="{{ route('expenses.index') }}?vehicle={{ $vehicle->id }}" class="btn btn-outline-primary">
-                                                            Lihat Semua Riwayat Pengeluaran
+                                                            View All Expenses History
                                                         </a>
                                                     </div>
                                                 @endif
                                             @else
                                                 <div class="text-center py-4">
                                                     <i class="fas fa-receipt display-4 text-muted"></i>
-                                                    <h5 class="mt-3 text-muted">Belum Ada Data Pengeluaran</h5>
+                                                    <h5 class="mt-3 text-muted">No expenses data yet</h5>
                                                     <a href="{{ route('expenses.create-for-vehicle', $vehicle) }}" class="btn btn-primary">
-                                                        <i class="fas fa-plus me-1"></i>Tambah Data Pengeluaran
+                                                        <i class="fas fa-plus me-1"></i>Add Expense Data
                                                     </a>
                                                 </div>
                                             @endif
@@ -388,3 +388,30 @@
     </div>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

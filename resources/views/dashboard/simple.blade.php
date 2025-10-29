@@ -13,7 +13,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-uppercase fw-bold small mb-1">Total Kendaraan</div>
+                        <div class="text-uppercase fw-bold small mb-1">Total Vehicle</div>
                         <div class="h5 mb-0 fw-bold">{{ \App\Models\Vehicle::count() }}</div>
                     </div>
                     <div class="col-auto">
@@ -45,7 +45,7 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-uppercase fw-bold small mb-1">Data Perawatan</div>
+                        <div class="text-uppercase fw-bold small mb-1">Data Maintenance</div>
                         <div class="h5 mb-0 fw-bold">{{ \App\Models\Maintenance::count() }}</div>
                     </div>
                     <div class="col-auto">
@@ -61,8 +61,8 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-uppercase fw-bold small mb-1">Rental Aktif</div>
-                        <div class="h5 mb-0 fw-bold">{{ \App\Models\Rental::whereIn('status', ['reserved', 'active'])->count() }}</div>
+                        <div class="text-uppercase fw-bold small mb-1">Rental Active</div>
+                        <div class="h5 mb-0 fw-bold">{{ \App\Models\Rental::whereIn('Status', ['reserved', 'active'])->count() }}</div>
                     </div>
                     <div class="col-auto">
                         <i class="bi bi-calendar-check fa-2x"></i>
@@ -93,15 +93,15 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header bg-white">
-                <h6 class="m-0 fw-bold">Selamat Datang di Vehicle Dashboard</h6>
+                <h6 class="m-0 fw-bold">Welcome to Vehicle Dashboard</h6>
             </div>
             <div class="card-body">
-                <p>Dashboard untuk tracking kendaraan Anda sudah siap digunakan!</p>
+                <p>Dashboard untuk tracking Vehicle you is ready to use!</p>
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <a href="{{ route('vehicles.index') }}" class="btn btn-outline-primary d-block">
                             <i class="bi bi-car-front me-2"></i>
-                            Kelola Kendaraan
+                            Manage Vehicle
                         </a>
                     </div>
                     <div class="col-md-3 mb-3">
@@ -113,13 +113,13 @@
                     <div class="col-md-3 mb-3">
                         <a href="{{ route('vehicles.create') }}" class="btn btn-outline-warning d-block">
                             <i class="bi bi-plus-circle me-2"></i>
-                            Tambah Kendaraan
+                            Add Vehicle
                         </a>
                     </div>
                     <div class="col-md-3 mb-3">
                         <a href="{{ route('fuel-fills.create') }}" class="btn btn-outline-info d-block">
                             <i class="bi bi-plus-circle me-2"></i>
-                            Tambah Data BBM
+                            Add Fuel Data
                         </a>
                     </div>
                 </div>
@@ -133,18 +133,18 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header bg-white">
-                <h6 class="m-0 fw-bold">Daftar Kendaraan</h6>
+                <h6 class="m-0 fw-bold">List Vehicle</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Nama</th>
-                                <th>Kendaraan</th>
+                                <th>Name</th>
+                                <th>Vehicle</th>
                                 <th>Plat Nomor</th>
                                 <th>Odometer</th>
-                                <th>Aksi</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -173,14 +173,41 @@
     <div class="col-12">
         <div class="text-center py-5">
             <i class="bi bi-car-front display-1 text-muted"></i>
-            <h3 class="mt-3">Belum Ada Kendaraan</h3>
-            <p class="text-muted">Mulai dengan menambahkan kendaraan pertama Anda.</p>
+            <h3 class="mt-3">No Vehicle</h3>
+            <p class="text-muted">Start dengan menambahkan Vehicle pertama you.</p>
             <a href="{{ route('vehicles.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-1"></i>
-                Tambah Kendaraan Pertama
+                Add Vehicle Pertama
             </a>
         </div>
     </div>
 </div>
 @endif
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

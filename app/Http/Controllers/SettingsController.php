@@ -3,15 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Setting;
+use App\Models\UploadedFile;
+use App\Models\Location;
+use App\Models\ServiceType;
+use App\Models\ExpenseType;
+use App\Models\IncomeType;
+use App\Models\PaymentMethod;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use ZipArchive;
 
 class SettingsController extends Controller
 {
     /**
-     * Display settings main page
+     * Display settings main page - redirect to format
      */
     public function index()
     {
-        return view('settings.index');
+        return redirect()->route('settings.format');
     }
 
     /**
@@ -35,7 +45,27 @@ class SettingsController extends Controller
      */
     public function format()
     {
-        return view('settings.format');
+        $dateFormat = Setting::get('date_format', 'd/m/Y');
+        $currencyFormat = Setting::get('currency_format', 'idr');
+        
+        return view('settings.format', compact('dateFormat', 'currencyFormat'));
+    }
+
+    /**
+     * Save Format Settings
+     */
+    public function saveFormat(Request $request)
+    {
+        $request->validate([
+            'date_format' => 'required|string',
+            'currency_format' => 'required|string',
+        ]);
+
+        Setting::set('date_format', $request->date_format);
+        Setting::set('currency_format', $request->currency_format);
+
+        return redirect()->route('settings.format')
+            ->with('success', 'Format settings saved successfully!');
     }
 
     /**
@@ -44,6 +74,194 @@ class SettingsController extends Controller
     public function account()
     {
         return view('settings.account');
+    }
+
+    /**
+     * File and Storage Settings
+     */
+    public function fileStorage()
+    {
+        $files = UploadedFile::orderBy('created_at', 'desc')->get();
+        
+        // Calculate total storage used
+        $totalSize = UploadedFile::sum('file_size');
+        $totalSizeGB = $totalSize / 1073741824; // Convert to GB
+        $storageLimit = 10240 / 1024; // 10240 MB = 10 GB limit
+        $usagePercentage = $totalSizeGB > 0 ? ($totalSizeGB / $storageLimit) * 100 : 0;
+        
+        // Calculate storage by category
+        $categories = [
+            'refueling' => UploadedFile::where('category', 'refueling')->sum('file_size'),
+            'expense' => UploadedFile::where('category', 'expense')->sum('file_size'),
+            'income' => UploadedFile::where('category', 'income')->sum('file_size'),
+            'service' => UploadedFile::where('category', 'service')->sum('file_size'),
+            'route' => UploadedFile::where('category', 'route')->sum('file_size'),
+        ];
+        
+        // Convert to MB and calculate percentages
+        $categoryStats = [];
+        foreach ($categories as $cat => $size) {
+            $sizeMB = $size / 1048576;
+            $percentage = $totalSize > 0 ? ($size / $totalSize) * 100 : 0;
+            $categoryStats[$cat] = [
+                'size' => $sizeMB,
+                'percentage' => $percentage
+            ];
+        }
+        
+        // Calculate unused storage
+        $usedStorageMB = $totalSize / 1048576;
+        $storageLimitMB = $storageLimit * 1024; // Convert GB to MB
+        $unusedMB = $storageLimitMB - $usedStorageMB;
+        $unusedPercentage = $storageLimitMB > 0 ? ($unusedMB / $storageLimitMB) * 100 : 100;
+        
+        return view('settings.file-storage', compact(
+            'files', 
+            'totalSize', 
+            'totalSizeGB', 
+            'storageLimit', 
+            'usagePercentage',
+            'categoryStats',
+            'unusedMB',
+            'unusedPercentage',
+            'usedStorageMB',
+            'storageLimitMB'
+        ));
+    }
+
+    /**
+     * Upload file
+     */
+    public function uploadFile(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|max:10240', // Max 10MB
+        ]);
+
+        try {
+            $file = $request->file('file');
+            $originalName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $storedName = Str::uuid() . '.' . $extension;
+            
+            // Store file
+            $path = $file->storeAs('uploads', $storedName, 'public');
+            
+            // Determine file type
+            $mimeType = $file->getMimeType();
+            $fileType = $this->determineFileType($mimeType, $extension);
+            
+            // Save to database
+            UploadedFile::create([
+                'original_name' => $originalName,
+                'stored_name' => $storedName,
+                'file_path' => $path,
+                'mime_type' => $mimeType,
+                'file_size' => $file->getSize(),
+                'file_type' => $fileType,
+            ]);
+
+            return redirect()->route('settings.file-storage')
+                ->with('success', 'File uploaded successfully!');
+                
+        } catch (\Exception $e) {
+            return redirect()->route('settings.file-storage')
+                ->with('error', 'Failed to upload file: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download single file
+     */
+    public function downloadFile($id)
+    {
+        $file = UploadedFile::findOrFail($id);
+        $filePath = storage_path('app/public/' . $file->file_path);
+        
+        if (!file_exists($filePath)) {
+            return redirect()->route('settings.file-storage')
+                ->with('error', 'File not found!');
+        }
+
+        return response()->download($filePath, $file->original_name);
+    }
+
+    /**
+     * Delete file
+     */
+    public function deleteFile($id)
+    {
+        try {
+            $file = UploadedFile::findOrFail($id);
+            
+            // Delete physical file
+            Storage::disk('public')->delete($file->file_path);
+            
+            // Delete from database
+            $file->delete();
+
+            return redirect()->route('settings.file-storage')
+                ->with('success', 'File deleted successfully!');
+                
+        } catch (\Exception $e) {
+            return redirect()->route('settings.file-storage')
+                ->with('error', 'Failed to delete file: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download all files as ZIP
+     */
+    public function downloadAllFiles()
+    {
+        $files = UploadedFile::all();
+        
+        if ($files->isEmpty()) {
+            return redirect()->route('settings.file-storage')
+                ->with('error', 'No files to download!');
+        }
+
+        $zipFileName = 'all_files_' . now()->format('Y-m-d_His') . '.zip';
+        $zipPath = storage_path('app/public/' . $zipFileName);
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+            foreach ($files as $file) {
+                $filePath = storage_path('app/public/' . $file->file_path);
+                if (file_exists($filePath)) {
+                    $zip->addFile($filePath, $file->original_name);
+                }
+            }
+            $zip->close();
+        }
+
+        return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Determine file type based on mime type
+     */
+    private function determineFileType($mimeType, $extension)
+    {
+        if (str_contains($mimeType, 'pdf')) {
+            return 'pdf';
+        } elseif (str_contains($mimeType, 'spreadsheet') || in_array($extension, ['xlsx', 'xls', 'csv'])) {
+            return 'excel';
+        } elseif (str_contains($mimeType, 'word') || in_array($extension, ['docx', 'doc'])) {
+            return 'word';
+        } elseif (str_contains($mimeType, 'image')) {
+            return 'image';
+        } elseif (str_contains($mimeType, 'video')) {
+            return 'video';
+        } elseif (str_contains($mimeType, 'audio')) {
+            return 'audio';
+        } elseif (in_array($extension, ['zip', 'rar', '7z', 'tar', 'gz'])) {
+            return 'archive';
+        } elseif (in_array($extension, ['js', 'php', 'html', 'css', 'json', 'xml'])) {
+            return 'code';
+        }
+        
+        return 'file';
     }
 
     /**
@@ -75,7 +293,61 @@ class SettingsController extends Controller
      */
     public function locations()
     {
-        return view('settings.locations');
+        $locations = Location::orderBy('name')->get();
+        return view('settings.locations', compact('locations'));
+    }
+
+    public function storeLocation(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $location = Location::create([
+            'name' => $validated['name'],
+            'code' => strtoupper(substr($validated['name'], 0, 3)),
+            'address' => $validated['description'] ?? '',
+            'is_active' => true
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Place added successfully',
+            'data' => $location
+        ]);
+    }
+
+    public function updateLocation(Request $request, $id)
+    {
+        $location = Location::findOrFail($id);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $location->update([
+            'name' => $validated['name'],
+            'address' => $validated['description'] ?? ''
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Place updated successfully',
+            'data' => $location
+        ]);
+    }
+
+    public function destroyLocation($id)
+    {
+        $location = Location::findOrFail($id);
+        $location->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Place deleted successfully'
+        ]);
     }
 
     /**
@@ -83,7 +355,57 @@ class SettingsController extends Controller
      */
     public function serviceTypes()
     {
-        return view('settings.service-types');
+        $serviceTypes = ServiceType::orderBy('name')->get();
+        return view('settings.service-types', compact('serviceTypes'));
+    }
+
+    public function storeServiceType(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $serviceType = ServiceType::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'is_active' => true
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Service type added successfully',
+            'data' => $serviceType
+        ]);
+    }
+
+    public function updateServiceType(Request $request, $id)
+    {
+        $serviceType = ServiceType::findOrFail($id);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $serviceType->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Service type updated successfully',
+            'data' => $serviceType
+        ]);
+    }
+
+    public function destroyServiceType($id)
+    {
+        $serviceType = ServiceType::findOrFail($id);
+        $serviceType->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Service type deleted successfully'
+        ]);
     }
 
     /**
@@ -91,7 +413,57 @@ class SettingsController extends Controller
      */
     public function expenseTypes()
     {
-        return view('settings.expense-types');
+        $expenseTypes = ExpenseType::orderBy('name')->get();
+        return view('settings.expense-types', compact('expenseTypes'));
+    }
+
+    public function storeExpenseType(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $expenseType = ExpenseType::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'is_active' => true
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Expense type added successfully',
+            'data' => $expenseType
+        ]);
+    }
+
+    public function updateExpenseType(Request $request, $id)
+    {
+        $expenseType = ExpenseType::findOrFail($id);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $expenseType->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Expense type updated successfully',
+            'data' => $expenseType
+        ]);
+    }
+
+    public function destroyExpenseType($id)
+    {
+        $expenseType = ExpenseType::findOrFail($id);
+        $expenseType->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Expense type deleted successfully'
+        ]);
     }
 
     /**
@@ -99,7 +471,57 @@ class SettingsController extends Controller
      */
     public function incomeTypes()
     {
-        return view('settings.income-types');
+        $incomeTypes = IncomeType::orderBy('name')->get();
+        return view('settings.income-types', compact('incomeTypes'));
+    }
+
+    public function storeIncomeType(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $incomeType = IncomeType::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'is_active' => true
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Income type added successfully',
+            'data' => $incomeType
+        ]);
+    }
+
+    public function updateIncomeType(Request $request, $id)
+    {
+        $incomeType = IncomeType::findOrFail($id);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $incomeType->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Income type updated successfully',
+            'data' => $incomeType
+        ]);
+    }
+
+    public function destroyIncomeType($id)
+    {
+        $incomeType = IncomeType::findOrFail($id);
+        $incomeType->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Income type deleted successfully'
+        ]);
     }
 
     /**
@@ -115,7 +537,57 @@ class SettingsController extends Controller
      */
     public function paymentMethods()
     {
-        return view('settings.payment-methods');
+        $paymentMethods = PaymentMethod::orderBy('name')->get();
+        return view('settings.payment-methods', compact('paymentMethods'));
+    }
+
+    public function storePaymentMethod(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $paymentMethod = PaymentMethod::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'is_active' => true
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment method added successfully',
+            'data' => $paymentMethod
+        ]);
+    }
+
+    public function updatePaymentMethod(Request $request, $id)
+    {
+        $paymentMethod = PaymentMethod::findOrFail($id);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $paymentMethod->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment method updated successfully',
+            'data' => $paymentMethod
+        ]);
+    }
+
+    public function destroyPaymentMethod($id)
+    {
+        $paymentMethod = PaymentMethod::findOrFail($id);
+        $paymentMethod->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Payment method deleted successfully'
+        ]);
     }
 
     /**

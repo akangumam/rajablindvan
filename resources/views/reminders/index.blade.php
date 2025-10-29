@@ -1,5 +1,5 @@
 @extends('layouts.drivvo')
-@section('title', 'Pengingat')
+@section('title', 'Reminders')
 @section('content')
 
 <style>
@@ -238,7 +238,7 @@
                 @if(isset($selectedVehicle))
                     {{ $selectedVehicle->name }}
                 @else
-                    Pilih Kendaraan
+                    Select Vehicle
                 @endif
             </span>
             <i class="fas fa-chevron-down" style="margin-left: auto; font-size: 12px;"></i>
@@ -250,7 +250,7 @@
         <div class="reminder-breadcrumb">
             <a href="{{ route('dashboard') }}">{{ $selectedVehicle->name }}</a>
             <i class="fas fa-chevron-right" style="font-size: 10px;"></i>
-            <span>Pengingat</span>
+            <span>Reminders</span>
         </div>
     @endif
 
@@ -258,11 +258,11 @@
     <div class="page-header">
         <h1 class="page-title">
             <i class="fas fa-bell"></i>
-            Pengingat
+            Reminders
         </h1>
         @if(isset($selectedVehicle))
             <a href="{{ route('reminders.create', ['vehicle' => $selectedVehicle->id]) }}" class="btn-add">
-                TAMBAH BARU
+                ADD NEW
             </a>
         @endif
     </div>
@@ -282,7 +282,7 @@
                 <i class="fas fa-bell"></i>
             </div>
             <div class="empty-state-text">
-                Pilih kendaraan untuk melihat pengingat
+                Select Vehicle to view reminders
             </div>
         </div>
     @elseif(isset($reminders) && $reminders->count() > 0)
@@ -300,7 +300,7 @@
                     </div>
                     <div>
                         @if($reminder->is_completed)
-                            <span class="reminder-badge completed">Selesai</span>
+                            <span class="reminder-badge completed">End</span>
                         @else
                             <span class="reminder-badge pending">Pending</span>
                         @endif
@@ -319,10 +319,10 @@
                 <i class="fas fa-bell"></i>
             </div>
             <div class="empty-state-text">
-                Anda tidak punya pengingat
+                you have no reminders
             </div>
             <a href="{{ route('reminders.create', ['vehicle' => $selectedVehicle->id]) }}" class="btn-empty-action">
-                TAMBAHKAN PENGINGAT BARU
+                ADD NEW REMINDER
             </a>
         </div>
     @endif
@@ -333,7 +333,7 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
         <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
             <div class="modal-header border-0 pb-2" style="padding: 20px 24px 10px 24px;">
-                <h5 class="modal-title fw-semibold" id="vehicleReminderModalLabel" style="font-size: 18px; color: #333;">Pilih Kendaraan</h5>
+                <h5 class="modal-title fw-semibold" id="vehicleReminderModalLabel" style="font-size: 18px; color: #333;">Select Vehicle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body pt-0" style="padding: 10px 24px 20px 24px; max-height: 400px; overflow-y: auto;">
@@ -368,7 +368,7 @@
                 <div class="d-grid gap-2 w-100">
                     <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('vehicles.create') }}'" 
                             style="background: #667eea; border: none; padding: 12px; font-weight: 600; border-radius: 10px;">
-                        <i class="fas fa-plus me-2"></i>TAMBAH KENDARAAN BARU
+                        <i class="fas fa-plus me-2"></i>Add New Vehicles
                     </button>
                 </div>
             </div>
@@ -377,3 +377,31 @@
 </div>
 
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

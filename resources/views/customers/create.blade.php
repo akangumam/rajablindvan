@@ -1,5 +1,5 @@
 @extends('layouts.drivvo-form', [
-    'pageTitle' => 'Tambah Pengguna',
+    'pageTitle' => '{{ __('customer.add_customer') }}',
     'pageIcon' => 'fa-users',
     'formAction' => route('customers.store'),
     'formId' => 'customerForm',
@@ -8,14 +8,14 @@
 ])
 
 @section('form-fields')
-<!-- Nama Depan & Belakang -->
+<!-- Name Depan & Belakang -->
 <div class="row mb-3">
     <div class="col-md-6">
         <label for="first_name" class="form-label">
             <i class="far fa-user" style="color: #5B7C99; margin-right: 8px;"></i>
-            Nama depan
+            Name depan
         </label>
-        <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="first_name" name="first_name" value="{{ old('first_name') }}" placeholder="Nama depan" required>
+        <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="first_name" name="first_name" value="{{ old('first_name') }}" placeholder="Name depan" required>
         @error('first_name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -23,9 +23,9 @@
     <div class="col-md-6">
         <label for="last_name" class="form-label">
             <i class="far fa-user" style="color: #5B7C99; margin-right: 8px; opacity: 0;"></i>
-            Nama belakang
+            Name belakang
         </label>
-        <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="last_name" name="last_name" value="{{ old('last_name') }}" placeholder="Nama belakang">
+        <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="last_name" name="last_name" value="{{ old('last_name') }}" placeholder="Name belakang">
         @error('last_name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -34,12 +34,12 @@
 
 <!-- Email -->
 <div class="mb-3">
-    <label for="email" class="form-label">
+    <label for="Email" class="form-label">
         <i class="far fa-envelope" style="color: #5B7C99; margin-right: 8px;"></i>
         Email
     </label>
-    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="Email">
-    @error('email')
+    <input type="Email" class="form-control @error('Email') is-invalid @enderror" id="Email" name="Email" value="{{ old('Email') }}" placeholder="Email">
+    @error('Email')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
@@ -92,11 +92,11 @@
     @enderror
 </div>
 
-<!-- No. Telepon -->
+<!-- No. Phone -->
 <div class="mb-3">
     <label for="phone" class="form-label">
         <i class="fas fa-phone" style="color: #5B7C99; margin-right: 8px;"></i>
-        No. Telepon
+        No. Phone
     </label>
     <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" placeholder="08123456789" required>
     @error('phone')
@@ -104,25 +104,25 @@
     @enderror
 </div>
 
-<!-- Alamat -->
+<!-- Address -->
 <div class="mb-3">
     <label for="address" class="form-label">
         <i class="fas fa-map-marker-alt" style="color: #5B7C99; margin-right: 8px;"></i>
-        Alamat
+        Address
     </label>
-    <textarea class="form-control @error('address') is-invalid @enderror" id="address" name="address" rows="3" placeholder="Alamat lengkap">{{ old('address') }}</textarea>
+    <textarea class="form-control @error('address') is-invalid @enderror" id="address" name="address" rows="3" placeholder="Address lengkap">{{ old('address') }}</textarea>
     @error('address')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
 
-<!-- Catatan -->
+<!-- Notes -->
 <div class="mb-3">
     <label for="notes" class="form-label">
         <i class="far fa-sticky-note" style="color: #5B7C99; margin-right: 8px;"></i>
-        Catatan
+        Notes
     </label>
-    <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3" placeholder="Catatan tambahan...">{{ old('notes') }}</textarea>
+    <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3" placeholder="Notes tambahan...">{{ old('notes') }}</textarea>
     @error('notes')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
@@ -142,11 +142,11 @@
                 <div id="userTypeList">
                     <div class="user-type-item" data-value="Pengelola" style="padding: 24px 32px; cursor: pointer; border-bottom: none; background: white;">
                         <div style="font-size: 18px; font-weight: 400; color: #0d6efd; margin-bottom: 8px;">Pengelola</div>
-                        <div style="font-size: 14px; color: #6c757d; line-height: 1.5;">Ini memiliki akses ke semua kendaraan, dapat mengelola dan mendaftarkan driver baru.</div>
+                        <div style="font-size: 14px; color: #6c757d; line-height: 1.5;">Ini memiliki akses ke All Vehicle, dapat mengelola dan menListkan driver baru.</div>
                     </div>
-                    <div class="user-type-item" data-value="Sopir" style="padding: 24px 32px; cursor: pointer; border-bottom: none; background: white;">
-                        <div style="font-size: 18px; font-weight: 400; color: #0d6efd; margin-bottom: 8px;">Sopir</div>
-                        <div style="font-size: 14px; color: #6c757d; line-height: 1.5;">Pengemudi hanya memiliki akses ke kendaraan yang dipilih oleh manajer armada.</div>
+                    <div class="user-type-item" data-value="driver" style="padding: 24px 32px; cursor: pointer; border-bottom: none; background: white;">
+                        <div style="font-size: 18px; font-weight: 400; color: #0d6efd; margin-bottom: 8px;">driver</div>
+                        <div style="font-size: 14px; color: #6c757d; line-height: 1.5;">Pengemudi hanya memiliki akses ke Vehicle yang checked oleh manajer armada.</div>
                     </div>
                 </div>
             </div>
@@ -222,5 +222,28 @@ document.addEventListener('DOMContentLoaded', function() {
 @endsection
 
 @section('additional-scripts')
-<!-- Script sudah dipindahkan ke section modals -->
+<!-- Script already dipindahkan ke section modals -->
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

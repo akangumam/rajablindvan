@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Tambah Kendaraan')
+@section('title', 'Add Vehicle')
 
 @push('styles')
 <style>
@@ -79,7 +79,7 @@
             <div class="form-icon">
                 <i class="fas fa-car"></i>
             </div>
-            <h5>Kendaraan</h5>
+            <h5>Vehicle</h5>
         </div>
 
         <!-- Form Content -->
@@ -89,10 +89,10 @@
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="name" class="form-label">Nama Kendaraan <span class="text-danger">*</span></label>
+                            <label for="name" class="form-label">Vehicle Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" 
                                    id="name" name="name" value="{{ old('name') }}"
-                                   placeholder="Contoh: Mobil Keluarga">
+                                   placeholder="Example: Family Car">
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -128,7 +128,7 @@
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label for="year" class="form-label">Tahun <span class="text-danger">*</span></label>
+                            <label for="year" class="form-label">Year <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('year') is-invalid @enderror" 
                                    id="year" name="year" value="{{ old('year') }}"
                                    placeholder="2020">
@@ -140,14 +140,14 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="engine_type" class="form-label">Jenis Mesin <span class="text-danger">*</span></label>
+                            <label for="engine_type" class="form-label">Engine Type <span class="text-danger">*</span></label>
                             <select class="form-select @error('engine_type') is-invalid @enderror" 
                                     id="engine_type" name="engine_type">
-                                <option value="">Pilih Jenis Mesin</option>
-                                <option value="Gasoline" {{ old('engine_type') == 'Gasoline' ? 'selected' : '' }}>Bensin</option>
+                                <option value="">Select Engine Type</option>
+                                <option value="Gasoline" {{ old('engine_type') == 'Gasoline' ? 'selected' : '' }}>Gasoline</option>
                                 <option value="Diesel" {{ old('engine_type') == 'Diesel' ? 'selected' : '' }}>Diesel</option>
                                 <option value="Hybrid" {{ old('engine_type') == 'Hybrid' ? 'selected' : '' }}>Hybrid</option>
-                                <option value="Electric" {{ old('engine_type') == 'Electric' ? 'selected' : '' }}>Listrik</option>
+                                <option value="Electric" {{ old('engine_type') == 'Electric' ? 'selected' : '' }}>Electric</option>
                             </select>
                             @error('engine_type')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -157,7 +157,7 @@
                             <label for="transmission" class="form-label">Transmisi <span class="text-danger">*</span></label>
                             <select class="form-select @error('transmission') is-invalid @enderror" 
                                     id="transmission" name="transmission">
-                                <option value="">Pilih Transmisi</option>
+                                <option value="">Select Transmisi</option>
                                 <option value="Manual" {{ old('transmission') == 'Manual' ? 'selected' : '' }}>Manual</option>
                                 <option value="Automatic" {{ old('transmission') == 'Automatic' ? 'selected' : '' }}>Otomatis</option>
                                 <option value="CVT" {{ old('transmission') == 'CVT' ? 'selected' : '' }}>CVT</option>
@@ -179,7 +179,7 @@
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label for="odometer" class="form-label">Odometer Saat Ini (KM) <span class="text-danger">*</span></label>
+                            <label for="odometer" class="form-label">Current Odometer (KM) <span class="text-danger">*</span></label>
                             <input type="number" class="form-control @error('odometer') is-invalid @enderror" 
                                    id="odometer" name="odometer" value="{{ old('odometer') }}"
                                    step="0.1" min="0" placeholder="50000">
@@ -199,20 +199,20 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="notes" class="form-label">Catatan</label>
+                        <label for="notes" class="form-label">Notes</label>
                         <textarea class="form-control @error('notes') is-invalid @enderror" 
                                   id="notes" name="notes" rows="3" 
-                                  placeholder="Catatan tambahan tentang kendaraan...">{{ old('notes') }}</textarea>
+                                  placeholder="Notes tambahan about vehicle...">{{ old('notes') }}</textarea>
                         @error('notes')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('vehicles.index') }}" class="btn btn-secondary">Batal</a>
+                        <a href="{{ route('vehicles.index') }}" class="btn btn-secondary">CANCEL</a>
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-circle me-1"></i>
-                            Simpan Kendaraan
+                            Save Vehicle
                         </button>
                     </div>
                 </form>
@@ -232,19 +232,19 @@
                 <ul class="list-unstyled small text-muted">
                     <li class="mb-2">
                         <i class="bi bi-check text-success me-2"></i>
-                        Gunakan nama yang mudah diingat untuk kendaraan Anda
+                        Use an easy to remember name for your vehicle
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-check text-success me-2"></i>
-                        Pastikan plat nomor diisi dengan benar dan unik
+                        Make sure the license plate is filled correctly and unique
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-check text-success me-2"></i>
-                        Odometer awal penting untuk tracking yang akurat
+                        Initial odometer is important for accurate tracking
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-check text-success me-2"></i>
-                        Kapasitas tangki membantu perhitungan konsumsi BBM
+                        Tank capacity helps calculate consumption BBM
                     </li>
                 </ul>
             </div>
@@ -252,3 +252,30 @@
     </div>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Pengaturan - Satuan')
+@section('title', 'Settings - Units')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -11,18 +11,18 @@
                 <div class="card-header bg-white py-3">
                     <h5 class="mb-0">
                         <i class="bi bi-gear-fill text-primary me-2"></i>
-                        Pengaturan
+                        Settings
                     </h5>
                 </div>
                 <div class="list-group list-group-flush">
-                    <!-- Sub-menu Pengaturan -->
+                    <!-- Settings Sub-menu -->
                     <a href="{{ route('settings.units') }}" class="list-group-item list-group-item-action ps-4 active">
                         <i class="bi bi-speedometer2 text-primary me-2"></i>
-                        Satuan
+                        Units
                     </a>
                     <a href="{{ route('settings.reminders') }}" class="list-group-item list-group-item-action ps-4">
                         <i class="bi bi-bell text-muted me-2"></i>
-                        Pengingat
+                        Reminders
                     </a>
                     <a href="{{ route('settings.format') }}" class="list-group-item list-group-item-action ps-4">
                         <i class="bi bi-calendar3 text-muted me-2"></i>
@@ -34,47 +34,47 @@
                     
                     <a href="{{ route('settings.account') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-person-circle text-muted me-2"></i>
-                        Akun saya
+                        My Account
                     </a>
                     <a href="{{ route('settings.index') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-file-earmark-text text-muted me-2"></i>
-                        File dan penyimpanan
+                        Files and Storage
                     </a>
                     <a href="{{ route('settings.fuel-types') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-fuel-pump text-muted me-2"></i>
-                        Bahan bakar
+                        Fuel Types
                     </a>
                     <a href="{{ route('settings.fuel-stations') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-shop text-muted me-2"></i>
-                        Spbu
+                        Gas Stations
                     </a>
                     <a href="{{ route('settings.locations') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-geo-alt text-muted me-2"></i>
-                        Lokasi
+                        Locations
                     </a>
                     <a href="{{ route('settings.service-types') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-wrench text-muted me-2"></i>
-                        Jenis layanan
+                        Service Types
                     </a>
                     <a href="{{ route('settings.expense-types') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-wallet2 text-muted me-2"></i>
-                        Jenis biaya
+                        Expense Types
                     </a>
                     <a href="{{ route('settings.income-types') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-cash-stack text-muted me-2"></i>
-                        Jenis pendapatan
+                        Income Types
                     </a>
                     <a href="{{ route('settings.reasons') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-briefcase text-muted me-2"></i>
-                        Alasan
+                        Reasons
                     </a>
                     <a href="{{ route('settings.payment-methods') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-credit-card text-muted me-2"></i>
-                        Cara Pembayaran
+                        Payment Methods
                     </a>
                     <a href="{{ route('settings.forms') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-file-earmark text-muted me-2"></i>
-                        Formulir
+                        Forms
                     </a>
                     <a href="{{ route('settings.contacts') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-envelope text-muted me-2"></i>
@@ -88,16 +88,16 @@
         <div class="col-md-9">
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">Satuan</h5>
+                    <h5 class="mb-0">Units</h5>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="#">
                         @csrf
                         
-                        <!-- Satuan unit jarak -->
+                        <!-- Distance Unit -->
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Satuan unit jarak (km / Miles)</label>
-                            <p class="text-muted small">Anda harus mengedit kendaraan anda untuk mengubah pengaturan ini.</p>
+                            <label class="form-label fw-bold">Distance Unit (km / Miles)</label>
+                            <p class="text-muted small">You must edit your vehicle to change these settings.</p>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="distance_unit" id="distanceKm" value="km" checked>
                                 <label class="form-check-label" for="distanceKm">
@@ -114,9 +114,9 @@
 
                         <hr>
 
-                        <!-- Bahan bakar cair -->
+                        <!-- Liquid Fuel -->
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Bahan bakar cair</label>
+                            <label class="form-label fw-bold">Liquid Fuel</label>
                             <select class="form-select" name="liquid_fuel_unit">
                                 <option value="liter" selected>Liter (L)</option>
                                 <option value="gallon">Gallon (gal)</option>
@@ -128,9 +128,9 @@
 
                         <hr>
 
-                        <!-- Bahan bakar gas -->
+                        <!-- Gas Fuel -->
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Bahan bakar gas</label>
+                            <label class="form-label fw-bold">Gas Fuel</label>
                             <select class="form-select" name="gas_fuel_unit">
                                 <option value="m3" selected>Meter kubik (M³)</option>
                                 <option value="kg">Kilogram (kg)</option>
@@ -143,9 +143,9 @@
 
                         <hr>
 
-                        <!-- Efisiensi bahan bakar -->
+                        <!-- Fuel Efficiency -->
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Efisiensi bahan bakar</label>
+                            <label class="form-label fw-bold">Fuel Efficiency</label>
                             <select class="form-select" name="fuel_efficiency_unit">
                                 <option value="km_per_liter" selected>Km/Liter</option>
                                 <option value="liter_per_100km">Liter/100km</option>
@@ -158,20 +158,20 @@
 
                         <hr>
 
-                        <!-- Tampilkan rata-rata -->
+                        <!-- Show Average -->
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Tampilkan rata-rata di pengisian bahan bakar terakhir</label>
+                            <label class="form-label fw-bold">Show average in last fuel fill</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="showAverage" name="show_average" checked>
                                 <label class="form-check-label" for="showAverage">
-                                    Aktifkan
+                                    Activekan
                                 </label>
                             </div>
                         </div>
 
                         <div class="mt-4">
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save me-2"></i>Simpan Perubahan
+                                <i class="bi bi-save me-2"></i>Save Changes
                             </button>
                         </div>
                     </form>
@@ -192,3 +192,33 @@
 }
 </style>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

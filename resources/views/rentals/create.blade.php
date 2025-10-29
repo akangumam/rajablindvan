@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Tambah Rental')
+@section('title', 'Add Rental')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,10 +10,10 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="fas fa-calendar-plus text-primary me-2"></i>
-                        Tambah Rental Baru
+                        Add New Rental
                     </h5>
                     <a href="{{ route('rentals.index') }}" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-arrow-left me-1"></i>Kembali
+                        <i class="fas fa-arrow-left me-1"></i>Back
                     </a>
                 </div>
                 <div class="card-body">
@@ -24,7 +24,7 @@
                             <!-- Customer & Vehicle -->
                             <div class="col-md-6">
                                 <h6 class="text-primary mb-3">
-                                    <i class="fas fa-users me-2"></i>Customer & Kendaraan
+                                    <i class="fas fa-users me-2"></i>Customer & Vehicle
                                 </h6>
                                 
                                 <div class="mb-3">
@@ -35,7 +35,7 @@
                                             id="customer_id" 
                                             name="customer_id" 
                                             required>
-                                        <option value="">Pilih Customer</option>
+                                        <option value="">Select Customer</option>
                                         @foreach($customers as $customer)
                                             <option value="{{ $customer->id }}" 
                                                     {{ (old('customer_id', $selectedCustomer?->id) == $customer->id) ? 'selected' : '' }}
@@ -47,7 +47,7 @@
                                     </select>
                                     <div id="customerInfo" class="mt-2 p-2 bg-light rounded d-none">
                                         <small>
-                                            <strong>Telepon:</strong> <span id="customerPhone"></span><br>
+                                            <strong>Phone:</strong> <span id="customerPhone"></span><br>
                                             <strong>No. Identitas:</strong> <span id="customerIdNumber"></span>
                                         </small>
                                     </div>
@@ -58,13 +58,13 @@
 
                                 <div class="mb-3">
                                     <label for="vehicle_id" class="form-label">
-                                        Kendaraan <span class="text-danger">*</span>
+                                        Vehicle <span class="text-danger">*</span>
                                     </label>
                                     <select class="form-select @error('vehicle_id') is-invalid @enderror" 
                                             id="vehicle_id" 
                                             name="vehicle_id" 
                                             required>
-                                        <option value="">Pilih Kendaraan</option>
+                                        <option value="">Select Vehicle</option>
                                         @foreach($vehicles as $vehicle)
                                             <option value="{{ $vehicle->id }}" 
                                                     {{ (old('vehicle_id', $selectedVehicle?->id) == $vehicle->id) ? 'selected' : '' }}
@@ -78,7 +78,7 @@
                                     <div id="vehicleInfo" class="mt-2 p-2 bg-light rounded d-none">
                                         <small>
                                             <strong>Plat Nomor:</strong> <span id="vehicleLicense"></span><br>
-                                            <strong>Odometer Terakhir:</strong> <span id="vehicleOdometer"></span> km<br>
+                                            <strong>Latest Odometer:</strong> <span id="vehicleOdometer"></span> km<br>
                                             <strong>Status:</strong> <span id="vehicleStatus"></span>
                                         </small>
                                     </div>
@@ -98,7 +98,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="start_date" class="form-label">
-                                                Tanggal Mulai <span class="text-danger">*</span>
+                                                Date Start <span class="text-danger">*</span>
                                             </label>
                                             <input type="date" 
                                                    class="form-control @error('start_date') is-invalid @enderror" 
@@ -115,7 +115,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="end_date" class="form-label">
-                                                Tanggal Selesai <span class="text-danger">*</span>
+                                                Date End <span class="text-danger">*</span>
                                             </label>
                                             <input type="date" 
                                                    class="form-control @error('end_date') is-invalid @enderror" 
@@ -140,13 +140,13 @@
                                             name="rental_type" 
                                             required>
                                         <option value="daily" {{ old('rental_type', 'daily') == 'daily' ? 'selected' : '' }}>
-                                            Harian (Per Hari)
+                                            Daily (Per Hari)
                                         </option>
                                         <option value="weekly" {{ old('rental_type') == 'weekly' ? 'selected' : '' }}>
-                                            Mingguan (Per Minggu)
+                                            Weekly (Per Minggu)
                                         </option>
                                         <option value="monthly" {{ old('rental_type') == 'monthly' ? 'selected' : '' }}>
-                                            Bulanan (Per Bulan)
+                                            Monthly (Per Bulan)
                                         </option>
                                     </select>
                                     @error('rental_type')
@@ -157,14 +157,14 @@
                                     <div class="alert alert-light border mt-2" id="rentalTypeHint">
                                         <small class="text-muted">
                                             <i class="fas fa-info-circle me-1"></i>
-                                            <span id="rentalTypeHintText">Pilih tanggal mulai dan selesai sesuai kebutuhan</span>
+                                            <span id="rentalTypeHintText">Select Date Start dan End sesuai kebutuhan</span>
                                         </small>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <div class="alert alert-info" id="durationInfo" style="display: none;">
-                                        <strong>Durasi:</strong> <span id="durationDays">0</span> hari
+                                        <strong>Duration:</strong> <span id="durationDays">0</span> hari
                                     </div>
                                 </div>
 
@@ -172,7 +172,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="daily_rate" class="form-label">
-                                                <span id="rateLabel">Tarif per Hari</span> (Rp) <span class="text-danger">*</span>
+                                                <span id="rateLabel">Rate per Day</span> (Rp) <span class="text-danger">*</span>
                                             </label>
                                             <input type="number" 
                                                    class="form-control @error('daily_rate') is-invalid @enderror" 
@@ -191,7 +191,7 @@
                                         <!-- Weekly Rate (hidden by default) -->
                                         <div class="mb-3" id="weeklyRateField" style="display: none;">
                                             <label for="weekly_rate" class="form-label">
-                                                Tarif per Minggu (Rp)
+                                                Rate per Week (Rp)
                                             </label>
                                             <input type="number" 
                                                    class="form-control @error('weekly_rate') is-invalid @enderror" 
@@ -209,7 +209,7 @@
                                         <!-- Monthly Rate (hidden by default) -->
                                         <div class="mb-3" id="monthlyRateField" style="display: none;">
                                             <label for="monthly_rate" class="form-label">
-                                                Tarif per Bulan (Rp)
+                                                Rate per Month (Rp)
                                             </label>
                                             <input type="number" 
                                                    class="form-control @error('monthly_rate') is-invalid @enderror" 
@@ -253,34 +253,34 @@
                             </div>
                         </div>
 
-                        <!-- Lokasi & Catatan -->
+                        <!-- Locations & Notes -->
                         <div class="row">
                             <div class="col-md-6">
                                 <h6 class="text-warning mb-3">
-                                    <i class="fas fa-map-marker-alt me-2"></i>Lokasi
+                                    <i class="fas fa-map-marker-alt me-2"></i>Locations
                                 </h6>
                                 
                                 <div class="mb-3">
-                                    <label for="pickup_location" class="form-label">Lokasi Pengambilan</label>
+                                    <label for="pickup_location" class="form-label">Locations Pengambilan</label>
                                     <input type="text" 
                                            class="form-control @error('pickup_location') is-invalid @enderror" 
                                            id="pickup_location" 
                                            name="pickup_location" 
                                            value="{{ old('pickup_location') }}" 
-                                           placeholder="Alamat pengambilan kendaraan">
+                                           placeholder="Address pengambilan Vehicle">
                                     @error('pickup_location')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="return_location" class="form-label">Lokasi Pengembalian</label>
+                                    <label for="return_location" class="form-label">Locations Pengembalian</label>
                                     <input type="text" 
                                            class="form-control @error('return_location') is-invalid @enderror" 
                                            id="return_location" 
                                            name="return_location" 
                                            value="{{ old('return_location') }}" 
-                                           placeholder="Alamat pengembalian kendaraan">
+                                           placeholder="Address pengembalian Vehicle">
                                     @error('return_location')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -289,16 +289,16 @@
 
                             <div class="col-md-6">
                                 <h6 class="text-info mb-3">
-                                    <i class="fas fa-sticky-note me-2"></i>Catatan
+                                    <i class="fas fa-sticky-note me-2"></i>Notes
                                 </h6>
                                 
                                 <div class="mb-3">
-                                    <label for="notes" class="form-label">Catatan Rental</label>
+                                    <label for="notes" class="form-label">Notes Rental</label>
                                     <textarea class="form-control @error('notes') is-invalid @enderror" 
                                               id="notes" 
                                               name="notes" 
                                               rows="5" 
-                                              placeholder="Catatan khusus untuk rental ini...">{{ old('notes') }}</textarea>
+                                              placeholder="Notes khusus untuk rental ini...">{{ old('notes') }}</textarea>
                                     @error('notes')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -310,10 +310,10 @@
                             <div class="col-12">
                                 <div class="d-flex justify-content-between">
                                     <a href="{{ route('rentals.index') }}" class="btn btn-secondary">
-                                        <i class="fas fa-times me-1"></i>Batal
+                                        <i class="fas fa-times me-1"></i>CANCEL
                                     </a>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-1"></i>Simpan Rental
+                                        <i class="fas fa-save me-1"></i>Save Rental
                                     </button>
                                 </div>
                             </div>
@@ -356,11 +356,11 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('vehicleLicense').textContent = selectedOption.dataset.license;
             document.getElementById('vehicleOdometer').textContent = new Intl.NumberFormat().format(selectedOption.dataset.odometer);
             
-            const statusSpan = document.getElementById('vehicleStatus');
+            const StatusSpan = document.getElementById('vehicleStatus');
             if (selectedOption.dataset.available === 'true') {
-                statusSpan.innerHTML = '<span class="text-success">Tersedia</span>';
+                StatusSpan.innerHTML = '<span class="text-success">Available</span>';
             } else {
-                statusSpan.innerHTML = '<span class="text-danger">Tidak Tersedia</span>';
+                StatusSpan.innerHTML = '<span class="text-danger">Tidak Available</span>';
             }
             
             vehicleInfo.classList.remove('d-none');
@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const suggestedEndDate = new Date(startDate);
                 suggestedEndDate.setDate(startDate.getDate() + (suggestedWeeks * 7) - 1);
                 
-                if (confirm(`Untuk rental mingguan, durasi sebaiknya kelipatan 7 hari.\nApakah Anda ingin mengubah tanggal selesai ke ${suggestedEndDate.toLocaleDateString('id-ID')}?`)) {
+                if (confirm(`For weekly rentals, duration should be multiples of 7 days.\nDo you want to change the End Date to ${suggestedEndDate.toLocaleDateString('id-ID')}?`)) {
                     this.value = suggestedEndDate.toISOString().split('T')[0];
                 }
             } else if (rentalType === 'monthly' && duration % 30 !== 0) {
@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const suggestedEndDate = new Date(startDate);
                 suggestedEndDate.setDate(startDate.getDate() + (suggestedMonths * 30) - 1);
                 
-                if (confirm(`Untuk rental bulanan, durasi sebaiknya kelipatan 30 hari.\nApakah Anda ingin mengubah tanggal selesai ke ${suggestedEndDate.toLocaleDateString('id-ID')}?`)) {
+                if (confirm(`For monthly rentals, duration should be multiples of 30 days.\nDo you want to change the End Date to ${suggestedEndDate.toLocaleDateString('id-ID')}?`)) {
                     this.value = suggestedEndDate.toISOString().split('T')[0];
                 }
             }
@@ -483,9 +483,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update label and show appropriate fields
         switch(rentalType) {
             case 'daily':
-                rateLabel.textContent = 'Tarif per Hari';
+                rateLabel.textContent = 'Rate per Day';
                 dailyRateField.querySelector('input').required = true;
-                rentalTypeHintText.textContent = 'Pilih tanggal mulai dan selesai sesuai kebutuhan';
+                rentalTypeHintText.textContent = 'Select Date Start dan End sesuai kebutuhan';
                 
                 // Reset end date constraints for daily rental
                 if (startDateInput.value) {
@@ -497,11 +497,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
                 
             case 'weekly':
-                rateLabel.textContent = 'Tarif per Minggu';
+                rateLabel.textContent = 'Rate per Week';
                 dailyRateField.style.display = 'block';
                 weeklyRateField.style.display = 'block';
                 weeklyRateField.querySelector('input').required = true;
-                rentalTypeHintText.textContent = 'Setelah pilih tanggal mulai, tanggal selesai akan otomatis diset 1 minggu kemudian';
+                rentalTypeHintText.textContent = 'After selecting Start Date, End Date will be automatically set 1 week later';
                 
                 // Auto-adjust dates for weekly rental
                 if (startDateInput.value) {
@@ -514,11 +514,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
                 
             case 'monthly':
-                rateLabel.textContent = 'Tarif per Bulan';
+                rateLabel.textContent = 'Rate per Month';
                 dailyRateField.style.display = 'block';
                 monthlyRateField.style.display = 'block';
                 monthlyRateField.querySelector('input').required = true;
-                rentalTypeHintText.textContent = 'Setelah pilih tanggal mulai, tanggal selesai akan otomatis diset 1 bulan kemudian';
+                rentalTypeHintText.textContent = 'After selecting Start Date, End Date will be automatically set 1 month later';
                 
                 // Auto-adjust dates for monthly rental
                 if (startDateInput.value) {
@@ -611,3 +611,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

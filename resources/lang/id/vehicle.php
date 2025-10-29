@@ -106,4 +106,56 @@ return [
     'select_option' => 'Pilih...',
     'save_vehicle' => 'Simpan Kendaraan',
     'error_occurred' => 'Terjadi Kesalahan!',
+
+    // Technical Specifications
+    'technical_specifications' => 'Spesifikasi Teknis',
+    'transmission' => 'Transmisi',
+    'transmission_manual' => 'Manual',
+    'transmission_automatic' => 'Otomatis',
+    'transmission_cvt' => 'CVT',
+    'fuel_tank_capacity' => 'Kapasitas Tangki (Liter)',
+    'initial_odometer' => 'Odometer Awal (km)',
+    'dual_fuel_tanks' => 'Kendaraan memiliki dua tangki',
+    'dual_fuel_tanks_hint' => 'Centang jika kendaraan dilengkapi dengan tangki bahan bakar ganda',
+    'distance_unit' => 'Unit Jarak',
+    'kilometer' => 'Kilometer (km)',
+    'mile' => 'Mil (mil)',
+    
+    // Vehicle Identity
+    'vehicle_identity' => 'Identitas Kendaraan',
+    'engine_number' => 'Nomor Mesin',
+    'engine_number_placeholder' => 'Nomor mesin kendaraan',
+    'chassis_number' => 'Nomor Rangka/VIN',
+    'chassis_number_placeholder' => 'Nomor rangka kendaraan',
+    'registration_date' => 'Tanggal Registrasi',
+    'registration_date_placeholder' => 'Tanggal registrasi kendaraan',
+    
+    // Purchase Information
+    'purchase_information' => 'Informasi Pembelian',
+    'purchase_date' => 'Tanggal Pembelian',
+    'purchase_price' => 'Harga Pembelian',
+    'purchase_price_placeholder' => 'Harga pembelian kendaraan',
+    'dealer' => 'Dealer/Penjual',
+    'dealer_placeholder' => 'Nama dealer atau penjual',
+    
+    // Insurance Information
+    'insurance_information' => 'Informasi Asuransi',
+    'insurance_company' => 'Perusahaan Asuransi',
+    'insurance_company_placeholder' => 'Nama perusahaan asuransi',
+    'policy_number' => 'Nomor Polis',
+    'policy_number_placeholder' => 'Nomor polis asuransi',
+    'insurance_expiry' => 'Tanggal Berakhir Asuransi',
+    
+    // Additional Information
+    'additional_information' => 'Informasi Tambahan',
+    'notes_placeholder' => 'Catatan tambahan tentang kendaraan',
+
+    // Additional keys
+    'leave_blank_auto' => 'Kosongkan untuk generate otomatis',
+    'type_brand_manual' => 'Ketik nama brand secara manual',
+    'active_vehicle_hint' => 'Kendaraan aktif dapat digunakan dalam transaksi',
+    'manage_vehicles' => 'Kelola Kendaraan',
+    
+    // Example texts
+    'license_plate_example' => 'Contoh: B 1234 ABC',
 ];

@@ -9,32 +9,47 @@ class Maintenance extends Model
 {
     protected $fillable = [
         'vehicle_id',
+        'user_id',
         'maintenance_date',
+        'service_date',
+        'service_time',
         'odometer',
         'type',
+        'service_type',
         'category',
         'description',
         'workshop',
+        'place',
         'cost',
+        'total_cost',
+        'payment_method',
         'next_maintenance_date',
         'next_maintenance_odometer',
         'parts_replaced',
         'status',
-        'notes'
+        'notes',
+        'attachment'
     ];
 
     protected $casts = [
         'maintenance_date' => 'date',
+        'service_date' => 'date',
         'next_maintenance_date' => 'date',
         'odometer' => 'decimal:2',
         'next_maintenance_odometer' => 'decimal:2',
-        'cost' => 'decimal:2'
+        'cost' => 'decimal:2',
+        'total_cost' => 'decimal:2'
     ];
 
     // Relationships
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     // Scopes

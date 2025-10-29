@@ -1,5 +1,5 @@
 @extends('layouts.drivvo-form', [
-    'pageTitle' => 'Edit Pengguna',
+    'pageTitle' => '{{ __('customer.edit_customer') }}',
     'pageIcon' => 'fa-users',
     'formAction' => route('customers.update', $customer),
     'formId' => 'customerForm',
@@ -10,14 +10,14 @@
 @section('form-fields')
 @method('PUT')
 
-<!-- Nama Depan & Belakang -->
+<!-- Name Depan & Belakang -->
 <div class="row mb-3">
     <div class="col-md-6">
         <label for="first_name" class="form-label">
             <i class="far fa-user" style="color: #5B7C99; margin-right: 8px;"></i>
-            Nama depan
+            Name depan
         </label>
-        <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="first_name" name="first_name" value="{{ old('first_name', $customer->first_name) }}" placeholder="Nama depan" required>
+        <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="first_name" name="first_name" value="{{ old('first_name', $customer->first_name) }}" placeholder="Name depan" required>
         @error('first_name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -25,9 +25,9 @@
     <div class="col-md-6">
         <label for="last_name" class="form-label">
             <i class="far fa-user" style="color: #5B7C99; margin-right: 8px; opacity: 0;"></i>
-            Nama belakang
+            Name belakang
         </label>
-        <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="last_name" name="last_name" value="{{ old('last_name', $customer->last_name) }}" placeholder="Nama belakang">
+        <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="last_name" name="last_name" value="{{ old('last_name', $customer->last_name) }}" placeholder="Name belakang">
         @error('last_name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -36,12 +36,12 @@
 
 <!-- Email -->
 <div class="mb-3">
-    <label for="email" class="form-label">
+    <label for="Email" class="form-label">
         <i class="far fa-envelope" style="color: #5B7C99; margin-right: 8px;"></i>
         Email
     </label>
-    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $customer->email) }}" placeholder="Email">
-    @error('email')
+    <input type="Email" class="form-control @error('Email') is-invalid @enderror" id="Email" name="Email" value="{{ old('Email', $customer->Email) }}" placeholder="Email">
+    @error('Email')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
@@ -53,7 +53,7 @@
         Tipe Pengguna
     </label>
     <input type="text" class="form-control" id="userTypeInput" value="{{ $customer->user_type ?? 'Customer' }}" readonly style="background-color: #f8f9fa; cursor: not-allowed;">
-    <small class="text-muted">Tipe pengguna tidak dapat diubah setelah dibuat</small>
+    <small class="text-muted">Tipe pengguna cannot be changed after creation</small>
 </div>
 
 <!-- Izin mengemudi & Kategori SIM -->
@@ -92,11 +92,11 @@
     @enderror
 </div>
 
-<!-- No. Telepon -->
+<!-- No. Phone -->
 <div class="mb-3">
     <label for="phone" class="form-label">
         <i class="fas fa-phone" style="color: #5B7C99; margin-right: 8px;"></i>
-        No. Telepon
+        No. Phone
     </label>
     <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $customer->phone) }}" placeholder="08123456789" required>
     @error('phone')
@@ -104,27 +104,56 @@
     @enderror
 </div>
 
-<!-- Alamat -->
+<!-- Address -->
 <div class="mb-3">
     <label for="address" class="form-label">
         <i class="fas fa-map-marker-alt" style="color: #5B7C99; margin-right: 8px;"></i>
-        Alamat
+        Address
     </label>
-    <textarea class="form-control @error('address') is-invalid @enderror" id="address" name="address" rows="3" placeholder="Alamat lengkap">{{ old('address', $customer->address) }}</textarea>
+    <textarea class="form-control @error('address') is-invalid @enderror" id="address" name="address" rows="3" placeholder="Address lengkap">{{ old('address', $customer->address) }}</textarea>
     @error('address')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
 
-<!-- Catatan -->
+<!-- Notes -->
 <div class="mb-3">
     <label for="notes" class="form-label">
         <i class="far fa-sticky-note" style="color: #5B7C99; margin-right: 8px;"></i>
-        Catatan
+        Notes
     </label>
-    <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3" placeholder="Catatan tambahan...">{{ old('notes', $customer->notes) }}</textarea>
+    <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3" placeholder="Notes tambahan...">{{ old('notes', $customer->notes) }}</textarea>
     @error('notes')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Laporan Rental')
+@section('title', 'Rental Report')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,7 +10,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">
                     <i class="fas fa-calendar-alt text-primary me-2"></i>
-                    Laporan Rental
+                    Report Rental
                 </h2>
                 <div class="d-flex gap-2">
                     <a href="{{ route('reports.rentals.excel') }}{{ request()->getQueryString() ? '?' . request()->getQueryString() : '' }}" class="btn btn-success">
@@ -21,7 +21,7 @@
                         <i class="fas fa-file-pdf me-1"></i>Export PDF
                     </a>
                     <a href="{{ route('reports.dashboard') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-1"></i>Kembali
+                        <i class="fas fa-arrow-left me-1"></i>Back
                     </a>
                 </div>
             </div>
@@ -35,30 +35,30 @@
                 <div class="card-body">
                     <form method="GET" action="{{ route('reports.rentals') }}" class="row g-3">
                         <div class="col-md-3">
-                            <label for="start_date" class="form-label">Tanggal Mulai</label>
+                            <label for="start_date" class="form-label">Date Start</label>
                             <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $startDate }}">
                         </div>
                         <div class="col-md-3">
-                            <label for="end_date" class="form-label">Tanggal Selesai</label>
+                            <label for="end_date" class="form-label">Date End</label>
                             <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $endDate }}">
                         </div>
                         <div class="col-md-2">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-select" id="status" name="status">
-                                <option value="all" {{ $status == 'all' ? 'selected' : '' }}>Semua Status</option>
-                                <option value="reserved" {{ $status == 'reserved' ? 'selected' : '' }}>Reservasi</option>
-                                <option value="active" {{ $status == 'active' ? 'selected' : '' }}>Aktif</option>
-                                <option value="completed" {{ $status == 'completed' ? 'selected' : '' }}>Selesai</option>
-                                <option value="cancelled" {{ $status == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
+                            <label for="Status" class="form-label">Status</label>
+                            <select class="form-select" id="Status" name="Status">
+                                <option value="all" {{ $Status == 'all' ? 'selected' : '' }}>All Status</option>
+                                <option value="reserved" {{ $Status == 'reserved' ? 'selected' : '' }}>Reservasi</option>
+                                <option value="active" {{ $Status == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="completed" {{ $Status == 'completed' ? 'selected' : '' }}>End</option>
+                                <option value="cancelled" {{ $Status == 'cancelled' ? 'selected' : '' }}>DiCANCELkan</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <label for="rental_type" class="form-label">Tipe Rental</label>
                             <select class="form-select" id="rental_type" name="rental_type">
-                                <option value="all" {{ $rentalType == 'all' ? 'selected' : '' }}>Semua Tipe</option>
-                                <option value="daily" {{ $rentalType == 'daily' ? 'selected' : '' }}>Harian</option>
-                                <option value="weekly" {{ $rentalType == 'weekly' ? 'selected' : '' }}>Mingguan</option>
-                                <option value="monthly" {{ $rentalType == 'monthly' ? 'selected' : '' }}>Bulanan</option>
+                                <option value="all" {{ $rentalType == 'all' ? 'selected' : '' }}>All Tipe</option>
+                                <option value="daily" {{ $rentalType == 'daily' ? 'selected' : '' }}>Daily</option>
+                                <option value="weekly" {{ $rentalType == 'weekly' ? 'selected' : '' }}>Weekly</option>
+                                <option value="monthly" {{ $rentalType == 'monthly' ? 'selected' : '' }}>Monthly</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -112,8 +112,8 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Rata-rata Durasi</div>
-                            <div class="h5 mb-0 font-weight-bold">{{ number_format($averageDuration, 1) }} hari</div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Average Duration</div>
+                            <div class="h5 mb-0 font-weight-bold">{{ number_format($averageDuration, 1) }} days</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-clock fa-2x text-white-50"></i>
@@ -128,7 +128,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Rata-rata Revenue</div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Average Revenue</div>
                             <div class="h5 mb-0 font-weight-bold">Rp {{ number_format($averageRevenue, 0, ',', '.') }}</div>
                         </div>
                         <div class="col-auto">
@@ -154,13 +154,13 @@
                                 <tr>
                                     <th>Kode Rental</th>
                                     <th>Customer</th>
-                                    <th>Kendaraan</th>
+                                    <th>Vehicle</th>
                                     <th>Periode</th>
                                     <th>Tipe</th>
-                                    <th>Durasi</th>
+                                    <th>Duration</th>
                                     <th>Total</th>
                                     <th>Status</th>
-                                    <th>Aksi</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -184,7 +184,7 @@
                                         @if($rental->isOverdue())
                                             <small class="text-danger">
                                                 <i class="fas fa-exclamation-triangle"></i>
-                                                Terlambat {{ $rental->getDaysOverdue() }} hari
+                                                Overdue {{ $rental->getDaysOverdue() }} hari
                                             </small>
                                         @endif
                                     </td>
@@ -192,7 +192,7 @@
                                         <span class="badge bg-secondary">{{ $rental->getRentalTypeLabel() }}</span>
                                     </td>
                                     <td>
-                                        <span class="badge bg-info">{{ $rental->duration_days }} hari</span>
+                                        <span class="badge bg-info">{{ $rental->duration_days }} days</span>
                                     </td>
                                     <td>
                                         <div class="fw-bold">Rp {{ number_format($rental->getFinalAmount(), 0, ',', '.') }}</div>
@@ -203,8 +203,8 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <span class="badge bg-{{ $rental->status_class }}">
-                                            {{ $rental->status_label }}
+                                        <span class="badge bg-{{ $rental->Status_class }}">
+                                            {{ $rental->Status_label }}
                                         </span>
                                     </td>
                                     <td>
@@ -212,7 +212,7 @@
                                             <a href="{{ route('rentals.show', $rental) }}" class="btn btn-info">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            @if($rental->status === 'reserved')
+                                            @if($rental->Status === 'reserved')
                                                 <a href="{{ route('rentals.edit', $rental) }}" class="btn btn-warning">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
@@ -224,7 +224,7 @@
                                 <tr>
                                     <td colspan="9" class="text-center text-muted py-4">
                                         <i class="fas fa-inbox fa-3x mb-3"></i><br>
-                                        Tidak ada data rental ditemukan
+                                        No data available rental ditemukan
                                     </td>
                                 </tr>
                                 @endforelse
@@ -244,3 +244,30 @@
     </div>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

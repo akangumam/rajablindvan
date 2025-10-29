@@ -9,15 +9,16 @@ class Income extends Model
 {
     protected $fillable = [
         'vehicle_id',
+        'user_id',
         'income_date',
+        'income_time',
         'odometer',
-        'category',
-        'source',
-        'description',
+        'type',
         'amount',
-        'payment_method',
-        'invoice_number',
-        'notes'
+        'notes',
+        'attachment',
+        // Keep old fields for backward compatibility
+        'description',
     ];
 
     protected $casts = [
@@ -32,10 +33,15 @@ class Income extends Model
         return $this->belongsTo(Vehicle::class);
     }
 
-    // Scopes
-    public function scopeByCategory($query, $category)
+    public function user(): BelongsTo
     {
-        return $query->where('category', $category);
+        return $this->belongsTo(User::class);
+    }
+
+    // Scopes
+    public function scopeByType($query, $type)
+    {
+        return $query->where('type', $type);
     }
 
     public function scopeByDateRange($query, $startDate, $endDate)

@@ -27,11 +27,11 @@
     }
 @endphp
 
-<!-- Tanggal dan Waktu -->
+<!-- Date dan Waktu -->
 <div class="row">
     <div class="col-md-6">
         <div class="field-group">
-            <label class="form-label">Tanggal</label>
+            <label class="form-label">Date</label>
             <input type="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
         </div>
     </div>
@@ -55,38 +55,38 @@
         <input type="number" step="0.01" name="odometer" id="odometerInput" class="form-control" 
                value="{{ old('odometer') }}" 
                min="{{ $lastOdometer }}" 
-               placeholder="Masukkan odometer saat ini" required>
+               placeholder="Enter Current Odometer" required>
         <span class="input-group-text">km</span>
     </div>
     @if($lastOdometer > 0)
-        <small class="text-muted">Odometer terakhir: {{ number_format($lastOdometer, 0, ',', '.') }} km</small>
+        <small class="text-muted">Latest Odometer: {{ number_format($lastOdometer, 0, ',', '.') }} km</small>
     @else
-        <small class="text-muted">Odometer terakhir: 0 km</small>
+        <small class="text-muted">Latest Odometer: 0 km</small>
     @endif
 </div>
 
-<!-- Jenis Bahan Bakar -->
+<!-- Type Bahan Bakar -->
 <div class="field-group">
-    <label class="form-label">Jenis bahan bakar</label>
+    <label class="form-label">Type bahan bakar</label>
     <input type="text" name="fuel_type" id="fuelTypeInput" class="form-control" 
            value="{{ old('fuel_type') }}" 
-           placeholder="Pilih jenis bahan bakar" 
+           placeholder="Select Type bahan bakar" 
            readonly 
            onclick="openFuelTypeModal()" 
            style="cursor: pointer; background: white;" required>
     <input type="hidden" id="fuelTypeValue" name="fuel_type_value">
 </div>
 
-<!-- Harga per Liter -->
+<!-- Price per Liter -->
 <div class="field-group">
-    <label class="form-label">Harga/liter</label>
+    <label class="form-label">Price/liter</label>
     <div class="input-group">
         <span class="input-group-text">Rp</span>
         <input type="number" step="0.01" name="price_per_liter" id="pricePerLiter" class="form-control" value="{{ old('price_per_liter') }}" placeholder="0">
     </div>
 </div>
 
-<!-- Total Harga -->
+<!-- Total Price -->
 <div class="field-group">
     <label class="form-label">Total</label>
     <div class="input-group">
@@ -114,17 +114,17 @@
     </div>
 </div>
 
-<!-- SPBU -->
+<!-- Gas Stations -->
 <div class="field-group">
     <label class="form-label">
         <i class="fas fa-gas-pump" style="color: #6c757d; margin-right: 8px;"></i>
-        SPBU
+        Gas Stations
     </label>
-    <input type="text" name="spbu" id="spbuInput" class="form-control"
-           value="{{ old('spbu') }}"
-           placeholder="Pilih SPBU"
+    <input type="text" name="Gas Stations" id="Gas StationsInput" class="form-control"
+           value="{{ old('Gas Stations') }}"
+           placeholder="Select Gas Stations"
            readonly
-           onclick="openSpbuModal()"
+           onclick="openGas StationsModal()"
            style="cursor: pointer; background: white;">
 </div>
 
@@ -136,45 +136,45 @@
     </label>
     <input type="text" name="driver" id="driverInput" class="form-control"
            value="{{ old('driver') }}"
-           placeholder="Pilih pengendara"
+           placeholder="Select pengendara"
            readonly
            onclick="openDriverModal()"
            style="cursor: pointer; background: white;">
 </div>
 
-<!-- Alasan -->
+<!-- Reasons -->
 <div class="field-group">
     <label class="form-label">
         <i class="fas fa-briefcase" style="color: #6c757d; margin-right: 8px;"></i>
-        Alasan (Optional)
+        Reasons (Optional)
     </label>
     <input type="text" name="reason" id="reasonInput" class="form-control"
            value="{{ old('reason') }}"
-           placeholder="Pilih alasan"
+           placeholder="Select Reasons"
            readonly
            onclick="openReasonModal()"
            style="cursor: pointer; background: white;">
 </div>
 
-<!-- Cara Pembayaran -->
+<!-- Payment Methods -->
 <div class="field-group">
     <label class="form-label">
         <i class="fas fa-credit-card" style="color: #6c757d; margin-right: 8px;"></i>
-        Cara Pembayaran (Optional)
+        Payment Methods (Optional)
     </label>
     <input type="text" name="payment_method" id="paymentMethodInput" class="form-control"
            value="{{ old('payment_method') }}"
-           placeholder="Pilih cara pembayaran"
+           placeholder="Select Payment Methods"
            readonly
            onclick="openPaymentMethodModal()"
            style="cursor: pointer; background: white;">
 </div>
 
-<!-- Pengisian bahan bakar sebelumnya terlewatkan -->
+<!-- Pengisian bahan bakar seNot yetnya terlewatkan -->
 <div class="field-group">
     <div class="form-check" style="display: flex; align-items: center; gap: 12px;">
         <label class="form-check-label" for="missedFilling" style="color: #5B7C99; font-size: 15px; order: 1;">
-            Pengisian bahan bakar sebelumnya terlewatkan?
+            Pengisian bahan bakar seNot yetnya terlewatkan?
         </label>
         <input class="form-check-input" type="checkbox" name="missed_filling" id="missedFilling" value="1" 
                {{ old('missed_filling') ? 'checked' : '' }} 
@@ -191,13 +191,13 @@
     <input type="file" name="attachment" id="attachmentInput" style="display: none;" accept="image/*,.pdf" onchange="updateAttachmentButtonText(this)">
 </div>
 
-<!-- Catatan -->
+<!-- Notes -->
 <div class="field-group">
     <label class="form-label">
         <i class="fas fa-align-left" style="color: #6c757d; margin-right: 8px;"></i>
-        Catatan
+        Notes
     </label>
-    <textarea name="notes" class="form-control" rows="3" placeholder="Tambahkan catatan (opsional)">{{ old('notes') }}</textarea>
+    <textarea name="notes" class="form-control" rows="3" placeholder="Tambahkan Notes (opsional)">{{ old('notes') }}</textarea>
 </div>
 @endsection
 
@@ -217,14 +217,14 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="fuelTypeSearch" class="form-control" placeholder="Cari bahan bakar..." style="border-left: 0;">
+                        <input type="text" id="fuelTypeSearch" class="form-control" placeholder="Search bahan bakar..." style="border-left: 0;">
                     </div>
                 </div>
                 
                 <!-- Fuel Types List -->
                 <div id="fuelTypeList" style="max-height: 300px; overflow-y: auto;">
                     <div class="fuel-type-item" data-value="Bensin" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
-                        <span style="color: #5B7C99; font-size: 15px;">Bensin</span>
+                        <span style="color: #5B7C99; font-size: 15px;">Gasoline</span>
                     </div>
                     <div class="fuel-type-item" data-value="Bensin Premium" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">Bensin Premium</span>
@@ -243,7 +243,7 @@
                 <!-- Add New Button -->
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0;">
                     <button type="button" class="btn" onclick="showAddFuelTypeForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                        TAMBAH BARU
+                        ADD NEW
                     </button>
                 </div>
             </div>
@@ -256,29 +256,29 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="addFuelTypeModalLabel" style="font-size: 18px; font-weight: 500;">Tambah Jenis Bahan Bakar</h5>
+                <h5 class="modal-title" id="addFuelTypeModalLabel" style="font-size: 18px; font-weight: 500;">Add Fuel Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="mb-3">
-                    <label for="newFuelTypeName" class="form-label">Nama Bahan Bakar</label>
+                    <label for="newFuelTypeName" class="form-label">Name Bahan Bakar</label>
                     <input type="text" class="form-control" id="newFuelTypeName" placeholder="Contoh: Pertalite, Pertamax, dll">
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #e0e0e0; padding: 12px 16px;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" onclick="addNewFuelType()">Simpan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" class="btn btn-primary" onclick="addNewFuelType()">Save</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- SPBU Modal -->
-<div class="modal fade" id="spbuModal" tabindex="-1" aria-labelledby="spbuModalLabel" aria-hidden="true">
+<!-- Gas Stations Modal -->
+<div class="modal fade" id="Gas StationsModal" tabindex="-1" aria-labelledby="Gas StationsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="spbuModalLabel" style="font-size: 18px; font-weight: 500;">SPBU</h5>
+                <h5 class="modal-title" id="Gas StationsModalLabel" style="font-size: 18px; font-weight: 500;">Gas Stations</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 0;">
@@ -287,26 +287,26 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="spbuSearch" class="form-control" placeholder="Cari SPBU..." style="border-left: 0;">
+                        <input type="text" id="Gas StationsSearch" class="form-control" placeholder="Search Gas Stations..." style="border-left: 0;">
                     </div>
                 </div>
-                <div id="spbuList" style="max-height: 300px; overflow-y: auto;">
-                    <div class="spbu-item" data-value="Shell" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+                <div id="Gas StationsList" style="max-height: 300px; overflow-y: auto;">
+                    <div class="Gas Stations-item" data-value="Shell" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">Shell</span>
                     </div>
-                    <div class="spbu-item" data-value="Pertamina" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+                    <div class="Gas Stations-item" data-value="Pertamina" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">Pertamina</span>
                     </div>
-                    <div class="spbu-item" data-value="Total" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+                    <div class="Gas Stations-item" data-value="Total" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">Total</span>
                     </div>
-                    <div class="spbu-item" data-value="BP" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+                    <div class="Gas Stations-item" data-value="BP" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">BP</span>
                     </div>
                 </div>
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0;">
-                    <button type="button" class="btn" onclick="showAddSpbuForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                        TAMBAH BARU
+                    <button type="button" class="btn" onclick="showAddGas StationsForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
+                        ADD NEW
                     </button>
                 </div>
             </div>
@@ -314,23 +314,23 @@
     </div>
 </div>
 
-<!-- Add New SPBU Modal -->
-<div class="modal fade" id="addSpbuModal" tabindex="-1" aria-labelledby="addSpbuModalLabel" aria-hidden="true">
+<!-- Add New Gas Stations Modal -->
+<div class="modal fade" id="addGas StationsModal" tabindex="-1" aria-labelledby="addGas StationsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="addSpbuModalLabel" style="font-size: 18px; font-weight: 500;">Tambah SPBU</h5>
+                <h5 class="modal-title" id="addGas StationsModalLabel" style="font-size: 18px; font-weight: 500;">Add Gas Station</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="mb-3">
-                    <label for="newSpbuName" class="form-label">Nama SPBU</label>
-                    <input type="text" class="form-control" id="newSpbuName" placeholder="Contoh: Shell, Pertamina, dll">
+                    <label for="newGas StationsName" class="form-label">Name Gas Stations</label>
+                    <input type="text" class="form-control" id="newGas StationsName" placeholder="Contoh: Shell, Pertamina, dll">
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #e0e0e0; padding: 12px 16px;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" onclick="addNewSpbu()">Simpan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" class="btn btn-primary" onclick="addNewGas Stations()">Save</button>
             </div>
         </div>
     </div>
@@ -350,26 +350,26 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="driverSearch" class="form-control" placeholder="Cari pengendara..." style="border-left: 0;">
+                        <input type="text" id="driverSearch" class="form-control" placeholder="Search pengendara..." style="border-left: 0;">
                     </div>
                 </div>
                 <div id="driverList" style="max-height: 300px; overflow-y: auto;">
                     @forelse($users as $user)
                     <div class="driver-item" data-value="{{ $user->name }}" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">{{ $user->name }}</span>
-                        @if($user->email)
-                        <br><small style="color: #9e9e9e; font-size: 13px;">{{ $user->email }}</small>
+                        @if($user->Email)
+                        <br><small style="color: #9e9e9e; font-size: 13px;">{{ $user->Email }}</small>
                         @endif
                     </div>
                     @empty
                     <div style="padding: 16px 20px; text-align: center; color: #9e9e9e;">
-                        <small>Belum ada data pengendara</small>
+                        <small>No data yet pengendara</small>
                     </div>
                     @endforelse
                 </div>
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0;">
                     <button type="button" class="btn" onclick="showAddDriverForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                        TAMBAH BARU
+                        ADD NEW
                     </button>
                 </div>
             </div>
@@ -382,18 +382,18 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="addDriverModalLabel" style="font-size: 18px; font-weight: 500;">Tambah Pengendara</h5>
+                <h5 class="modal-title" id="addDriverModalLabel" style="font-size: 18px; font-weight: 500;">Add Driver</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="mb-3">
-                    <label for="newDriverName" class="form-label">Nama Pengendara</label>
-                    <input type="text" class="form-control" id="newDriverName" placeholder="Masukkan nama pengendara">
+                    <label for="newDriverName" class="form-label">Name Pengendara</label>
+                    <input type="text" class="form-control" id="newDriverName" placeholder="Enter driver name">
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #e0e0e0; padding: 12px 16px;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" onclick="addNewDriver()">Simpan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" class="btn btn-primary" onclick="addNewDriver()">Save</button>
             </div>
         </div>
     </div>
@@ -404,7 +404,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="reasonModalLabel" style="font-size: 18px; font-weight: 500;">Alasan</h5>
+                <h5 class="modal-title" id="reasonModalLabel" style="font-size: 18px; font-weight: 500;">Reasons</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 0;">
@@ -413,7 +413,7 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="reasonSearch" class="form-control" placeholder="Cari alasan..." style="border-left: 0;">
+                        <input type="text" id="reasonSearch" class="form-control" placeholder="Search Reasons..." style="border-left: 0;">
                     </div>
                 </div>
                 <div id="reasonList" style="max-height: 300px; overflow-y: auto;">
@@ -432,7 +432,7 @@
                 </div>
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0;">
                     <button type="button" class="btn" onclick="showAddReasonForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                        TAMBAH BARU
+                        ADD NEW
                     </button>
                 </div>
             </div>
@@ -445,18 +445,18 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="addReasonModalLabel" style="font-size: 18px; font-weight: 500;">Tambah Alasan</h5>
+                <h5 class="modal-title" id="addReasonModalLabel" style="font-size: 18px; font-weight: 500;">Add Reason</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="mb-3">
-                    <label for="newReasonName" class="form-label">Alasan</label>
-                    <input type="text" class="form-control" id="newReasonName" placeholder="Masukkan alasan">
+                    <label for="newReasonName" class="form-label">Reasons</label>
+                    <input type="text" class="form-control" id="newReasonName" placeholder="Enter reason">
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #e0e0e0; padding: 12px 16px;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" onclick="addNewReason()">Simpan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" class="btn btn-primary" onclick="addNewReason()">Save</button>
             </div>
         </div>
     </div>
@@ -467,7 +467,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="paymentMethodModalLabel" style="font-size: 18px; font-weight: 500;">Cara Pembayaran</h5>
+                <h5 class="modal-title" id="paymentMethodModalLabel" style="font-size: 18px; font-weight: 500;">Payment Methods</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 0;">
@@ -476,7 +476,7 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="paymentMethodSearch" class="form-control" placeholder="Cari cara pembayaran..." style="border-left: 0;">
+                        <input type="text" id="paymentMethodSearch" class="form-control" placeholder="Search Payment Methods..." style="border-left: 0;">
                     </div>
                 </div>
                 <div id="paymentMethodList" style="max-height: 300px; overflow-y: auto;">
@@ -498,7 +498,7 @@
                 </div>
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0;">
                     <button type="button" class="btn" onclick="showAddPaymentMethodForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                        TAMBAH BARU
+                        ADD NEW
                     </button>
                 </div>
             </div>
@@ -511,18 +511,18 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="addPaymentMethodModalLabel" style="font-size: 18px; font-weight: 500;">Tambah Cara Pembayaran</h5>
+                <h5 class="modal-title" id="addPaymentMethodModalLabel" style="font-size: 18px; font-weight: 500;">Add Payment Method</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="mb-3">
-                    <label for="newPaymentMethodName" class="form-label">Cara Pembayaran</label>
-                    <input type="text" class="form-control" id="newPaymentMethodName" placeholder="Masukkan cara pembayaran">
+                    <label for="newPaymentMethodName" class="form-label">Payment Methods</label>
+                    <input type="text" class="form-control" id="newPaymentMethodName" placeholder="Enter payment method">
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #e0e0e0; padding: 12px 16px;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" onclick="addNewPaymentMethod()">Simpan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" class="btn btn-primary" onclick="addNewPaymentMethod()">Save</button>
             </div>
         </div>
     </div>
@@ -586,7 +586,7 @@ function addNewFuelType() {
     const newFuelName = document.getElementById('newFuelTypeName').value.trim();
     
     if (newFuelName === '') {
-        alert('Mohon masukkan nama bahan bakar');
+        alert('Mohon Enter fuel name');
         return;
     }
     
@@ -600,7 +600,7 @@ function addNewFuelType() {
     });
     
     if (exists) {
-        alert('Bahan bakar ini sudah ada dalam daftar');
+        alert('Bahan bakar ini already exists in list');
         return;
     }
     
@@ -659,58 +659,58 @@ function updateAttachmentButtonText(input) {
     }
 }
 
-// ===== SPBU MODAL FUNCTIONS =====
-function openSpbuModal() {
-    const modal = new bootstrap.Modal(document.getElementById('spbuModal'));
+// ===== Gas Stations MODAL FUNCTIONS =====
+function openGas StationsModal() {
+    const modal = new bootstrap.Modal(document.getElementById('Gas StationsModal'));
     modal.show();
 }
 
-document.getElementById('spbuSearch').addEventListener('input', function() {
+document.getElementById('Gas StationsSearch').addEventListener('input', function() {
     const searchText = this.value.toLowerCase();
-    const items = document.querySelectorAll('.spbu-item');
+    const items = document.querySelectorAll('.Gas Stations-item');
     items.forEach(item => {
         const text = item.textContent.toLowerCase();
         item.style.display = text.includes(searchText) ? 'block' : 'none';
     });
 });
 
-document.querySelectorAll('.spbu-item').forEach(item => {
+document.querySelectorAll('.Gas Stations-item').forEach(item => {
     item.addEventListener('click', function() {
-        document.getElementById('spbuInput').value = this.getAttribute('data-value');
-        bootstrap.Modal.getInstance(document.getElementById('spbuModal')).hide();
+        document.getElementById('Gas StationsInput').value = this.getAttribute('data-value');
+        bootstrap.Modal.getInstance(document.getElementById('Gas StationsModal')).hide();
     });
     item.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     item.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
 });
 
-function showAddSpbuForm() {
-    bootstrap.Modal.getInstance(document.getElementById('spbuModal')).hide();
-    new bootstrap.Modal(document.getElementById('addSpbuModal')).show();
+function showAddGas StationsForm() {
+    bootstrap.Modal.getInstance(document.getElementById('Gas StationsModal')).hide();
+    new bootstrap.Modal(document.getElementById('addGas StationsModal')).show();
 }
 
-function addNewSpbu() {
-    const newName = document.getElementById('newSpbuName').value.trim();
-    if (!newName) { alert('Mohon masukkan nama SPBU'); return; }
+function addNewGas Stations() {
+    const newName = document.getElementById('newGas StationsName').value.trim();
+    if (!newName) { alert('Mohon Enter gas station name'); return; }
     
-    const spbuList = document.getElementById('spbuList');
+    const Gas StationsList = document.getElementById('Gas StationsList');
     const newItem = document.createElement('div');
-    newItem.className = 'spbu-item';
+    newItem.className = 'Gas Stations-item';
     newItem.setAttribute('data-value', newName);
     newItem.style.cssText = 'padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;';
     newItem.innerHTML = `<span style="color: #5B7C99; font-size: 15px;">${newName}</span>`;
     
     newItem.addEventListener('click', function() {
-        document.getElementById('spbuInput').value = this.getAttribute('data-value');
-        bootstrap.Modal.getInstance(document.getElementById('spbuModal')).hide();
+        document.getElementById('Gas StationsInput').value = this.getAttribute('data-value');
+        bootstrap.Modal.getInstance(document.getElementById('Gas StationsModal')).hide();
     });
     newItem.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     newItem.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
     
-    spbuList.appendChild(newItem);
-    bootstrap.Modal.getInstance(document.getElementById('addSpbuModal')).hide();
-    document.getElementById('spbuInput').value = newName;
-    document.getElementById('newSpbuName').value = '';
-    alert('SPBU "' + newName + '" berhasil ditambahkan!');
+    Gas StationsList.appendChild(newItem);
+    bootstrap.Modal.getInstance(document.getElementById('addGas StationsModal')).hide();
+    document.getElementById('Gas StationsInput').value = newName;
+    document.getElementById('newGas StationsName').value = '';
+    alert('Gas Stations "' + newName + '" berhasil ditambahkan!');
 }
 
 // ===== DRIVER MODAL FUNCTIONS =====
@@ -744,7 +744,7 @@ function showAddDriverForm() {
 
 function addNewDriver() {
     const newName = document.getElementById('newDriverName').value.trim();
-    if (!newName) { alert('Mohon masukkan nama pengendara'); return; }
+    if (!newName) { alert('Mohon Enter driver name'); return; }
     
     const driverList = document.getElementById('driverList');
     const newItem = document.createElement('div');
@@ -798,7 +798,7 @@ function showAddReasonForm() {
 
 function addNewReason() {
     const newName = document.getElementById('newReasonName').value.trim();
-    if (!newName) { alert('Mohon masukkan alasan'); return; }
+    if (!newName) { alert('Mohon Enter reason'); return; }
     
     const reasonList = document.getElementById('reasonList');
     const newItem = document.createElement('div');
@@ -818,7 +818,7 @@ function addNewReason() {
     bootstrap.Modal.getInstance(document.getElementById('addReasonModal')).hide();
     document.getElementById('reasonInput').value = newName;
     document.getElementById('newReasonName').value = '';
-    alert('Alasan "' + newName + '" berhasil ditambahkan!');
+    alert('Reasons "' + newName + '" berhasil ditambahkan!');
 }
 
 // ===== PAYMENT METHOD MODAL FUNCTIONS =====
@@ -852,7 +852,7 @@ function showAddPaymentMethodForm() {
 
 function addNewPaymentMethod() {
     const newName = document.getElementById('newPaymentMethodName').value.trim();
-    if (!newName) { alert('Mohon masukkan cara pembayaran'); return; }
+    if (!newName) { alert('Mohon Enter payment method'); return; }
     
     const paymentMethodList = document.getElementById('paymentMethodList');
     const newItem = document.createElement('div');
@@ -872,7 +872,7 @@ function addNewPaymentMethod() {
     bootstrap.Modal.getInstance(document.getElementById('addPaymentMethodModal')).hide();
     document.getElementById('paymentMethodInput').value = newName;
     document.getElementById('newPaymentMethodName').value = '';
-    alert('Cara pembayaran "' + newName + '" berhasil ditambahkan!');
+    alert('Payment Methods "' + newName + '" berhasil ditambahkan!');
 }
 
 // Auto-calculate between price per liter, total, and liters
@@ -907,7 +907,7 @@ const lastOdometer = parseFloat(odometerInput.getAttribute('min')) || 0;
 odometerInput.addEventListener('blur', function() {
     const currentValue = parseFloat(this.value) || 0;
     if (currentValue < lastOdometer) {
-        alert('Odometer tidak boleh kurang dari odometer terakhir: ' + lastOdometer.toFixed(0) + ' km');
+        alert('Odometer cannot be less than Latest Odometer: ' + lastOdometer.toFixed(0) + ' km');
         this.value = lastOdometer;
         this.focus();
     }
@@ -926,7 +926,7 @@ function openTimePicker() {
         <div class="time-picker-overlay" onclick="closeTimePicker()"></div>
         <div class="time-picker-content">
             <div class="time-picker-header">
-                <h5>Pilih</h5>
+                <h5>Select</h5>
                 <button type="button" class="time-picker-close" onclick="closeTimePicker()">&times;</button>
             </div>
             <div class="time-display">
@@ -938,7 +938,7 @@ function openTimePicker() {
                 </div>
             </div>
             <div class="time-picker-footer">
-                <button type="button" class="btn-time-cancel" onclick="closeTimePicker()">BATAL</button>
+                <button type="button" class="btn-time-cancel" onclick="closeTimePicker()">CANCEL</button>
                 <button type="button" class="btn-time-ok" onclick="confirmTime()">OK</button>
             </div>
         </div>
@@ -1040,15 +1040,15 @@ function drawClock(hour, minute) {
     }
     
     // Draw hand
-    const handAngle = selectingHour 
+    const hyoungle = selectingHour 
         ? (selectedHour - 3) * Math.PI / 6
         : (selectedMinute / 5 - 3) * Math.PI / 6;
     
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(
-        centerX + radius * 0.5 * Math.cos(handAngle),
-        centerY + radius * 0.5 * Math.sin(handAngle)
+        centerX + radius * 0.5 * Math.cos(hyoungle),
+        centerY + radius * 0.5 * Math.sin(hyoungle)
     );
     ctx.strokeStyle = '#1976d2';
     ctx.lineWidth = 2;
@@ -1233,3 +1233,31 @@ input[type="time"]::-webkit-clear-button {
 }
 </style>
 @endpush
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

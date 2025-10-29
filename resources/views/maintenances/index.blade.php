@@ -2,11 +2,11 @@
 
 
 
-@section('title', 'Data Perawatan')
+@section('title', 'Maintenance Data')
 
 
 
-@section('content')@section('title', 'Data Perawatan')
+@section('content')@section('title', 'Maintenance Data')
 
 <style>
 
@@ -14,7 +14,7 @@
 
         padding: 0 0 20px 0;
 
-        margin-bottom: 0;@section('content')@section('title', 'Data Perawatan')
+        margin-bottom: 0;@section('content')@section('title', 'Maintenance Data')
 
         border-bottom: 2px solid #f0f0f0;
 
@@ -30,7 +30,7 @@
 
         margin: 0;
 
-        letter-spacing: -0.5px;        border-radius: 12px;@section('content')@section('title', 'Data Perawatan')@section('title', 'Data Perawatan')
+        letter-spacing: -0.5px;        border-radius: 12px;@section('content')@section('title', 'Maintenance Data')@section('title', 'Maintenance Data')
 
     }
 
@@ -94,7 +94,7 @@
 
         line-height: 1.7;
 
-        margin-bottom: 40px;        font-size: 24px;    }    .maintenance-card {    <h1 class="h2">Data Perawatan & Service</h1>
+        margin-bottom: 40px;        font-size: 24px;    }    .maintenance-card {    <h1 class="h2">Data Maintenance & Service</h1>
 
         max-width: 500px;
 
@@ -108,9 +108,9 @@
 
     <div>    .category-routine { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
 
-        <h1 class="page-title">Riwayat Perawatan & Service</h1>
+        <h1 class="page-title">Maintenance History & Service</h1>
 
-        <p class="page-subtitle">Pantau jadwal perawatan kendaraan Anda</p>    .category-repair { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }        box-shadow: 0 4px 12px rgba(0,0,0,0.1);        border: none;    <div class="btn-toolbar mb-2 mb-md-0">
+        <p class="page-subtitle">Monitor schedule Maintenance Vehicle you</p>    .category-repair { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }        box-shadow: 0 4px 12px rgba(0,0,0,0.1);        border: none;    <div class="btn-toolbar mb-2 mb-md-0">
 
     </div>
 
@@ -126,7 +126,7 @@
 
 <div class="alert alert-info">
 
-    Data perawatan tersedia. Feature list belum diimplementasi.        font-size: 20px;    }        border-radius: 12px;        <a href="{{ route('maintenances.create') }}" class="btn btn-primary">
+    Data Maintenance Available. Feature list not yet implemented.        font-size: 20px;    }        border-radius: 12px;        <a href="{{ route('maintenances.create') }}" class="btn btn-primary">
 
 </div>
 
@@ -142,23 +142,23 @@
 
     </div>
 
-    <h3 class="empty-title">Belum Ada Data Perawatan</h3>    .maintenance-date {        width: 48px;        box-shadow: 0 2px 8px rgba(0,0,0,0.06);            <i class="bi bi-plus-circle me-1"></i>
+    <h3 class="empty-title">No data yet Maintenance</h3>    .maintenance-date {        width: 48px;        box-shadow: 0 2px 8px rgba(0,0,0,0.06);            <i class="bi bi-plus-circle me-1"></i>
 
     <p class="empty-description">
 
-        Mulai mencatat setiap perawatan dan service kendaraan        font-size: 13px;
+        Start recording every Maintenance and service Vehicle        font-size: 13px;
 
-        untuk menjaga performa dan kondisi kendaraan Anda.
+        to maintain performance and condition of your vehicle.
 
     </p>        color: #6c757d;        height: 48px;
 
     <a href="{{ route('maintenances.create') }}" class="btn btn-warning btn-lg rounded-pill px-5 shadow">
 
-        <i class="bi bi-plus-lg me-2"></i>Tambah Data Pertama    }
+        <i class="bi bi-plus-lg me-2"></i>Add Data Pertama    }
 
     </a>
 
-</div>    .status-badge {        border-radius: 12px;        margin-bottom: 12px;            Tambah Data Service
+</div>    .Status-badge {        border-radius: 12px;        margin-bottom: 12px;            Add Maintenance Data
 
 @endif
 
@@ -174,11 +174,11 @@
 
     }        justify-content: center;
 
-    .status-completed { background: #28a745; }
+    .Status-completed { background: #28a745; }
 
-    .status-scheduled { background: #007bff; }        font-size: 24px;    }    </div>
+    .Status-scheduled { background: #007bff; }        font-size: 24px;    }    </div>
 
-    .status-overdue { background: #dc3545; }
+    .Status-overdue { background: #dc3545; }
 
         margin-right: 16px;
 
@@ -240,7 +240,7 @@
 
         max-width: 650px;
 
-        margin: 60px auto;    .status-badge {        border-radius: 12px;                <thead class="table-light">
+        margin: 60px auto;    .Status-badge {        border-radius: 12px;                <thead class="table-light">
 
         min-height: 60vh;
 
@@ -256,7 +256,7 @@
 
     .empty-title {
 
-        font-size: 32px;        font-weight: 600;        align-items: center;                        <th>Tanggal</th>
+        font-size: 32px;        font-weight: 600;        align-items: center;                        <th>Date</th>
 
         font-weight: 800;
 
@@ -264,19 +264,19 @@
 
         margin-bottom: 20px;
 
-        letter-spacing: -0.5px;    }        justify-content: center;                        <th>Kendaraan</th>
+        letter-spacing: -0.5px;    }        justify-content: center;                        <th>Vehicle</th>
 
     }
 
-    .empty-description {    .status-completed { background: #28a745; }
+    .empty-description {    .Status-completed { background: #28a745; }
 
         font-size: 17px;
 
-        color: #6c757d;    .status-scheduled { background: #007bff; }        font-size: 24px;                        <th>Jenis Service</th>
+        color: #6c757d;    .Status-scheduled { background: #007bff; }        font-size: 24px;                        <th>Type Service</th>
 
         line-height: 1.7;
 
-        margin-bottom: 40px;    .status-overdue { background: #dc3545; }
+        margin-bottom: 40px;    .Status-overdue { background: #dc3545; }
 
         max-width: 500px;
 
@@ -290,13 +290,13 @@
 
     <div>        border-radius: 12px;    }                        <th>Odometer</th>
 
-        <h1 class="page-title">Riwayat Perawatan & Service</h1>
+        <h1 class="page-title">Maintenance History & Service</h1>
 
-        <p class="page-subtitle">Pantau jadwal perawatan kendaraan Anda</p>        padding: 20px;
+        <p class="page-subtitle">Monitor schedule Maintenance Vehicle you</p>        padding: 20px;
 
     </div>
 
-</div>        margin-bottom: 24px;    .category-routine { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }                        <th>Biaya</th>
+</div>        margin-bottom: 24px;    .category-routine { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }                        <th>Cost</th>
 
 
 
@@ -320,15 +320,15 @@
 
         <div class="col-md-4 stat-item text-center border-start border-white border-opacity-25">
 
-            <div style="font-size: 28px; font-weight: 700;">Rp {{ number_format($maintenances->sum('cost'), 0, ',', '.') }}</div>        margin-bottom: 24px;                        <th>Aksi</th>
+            <div style="font-size: 28px; font-weight: 700;">Rp {{ number_format($maintenances->sum('cost'), 0, ',', '.') }}</div>        margin-bottom: 24px;                        <th>Action</th>
 
-            <div style="font-size: 13px; opacity: 0.9;">Total Biaya</div>
+            <div style="font-size: 13px; opacity: 0.9;">Total Cost</div>
 
         </div>    }
 
         <div class="col-md-4 stat-item text-center border-start border-white border-opacity-25">
 
-            <div style="font-size: 28px; font-weight: 700;">{{ $maintenances->where('status', 'Scheduled')->count() }}</div>    .page-title {    .maintenance-amount {                    </tr>
+            <div style="font-size: 28px; font-weight: 700;">{{ $maintenances->where('Status', 'Scheduled')->count() }}</div>    .page-title {    .maintenance-amount {                    </tr>
 
             <div style="font-size: 13px; opacity: 0.9;">Dijadwalkan</div>
 
@@ -400,13 +400,13 @@
 
                                         ];
 
-                                        $statusMap = [        font-size: 28px;    .status-badge {                        <td>
+                                        $StatusMap = [        font-size: 28px;    .Status-badge {                        <td>
 
-                                            'Completed' => ['text' => 'Selesai', 'class' => 'completed'],
+                                            'Completed' => ['text' => 'End', 'class' => 'completed'],
 
                                             'Scheduled' => ['text' => 'Dijadwalkan', 'class' => 'scheduled'],        font-weight: 700;
 
-                                            'Overdue' => ['text' => 'Terlambat', 'class' => 'overdue']
+                                            'Overdue' => ['text' => 'Overdue', 'class' => 'overdue']
 
                                         ];        color: #1a1a1a;        padding: 6px 12px;                            <div class="fw-bold">{{ $maintenance->vehicle->name }}</div>
 
@@ -418,9 +418,9 @@
 
                                     </span>    }        border-radius: 8px;                            <small class="text-muted">{{ $maintenance->vehicle->license_plate }}</small>
 
-                                    <span class="status-badge status-{{ $statusMap[$maintenance->status]['class'] ?? 'secondary' }}">
+                                    <span class="Status-badge Status-{{ $StatusMap[$maintenance->Status]['class'] ?? 'secondary' }}">
 
-                                        {{ $statusMap[$maintenance->status]['text'] ?? $maintenance->status }}    .empty-description {
+                                        {{ $StatusMap[$maintenance->Status]['text'] ?? $maintenance->Status }}    .empty-description {
 
                                     </span>
 
@@ -456,7 +456,7 @@
 
                                 </div>
 
-                            </div>    <div class="d-flex justify-content-between align-items-center">    .status-completed { background: #28a745; }                                $categoryColors = [
+                            </div>    <div class="d-flex justify-content-between align-items-center">    .Status-completed { background: #28a745; }                                $categoryColors = [
 
                         </div>
 
@@ -464,15 +464,15 @@
 
                         <div class="d-flex justify-content-between align-items-center">
 
-                            <div>            <h1 class="page-title">Riwayat Perawatan & Service</h1>    .status-scheduled { background: #007bff; }                                    'Routine' => 'bg-info',
+                            <div>            <h1 class="page-title">Maintenance History & Service</h1>    .Status-scheduled { background: #007bff; }                                    'Routine' => 'bg-info',
 
                                 @if($maintenance->next_maintenance_date)
 
-                                    <span class="badge bg-primary">            <p class="page-subtitle">Pantau jadwal perawatan kendaraan Anda</p>
+                                    <span class="badge bg-primary">            <p class="page-subtitle">Monitor schedule Maintenance Vehicle you</p>
 
                                         <i class="bi bi-clock-history"></i>
 
-                                        Service Berikutnya: {{ $maintenance->next_maintenance_date->format('d M Y') }}        </div>    .status-overdue { background: #dc3545; }                                    'Repair' => 'bg-warning',
+                                        Service Berikutnya: {{ $maintenance->next_maintenance_date->format('d M Y') }}        </div>    .Status-overdue { background: #dc3545; }                                    'Repair' => 'bg-warning',
 
                                         @if($maintenance->next_maintenance_odometer)
 
@@ -512,7 +512,7 @@
 
                                         <a class="dropdown-item" href="{{ route('maintenances.show', $maintenance) }}">
 
-                                            <i class="bi bi-eye me-2"></i>Lihat Detail<div class="stats-card">        margin-bottom: 24px;                                {{ $maintenance->category }}
+                                            <i class="bi bi-eye me-2"></i>View Details<div class="stats-card">        margin-bottom: 24px;                                {{ $maintenance->category }}
 
                                         </a>
 
@@ -534,7 +534,7 @@
 
                                         <form action="{{ route('maintenances.destroy', $maintenance) }}" method="POST"        </div>
 
-                                              onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                              onsubmit="return confirm('Yakin want to delete data ini?')">
 
                                             @csrf        <div class="col-md-4 stat-item text-center border-start border-white border-opacity-25">    }                        <td>{{ number_format($maintenance->odometer, 0, ',', '.') }} km</td>
 
@@ -542,9 +542,9 @@
 
                                             <button type="submit" class="dropdown-item text-danger">            <div style="font-size: 28px; font-weight: 700;">Rp {{ number_format($maintenances->sum('cost'), 0, ',', '.') }}</div>
 
-                                                <i class="bi bi-trash me-2"></i>Hapus
+                                                <i class="bi bi-trash me-2"></i>Delete
 
-                                            </button>            <div style="font-size: 13px; opacity: 0.9;">Total Biaya</div></style>                        <td>
+                                            </button>            <div style="font-size: 13px; opacity: 0.9;">Total Cost</div></style>                        <td>
 
                                         </form>
 
@@ -556,7 +556,7 @@
 
                         </div>
 
-                    </div>            <div style="font-size: 28px; font-weight: 700;">{{ $maintenances->where('status', 'Scheduled')->count() }}</div>
+                    </div>            <div style="font-size: 28px; font-weight: 700;">{{ $maintenances->where('Status', 'Scheduled')->count() }}</div>
 
                 </div>
 
@@ -576,7 +576,7 @@
 
 <div class="d-flex justify-content-center mt-4">
 
-    {{ $maintenances->links() }}        <h1 class="h3 mb-1">Riwayat Perawatan & Service</h1>                            @php
+    {{ $maintenances->links() }}        <h1 class="h3 mb-1">Maintenance History & Service</h1>                            @php
 
 </div>
 
@@ -584,7 +584,7 @@
 
 @else
 
-<div class="empty-state"><div class="row">        <p class="text-muted small mb-0">Pantau jadwal perawatan kendaraan Anda</p>                                $statusColors = [
+<div class="empty-state"><div class="row">        <p class="text-muted small mb-0">Monitor schedule Maintenance Vehicle you</p>                                $StatusColors = [
 
     <div style="width: 160px; height: 160px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: 0 12px 32px rgba(250, 112, 154, 0.3); margin: 0 auto 40px;">
 
@@ -592,19 +592,19 @@
 
     </div>
 
-    <h3 class="empty-title">Belum Ada Data Perawatan</h3>    <div class="col-12">    </div>                                    'Completed' => 'bg-success',
+    <h3 class="empty-title">No data yet Maintenance</h3>    <div class="col-12">    </div>                                    'Completed' => 'bg-success',
 
     <p class="empty-description">
 
-        Mulai mencatat setiap perawatan dan service kendaraan        <div class="maintenance-card">
+        Start recording every Maintenance and service Vehicle        <div class="maintenance-card">
 
-        untuk menjaga performa dan kondisi kendaraan Anda.
+        to maintain performance and condition of your vehicle.
 
     </p>            <div class="card-body p-3">    <a href="{{ route('maintenances.create') }}" class="btn btn-warning rounded-pill px-4">                                    'Scheduled' => 'bg-primary',
 
     <a href="{{ route('maintenances.create') }}" class="btn btn-warning btn-lg rounded-pill px-5 shadow">
 
-        <i class="bi bi-plus-lg me-2"></i>Tambah Data Pertama                <div class="d-flex align-items-center">
+        <i class="bi bi-plus-lg me-2"></i>Add Data Pertama                <div class="d-flex align-items-center">
 
     </a>
 
@@ -623,11 +623,11 @@
 
                             ⚙️
 
-                        @else                            <span class="badge {{ $statusColors[$maintenance->status] ?? 'bg-secondary' }}">
+                        @else                            <span class="badge {{ $StatusColors[$maintenance->Status] ?? 'bg-secondary' }}">
 
                             🚨
 
-                        @endif@if($maintenances->count() > 0)                                {{ $maintenance->status }}
+                        @endif@if($maintenances->count() > 0)                                {{ $maintenance->Status }}
 
                     </div>
 
@@ -657,13 +657,13 @@
 
                                         ];            <div class="stat-label" style="font-size: 13px; opacity: 0.9;">Total Service</div>                                    <small class="text-muted">{{ number_format($maintenance->next_maintenance_odometer, 0, ',', '.') }} km</small>
 
-                                        $statusMap = [
+                                        $StatusMap = [
 
-                                            'Completed' => ['text' => 'Selesai', 'class' => 'completed'],        </div>                                @endif
+                                            'Completed' => ['text' => 'End', 'class' => 'completed'],        </div>                                @endif
 
                                             'Scheduled' => ['text' => 'Dijadwalkan', 'class' => 'scheduled'],
 
-                                            'Overdue' => ['text' => 'Terlambat', 'class' => 'overdue']        <div class="col-md-4 stat-item text-center border-start border-white border-opacity-25">                            @else
+                                            'Overdue' => ['text' => 'Overdue', 'class' => 'overdue']        <div class="col-md-4 stat-item text-center border-start border-white border-opacity-25">                            @else
 
                                         ];
 
@@ -671,19 +671,19 @@
 
                                     <span class="badge bg-{{ $categoryColors[$maintenance->category] ?? 'secondary' }}">
 
-                                        {{ $maintenance->category }}            <div class="stat-label" style="font-size: 13px; opacity: 0.9;">Total Biaya</div>                            @endif
+                                        {{ $maintenance->category }}            <div class="stat-label" style="font-size: 13px; opacity: 0.9;">Total Cost</div>                            @endif
 
                                     </span>
 
-                                    <span class="status-badge status-{{ $statusMap[$maintenance->status]['class'] ?? 'secondary' }}">        </div>                        </td>
+                                    <span class="Status-badge Status-{{ $StatusMap[$maintenance->Status]['class'] ?? 'secondary' }}">        </div>                        </td>
 
-                                        {{ $statusMap[$maintenance->status]['text'] ?? $maintenance->status }}
+                                        {{ $StatusMap[$maintenance->Status]['text'] ?? $maintenance->Status }}
 
                                     </span>        <div class="col-md-4 stat-item text-center border-start border-white border-opacity-25">                        <td>
 
                                 </h6>
 
-                                <p class="mb-1 text-muted small">            <div class="stat-value" style="font-size: 28px; font-weight: 700;">{{ $maintenances->where('status', 'Scheduled')->count() }}</div>                            <div class="btn-group btn-group-sm">
+                                <p class="mb-1 text-muted small">            <div class="stat-value" style="font-size: 28px; font-weight: 700;">{{ $maintenances->where('Status', 'Scheduled')->count() }}</div>                            <div class="btn-group btn-group-sm">
 
                                     <span class="badge bg-success">{{ $maintenance->vehicle->name }}</span>
 
@@ -755,7 +755,7 @@
 
 
 
-                            <div class="dropdown">                            ⚙️                                              onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                            <div class="dropdown">                            ⚙️                                              onsubmit="return confirm('Yakin want to delete data ini?')">
 
                                 <button class="btn btn-sm btn-outline-secondary rounded-pill" type="button" data-bs-toggle="dropdown">
 
@@ -771,7 +771,7 @@
 
                                             <i class="bi bi-eye me-2"></i>Lihat Detail
 
-                                        </a>                    </div>                                                <i class="bi bi-trash me-2"></i>Hapus
+                                        </a>                    </div>                                                <i class="bi bi-trash me-2"></i>Delete
 
                                     </li>
 
@@ -791,7 +791,7 @@
 
                                         <form action="{{ route('maintenances.destroy', $maintenance) }}" method="POST"
 
-                                              onsubmit="return confirm('Yakin ingin menghapus data ini?')">                            <div>                            </div>
+                                              onsubmit="return confirm('Yakin want to delete data ini?')">                            <div>                            </div>
 
                                             @csrf
 
@@ -799,7 +799,7 @@
 
                                             <button type="submit" class="dropdown-item text-danger">
 
-                                                <i class="bi bi-trash me-2"></i>Hapus                                    <strong>{{ $maintenance->type }}</strong>                    </tr>
+                                                <i class="bi bi-trash me-2"></i>Delete                                    <strong>{{ $maintenance->type }}</strong>                    </tr>
 
                                             </button>
 
@@ -827,11 +827,11 @@
 
 </div>
 
-                                        $statusMap = [
+                                        $StatusMap = [
 
 <!-- Pagination -->
 
-<div class="d-flex justify-content-center mt-4">                                            'Completed' => ['text' => 'Selesai', 'class' => 'completed'],<!-- Pagination -->
+<div class="d-flex justify-content-center mt-4">                                            'Completed' => ['text' => 'End', 'class' => 'completed'],<!-- Pagination -->
 
     {{ $maintenances->links() }}
 
@@ -839,7 +839,7 @@
 
 
 
-@else                                            'Overdue' => ['text' => 'Terlambat', 'class' => 'overdue']    {{ $maintenances->links() }}
+@else                                            'Overdue' => ['text' => 'Overdue', 'class' => 'overdue']    {{ $maintenances->links() }}
 
 <div class="empty-state">
 
@@ -849,25 +849,25 @@
 
     </div>                                    @endphp
 
-    <h3 class="empty-title">Belum Ada Data Perawatan</h3>
+    <h3 class="empty-title">No data yet Maintenance</h3>
 
     <p class="empty-description">                                    <span class="badge bg-{{ $categoryColors[$maintenance->category] ?? 'secondary' }}">@else
 
-        Mulai mencatat setiap perawatan dan service kendaraan<br>
+        Start recording every Maintenance and service Vehicle<br>
 
-        untuk menjaga performa dan kondisi kendaraan Anda.                                        {{ $maintenance->category }}<div class="text-center py-5">
+        to maintain performance and condition of your vehicle.                                        {{ $maintenance->category }}<div class="text-center py-5">
 
     </p>
 
     <a href="{{ route('maintenances.create') }}" class="btn btn-warning btn-lg rounded-pill px-5 shadow">                                    </span>    <i class="bi bi-tools display-1 text-muted"></i>
 
-        <i class="bi bi-plus-lg me-2"></i>Tambah Data Pertama
+        <i class="bi bi-plus-lg me-2"></i>Add Data Pertama
 
-    </a>                                    <span class="status-badge status-{{ $statusMap[$maintenance->status]['class'] ?? 'secondary' }}">    <h3 class="mt-3">Belum Ada Data Perawatan</h3>
+    </a>                                    <span class="Status-badge Status-{{ $StatusMap[$maintenance->Status]['class'] ?? 'secondary' }}">    <h3 class="mt-3">No data yet Maintenance</h3>
 
 </div>
 
-@endif                                        {{ $statusMap[$maintenance->status]['text'] ?? $maintenance->status }}    <p class="text-muted">Mulai dengan menambahkan data service pertama Anda.</p>
+@endif                                        {{ $StatusMap[$maintenance->Status]['text'] ?? $maintenance->Status }}    <p class="text-muted">Start dengan menambahkan data service pertama you.</p>
 
 @endsection
 
@@ -875,7 +875,7 @@
 
                                 </h6>        <i class="bi bi-plus-circle me-1"></i>
 
-                                <p class="mb-1 text-muted small">        Tambah Data Pertama
+                                <p class="mb-1 text-muted small">        Add Data Pertama
 
                                     <span class="badge bg-success">{{ $maintenance->vehicle->name }}</span>    </a>
 
@@ -934,11 +934,11 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="{{ route('maintenances.destroy', $maintenance) }}" method="POST"
-                                              onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                              onsubmit="return confirm('Yakin want to delete data ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bi bi-trash me-2"></i>Hapus
+                                                <i class="bi bi-trash me-2"></i>Delete
                                             </button>
                                         </form>
                                     </li>
@@ -963,11 +963,39 @@
     <div class="empty-icon mx-auto mb-4" style="width: 120px; height: 120px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px;">
         🔧
     </div>
-    <h3 class="mb-3">Belum Ada Data Perawatan</h3>
-    <p class="text-muted mb-4">Mulai mencatat setiap perawatan dan service kendaraan<br>untuk menjaga performa dan kondisi kendaraan Anda.</p>
+    <h3 class="mb-3">No data yet Maintenance</h3>
+    <p class="text-muted mb-4">Start recording every Maintenance and service Vehicle<br>to maintain performance and condition of your vehicle.</p>
     <a href="{{ route('maintenances.create') }}" class="btn btn-warning btn-lg rounded-pill px-5">
-        <i class="bi bi-plus-lg me-2"></i>Tambah Data Pertama
+        <i class="bi bi-plus-lg me-2"></i>Add Data Pertama
     </a>
 </div>
 @endif
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

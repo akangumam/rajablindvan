@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Dashboard Laporan')
+@section('title', 'Report Dashboard')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,20 +10,20 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">
                     <i class="fas fa-chart-line text-primary me-2"></i>
-                    Dashboard Laporan
+                    Dashboard Report
                 </h2>
                 <div class="btn-group">
                     <a href="{{ route('reports.dashboard', ['period' => 'week']) }}" 
                        class="btn btn-{{ $period == 'week' ? 'primary' : 'outline-primary' }} btn-sm">
-                        Minggu Ini
+                        This Week
                     </a>
                     <a href="{{ route('reports.dashboard', ['period' => 'month']) }}" 
                        class="btn btn-{{ $period == 'month' ? 'primary' : 'outline-primary' }} btn-sm">
-                        Bulan Ini
+                        This Month
                     </a>
                     <a href="{{ route('reports.dashboard', ['period' => 'year']) }}" 
                        class="btn btn-{{ $period == 'year' ? 'primary' : 'outline-primary' }} btn-sm">
-                        Tahun Ini
+                        This Year
                     </a>
                 </div>
                 <div class="d-flex gap-2">
@@ -82,7 +82,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Rental Aktif
+                                Rental Active
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $activeRentals }}</div>
                         </div>
@@ -100,7 +100,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Kendaraan Tersedia
+                                available vehicles
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ $availableVehicles }}/{{ $totalVehicles }}
@@ -120,7 +120,7 @@
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Harian</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Revenue Daily</h6>
                 </div>
                 <div class="card-body">
                     <canvas id="revenueChart"></canvas>
@@ -135,7 +135,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">Status Rental</h6>
                 </div>
                 <div class="card-body">
-                    <canvas id="statusChart"></canvas>
+                    <canvas id="StatusChart"></canvas>
                 </div>
             </div>
         </div>
@@ -162,7 +162,7 @@
                         </div>
                     </div>
                     @empty
-                    <p class="text-muted text-center">Tidak ada data kendaraan</p>
+                    <p class="text-muted text-center">No data available Vehicle</p>
                     @endforelse
                 </div>
             </div>
@@ -188,7 +188,7 @@
                         </div>
                     </div>
                     @empty
-                    <p class="text-muted text-center">Tidak ada data customer</p>
+                    <p class="text-muted text-center">No data available customer</p>
                     @endforelse
                 </div>
             </div>
@@ -200,7 +200,7 @@
         <div class="col-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Tren Bulanan (12 Bulan Terakhir)</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Monthly Trend (Last 12 Months)</h6>
                 </div>
                 <div class="card-body">
                     <canvas id="monthlyTrendsChart"></canvas>
@@ -214,44 +214,44 @@
         <div class="col-12">
             <div class="card shadow">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Laporan Detail</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Report Detail</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('reports.rentals') }}" class="btn btn-outline-primary w-100">
                                 <i class="fas fa-calendar-alt mb-1"></i><br>
-                                Laporan Rental
+                                Report Rental
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('reports.vehicles') }}" class="btn btn-outline-success w-100">
                                 <i class="fas fa-car mb-1"></i><br>
-                                Laporan Kendaraan
+                                Report Vehicle
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('reports.financial') }}" class="btn btn-outline-warning w-100">
                                 <i class="fas fa-chart-pie mb-1"></i><br>
-                                Laporan Keuangan
+                                Report Keuangan
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('reports.customers') }}" class="btn btn-outline-info w-100">
                                 <i class="fas fa-users mb-1"></i><br>
-                                Laporan Customer
+                                Report Customer
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('rentals.create') }}" class="btn btn-primary w-100">
                                 <i class="fas fa-plus mb-1"></i><br>
-                                Rental Baru
+                                New Rentals
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('vehicles.create') }}" class="btn btn-secondary w-100">
                                 <i class="fas fa-plus-circle mb-1"></i><br>
-                                Kendaraan Baru
+                                New Vehicles
                             </a>
                         </div>
                     </div>
@@ -266,7 +266,7 @@
             <div class="card shadow">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-success">
-                        <i class="fas fa-file-excel me-2"></i>Export Laporan ke Excel
+                        <i class="fas fa-file-excel me-2"></i>Export Report ke Excel
                     </h6>
                 </div>
                 <div class="card-body">
@@ -280,19 +280,19 @@
                         <div class="col-md-3 mb-3">
                             <a href="{{ route('reports.vehicles.excel') }}" class="btn btn-success w-100">
                                 <i class="fas fa-car mb-1"></i><br>
-                                Export Data Kendaraan
+                                Export Vehicle Data
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="{{ route('reports.financial.excel') }}" class="btn btn-success w-100">
                                 <i class="fas fa-chart-pie mb-1"></i><br>
-                                Export Laporan Keuangan
+                                Export Report Keuangan
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="{{ route('reports.customers.excel') }}" class="btn btn-success w-100">
                                 <i class="fas fa-users mb-1"></i><br>
-                                Export Data Pelanggan
+                                Export Data Customer
                             </a>
                         </div>
                     </div>
@@ -300,7 +300,7 @@
                         <div class="col-12">
                             <div class="alert alert-info">
                                 <i class="fas fa-info-circle me-2"></i>
-                                <strong>Tips:</strong> File Excel akan diunduh otomatis. Anda dapat membuka file dengan Microsoft Excel atau Google Sheets untuk analisis lebih lanjut.
+                                <strong>Tips:</strong> File Excel akan diunduh otomatis. you dapat membuka file dengan Microsoft Excel atau Google Sheets untuk analisis lebih lanjut.
                             </div>
                         </div>
                     </div>
@@ -350,23 +350,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Status Chart
-    const statusCtx = document.getElementById('statusChart').getContext('2d');
-    const statusData = @json($rentalStatusChart);
+    const StatusCtx = document.getElementById('StatusChart').getContext('2d');
+    const StatusData = @json($rentalStatusChart);
     
-    new Chart(statusCtx, {
+    new Chart(StatusCtx, {
         type: 'doughnut',
         data: {
-            labels: statusData.map(item => {
-                const statusLabels = {
+            labels: StatusData.map(item => {
+                const StatusLabels = {
                     'reserved': 'Reservasi',
-                    'active': 'Aktif',
-                    'completed': 'Selesai',
-                    'cancelled': 'Dibatalkan'
+                    'active': 'Active',
+                    'completed': 'End',
+                    'cancelled': 'DiCANCELkan'
                 };
-                return statusLabels[item.status] || item.status;
+                return StatusLabels[item.Status] || item.Status;
             }),
             datasets: [{
-                data: statusData.map(item => item.count),
+                data: StatusData.map(item => item.count),
                 backgroundColor: [
                     '#ffc107',
                     '#28a745',
@@ -452,3 +452,30 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

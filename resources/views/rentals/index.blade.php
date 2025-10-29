@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Data Rental')
+@section('title', 'Rental Data')
 
 @section('content')
 <style>
@@ -39,7 +39,7 @@
 <div class="page-header">
     <h1 class="page-title">Rental</h1>
     <a href="{{ route('rentals.create') }}" class="btn-add">
-        TAMBAH BARU
+        ADD NEW
     </a>
 </div>
 
@@ -66,13 +66,13 @@
                     <tr>
                         <th>Kode Rental</th>
                         <th>Customer</th>
-                        <th>Kendaraan</th>
+                        <th>Vehicle</th>
                         <th>Periode</th>
                         <th>Tipe</th>
-                        <th>Durasi</th>
+                        <th>Duration</th>
                         <th>Total</th>
                         <th>Status</th>
-                        <th>Aksi</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,7 +96,7 @@
                             @if($rental->isOverdue())
                                 <small class="text-danger">
                                     <i class="bi bi-exclamation-triangle"></i>
-                                    Terlambat {{ $rental->getDaysOverdue() }} hari
+                                    Overdue {{ $rental->getDaysOverdue() }} hari
                                 </small>
                             @endif
                         </td>
@@ -104,7 +104,7 @@
                             <span class="badge bg-secondary">{{ $rental->getRentalTypeLabel() }}</span>
                         </td>
                         <td>
-                            <span class="badge bg-info">{{ $rental->duration_days }} hari</span>
+                            <span class="badge bg-info">{{ $rental->duration_days }} days</span>
                         </td>
                         <td>
                             <div class="fw-bold">Rp {{ number_format($rental->getFinalAmount(), 0, ',', '.') }}</div>
@@ -115,8 +115,8 @@
                             @endif
                         </td>
                         <td>
-                            <span class="badge bg-{{ $rental->status_class }}">
-                                {{ $rental->status_label }}
+                            <span class="badge bg-{{ $rental->Status_class }}">
+                                {{ $rental->Status_label }}
                             </span>
                         </td>
                         <td>
@@ -130,7 +130,7 @@
                                             <i class="bi bi-eye me-2"></i>Detail
                                         </a>
                                     </li>
-                                    @if($rental->status === 'reserved')
+                                    @if($rental->Status === 'reserved')
                                     <li>
                                         <a class="dropdown-item" href="{{ route('rentals.edit', $rental) }}">
                                             <i class="bi bi-pencil me-2"></i>Edit
@@ -141,26 +141,26 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item text-success" href="#" data-bs-toggle="modal" data-bs-target="#startRentalModal{{ $rental->id }}">
-                                            <i class="bi bi-play-circle me-2"></i>Mulai Rental
+                                            <i class="bi bi-play-circle me-2"></i>Start Rental
                                         </a>
                                     </li>
                                     @endif
                                     @if($rental->canBeCompleted())
                                     <li>
                                         <a class="dropdown-item text-warning" href="#" data-bs-toggle="modal" data-bs-target="#completeRentalModal{{ $rental->id }}">
-                                            <i class="bi bi-check-circle me-2"></i>Selesaikan
+                                            <i class="bi bi-check-circle me-2"></i>Endkan
                                         </a>
                                     </li>
                                     @endif
-                                    @if($rental->status !== 'active')
+                                    @if($rental->Status !== 'active')
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="{{ route('rentals.destroy', $rental) }}" method="POST" 
-                                              onsubmit="return confirm('Yakin ingin menghapus rental ini?')">
+                                              onsubmit="return confirm('Yakin want to delete rental ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
-                                                <i class="bi bi-trash me-2"></i>Hapus
+                                                <i class="bi bi-trash me-2"></i>Delete
                                             </button>
                                         </form>
                                     </li>
@@ -178,12 +178,12 @@
                                 <form action="{{ route('rentals.start', $rental) }}" method="POST">
                                     @csrf
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Mulai Rental - {{ $rental->rental_code }}</h5>
+                                        <h5 class="modal-title">Start Rental - {{ $rental->rental_code }}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label class="form-label">Odometer Saat Ini (km)</label>
+                                            <label class="form-label">Current Odometer (km)</label>
                                             <input type="number" 
                                                    class="form-control" 
                                                    name="actual_start_odometer" 
@@ -195,8 +195,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                        <button type="submit" class="btn btn-success">Mulai Rental</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                                        <button type="submit" class="btn btn-success">Start Rental</button>
                                     </div>
                                 </form>
                             </div>
@@ -212,12 +212,12 @@
                                 <form action="{{ route('rentals.complete', $rental) }}" method="POST">
                                     @csrf
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Selesaikan Rental - {{ $rental->rental_code }}</h5>
+                                        <h5 class="modal-title">Endkan Rental - {{ $rental->rental_code }}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
-                                            <label class="form-label">Odometer Akhir (km) <span class="text-danger">*</span></label>
+                                            <label class="form-label">End Odometer (km) <span class="text-danger">*</span></label>
                                             <input type="number" 
                                                    class="form-control" 
                                                    name="end_odometer" 
@@ -227,7 +227,7 @@
                                             <small class="text-muted">Minimum: {{ number_format($rental->start_odometer) }} km</small>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">Biaya Tambahan (Rp)</label>
+                                            <label class="form-label">Additional Expenses (Rp)</label>
                                             <input type="number" 
                                                    class="form-control" 
                                                    name="additional_charges" 
@@ -236,7 +236,7 @@
                                                    placeholder="0">
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">Catatan Biaya Tambahan</label>
+                                            <label class="form-label">Notes Additional Expenses</label>
                                             <textarea class="form-control" 
                                                       name="additional_charges_notes" 
                                                       rows="2" 
@@ -244,8 +244,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                        <button type="submit" class="btn btn-warning">Selesaikan Rental</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                                        <button type="submit" class="btn btn-warning">Endkan Rental</button>
                                     </div>
                                 </form>
                             </div>
@@ -268,12 +268,39 @@
 @else
 <div class="text-center py-5">
     <i class="bi bi-calendar-check display-1 text-muted"></i>
-    <h3 class="mt-3">Belum Ada Data Rental</h3>
-    <p class="text-muted">Mulai dengan menambahkan rental pertama Anda.</p>
+    <h3 class="mt-3">No data yet Rental</h3>
+    <p class="text-muted">Start dengan menambahkan rental pertama you.</p>
     <a href="{{ route('rentals.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-circle me-1"></i>
-        Tambah Rental Pertama
+        Add First Rental
     </a>
 </div>
 @endif
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -14,7 +14,7 @@
                 </h2>
                 <div>
                     <a href="{{ route('locations.index') }}" class="btn btn-outline-primary me-2">
-                        <i class="fas fa-cog me-1"></i>Kelola Lokasi
+                        <i class="fas fa-cog me-1"></i>Manage Locations
                     </a>
                     <a href="{{ route('dashboard') }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left me-1"></i>Dashboard Utama
@@ -43,18 +43,18 @@
                         <!-- Location Stats -->
                         <div class="row mb-3">
                             <div class="col-6">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Kendaraan</div>
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Vehicle</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $data['vehicles_count'] }}</div>
                             </div>
                             <div class="col-6">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tersedia</div>
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Available</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $data['available_vehicles'] }}</div>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-6">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sewa Aktif</div>
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sewa Active</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $data['active_rentals'] }}</div>
                             </div>
                             <div class="col-6">
@@ -65,7 +65,7 @@
 
                         <!-- Financial Performance -->
                         <hr>
-                        <h6 class="text-primary mb-3">Performa Bulan Ini</h6>
+                        <h6 class="text-primary mb-3">Performa This Month</h6>
                         
                         <div class="row mb-2">
                             <div class="col-6">
@@ -73,7 +73,7 @@
                                 <div class="h6 mb-0 text-success">Rp {{ number_format($data['monthly_revenue'], 0, ',', '.') }}</div>
                             </div>
                             <div class="col-6">
-                                <div class="text-xs font-weight-bold text-uppercase mb-1">Pengeluaran</div>
+                                <div class="text-xs font-weight-bold text-uppercase mb-1">Expenses</div>
                                 <div class="h6 mb-0 text-danger">Rp {{ number_format($data['monthly_expenses'], 0, ',', '.') }}</div>
                             </div>
                         </div>
@@ -126,18 +126,18 @@
         <div class="col-12">
             <div class="card shadow">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Perbandingan Performa Lokasi</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Perbandingan Performa Locations</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-primary">
                                 <tr>
-                                    <th>Lokasi</th>
-                                    <th>Total Kendaraan</th>
+                                    <th>Locations</th>
+                                    <th>Total Vehicle</th>
                                     <th>Utilisasi (%)</th>
-                                    <th>Pendapatan Bulan Ini</th>
-                                    <th>Pengeluaran Bulan Ini</th>
+                                    <th>Pendapatan This Month</th>
+                                    <th>Expenses This Month</th>
                                     <th>Keuntungan Bersih</th>
                                     <th>Manager</th>
                                 </tr>
@@ -180,3 +180,30 @@
 }
 </style>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

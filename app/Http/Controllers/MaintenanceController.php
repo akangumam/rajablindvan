@@ -91,31 +91,62 @@ class MaintenanceController extends Controller
         
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
-            'maintenance_date' => 'required|date',
+            'maintenance_date' => 'nullable|date',
+            'service_date' => 'required|date',
+            'service_time' => 'required',
             'odometer' => [
                 'required',
                 'numeric',
-                'min:' . $vehicle->getMinimumOdometer(),
+                'min:0',
             ],
-            'type' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'description' => 'required|string',
+            'type' => 'nullable|string|max:255',
+            'service_type' => 'required|string|max:255',
+            'category' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'workshop' => 'nullable|string|max:255',
-            'cost' => 'required|numeric|min:0',
-            'next_maintenance_date' => 'nullable|date|after:maintenance_date',
+            'place' => 'required|string|max:255',
+            'user_id' => 'nullable|exists:users,id',
+            'payment_method' => 'required|string|max:255',
+            'cost' => 'nullable|numeric|min:0',
+            'total_cost' => 'nullable|numeric|min:0',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
+            'next_maintenance_date' => 'nullable|date|after:service_date',
             'next_maintenance_odometer' => 'nullable|numeric|min:0',
             'parts_replaced' => 'nullable|string',
             'notes' => 'nullable|string'
-        ], [
-            'odometer.min' => $vehicle->getOdometerValidationMessage(),
         ]);
 
+        // Handle file upload
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('maintenances', $filename, 'public');
+            $validated['attachment'] = $filename;
+        }
+
+        // Set maintenance_date from service_date if not provided
+        if (!isset($validated['maintenance_date'])) {
+            $validated['maintenance_date'] = $validated['service_date'];
+        }
+
+        // Set user_id from auth if not provided
+        if (!isset($validated['user_id'])) {
+            $validated['user_id'] = auth()->id();
+        }
+
+        // Set default values
         $validated['status'] = 'Completed';
+        if (!isset($validated['cost'])) {
+            $validated['cost'] = 0;
+        }
+        if (!isset($validated['total_cost'])) {
+            $validated['total_cost'] = 0;
+        }
 
         Maintenance::create($validated);
 
         return redirect()->route('maintenances.index')
-            ->with('success', 'Data perawatan berhasil ditambahkan!');
+            ->with('success', 'Service data has been added successfully!');
     }
 
     /**

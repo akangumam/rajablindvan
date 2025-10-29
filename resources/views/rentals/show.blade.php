@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Detail Rental')
+@section('title', 'Rental Detail')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -13,13 +13,13 @@
                         Detail Rental - {{ $rental->rental_code }}
                     </h5>
                     <div class="btn-group">
-                        @if($rental->status === 'reserved')
+                        @if($rental->Status === 'reserved')
                             <a href="{{ route('rentals.edit', $rental) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit me-1"></i>Edit
                             </a>
                         @endif
                         <a href="{{ route('rentals.index') }}" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-arrow-left me-1"></i>Kembali
+                            <i class="fas fa-arrow-left me-1"></i>Back
                         </a>
                     </div>
                 </div>
@@ -27,33 +27,33 @@
                     <!-- Status Alert -->
                     <div class="row mb-4">
                         <div class="col-12">
-                            <div class="alert alert-{{ $rental->status_class }} d-flex align-items-center">
+                            <div class="alert alert-{{ $rental->Status_class }} d-flex align-items-center">
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">
                                         <i class="fas 
-                                            @if($rental->status === 'reserved') fa-clock
-                                            @elseif($rental->status === 'active') fa-play-circle
-                                            @elseif($rental->status === 'completed') fa-check-circle
+                                            @if($rental->Status === 'reserved') fa-clock
+                                            @elseif($rental->Status === 'active') fa-play-circle
+                                            @elseif($rental->Status === 'completed') fa-check-circle
                                             @else fa-times-circle
                                             @endif
                                             me-2"></i>
-                                        Status: {{ $rental->status_label }}
+                                        Status: {{ $rental->Status_label }}
                                     </h6>
                                     @if($rental->isOverdue())
                                         <small class="text-danger">
                                             <i class="fas fa-exclamation-triangle"></i>
-                                            Terlambat {{ $rental->getDaysOverdue() }} hari dari jadwal
+                                            Overdue {{ $rental->getDaysOverdue() }} hari dari jadwal
                                         </small>
                                     @endif
                                 </div>
                                 <div>
                                     @if($rental->canBeStarted())
                                         <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#startRentalModal">
-                                            <i class="fas fa-play me-1"></i>Mulai Rental
+                                            <i class="fas fa-play me-1"></i>Start Rental
                                         </button>
                                     @elseif($rental->canBeCompleted())
                                         <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#completeRentalModal">
-                                            <i class="fas fa-check me-1"></i>Selesaikan
+                                            <i class="fas fa-check me-1"></i>Endkan
                                         </button>
                                     @endif
                                 </div>
@@ -71,13 +71,13 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $rental->customer->name }}</h5>
                                     <div class="row">
-                                        <div class="col-sm-4"><strong>Telepon:</strong></div>
+                                        <div class="col-sm-4"><strong>Phone:</strong></div>
                                         <div class="col-sm-8">{{ $rental->customer->phone }}</div>
                                     </div>
-                                    @if($rental->customer->email)
+                                    @if($rental->customer->Email)
                                     <div class="row">
                                         <div class="col-sm-4"><strong>Email:</strong></div>
-                                        <div class="col-sm-8">{{ $rental->customer->email }}</div>
+                                        <div class="col-sm-8">{{ $rental->customer->Email }}</div>
                                     </div>
                                     @endif
                                     <div class="row">
@@ -85,7 +85,7 @@
                                         <div class="col-sm-8"><span class="badge bg-dark">{{ $rental->customer->id_number }}</span></div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-4"><strong>Alamat:</strong></div>
+                                        <div class="col-sm-4"><strong>Address:</strong></div>
                                         <div class="col-sm-8">{{ $rental->customer->address }}</div>
                                     </div>
                                     @if($rental->customer->emergency_contact)
@@ -106,7 +106,7 @@
                         <div class="col-md-6">
                             <div class="card border-success mb-4">
                                 <div class="card-header bg-success text-white">
-                                    <h6 class="mb-0"><i class="fas fa-car me-2"></i>Informasi Kendaraan</h6>
+                                    <h6 class="mb-0"><i class="fas fa-car me-2"></i>Vehicle Information</h6>
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $rental->vehicle->name }}</h5>
@@ -119,7 +119,7 @@
                                         <div class="col-sm-8">{{ $rental->vehicle->brand }} {{ $rental->vehicle->model }}</div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-4"><strong>Tahun:</strong></div>
+                                        <div class="col-sm-4"><strong>Year:</strong></div>
                                         <div class="col-sm-8">{{ $rental->vehicle->year }}</div>
                                     </div>
                                     <div class="row">
@@ -127,7 +127,7 @@
                                         <div class="col-sm-8">{{ $rental->vehicle->transmission }}</div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-4"><strong>Jenis Mesin:</strong></div>
+                                        <div class="col-sm-4"><strong>Engine Type:</strong></div>
                                         <div class="col-sm-8">{{ $rental->vehicle->engine_type }}</div>
                                     </div>
                                 </div>
@@ -147,10 +147,10 @@
                                         <div class="col-md-6">
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
-                                                    <h6 class="text-primary mb-1">Tanggal Mulai</h6>
+                                                    <h6 class="text-primary mb-1">Date Start</h6>
                                                     <div class="fw-bold">{{ $rental->start_date->format('d F Y') }}</div>
                                                     @if($rental->actual_start_time)
-                                                        <small class="text-muted">Dimulai: {{ $rental->actual_start_time->format('d/m/Y H:i') }}</small>
+                                                        <small class="text-muted">DiStart: {{ $rental->actual_start_time->format('d/m/Y H:i') }}</small>
                                                     @endif
                                                 </div>
                                             </div>
@@ -158,10 +158,10 @@
                                         <div class="col-md-6">
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
-                                                    <h6 class="text-warning mb-1">Tanggal Selesai</h6>
+                                                    <h6 class="text-warning mb-1">Date End</h6>
                                                     <div class="fw-bold">{{ $rental->end_date->format('d F Y') }}</div>
                                                     @if($rental->actual_end_time)
-                                                        <small class="text-muted">Selesai: {{ $rental->actual_end_time->format('d/m/Y H:i') }}</small>
+                                                        <small class="text-muted">End: {{ $rental->actual_end_time->format('d/m/Y H:i') }}</small>
                                                     @endif
                                                 </div>
                                             </div>
@@ -172,8 +172,8 @@
                                         <div class="col-md-4">
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
-                                                    <h6 class="text-success mb-1">Durasi</h6>
-                                                    <div class="fw-bold">{{ $rental->duration_days }} Hari</div>
+                                                    <h6 class="text-success mb-1">Duration</h6>
+                                                    <div class="fw-bold">{{ $rental->duration_days }} days</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -188,7 +188,7 @@
                                         <div class="col-md-4">
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
-                                                    <h6 class="text-warning mb-1">Tarif {{ $rental->getRentalTypeLabel() }}</h6>
+                                                    <h6 class="text-warning mb-1">Rate {{ $rental->getRentalTypeLabel() }}</h6>
                                                     <div class="fw-bold">Rp {{ number_format($rental->getEffectiveRate(), 0, ',', '.') }}</div>
                                                 </div>
                                             </div>
@@ -199,7 +199,7 @@
                                         <div class="col-md-6">
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
-                                                    <h6 class="text-primary mb-1">Odometer Awal</h6>
+                                                    <h6 class="text-primary mb-1">Start Odometer</h6>
                                                     <div class="fw-bold">{{ number_format($rental->start_odometer, 0, ',', '.') }} km</div>
                                                 </div>
                                             </div>
@@ -207,15 +207,15 @@
                                         <div class="col-md-6">
                                             <div class="card bg-light">
                                                 <div class="card-body py-2">
-                                                    <h6 class="text-warning mb-1">Odometer Akhir</h6>
+                                                    <h6 class="text-warning mb-1">End Odometer</h6>
                                                     <div class="fw-bold">
                                                         @if($rental->end_odometer)
                                                             {{ number_format($rental->end_odometer, 0, ',', '.') }} km
                                                             <small class="text-muted d-block">
-                                                                Jarak: {{ number_format($rental->getTotalDistance(), 0, ',', '.') }} km
+                                                                Distance: {{ number_format($rental->getTotalDistance(), 0, ',', '.') }} km
                                                             </small>
                                                         @else
-                                                            <span class="text-muted">Belum selesai</span>
+                                                            <span class="text-muted">Not ended yet</span>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -230,7 +230,7 @@
                         <div class="col-md-4">
                             <div class="card border-warning mb-4">
                                 <div class="card-header bg-warning text-dark">
-                                    <h6 class="mb-0"><i class="fas fa-money-bill me-2"></i>Ringkasan Biaya</h6>
+                                    <h6 class="mb-0"><i class="fas fa-money-bill me-2"></i>Ringkasan Cost</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between mb-2">
@@ -243,13 +243,13 @@
                                     </div>
                                     @if($rental->additional_charges > 0)
                                     <div class="d-flex justify-content-between mb-2">
-                                        <span>Biaya Tambahan:</span>
+                                        <span>Additional Expenses:</span>
                                         <span class="fw-bold text-danger">Rp {{ number_format($rental->additional_charges, 0, ',', '.') }}</span>
                                     </div>
                                     @endif
                                     <hr>
                                     <div class="d-flex justify-content-between">
-                                        <span class="fw-bold">Total Akhir:</span>
+                                        <span class="fw-bold">Final Total:</span>
                                         <span class="fw-bold h5 text-primary">Rp {{ number_format($rental->getFinalAmount(), 0, ',', '.') }}</span>
                                     </div>
                                 </div>
@@ -258,7 +258,7 @@
                             @if($rental->additional_charges > 0 && $rental->additional_charges_notes)
                             <div class="card border-danger mb-4">
                                 <div class="card-header bg-danger text-white">
-                                    <h6 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Biaya Tambahan</h6>
+                                    <h6 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Additional Expenses</h6>
                                 </div>
                                 <div class="card-body">
                                     <p class="mb-0">{{ $rental->additional_charges_notes }}</p>
@@ -274,7 +274,7 @@
                         <div class="col-12">
                             <div class="card border-secondary mb-4">
                                 <div class="card-header bg-secondary text-white">
-                                    <h6 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Lokasi</h6>
+                                    <h6 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Locations</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -303,7 +303,7 @@
                         <div class="col-12">
                             <div class="card border-info">
                                 <div class="card-header bg-info text-white">
-                                    <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Catatan</h6>
+                                    <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Notes</h6>
                                 </div>
                                 <div class="card-body">
                                     <p class="mb-0">{{ $rental->notes }}</p>
@@ -326,12 +326,12 @@
             <form action="{{ route('rentals.start', $rental) }}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title">Mulai Rental - {{ $rental->rental_code }}</h5>
+                    <h5 class="modal-title">Start Rental - {{ $rental->rental_code }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="actual_start_odometer" class="form-label">Odometer Saat Ini (km) <span class="text-danger">*</span></label>
+                        <label for="actual_start_odometer" class="form-label">Current Odometer (km) <span class="text-danger">*</span></label>
                         <input type="number" 
                                class="form-control" 
                                id="actual_start_odometer"
@@ -343,12 +343,12 @@
                         <small class="text-muted">Minimum: {{ number_format($rental->start_odometer) }} km</small>
                     </div>
                     <div class="alert alert-info">
-                        <strong>Perhatian:</strong> Pastikan kondisi kendaraan sudah dicek dan siap untuk disewakan.
+                        <strong>Attention:</strong> Make sure the Vehicle condition is already checked and ready to be rented.
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Mulai Rental</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-success">Start Rental</button>
                 </div>
             </form>
         </div>
@@ -364,12 +364,12 @@
             <form action="{{ route('rentals.complete', $rental) }}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title">Selesaikan Rental - {{ $rental->rental_code }}</h5>
+                    <h5 class="modal-title">Endkan Rental - {{ $rental->rental_code }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="end_odometer" class="form-label">Odometer Akhir (km) <span class="text-danger">*</span></label>
+                        <label for="end_odometer" class="form-label">End Odometer (km) <span class="text-danger">*</span></label>
                         <input type="number" 
                                class="form-control" 
                                id="end_odometer"
@@ -380,7 +380,7 @@
                         <small class="text-muted">Minimum: {{ number_format($rental->start_odometer) }} km</small>
                     </div>
                     <div class="mb-3">
-                        <label for="additional_charges" class="form-label">Biaya Tambahan (Rp)</label>
+                        <label for="additional_charges" class="form-label">Additional Expenses (Rp)</label>
                         <input type="number" 
                                class="form-control" 
                                id="additional_charges"
@@ -391,17 +391,17 @@
                         <small class="text-muted">Denda, bahan bakar, kerusakan, dll.</small>
                     </div>
                     <div class="mb-3">
-                        <label for="additional_charges_notes" class="form-label">Catatan Biaya Tambahan</label>
+                        <label for="additional_charges_notes" class="form-label">Notes Additional Expenses</label>
                         <textarea class="form-control" 
                                   id="additional_charges_notes"
                                   name="additional_charges_notes" 
                                   rows="2" 
-                                  placeholder="Jelaskan alasan biaya tambahan..."></textarea>
+                                  placeholder="Jelaskan Reasons Additional Expenses..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-warning">Selesaikan Rental</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-warning">Endkan Rental</button>
                 </div>
             </form>
         </div>
@@ -409,3 +409,30 @@
 </div>
 @endif
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

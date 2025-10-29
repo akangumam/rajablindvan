@@ -37,4 +37,8 @@ return [
     // Messages
     'no_customers' => 'Belum ada pelanggan',
     'add_first_customer' => 'Tambah pelanggan pertama Anda',
+    'add_first' => 'Tambah Pengguna Pertama',
+    'delete_customer' => 'Hapus Pengguna',
+    'delete_confirm' => 'Apakah Anda yakin ingin menghapus pengguna',
+    'delete_note' => 'Data yang terkait dengan pengguna ini akan tetap ada namun tidak lagi terhubung',
 ];

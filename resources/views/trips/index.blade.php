@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Rute/Perjalanan')
+@section('title', 'Routes/Trips')
 
 @section('content')
 <style>
@@ -37,9 +37,9 @@
 </style>
 
 <div class="page-header">
-    <h1 class="page-title">Rute / Perjalanan</h1>
+    <h1 class="page-title">Rute / trip</h1>
     <a href="{{ route('trips.create') }}" class="btn-add">
-        TAMBAH BARU
+        ADD NEW
     </a>
 </div>
 
@@ -57,13 +57,13 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Tanggal</th>
-                                <th>Kendaraan</th>
+                                <th>Date</th>
+                                <th>Vehicle</th>
                                 <th>Rute</th>
-                                <th>Jarak</th>
+                                <th>Distance</th>
                                 <th>Driver</th>
-                                <th>Tujuan</th>
-                                <th>Aksi</th>
+                                <th>Destination</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,9 +87,37 @@
                 </div>
                 {{ $trips->links() }}
             @else
-                <p class="text-center text-muted py-5">Belum ada data perjalanan</p>
+                <p class="text-center text-muted py-5">No data yet trip</p>
             @endif
         </div>
     </div>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

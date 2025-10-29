@@ -17,17 +17,17 @@ class IncomeController extends Controller
         
         // Filter incomes based on user type
         if ($user && $user->isPengelola()) {
-            $incomes = Income::with('vehicle')
+            $incomes = Income::with(['vehicle', 'user'])
                 ->latest('income_date')
                 ->paginate(20);
         } elseif ($user && $user->isSopir()) {
             $vehicleIds = $user->vehicles()->pluck('vehicles.id');
-            $incomes = Income::with('vehicle')
+            $incomes = Income::with(['vehicle', 'user'])
                 ->whereIn('vehicle_id', $vehicleIds)
                 ->latest('income_date')
                 ->paginate(20);
         } else {
-            $incomes = Income::with('vehicle')
+            $incomes = Income::with(['vehicle', 'user'])
                 ->latest('income_date')
                 ->paginate(20);
         }
@@ -82,20 +82,37 @@ class IncomeController extends Controller
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'income_date' => 'required|date',
+            'income_time' => 'nullable|date_format:H:i',
             'odometer' => 'nullable|numeric|min:0',
-            'category' => 'required|string|max:255',
-            'source' => 'nullable|string|max:255',
-            'description' => 'required|string',
+            'type' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
-            'payment_method' => 'nullable|string|max:255',
-            'invoice_number' => 'nullable|string|max:255',
-            'notes' => 'nullable|string'
+            'notes' => 'nullable|string',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120'
         ]);
+
+        // Set default time to now if not provided
+        if (empty($validated['income_time'])) {
+            $validated['income_time'] = now()->format('H:i');
+        }
+
+        // Set user_id to logged in user
+        $validated['user_id'] = auth()->id();
+        
+        // Keep description for backward compatibility (use notes as description)
+        $validated['description'] = $validated['notes'] ?? 'Income entry';
+
+        // Handle file upload
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('incomes', $filename, 'public');
+            $validated['attachment'] = $path;
+        }
 
         Income::create($validated);
 
         return redirect()->route('incomes.index')
-            ->with('success', 'Pendapatan berhasil ditambahkan!');
+            ->with('success', 'Income has been added successfully!');
     }
 
     /**

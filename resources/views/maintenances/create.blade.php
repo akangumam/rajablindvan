@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Layanan')
+@section('title', 'Add New Service')
 
 @push('styles')
 <style>
@@ -320,7 +320,7 @@
                 <div style="flex: 1;">
                     <h4 style="margin-bottom: 2px;">{{ $vehicle->name }}</h4>
                     <div style="font-size: 13px; color: #007bff; display: flex; align-items: center; gap: 4px;">
-                        <span>Kendaraan</span>
+                        <span>Vehicle</span>
                         <i class="fas fa-chevron-right" style="font-size: 10px; color: #6c757d;"></i>
                         <span>{{ $vehicle->license_plate }}</span>
                     </div>
@@ -330,7 +330,7 @@
                 <div class="title-icon">
                     <i class="fas fa-car"></i>
                 </div>
-                <h4 style="flex: 1;">Pilih Kendaraan</h4>
+                <h4 style="flex: 1;">Select Vehicle</h4>
                 <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 14px;"></i>
             @endif
         </div>
@@ -342,12 +342,12 @@
             <div class="title-icon">
                 <i class="fas fa-wrench"></i>
             </div>
-            <h4 style="margin: 0;">Layanan</h4>
+            <h4 style="margin: 0;">Add New Service</h4>
         </div>
 
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>Terjadi Kesalahan!</h6>
+                <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>An Error Occurred!</h6>
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -362,106 +362,162 @@
             <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
         @endif
 
-        <!-- Date & Time Fields -->
+        <!-- Date -->
         <div class="field-group">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label" for="maintenance_date">Tanggal</label>
-                    <input type="date" class="form-control @error('maintenance_date') is-invalid @enderror" id="maintenance_date" name="maintenance_date" value="{{ old('maintenance_date', date('Y-m-d')) }}" required>
-                    @error('maintenance_date')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label" for="maintenance_time">Jam</label>
-                    <input type="time" class="form-control @error('maintenance_time') is-invalid @enderror" id="maintenance_time" name="maintenance_time" value="{{ old('maintenance_time', date('H:i')) }}" required>
-                    @error('maintenance_time')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
+            <label class="form-label" for="service_date">1. Date</label>
+            <input type="date" class="form-control @error('service_date') is-invalid @enderror" 
+                   id="service_date" name="service_date" 
+                   value="{{ old('service_date', date('Y-m-d')) }}" required>
+            @error('service_date')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">Select date on automatic Calender selection/default is today</small>
+        </div>
+
+        <!-- Time -->
+        <div class="field-group">
+            <label class="form-label" for="service_time">2. Time</label>
+            <input type="time" class="form-control @error('service_time') is-invalid @enderror" 
+                   id="service_time" name="service_time" 
+                   value="{{ old('service_time', date('H:i')) }}" required>
+            @error('service_time')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">Select time on automatic time/default is now</small>
         </div>
 
         <!-- Odometer -->
         <div class="field-group">
-            <label class="form-label" for="odometer">Odometer (km)</label>
-            <input type="number" class="form-control @error('odometer') is-invalid @enderror" id="odometer" name="odometer" value="{{ old('odometer', isset($vehicle) ? $vehicle->getMinimumOdometer() : '') }}" step="0.1" min="{{ isset($vehicle) ? $vehicle->getMinimumOdometer() : 0 }}" placeholder="Odometer (km)" required>
+            <label class="form-label" for="odometer">3. Odometer</label>
+            <input type="number" class="form-control @error('odometer') is-invalid @enderror" 
+                   id="odometer" name="odometer" 
+                   value="{{ old('odometer', isset($vehicle) ? $vehicle->odometer : '') }}" 
+                   step="0.1" min="0" placeholder="Enter odometer reading" required>
             @error('odometer')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">Free Text</small>
             @if(isset($vehicle))
-                <small class="text-muted d-block mt-1" style="font-size: 11px;">
-                    Odometer terakhir: {{ number_format($vehicle->getMinimumOdometer()) }} km
+                <small class="text-muted d-block" style="font-size: 11px;">
+                    Latest: {{ number_format($vehicle->odometer, 1) }} km
                 </small>
             @endif
         </div>
 
-        <!-- Service Type -->
+        <!-- Type of Service -->
         <div class="field-group">
-            <label class="form-label" for="type">Jenis layanan</label>
-            <input type="text" class="form-control @error('type') is-invalid @enderror" id="type" name="type" value="{{ old('type') }}" placeholder="Jenis layanan" required>
-            @error('type')
+            <label class="form-label" for="service_type">4. Type of Service</label>
+            <select class="form-select @error('service_type') is-invalid @enderror" 
+                    id="service_type" name="service_type" required>
+                <option value="">-- Select Type of Service --</option>
+                <option value="Oil Change" {{ old('service_type') == 'Oil Change' ? 'selected' : '' }}>Oil Change</option>
+                <option value="Tire Rotation" {{ old('service_type') == 'Tire Rotation' ? 'selected' : '' }}>Tire Rotation</option>
+                <option value="Brake Service" {{ old('service_type') == 'Brake Service' ? 'selected' : '' }}>Brake Service</option>
+                <option value="Engine Repair" {{ old('service_type') == 'Engine Repair' ? 'selected' : '' }}>Engine Repair</option>
+                <option value="Transmission Service" {{ old('service_type') == 'Transmission Service' ? 'selected' : '' }}>Transmission Service</option>
+                <option value="Battery Replacement" {{ old('service_type') == 'Battery Replacement' ? 'selected' : '' }}>Battery Replacement</option>
+                <option value="AC Service" {{ old('service_type') == 'AC Service' ? 'selected' : '' }}>AC Service</option>
+                <option value="General Inspection" {{ old('service_type') == 'General Inspection' ? 'selected' : '' }}>General Inspection</option>
+                <option value="Other" {{ old('service_type') == 'Other' ? 'selected' : '' }}>Other</option>
+            </select>
+            @error('service_type')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">Drop down selection based on list that been set on setting menu</small>
         </div>
 
-        <!-- Location -->
+        <!-- Place -->
         <div class="field-group">
-            <label class="form-label" for="workshop">Lokal</label>
-            <input type="text" class="form-control @error('workshop') is-invalid @enderror" id="workshop" name="workshop" value="{{ old('workshop') }}" placeholder="Lokal">
-            @error('workshop')
+            <label class="form-label" for="place">5. Place</label>
+            <select class="form-select @error('place') is-invalid @enderror" 
+                    id="place" name="place" required>
+                <option value="">-- Select Place --</option>
+                <option value="Workshop A" {{ old('place') == 'Workshop A' ? 'selected' : '' }}>Workshop A</option>
+                <option value="Workshop B" {{ old('place') == 'Workshop B' ? 'selected' : '' }}>Workshop B</option>
+                <option value="Official Dealer" {{ old('place') == 'Official Dealer' ? 'selected' : '' }}>Official Dealer</option>
+                <option value="Independent Mechanic" {{ old('place') == 'Independent Mechanic' ? 'selected' : '' }}>Independent Mechanic</option>
+                <option value="Other" {{ old('place') == 'Other' ? 'selected' : '' }}>Other</option>
+            </select>
+            @error('place')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">Drop down selection based on list that been set on setting menu</small>
         </div>
 
-        <!-- Driver -->
+        <!-- User -->
         <div class="field-group">
-            <label class="form-label" for="driver">Pengendara</label>
-            <input type="text" class="form-control @error('driver') is-invalid @enderror" id="driver" name="driver" value="{{ old('driver', auth()->user()->name ?? '') }}" placeholder="any nomouse">
-            @error('driver')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <label class="form-label" for="user_display">6. User</label>
+            <input type="text" class="form-control" id="user_display" 
+                   value="{{ auth()->check() ? auth()->user()->name : 'Guest' }}" readonly>
+            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">Based on account logged in</small>
         </div>
 
         <!-- Payment Method -->
         <div class="field-group">
-            <label class="form-label" for="payment_method">Cara Pembayaran (Optional)</label>
-            <input type="text" class="form-control @error('payment_method') is-invalid @enderror" id="payment_method" name="payment_method" value="{{ old('payment_method') }}" placeholder="Cara Pembayaran (Optional)">
+            <label class="form-label" for="payment_method">7. Payment Method</label>
+            <select class="form-select @error('payment_method') is-invalid @enderror" 
+                    id="payment_method" name="payment_method" required>
+                <option value="">-- Select Payment Method --</option>
+                <option value="Cash" {{ old('payment_method') == 'Cash' ? 'selected' : '' }}>Cash</option>
+                <option value="Credit Card" {{ old('payment_method') == 'Credit Card' ? 'selected' : '' }}>Credit Card</option>
+                <option value="Debit Card" {{ old('payment_method') == 'Debit Card' ? 'selected' : '' }}>Debit Card</option>
+                <option value="Bank Transfer" {{ old('payment_method') == 'Bank Transfer' ? 'selected' : '' }}>Bank Transfer</option>
+                <option value="E-Wallet" {{ old('payment_method') == 'E-Wallet' ? 'selected' : '' }}>E-Wallet</option>
+                <option value="Other" {{ old('payment_method') == 'Other' ? 'selected' : '' }}>Other</option>
+            </select>
             @error('payment_method')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-        </div>
-
-        <!-- File Attachment -->
-        <div class="field-group">
-            <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('attachment').click()">
-                <i class="fas fa-paperclip me-2"></i>LAMPIRKAN FILE
-            </button>
-            <input type="file" class="d-none" id="attachment" name="attachment" accept="image/*,.pdf">
-            <small class="text-muted d-block mt-1" style="font-size: 11px;">Format: JPG, PNG, PDF (Max: 5MB)</small>
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">Drop down selection based on list that been set on setting menu</small>
         </div>
 
         <!-- Notes -->
         <div class="field-group">
-            <label class="form-label" for="notes">Catatan</label>
-            <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="4" placeholder="Catatan">{{ old('notes') }}</textarea>
+            <label class="form-label" for="notes">8. Notes</label>
+            <textarea class="form-control @error('notes') is-invalid @enderror" 
+                      id="notes" name="notes" rows="4" 
+                      placeholder="Enter service notes...">{{ old('notes') }}</textarea>
             @error('notes')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">Free Text</small>
         </div>
 
-        <!-- Hidden fields for compatibility -->
+        <!-- Attach File -->
+        <div class="field-group">
+            <label class="form-label">9. Attach File Button</label>
+            <div>
+                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('attachment').click()">
+                    <i class="fas fa-paperclip me-2"></i>ATTACH FILE
+                </button>
+                <input type="file" class="d-none @error('attachment') is-invalid @enderror" 
+                       id="attachment" name="attachment" 
+                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" 
+                       onchange="updateFileName(this)">
+                <span id="fileName" class="ms-3 text-muted" style="font-size: 13px;"></span>
+                @error('attachment')
+                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                @enderror
+            </div>
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">Max: 5MB (jpg, jpeg, png, pdf, doc, docx)</small>
+        </div>
+
+        <!-- Hidden fields for backward compatibility -->
+        <input type="hidden" name="maintenance_date" id="hidden_maintenance_date">
+        <input type="hidden" name="type" value="Service">
         <input type="hidden" name="category" value="Routine">
-        <input type="hidden" name="cost" id="hidden_cost" value="{{ old('cost', 0) }}">
-        <input type="hidden" name="description" id="hidden_description" value="{{ old('description', '-') }}">
+        <input type="hidden" name="cost" value="0">
+        <input type="hidden" name="total_cost" value="0">
+        <input type="hidden" name="description" value="-">
 
         <!-- Action Buttons -->
         <div class="d-flex gap-2 justify-content-end mt-4 mb-5" style="padding-bottom: 40px;">
             <a href="{{ route('maintenances.index') }}" class="btn btn-cancel">
-                BATAL
+                CANCEL
             </a>
             <button type="submit" class="btn btn-save">
-                DAFTAR
+                SAVE
             </button>
         </div>
     </form>
@@ -471,12 +527,12 @@
 <div id="vehicleModal" class="vehicle-modal">
     <div class="vehicle-modal-content">
         <div class="vehicle-modal-header">
-            <h5 class="vehicle-modal-title">Kendaraan</h5>
+            <h5 class="vehicle-modal-title">Vehicle</h5>
             <button class="vehicle-modal-close" onclick="closeVehicleModal()">&times;</button>
         </div>
         <div class="vehicle-modal-search" style="position: relative;">
             <i class="fas fa-search vehicle-search-icon"></i>
-            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Cari kendaraan..." onkeyup="filterVehicles()">
+            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." onkeyup="filterVehicles()">
         </div>
         <div class="vehicle-modal-body">
             @php
@@ -509,7 +565,7 @@
                     <i class="fas fa-plus" style="color: #007bff;"></i>
                 </div>
                 <div class="vehicle-item-info">
-                    <div class="vehicle-item-name" style="color: #007bff;">Tambah Kendaraan Baru</div>
+                    <div class="vehicle-item-name" style="color: #007bff;">Add New Vehicles</div>
                 </div>
                 <i class="fas fa-chevron-right vehicle-item-icon" style="color: #007bff;"></i>
             </a>
@@ -560,6 +616,59 @@ document.addEventListener('keydown', function(e) {
         closeVehicleModal();
     }
 });
+
+// Update file name display
+function updateFileName(input) {
+    const fileNameSpan = document.getElementById('fileName');
+    if (input.files && input.files[0]) {
+        const fileName = input.files[0].name;
+        const fileSize = (input.files[0].size / 1024 / 1024).toFixed(2); // Convert to MB
+        fileNameSpan.textContent = `${fileName} (${fileSize} MB)`;
+        fileNameSpan.style.color = '#28a745';
+    } else {
+        fileNameSpan.textContent = '';
+    }
+}
+
+// Sync service_date to hidden maintenance_date for backward compatibility
+document.getElementById('service_date').addEventListener('change', function() {
+    document.getElementById('hidden_maintenance_date').value = this.value;
+});
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set initial maintenance_date value
+    const serviceDateValue = document.getElementById('service_date').value;
+    document.getElementById('hidden_maintenance_date').value = serviceDateValue;
+});
 </script>
 @endpush
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

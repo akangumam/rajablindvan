@@ -416,7 +416,7 @@
                 <div style="flex: 1;">
                     <h4 style="margin-bottom: 2px;">{{ $vehicle->name }}</h4>
                     <div style="font-size: 13px; color: #007bff; display: flex; align-items: center; gap: 4px;">
-                        <span>Kendaraan</span>
+                        <span>Vehicle</span>
                         <i class="fas fa-chevron-right" style="font-size: 10px; color: #6c757d;"></i>
                         <span>{{ $vehicle->license_plate }}</span>
                     </div>
@@ -426,7 +426,7 @@
                 <div class="title-icon">
                     <i class="fas fa-car"></i>
                 </div>
-                <h4 style="flex: 1;">Pilih Kendaraan</h4>
+                <h4 style="flex: 1;">Select Vehicle</h4>
                 <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 14px;"></i>
             @endif
         </div>
@@ -443,7 +443,7 @@
 
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>Terjadi Kesalahan!</h6>
+                <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>An Error Occurred!</h6>
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -462,7 +462,7 @@
         <div class="field-group">
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label" for="fill_date">Tanggal</label>
+                    <label class="form-label" for="fill_date">Date</label>
                     <input type="date" class="form-control @error('fill_date') is-invalid @enderror" id="fill_date" name="fill_date" value="{{ old('fill_date', date('Y-m-d')) }}" required>
                     @error('fill_date')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -480,7 +480,7 @@
             <label class="form-label" for="odometer">Odometer (km)</label>
             <input type="number" class="form-control @error('odometer') is-invalid @enderror" id="odometer" name="odometer" value="{{ old('odometer', isset($vehicle) ? $vehicle->getMinimumOdometer() : '') }}" step="0.1" min="{{ isset($vehicle) ? $vehicle->getMinimumOdometer() : 0 }}" placeholder="Odometer (km)" required>
             @if(isset($vehicle))
-                <div class="helper-text">Odometer terakhir: {{ number_format($vehicle->getMinimumOdometer()) }} km</div>
+                <div class="helper-text">Latest Odometer: {{ number_format($vehicle->getMinimumOdometer()) }} km</div>
             @endif
             @error('odometer')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -491,7 +491,7 @@
         <div class="field-group">
             <label class="form-label" for="fuel_type">Bahan bakar</label>
             <select class="form-select @error('fuel_type') is-invalid @enderror" id="fuel_type" name="fuel_type" required>
-                <option value="">Pilih bahan bakar</option>
+                <option value="">Select bahan bakar</option>
                 <option value="Pertalite" {{ old('fuel_type') == 'Pertalite' ? 'selected' : '' }}>Pertalite</option>
                 <option value="Pertamax" {{ old('fuel_type') == 'Pertamax' ? 'selected' : '' }}>Pertamax</option>
                 <option value="Pertamax Turbo" {{ old('fuel_type') == 'Pertamax Turbo' ? 'selected' : '' }}>Pertamax Turbo</option>
@@ -507,15 +507,15 @@
         <div class="field-group">
             <div class="row g-3">
                 <div class="col-md-4">
-                    <label class="form-label" for="price_per_liter">Harga / L</label>
-                    <input type="number" class="form-control @error('price_per_liter') is-invalid @enderror" id="price_per_liter" name="price_per_liter" value="{{ old('price_per_liter') }}" step="50" min="0" placeholder="Harga / L" required>
+                    <label class="form-label" for="price_per_liter">Price / L</label>
+                    <input type="number" class="form-control @error('price_per_liter') is-invalid @enderror" id="price_per_liter" name="price_per_liter" value="{{ old('price_per_liter') }}" step="50" min="0" placeholder="Price / L" required>
                     @error('price_per_liter')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="total_cost_input">Total biaya</label>
-                    <input type="number" class="form-control" id="total_cost_input" step="100" min="0" placeholder="Total biaya">
+                    <label class="form-label" for="total_cost_input">Total Cost</label>
+                    <input type="number" class="form-control" id="total_cost_input" step="100" min="0" placeholder="Total Cost">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="liters">Liter</label>
@@ -541,15 +541,15 @@
                     BAHAN BAKAR
                 </div>
                 <div class="info-box-text">
-                    Jika dipilih, kami akan menghitung konsumsi bahan bakar berdasarkan pengisian terakhir. Jika tidak, pencatatan ini akan dianggap sebagai pengisian parsial dan tidak akan digunakan dalam penghitungan efisiensi bahan bakar Anda.
+                    Jika checked, we will calculate fuel Consumption based on the last fill. Jika tidak, this entry will be considered as a partial fill and will not be used in your fuel efficiency calculation.
                 </div>
             </div>
         </div>
 
-        <!-- SPBU Field -->
+        <!-- Gas Stations Field -->
         <div class="field-group">
-            <label class="form-label" for="gas_station">SPBU</label>
-            <input type="text" class="form-control @error('gas_station') is-invalid @enderror" id="gas_station" name="gas_station" value="{{ old('gas_station') }}" placeholder="SPBU">
+            <label class="form-label" for="gas_station">Gas Stations</label>
+            <input type="text" class="form-control @error('gas_station') is-invalid @enderror" id="gas_station" name="gas_station" value="{{ old('gas_station') }}" placeholder="Gas Stations">
             @error('gas_station')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -563,15 +563,15 @@
 
         <!-- Reason Field -->
         <div class="field-group">
-            <label class="form-label" for="reason">Alasan (Optional)</label>
-            <input type="text" class="form-control" id="reason" name="reason" value="{{ old('reason') }}" placeholder="Alasan (Optional)">
+            <label class="form-label" for="reason">Reasons (Optional)</label>
+            <input type="text" class="form-control" id="reason" name="reason" value="{{ old('reason') }}" placeholder="Reasons (Optional)">
         </div>
 
         <!-- Payment Method Field -->
         <div class="field-group">
-            <label class="form-label" for="payment_method">Cara Pembayaran (Optional)</label>
+            <label class="form-label" for="payment_method">Payment Methods (Optional)</label>
             <select class="form-select" id="payment_method" name="payment_method">
-                <option value="">Pilih cara pembayaran</option>
+                <option value="">Select Payment Methods</option>
                 <option value="Tunai" {{ old('payment_method') == 'Tunai' ? 'selected' : '' }}>Tunai</option>
                 <option value="Debit" {{ old('payment_method') == 'Debit' ? 'selected' : '' }}>Debit</option>
                 <option value="Kredit" {{ old('payment_method') == 'Kredit' ? 'selected' : '' }}>Kredit</option>
@@ -584,11 +584,11 @@
             <div class="form-check form-switch d-flex align-items-start">
                 <input class="form-check-input me-2 flex-shrink-0" type="checkbox" name="track_before_filled" id="track_before_filled" value="1" {{ old('track_before_filled') ? 'checked' : '' }}>
                 <label class="form-check-label" for="track_before_filled" style="margin-top: -2px;">
-                    Pengisian bahan bakar sebelumnya terlewatkan?
+                    Pengisian bahan bakar seNot yetnya terlewatkan?
                 </label>
             </div>
             <div class="helper-text" style="margin-left: 48px;">
-                Jika dipilih, perhitungan konsumsi bahan bakar akan melewatkan pengisian sebelumnya
+                If checked, fuel Consumption calculation will skip the previous fill
             </div>
         </div>
 
@@ -600,14 +600,14 @@
                 LAMPIRKAN FILE
             </label>
             <div class="helper-text mt-2">
-                Upload struk, foto, atau dokumen lainnya
+                Upload struk, foto, atau dokumen Others
             </div>
         </div>
 
         <!-- Notes Field -->
         <div class="field-group">
-            <label class="form-label" for="notes">Catatan</label>
-            <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" placeholder="Catatan" rows="4">{{ old('notes') }}</textarea>
+            <label class="form-label" for="notes">Notes</label>
+            <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" placeholder="Notes" rows="4">{{ old('notes') }}</textarea>
             @error('notes')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -619,9 +619,9 @@
         @else
             <!-- Vehicle Selector Field -->
             <div class="field-group">
-                <label class="form-label" for="vehicle_id">Pilih Kendaraan *</label>
+                <label class="form-label" for="vehicle_id">Select Vehicle *</label>
                 <select class="form-select @error('vehicle_id') is-invalid @enderror" id="vehicle_id" name="vehicle_id" required>
-                    <option value="">Pilih kendaraan</option>
+                    <option value="">Select Vehicle</option>
                     @foreach($vehicles as $vehicleOption)
                         <option value="{{ $vehicleOption->id }}" {{ old('vehicle_id') == $vehicleOption->id ? 'selected' : '' }}>
                             {{ $vehicleOption->name }} ({{ $vehicleOption->license_plate }})
@@ -637,10 +637,10 @@
         <!-- Action Buttons -->
         <div class="d-flex gap-2 justify-content-end mt-4 mb-5" style="padding-bottom: 40px;">
             <a href="{{ route('fuel-fills.index') }}" class="btn btn-cancel">
-                BATAL
+                CANCEL
             </a>
             <button type="submit" class="btn btn-save">
-                DAFTAR
+                List
             </button>
         </div>
     </form>
@@ -650,12 +650,12 @@
 <div id="vehicleModal" class="vehicle-modal">
     <div class="vehicle-modal-content">
         <div class="vehicle-modal-header">
-            <h5 class="vehicle-modal-title">Kendaraan</h5>
+            <h5 class="vehicle-modal-title">Vehicle</h5>
             <button class="vehicle-modal-close" onclick="closeVehicleModal()">&times;</button>
         </div>
         <div class="vehicle-modal-search" style="position: relative;">
             <i class="fas fa-search vehicle-search-icon"></i>
-            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Cari kendaraan..." onkeyup="filterVehicles()">
+            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." onkeyup="filterVehicles()">
         </div>
         <div class="vehicle-modal-body">
             @php
@@ -688,7 +688,7 @@
                     <i class="fas fa-plus" style="color: #007bff;"></i>
                 </div>
                 <div class="vehicle-item-info">
-                    <div class="vehicle-item-name" style="color: #007bff;">Tambah Kendaraan Baru</div>
+                    <div class="vehicle-item-name" style="color: #007bff;">Add New Vehicles</div>
                 </div>
                 <i class="fas fa-chevron-right vehicle-item-icon" style="color: #007bff;"></i>
             </a>
@@ -771,3 +771,30 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 @endpush
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

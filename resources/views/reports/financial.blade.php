@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Laporan Keuangan')
+@section('title', 'Financial Report')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,14 +10,14 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">
                     <i class="fas fa-chart-pie text-primary me-2"></i>
-                    Laporan Keuangan
+                    Report Keuangan
                 </h2>
                 <div>
                     <a href="{{ route('reports.financial.excel') }}{{ request()->getQueryString() ? '?' . request()->getQueryString() : '' }}" class="btn btn-success me-2">
                         <i class="fas fa-file-excel me-1"></i>Export Excel
                     </a>
                     <a href="{{ route('reports.dashboard') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-1"></i>Kembali
+                        <i class="fas fa-arrow-left me-1"></i>Back
                     </a>
                 </div>
             </div>
@@ -31,11 +31,11 @@
                 <div class="card-body">
                     <form method="GET" action="{{ route('reports.financial') }}" class="row g-3">
                         <div class="col-md-4">
-                            <label for="start_date" class="form-label">Tanggal Mulai</label>
+                            <label for="start_date" class="form-label">Date Start</label>
                             <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $startDate }}">
                         </div>
                         <div class="col-md-4">
-                            <label for="end_date" class="form-label">Tanggal Selesai</label>
+                            <label for="end_date" class="form-label">Date End</label>
                             <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $endDate }}">
                         </div>
                         <div class="col-md-4">
@@ -73,7 +73,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Pengeluaran</div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Expenses</div>
                             <div class="h5 mb-0 font-weight-bold">Rp {{ number_format($totalOperationalCosts, 0, ',', '.') }}</div>
                         </div>
                         <div class="col-auto">
@@ -122,7 +122,7 @@
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Tren Revenue vs Pengeluaran</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Tren Revenue vs Expenses</h6>
                 </div>
                 <div class="card-body">
                     <canvas id="financialTrendsChart"></canvas>
@@ -134,7 +134,7 @@
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Breakdown Pengeluaran</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Breakdown Expenses</h6>
                 </div>
                 <div class="card-body">
                     <canvas id="expenseBreakdownChart"></canvas>
@@ -177,7 +177,7 @@
         <div class="col-xl-6 col-lg-6">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Detail Pengeluaran</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Detail Expenses</h6>
                 </div>
                 <div class="card-body">
                     @foreach($expenses as $expense)
@@ -191,21 +191,21 @@
                     
                     <div class="mb-3">
                         <div class="d-flex justify-content-between">
-                            <span>Biaya Maintenance:</span>
+                            <span>Cost Maintenance:</span>
                             <span class="fw-bold text-danger">Rp {{ number_format($maintenanceCosts, 0, ',', '.') }}</span>
                         </div>
                     </div>
                     
                     <div class="mb-3">
                         <div class="d-flex justify-content-between">
-                            <span>Biaya Bahan Bakar:</span>
+                            <span>Cost Bahan Bakar:</span>
                             <span class="fw-bold text-danger">Rp {{ number_format($fuelCosts, 0, ',', '.') }}</span>
                         </div>
                     </div>
                     
                     <hr>
                     <div class="d-flex justify-content-between">
-                        <span class="fw-bold">Total Pengeluaran:</span>
+                        <span class="fw-bold">Total Expenses:</span>
                         <span class="fw-bold h5 text-danger">Rp {{ number_format($totalOperationalCosts, 0, ',', '.') }}</span>
                     </div>
                 </div>
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 backgroundColor: 'rgba(40, 167, 69, 0.1)',
                 tension: 0.1
             }, {
-                label: 'Pengeluaran',
+                label: 'Expenses',
                 data: expenseData,
                 borderColor: 'rgb(220, 53, 69)',
                 backgroundColor: 'rgba(220, 53, 69, 0.1)',
@@ -323,3 +323,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

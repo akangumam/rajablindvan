@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Manajemen Lokasi')
+@section('title', 'Location Management')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,11 +10,11 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">
                     <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                    Manajemen Lokasi
+                    Manajemen Locations
                 </h2>
                 <div>
                     <a href="{{ route('multi-location.dashboard') }}" class="btn btn-success me-2">
-                        <i class="fas fa-chart-bar me-1"></i>Dashboard Multi-Lokasi
+                        <i class="fas fa-chart-bar me-1"></i>Dashboard Multi-Locations
                     </a>
                     <a href="{{ route('dashboard') }}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left me-1"></i>Dashboard Utama
@@ -42,7 +42,7 @@
                         <!-- Location Info -->
                         <div class="mb-3">
                             <h6 class="text-muted mb-2">
-                                <i class="fas fa-map-marker-alt me-1"></i>Alamat
+                                <i class="fas fa-map-marker-alt me-1"></i>Address
                             </h6>
                             <p class="mb-0">{{ $location->address }}</p>
                         </div>
@@ -50,7 +50,7 @@
                         <div class="row mb-3">
                             <div class="col-6">
                                 <h6 class="text-muted mb-2">
-                                    <i class="fas fa-phone me-1"></i>Telepon
+                                    <i class="fas fa-phone me-1"></i>Phone
                                 </h6>
                                 <p class="mb-0">{{ $location->phone ?? '-' }}</p>
                             </div>
@@ -66,15 +66,15 @@
                         <hr>
                         <div class="row text-center">
                             <div class="col-4">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Kendaraan</div>
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Vehicle</div>
                                 <div class="h4 mb-0 font-weight-bold text-gray-800">{{ $location->vehicles_count }}</div>
                             </div>
                             <div class="col-4">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tersedia</div>
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Available</div>
                                 <div class="h4 mb-0 font-weight-bold text-gray-800">{{ $location->available_vehicles }}</div>
                             </div>
                             <div class="col-4">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sewa Aktif</div>
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sewa Active</div>
                                 <div class="h4 mb-0 font-weight-bold text-gray-800">{{ $location->rentals_count }}</div>
                             </div>
                         </div>
@@ -83,11 +83,11 @@
                         <hr>
                         <div class="row text-center">
                             <div class="col-6">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Pendapatan Bulan Ini</div>
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Pendapatan This Month</div>
                                 <div class="h6 mb-0 text-success">Rp {{ number_format($location->monthly_revenue, 0, ',', '.') }}</div>
                             </div>
                             <div class="col-6">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Pengeluaran Bulan Ini</div>
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Expenses This Month</div>
                                 <div class="h6 mb-0 text-danger">Rp {{ number_format($location->monthly_expenses, 0, ',', '.') }}</div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                             <div class="col-6">
                                 <div class="dropdown w-100">
                                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
-                                        <i class="fas fa-cog me-1"></i>Aksi
+                                        <i class="fas fa-cog me-1"></i>Action
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="{{ route('locations.edit', $location) }}">
@@ -117,7 +117,7 @@
                                         </a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item" href="{{ route('vehicles.index') }}?location={{ $location->id }}">
-                                            <i class="fas fa-car me-1"></i>Lihat Kendaraan
+                                            <i class="fas fa-car me-1"></i>Lihat Vehicle
                                         </a></li>
                                         <li><a class="dropdown-item" href="{{ route('rentals.index') }}?location={{ $location->id }}">
                                             <i class="fas fa-calendar me-1"></i>Lihat Sewa
@@ -138,10 +138,10 @@
                 <div class="card shadow">
                     <div class="card-body text-center py-5">
                         <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
-                        <h4 class="text-muted">Belum Ada Lokasi</h4>
-                        <p class="text-muted mb-4">Mulai dengan menambahkan lokasi bisnis pertama Anda.</p>
+                        <h4 class="text-muted">No Locations</h4>
+                        <p class="text-muted mb-4">Start dengan menambahkan Locations bisnis pertama you.</p>
                         <a href="{{ route('locations.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus me-1"></i>Tambah Lokasi
+                            <i class="fas fa-plus me-1"></i>Tambah Locations
                         </a>
                     </div>
                 </div>
@@ -165,13 +165,13 @@
                         <table class="table table-bordered">
                             <thead class="table-primary">
                                 <tr>
-                                    <th>Nama</th>
+                                    <th>Name</th>
                                     <th>Email</th>
                                     <th>Role</th>
-                                    <th>Lokasi</th>
-                                    <th>Telepon</th>
+                                    <th>Locations</th>
+                                    <th>Phone</th>
                                     <th>Status</th>
-                                    <th>Aksi</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -181,7 +181,7 @@
                                 @foreach($users as $user)
                                 <tr>
                                     <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->Email }}</td>
                                     <td>
                                         <span class="badge bg-{{ $user->role === 'admin' ? 'danger' : ($user->role === 'manager' ? 'warning' : 'info') }}">
                                             {{ ucfirst($user->role) }}
@@ -215,3 +215,30 @@
     </div>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

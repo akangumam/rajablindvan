@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Laporan Kendaraan')
+@section('title', 'Vehicle Report')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,14 +10,14 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">
                     <i class="fas fa-car text-primary me-2"></i>
-                    Laporan Kendaraan
+                    Report Vehicle
                 </h2>
                 <div>
                     <a href="{{ route('reports.vehicles.excel') }}" class="btn btn-success me-2">
                         <i class="fas fa-file-excel me-1"></i>Export Excel
                     </a>
                     <a href="{{ route('reports.dashboard') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-1"></i>Kembali
+                        <i class="fas fa-arrow-left me-1"></i>Back
                     </a>
                 </div>
             </div>
@@ -31,11 +31,11 @@
                 <div class="card-body">
                     <form method="GET" action="{{ route('reports.vehicles') }}" class="row g-3">
                         <div class="col-md-4">
-                            <label for="start_date" class="form-label">Tanggal Mulai</label>
+                            <label for="start_date" class="form-label">Date Start</label>
                             <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $startDate }}">
                         </div>
                         <div class="col-md-4">
-                            <label for="end_date" class="form-label">Tanggal Selesai</label>
+                            <label for="end_date" class="form-label">Date End</label>
                             <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $endDate }}">
                         </div>
                         <div class="col-md-4">
@@ -55,19 +55,19 @@
         <div class="col-12">
             <div class="card shadow">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Performance Kendaraan</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Performance Vehicle</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Kendaraan</th>
+                                    <th>Vehicle</th>
                                     <th>Total Rental</th>
-                                    <th>Rental Selesai</th>
+                                    <th>Rental End</th>
                                     <th>Revenue</th>
                                     <th>Utilisasi</th>
-                                    <th>Rata-rata Durasi</th>
+                                    <th>Average Duration</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -100,7 +100,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge bg-info">{{ number_format($stat['average_rental_duration'], 1) }} hari</span>
+                                        <span class="badge bg-info">{{ number_format($stat['average_rental_duration'], 1) }} days</span>
                                     </td>
                                     <td>
                                         @php
@@ -109,7 +109,7 @@
                                         @if($currentRental)
                                             <span class="badge bg-warning">Sedang Disewa</span>
                                         @else
-                                            <span class="badge bg-success">Tersedia</span>
+                                            <span class="badge bg-success">Available</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -117,7 +117,7 @@
                                 <tr>
                                     <td colspan="7" class="text-center text-muted py-4">
                                         <i class="fas fa-car fa-3x mb-3"></i><br>
-                                        Tidak ada data kendaraan ditemukan
+                                        No data available Vehicle ditemukan
                                     </td>
                                 </tr>
                                 @endforelse
@@ -136,7 +136,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Kendaraan</div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Total Vehicle</div>
                             <div class="h5 mb-0 font-weight-bold">{{ $vehicleStats->count() }}</div>
                         </div>
                         <div class="col-auto">
@@ -152,7 +152,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Kendaraan Tersedia</div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">available vehicles</div>
                             <div class="h5 mb-0 font-weight-bold">
                                 {{ $vehicleStats->filter(function($stat) { return !$stat['vehicle']->getCurrentRental(); })->count() }}
                             </div>
@@ -188,7 +188,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-uppercase mb-1">Rata-rata Utilisasi</div>
+                            <div class="text-xs font-weight-bold text-uppercase mb-1">Average Utilization</div>
                             <div class="h5 mb-0 font-weight-bold">
                                 {{ number_format($vehicleStats->avg('utilization_rate'), 1) }}%
                             </div>
@@ -203,3 +203,30 @@
     </div>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

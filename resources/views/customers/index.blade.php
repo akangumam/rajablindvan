@@ -9,19 +9,29 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 24px;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     .page-title {
-        font-size: 28px;
+        font-size: 32px;
         font-weight: 700;
-        color: #333;
-        margin: 0;
+        color: #2c3e50;
+        margin: 0 0 8px 0;
         display: flex;
         align-items: center;
         gap: 12px;
     }
-    .search-icon {
-        color: #3498db;
-        font-size: 24px;
+    .page-title i {
+        font-size: 28px;
+        color: #007bff;
+    }
+    .page-subtitle {
+        font-size: 15px;
+        color: #7f8c8d;
+        margin: 0;
+        font-weight: 400;
     }
     .btn-add-user {
         background: white;
@@ -96,7 +106,7 @@
         color: #333;
         font-size: 15px;
     }
-    .user-email {
+    .user-Email {
         color: #666;
         font-size: 14px;
     }
@@ -112,11 +122,11 @@
         background: #e3f2fd;
         color: #1976d2;
     }
-    .badge-sopir {
+    .badge-driver {
         background: #fff3e0;
         color: #f57c00;
     }
-    .status-badge {
+    .Status-badge {
         display: inline-block;
         padding: 6px 14px;
         border-radius: 20px;
@@ -124,11 +134,11 @@
         font-weight: 600;
         letter-spacing: 0.3px;
     }
-    .status-aktif {
+    .Status-Active {
         background: #d4edda;
         color: #155724;
     }
-    .status-nonaktif {
+    .Status-nonActive {
         background: #f8d7da;
         color: #721c24;
     }
@@ -202,12 +212,15 @@
 </style>
 
 <div class="page-header">
-    <h1 class="page-title">
-        Pengguna
-        <i class="fas fa-search search-icon"></i>
-    </h1>
+    <div>
+        <h1 class="page-title">
+            <i class="fas fa-users"></i>
+            Customers
+        </h1>
+        <p class="page-subtitle">Manage customer information and contact details</p>
+    </div>
     <a href="{{ route('customers.create') }}" class="btn-add-user">
-        TAMBAH BARU
+        {{ strtoupper(__('common.add_new')) }}
     </a>
 </div>
 
@@ -232,22 +245,22 @@
             <tr>
                 <th>
                     <span class="sortable-header">
-                        # Nama
+                        # Name
                         <i class="fas fa-sort sort-icon"></i>
                     </span>
                 </th>
                 <th>Email</th>
                 <th>Tipe Pengguna</th>
                 <th>Masa berlaku izin mengemudi</th>
-                <th>Kendaraan / Pengguna</th>
-                <th>Aktif</th>
-                <th style="text-align: right;">Aksi</th>
+                <th>Vehicle / Pengguna</th>
+                <th>Active</th>
+                <th style="text-align: right;">Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach($customers as $index => $customer)
             @php
-                $user = \App\Models\User::where('email', $customer->email)->first();
+                $user = \App\Models\User::where('Email', $customer->Email)->first();
                 $userType = $user ? $user->user_type : 'Customer';
                 $assignedVehicles = $user ? $user->vehicles()->count() : 0;
             @endphp
@@ -256,20 +269,20 @@
                     <div class="user-name">{{ $index + 1 }}. {{ $customer->name }}</div>
                 </td>
                 <td>
-                    <div class="user-email">{{ $customer->email ?? '-' }}</div>
+                    <div class="user-Email">{{ $customer->Email ?? '-' }}</div>
                 </td>
                 <td>
                     @if($userType == 'Pengelola')
                         <span class="badge-type badge-pengelola">Administrator</span>
-                    @elseif($userType == 'Sopir')
-                        <span class="badge-type badge-sopir">Sopir</span>
+                    @elseif($userType == 'driver')
+                        <span class="badge-type badge-driver">driver</span>
                     @else
                         <span class="badge-type" style="background: #f5f5f5; color: #666;">Customer</span>
                     @endif
                 </td>
                 <td>
                     <div style="color: #666;">
-                        @if($userType == 'Sopir' && isset($customer->license_category))
+                        @if($userType == 'driver' && isset($customer->license_category))
                             SIM {{ $customer->license_category }}
                         @else
                             -
@@ -279,20 +292,20 @@
                 <td>
                     <div style="color: #666;">
                         @if($assignedVehicles > 0)
-                            {{ $assignedVehicles }} kendaraan
+                            {{ $assignedVehicles }} Vehicle
                         @else
                             -
                         @endif
                     </div>
                 </td>
                 <td>
-                    <span class="status-badge {{ $customer->is_active ? 'status-aktif' : 'status-nonaktif' }}">
+                    <span class="Status-badge {{ $customer->is_active ? 'Status-Active' : 'Status-nonActive' }}">
                         {{ $customer->is_active ? 'Ya' : 'Tidak' }}
                     </span>
                 </td>
                 <td>
                     <div class="action-buttons">
-                        <a href="{{ route('customers.edit', $customer) }}" class="action-icon-btn btn-edit" title="Edit Pengguna">
+                        <a href="{{ route('customers.edit', $customer) }}" class="action-icon-btn btn-edit" title="{{ __('customer.edit_customer') }}">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
                         @php
@@ -302,7 +315,7 @@
                         <form action="{{ route('customers.destroy', $customer) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event, '{{ $customer->name }}')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="action-icon-btn btn-delete" title="Hapus Pengguna">
+                            <button type="submit" class="action-icon-btn btn-delete" title="{{ __('customer.delete_customer') }}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -325,12 +338,12 @@
 @else
 <div class="empty-state">
     <div class="empty-icon">👥</div>
-    <h3 class="empty-title">Belum Ada Data Pengguna</h3>
+    <h3 class="empty-title">No data yet Pengguna</h3>
     <p class="empty-description">
-        Mulai dengan menambahkan pengguna pertama Anda untuk mengelola sistem.
+        Start dengan menambahkan pengguna pertama you untuk mengelola sistem.
     </p>
     <a href="{{ route('customers.create') }}" class="btn-add-user">
-        TAMBAH PENGGUNA PERTAMA
+        {{ strtoupper(__('customer.add_first')) }}
     </a>
 </div>
 @endif
@@ -340,7 +353,7 @@
 function confirmDelete(event, userName) {
     event.preventDefault();
     
-    if (confirm('Apakah Anda yakin ingin menghapus pengguna "' + userName + '"?\n\nData yang terkait dengan pengguna ini akan tetap ada namun tidak lagi terhubung.')) {
+    if (confirm('{{ __("customer.delete_confirm") }} "' + userName + '"?\n\n{{ __("customer.delete_note") }}')) {
         event.target.submit();
     }
     
@@ -349,3 +362,31 @@ function confirmDelete(event, userName) {
 </script>
 @endpush
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

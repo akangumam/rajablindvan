@@ -1,166 +1,279 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Pengaturan')
+@section('title', 'Settings')
+
+@push('styles')
+<style>
+body {
+    background-color: #f8f9fa;
+}
+
+.settings-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.settings-header {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.settings-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.settings-count {
+    color: #6c757d;
+    font-size: 18px;
+}
+
+.settings-section {
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.settings-section-title {
+    padding: 16px 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+    font-size: 14px;
+    color: #495057;
+}
+
+.settings-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.settings-item {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.settings-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.2s;
+}
+
+.settings-link:hover {
+    background: #f8f9fa;
+    color: #333;
+}
+
+.settings-link-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.settings-number {
+    width: 24px;
+    font-weight: 500;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.settings-label {
+    font-size: 15px;
+}
+
+.settings-arrow {
+    color: #6c757d;
+    font-size: 18px;
+}
+
+.settings-note {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.settings-note-title {
+    font-weight: 400;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.settings-note-text {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.8;
+    margin: 0;
+}
+</style>
+@endpush
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="row">
-        <!-- Sidebar Menu -->
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">
-                        <i class="bi bi-gear-fill text-primary me-2"></i>
-                        Pengaturan
-                    </h5>
-                </div>
-                <div class="list-group list-group-flush">
-                    <!-- Sub-menu Pengaturan -->
-                    <a href="{{ route('settings.units') }}" class="list-group-item list-group-item-action ps-4">
-                        <i class="bi bi-speedometer2 text-muted me-2"></i>
-                        Satuan
-                    </a>
-                    <a href="{{ route('settings.reminders') }}" class="list-group-item list-group-item-action ps-4">
-                        <i class="bi bi-bell text-muted me-2"></i>
-                        Pengingat
-                    </a>
-                    <a href="{{ route('settings.format') }}" class="list-group-item list-group-item-action ps-4">
-                        <i class="bi bi-calendar3 text-muted me-2"></i>
-                        Format
-                    </a>
-                    
-                    <!-- Divider -->
-                    <div class="list-group-item bg-light py-1"></div>
-                    
-                    <a href="{{ route('settings.account') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-person-circle text-muted me-2"></i>
-                        Akun saya
-                    </a>
-                    <a href="{{ route('settings.index') }}" class="list-group-item list-group-item-action active">
-                        <i class="bi bi-file-earmark-text text-primary me-2"></i>
-                        File dan penyimpanan
-                    </a>
-                    <a href="{{ route('settings.fuel-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-fuel-pump text-muted me-2"></i>
-                        Bahan bakar
-                    </a>
-                    <a href="{{ route('settings.fuel-stations') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-shop text-muted me-2"></i>
-                        Spbu
-                    </a>
-                    <a href="{{ route('settings.locations') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-geo-alt text-muted me-2"></i>
-                        Lokasi
-                    </a>
-                    <a href="{{ route('settings.service-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-wrench text-muted me-2"></i>
-                        Jenis layanan
-                    </a>
-                    <a href="{{ route('settings.expense-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-wallet2 text-muted me-2"></i>
-                        Jenis biaya
-                    </a>
-                    <a href="{{ route('settings.income-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-cash-stack text-muted me-2"></i>
-                        Jenis pendapatan
-                    </a>
-                    <a href="{{ route('settings.reasons') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-briefcase text-muted me-2"></i>
-                        Alasan
-                    </a>
-                    <a href="{{ route('settings.payment-methods') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-credit-card text-muted me-2"></i>
-                        Cara Pembayaran
-                    </a>
-                    <a href="{{ route('settings.forms') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-file-earmark text-muted me-2"></i>
-                        Formulir
-                    </a>
-                    <a href="{{ route('settings.contacts') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-envelope text-muted me-2"></i>
-                        Menghubungi
-                    </a>
-                </div>
-            </div>
-        </div>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="fas fa-cog"></i>
+        Settings
+    </h1>
+    <p class="page-subtitle">Configure your application preferences and formatting options</p>
+</div>
 
-        <!-- Main Content -->
-        <div class="col-md-9">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">File dan penyimpanan</h5>
-                </div>
-                <div class="card-body">
-                        <div class="alert alert-info">
-                            <h6 class="alert-heading">
-                                <i class="bi bi-info-circle me-2"></i>
-                                File dan penyimpanan
-                            </h6>
-                            <p class="mb-0">Halaman ini digunakan untuk mengelola file dan penyimpanan data sistem.</p>
-                        </div>
-                        
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h6 class="card-title">Total Penyimpanan</h6>
-                                        <h3 class="mb-0">0 GB</h3>
-                                        <small class="text-muted">dari 10 GB tersedia</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h6 class="card-title">File Tersimpan</h6>
-                                        <h3 class="mb-0">0</h3>
-                                        <small class="text-muted">dokumen & gambar</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="settings-container">
+    <!-- Header -->
+    <div class="settings-header">
+        <h4>SETTINGS <span class="settings-count">- (8)</span></h4>
+    </div>
+
+    <!-- Section 1-3: Apps Settings -->
+    <div class="settings-section">
+        <ul class="settings-list">
+            <li class="settings-item">
+                <a href="{{ route('settings.format') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">1.</span>
+                        <i class="fas fa-sliders-h" style="color: #667eea; font-size: 16px;"></i>
+                        <span class="settings-label">Apps Format</span>
                     </div>
-                </div>
-            </div>
+                    <i class="fas fa-chevron-right settings-arrow"></i>
+                </a>
+            </li>
+            <li class="settings-item">
+                <a href="{{ route('settings.account') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">2.</span>
+                        <i class="fas fa-user-circle" style="color: #3498db; font-size: 16px;"></i>
+                        <span class="settings-label">My Account</span>
+                    </div>
+                    <i class="fas fa-chevron-right settings-arrow"></i>
+                </a>
+            </li>
+            <li class="settings-item">
+                <a href="{{ route('settings.file-storage') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">3.</span>
+                        <i class="fas fa-folder-open" style="color: #f39c12; font-size: 16px;"></i>
+                        <span class="settings-label">File and Storage</span>
+                    </div>
+                    <i class="fas fa-chevron-right settings-arrow"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Selection List Section -->
+    <div class="settings-section">
+        <div class="settings-section-title">Selection List</div>
+        <ul class="settings-list">
+            <li class="settings-item">
+                <a href="{{ route('settings.locations') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">4.</span>
+                        <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 16px;"></i>
+                        <span class="settings-label">Place</span>
+                    </div>
+                    <i class="fas fa-chevron-right settings-arrow"></i>
+                </a>
+            </li>
+            <li class="settings-item">
+                <a href="{{ route('settings.service-types') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">5.</span>
+                        <i class="fas fa-wrench" style="color: #95a5a6; font-size: 16px;"></i>
+                        <span class="settings-label">Types of Service</span>
+                    </div>
+                    <i class="fas fa-chevron-right settings-arrow"></i>
+                </a>
+            </li>
+            <li class="settings-item">
+                <a href="{{ route('settings.expense-types') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">6.</span>
+                        <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 16px;"></i>
+                        <span class="settings-label">Type of Expense</span>
+                    </div>
+                    <i class="fas fa-chevron-right settings-arrow"></i>
+                </a>
+            </li>
+            <li class="settings-item">
+                <a href="{{ route('settings.income-types') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">7.</span>
+                        <i class="fas fa-coins" style="color: #27ae60; font-size: 16px;"></i>
+                        <span class="settings-label">Type of Income</span>
+                    </div>
+                    <i class="fas fa-chevron-right settings-arrow"></i>
+                </a>
+            </li>
+            <li class="settings-item">
+                <a href="{{ route('settings.payment-methods') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">8.</span>
+                        <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 16px;"></i>
+                        <span class="settings-label">Payment Methods</span>
+                    </div>
+                    <i class="fas fa-chevron-right settings-arrow"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Note Section -->
+    <div class="settings-note">
+        <div class="settings-note-title">
+            Pada sub menu kategori Selection List terdiri atas beberapa fungsi sbb:
+        </div>
+        <div class="settings-note-text">
+            - Add New<br>
+            - Edit<br>
+            - Delete
         </div>
     </div>
 </div>
-
-<style>
-.settings-card {
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.settings-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-
-.icon-wrapper {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.card-title {
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.card-text {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-}
-
-.btn {
-    transition: all 0.3s ease;
-}
-
-.btn:hover {
-    transform: translateX(5px);
-}
-</style>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

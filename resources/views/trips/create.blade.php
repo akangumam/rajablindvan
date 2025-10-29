@@ -27,17 +27,17 @@
     }
 @endphp
 
-<!-- Tanggal -->
+<!-- Date -->
 <div class="field-group">
-    <label class="form-label">Tanggal</label>
+    <label class="form-label">Date</label>
     <input type="date" name="trip_date" class="form-control" value="{{ old('trip_date', date('Y-m-d')) }}" required>
 </div>
 
-<!-- Waktu Mulai dan Selesai -->
+<!-- Start and End Time -->
 <div class="row">
     <div class="col-md-6">
         <div class="field-group">
-            <label class="form-label">Waktu mulai</label>
+            <label class="form-label">Waktu Start</label>
             <div class="input-group">
                 <input type="time" name="start_time" id="startTimeInput" class="form-control" value="{{ old('start_time') }}" style="border-right: 0;">
                 <button type="button" class="input-group-text" onclick="openStartTimePicker()" style="cursor: pointer; background: white; border-left: 0;">
@@ -48,7 +48,7 @@
     </div>
     <div class="col-md-6">
         <div class="field-group">
-            <label class="form-label">Waktu selesai</label>
+            <label class="form-label">Waktu End</label>
             <div class="input-group">
                 <input type="time" name="end_time" id="endTimeInput" class="form-control" value="{{ old('end_time') }}" style="border-right: 0;">
                 <button type="button" class="input-group-text" onclick="openEndTimePicker()" style="cursor: pointer; background: white; border-left: 0;">
@@ -59,82 +59,82 @@
     </div>
 </div>
 
-<!-- Odometer Awal dan Akhir -->
+<!-- Start and End Odometer -->
 <div class="row">
     <div class="col-md-6">
         <div class="field-group">
-            <label class="form-label">Odometer awal</label>
+            <label class="form-label">Start Odometer</label>
             <div class="input-group">
                 <input type="number" step="0.01" name="start_odometer" id="startOdometer" class="form-control" 
                        value="{{ old('start_odometer') }}" 
                        min="{{ $lastOdometer }}"
-                       placeholder="Masukkan odometer awal" required>
+                       placeholder="Enter start odometer" required>
                 <span class="input-group-text">km</span>
             </div>
             @if($lastOdometer > 0)
-                <small class="text-muted">Odometer terakhir: {{ number_format($lastOdometer, 0, ',', '.') }} km</small>
+                <small class="text-muted">Latest Odometer: {{ number_format($lastOdometer, 0, ',', '.') }} km</small>
             @else
-                <small class="text-muted">Odometer terakhir: 0 km</small>
+                <small class="text-muted">Latest Odometer: 0 km</small>
             @endif
         </div>
     </div>
     <div class="col-md-6">
         <div class="field-group">
-            <label class="form-label">Odometer akhir</label>
+            <label class="form-label">End Odometer</label>
             <div class="input-group">
-                <input type="number" step="0.01" name="end_odometer" id="endOdometer" class="form-control" value="{{ old('end_odometer') }}" placeholder="Masukkan odometer akhir">
+                <input type="number" step="0.01" name="end_odometer" id="endOdometer" class="form-control" value="{{ old('end_odometer') }}" placeholder="Enter end odometer">
                 <span class="input-group-text">km</span>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Jarak Tempuh -->
+<!-- Distance Tempuh -->
 <div class="field-group">
-    <label class="form-label">Jarak tempuh</label>
+    <label class="form-label">Distance tempuh</label>
     <div class="input-group">
         <input type="number" step="0.01" name="distance" id="distance" class="form-control" value="{{ old('distance') }}" placeholder="0" readonly>
         <span class="input-group-text">km</span>
     </div>
-    <small class="text-muted">Otomatis dihitung dari odometer akhir - awal</small>
+    <small class="text-muted">Automatically calculated from end odometer - start odometer</small>
 </div>
 
-<!-- Lokasi Awal -->
+<!-- Locations Awal -->
 <div class="field-group">
-    <label class="form-label">Lokasi awal</label>
+    <label class="form-label">Locations awal</label>
     <input type="text" name="start_location" class="form-control" value="{{ old('start_location') }}" placeholder="Contoh: Kantor Jakarta">
 </div>
 
-<!-- Lokasi Tujuan -->
+<!-- Locations Destination -->
 <div class="field-group">
-    <label class="form-label">Lokasi tujuan</label>
+    <label class="form-label">Locations Destination</label>
     <input type="text" name="end_location" class="form-control" value="{{ old('end_location') }}" placeholder="Contoh: Bandung">
 </div>
 
 <!-- Driver -->
 <div class="field-group">
     <label class="form-label">Driver</label>
-    <input type="text" name="driver" class="form-control" value="{{ old('driver') }}" placeholder="Nama driver">
+    <input type="text" name="driver" class="form-control" value="{{ old('driver') }}" placeholder="Name driver">
 </div>
 
-<!-- Tujuan Perjalanan -->
+<!-- Destination trip -->
 <div class="field-group">
-    <label class="form-label">Tujuan perjalanan</label>
+    <label class="form-label">Destination trip</label>
     <select name="purpose" class="form-select">
-        <option value="">Pilih tujuan</option>
+        <option value="">Select Destination</option>
         <option value="Bisnis" {{ old('purpose') == 'Bisnis' ? 'selected' : '' }}>Bisnis</option>
         <option value="Pribadi" {{ old('purpose') == 'Pribadi' ? 'selected' : '' }}>Pribadi</option>
         <option value="Rental" {{ old('purpose') == 'Rental' ? 'selected' : '' }}>Rental</option>
         <option value="Service" {{ old('purpose') == 'Service' ? 'selected' : '' }}>Service</option>
-        <option value="Lainnya" {{ old('purpose') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+        <option value="Others" {{ old('purpose') == 'Others' ? 'selected' : '' }}>Others</option>
     </select>
 </div>
 
-<!-- Jenis Rute -->
+<!-- Type Rute -->
 <div class="field-group">
-    <label class="form-label">Jenis rute</label>
+    <label class="form-label">Type rute</label>
     <select name="route_type" class="form-select">
-        <option value="">Pilih jenis rute</option>
+        <option value="">Select Type rute</option>
         <option value="Tol" {{ old('route_type') == 'Tol' ? 'selected' : '' }}>Tol</option>
         <option value="Dalam Kota" {{ old('route_type') == 'Dalam Kota' ? 'selected' : '' }}>Dalam Kota</option>
         <option value="Luar Kota" {{ old('route_type') == 'Luar Kota' ? 'selected' : '' }}>Luar Kota</option>
@@ -142,10 +142,10 @@
     </select>
 </div>
 
-<!-- Catatan -->
+<!-- Notes -->
 <div class="field-group">
-    <label class="form-label">Catatan</label>
-    <textarea name="notes" class="form-control" rows="3" placeholder="Tambahkan catatan perjalanan (opsional)">{{ old('notes') }}</textarea>
+    <label class="form-label">Notes</label>
+    <textarea name="notes" class="form-control" rows="3" placeholder="Add trip notes (optional)">{{ old('notes') }}</textarea>
 </div>
 @endsection
 
@@ -157,7 +157,7 @@ const lastOdometer = parseFloat(startOdometerInput.getAttribute('min')) || 0;
 startOdometerInput.addEventListener('blur', function() {
     const currentValue = parseFloat(this.value) || 0;
     if (currentValue < lastOdometer) {
-        alert('Odometer tidak boleh kurang dari odometer terakhir: ' + lastOdometer.toFixed(0) + ' km');
+        alert('Odometer cannot be less than Latest Odometer: ' + lastOdometer.toFixed(0) + ' km');
         this.value = '';
         this.focus();
     }
@@ -204,7 +204,7 @@ function openTimePickerModal(timeInput) {
         <div class="time-picker-overlay" onclick="closeTimePicker()"></div>
         <div class="time-picker-content">
             <div class="time-picker-header">
-                <h5>Pilih</h5>
+                <h5>Select</h5>
                 <button type="button" class="time-picker-close" onclick="closeTimePicker()">&times;</button>
             </div>
             <div class="time-display">
@@ -216,7 +216,7 @@ function openTimePickerModal(timeInput) {
                 </div>
             </div>
             <div class="time-picker-footer">
-                <button type="button" class="btn-time-cancel" onclick="closeTimePicker()">BATAL</button>
+                <button type="button" class="btn-time-cancel" onclick="closeTimePicker()">CANCEL</button>
                 <button type="button" class="btn-time-ok" onclick="confirmTime()">OK</button>
             </div>
         </div>
@@ -308,15 +308,15 @@ function drawClock(hour, minute) {
         }
     }
     
-    const handAngle = selectingHour 
+    const hyoungle = selectingHour 
         ? (selectedHour - 3) * Math.PI / 6
         : (selectedMinute / 5 - 3) * Math.PI / 6;
     
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(
-        centerX + radius * 0.5 * Math.cos(handAngle),
-        centerY + radius * 0.5 * Math.sin(handAngle)
+        centerX + radius * 0.5 * Math.cos(hyoungle),
+        centerY + radius * 0.5 * Math.sin(hyoungle)
     );
     ctx.strokeStyle = '#1976d2';
     ctx.lineWidth = 2;
@@ -382,3 +382,31 @@ input[type="time"]::-webkit-inner-spin-button{display:none}
 input[type="time"]::-webkit-clear-button{display:none}
 </style>
 @endpush
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

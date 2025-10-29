@@ -1,231 +1,435 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Pengaturan - Akun saya')
+@section('title', 'Settings - My Account')
+
+@push('styles')
+<style>
+.settings-page-layout {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.settings-page-sidebar {
+    flex: 0 0 320px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    height: fit-content;
+}
+
+.settings-page-sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.settings-page-sidebar-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.settings-page-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.settings-page-menu-item {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.settings-page-menu-item:last-child {
+    border-bottom: none;
+}
+
+.settings-page-menu-link {
+    display: block;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    transition: background 0.2s;
+}
+
+.settings-page-menu-link:hover {
+    background: #f8f9fa;
+    color: #333;
+}
+
+.settings-page-menu-link.active {
+    background: #e7f3ff;
+    color: #007bff;
+    font-weight: 500;
+}
+
+.settings-page-content {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.settings-page-content-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.settings-page-content-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.account-section {
+    margin-bottom: 30px;
+}
+
+.account-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.account-field {
+    margin-bottom: 20px;
+}
+
+.account-field-label {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.account-field-value {
+    font-size: 15px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.account-field-value:hover {
+    text-decoration: underline;
+}
+
+.btn-change-password {
+    background: transparent;
+    color: #007bff;
+    border: none;
+    padding: 10px 0;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.btn-change-password:hover {
+    text-decoration: underline;
+}
+
+.btn-delete-account {
+    background: transparent;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 10px 32px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-delete-account:hover {
+    background: #dc3545;
+    color: white;
+}
+</style>
+@endpush
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="row">
-        <!-- Sidebar Menu -->
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">
-                        <i class="bi bi-gear-fill text-primary me-2"></i>
-                        Pengaturan
-                    </h5>
-                </div>
-                <div class="list-group list-group-flush">
-                    <!-- Sub-menu Pengaturan -->
-                    <a href="{{ route('settings.units') }}" class="list-group-item list-group-item-action ps-4">
-                        <i class="bi bi-speedometer2 text-muted me-2"></i>
-                        Satuan
-                    </a>
-                    <a href="{{ route('settings.reminders') }}" class="list-group-item list-group-item-action ps-4">
-                        <i class="bi bi-bell text-muted me-2"></i>
-                        Pengingat
-                    </a>
-                    <a href="{{ route('settings.format') }}" class="list-group-item list-group-item-action ps-4">
-                        <i class="bi bi-calendar3 text-muted me-2"></i>
-                        Format
-                    </a>
-                    
-                    <!-- Divider -->
-                    <div class="list-group-item bg-light py-1"></div>
-                    
-                    <a href="{{ route('settings.account') }}" class="list-group-item list-group-item-action active">
-                        <i class="bi bi-person-circle text-primary me-2"></i>
-                        Akun saya
-                    </a>
-                    <a href="{{ route('settings.index') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-file-earmark-text text-muted me-2"></i>
-                        File dan penyimpanan
-                    </a>
-                    <a href="{{ route('settings.fuel-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-fuel-pump text-muted me-2"></i>
-                        Bahan bakar
-                    </a>
-                    <a href="{{ route('settings.fuel-stations') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-shop text-muted me-2"></i>
-                        Spbu
-                    </a>
-                    <a href="{{ route('settings.locations') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-geo-alt text-muted me-2"></i>
-                        Lokasi
-                    </a>
-                    <a href="{{ route('settings.service-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-wrench text-muted me-2"></i>
-                        Jenis layanan
-                    </a>
-                    <a href="{{ route('settings.expense-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-wallet2 text-muted me-2"></i>
-                        Jenis biaya
-                    </a>
-                    <a href="{{ route('settings.income-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-cash-stack text-muted me-2"></i>
-                        Jenis pendapatan
-                    </a>
-                    <a href="{{ route('settings.reasons') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-briefcase text-muted me-2"></i>
-                        Alasan
-                    </a>
-                    <a href="{{ route('settings.payment-methods') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-credit-card text-muted me-2"></i>
-                        Cara Pembayaran
-                    </a>
-                    <a href="{{ route('settings.forms') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-file-earmark text-muted me-2"></i>
-                        Formulir
-                    </a>
-                    <a href="{{ route('settings.contacts') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-envelope text-muted me-2"></i>
-                        Menghubungi
-                    </a>
-                </div>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="fas fa-cog"></i>
+        Settings
+    </h1>
+    <p class="page-subtitle">Configure your application preferences and formatting options</p>
+</div>
+
+<div class="settings-page-layout">
+    <div class="settings-page-sidebar">
+        <div class="settings-page-sidebar-header">
+            <h2 class="settings-page-sidebar-title">Settings</h2>
+        </div>
+        <ul class="settings-page-menu">
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.format') }}" class="settings-page-menu-link">
+                    <i class="fas fa-sliders-h" style="color: #667eea; font-size: 14px; margin-right: 12px;"></i>
+                    Apps Format
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.account') }}" class="settings-page-menu-link active">
+                    <i class="fas fa-user-circle" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
+                    My Account
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.file-storage') }}" class="settings-page-menu-link">
+                    <i class="fas fa-folder-open" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
+                    File and Storage
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.locations') }}" class="settings-page-menu-link">
+                    <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 14px; margin-right: 12px;"></i>
+                    Place
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
+                    <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
+                    Type of Services
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link">
+                    <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
+                    Type of Expense
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
+                    <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
+                    Type of Income
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.payment-methods') }}" class="settings-page-menu-link">
+                    <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
+                    Payment Methods
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="settings-page-content">
+        <div class="settings-page-content-header">
+            <h1 class="settings-page-content-title">My Account</h1>
+        </div>
+
+        <div class="account-section">
+            <h3 class="account-section-title">My Details</h3>
+        <div class="account-section">
+            <div class="account-field">
+                <label class="account-field-label">1. Nama</label>
+                <a href="#" class="account-field-value">
+                    Khaerul Umam
+                </a>
+            </div>
+
+            <div class="account-field">
+                <label class="account-field-label">2. Email</label>
+                <a href="#" class="account-field-value">
+                    napsterweb.id@gmail.com
+                </a>
+            </div>
+
+            <div class="account-field">
+                <label class="account-field-label">3. Posisi</label>
+                <a href="#" class="account-field-value">Administrator</a>
+            </div>
+
+            <div class="account-field">
+                <label class="account-field-label">4. User Authorization/ User Type</label>
+                <a href="#" class="account-field-value">Super Admin</a>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="col-md-9">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">Akun saya</h5>
-                </div>
-                <div class="card-body">
-                   
+        <hr>
 
-                    <!-- Rincianku -->
-                    <div class="mb-4">
-                        <h6 class="fw-bold mb-3">Rincianku</h6>
-                        
-                        <div class="mb-3">
-                            <label class="form-label text-muted small">Nama</label>
-                            <div>
-                                <a href="#" class="text-primary text-decoration-none">
-                                    {{ auth()->user()->name ?? 'Khaerul Umam' }}
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label text-muted small">Email</label>
-                            <div>
-                                <a href="#" class="text-primary text-decoration-none">
-                                    {{ auth()->user()->email ?? 'napsterweb.id@gmail.com' }}
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label text-muted small">Izin mengemudi</label>
-                            <div>
-                                <a href="#" class="text-primary text-decoration-none">Daftar</a>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label text-muted small">Masa berlaku izin mengemudi</label>
-                            <div>
-                                <a href="#" class="text-primary text-decoration-none">Daftar</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <!-- Kata kunci -->
-                    <div class="mb-4">
-                        <h6 class="fw-bold mb-3">Kata kunci</h6>
-                        <a href="#" class="text-primary text-decoration-none" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                            <i class="bi bi-key me-2"></i>GANTI KATA KUNCI
-                        </a>
-                    </div>
-
-                    <hr>
-
-                    <!-- Hapus Akun -->
-                    <div class="mt-4">
-                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
-                            <i class="bi bi-trash me-2"></i>HAPUS AKUN
-                        </button>
-                    </div>
-                </div>
+        <div class="account-section">
+            <h3 class="account-section-title">Password</h3>
+            <div class="account-field">
+                <label class="account-field-label">5. Change Password</label>
+                <button type="button" class="btn-change-password" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                    <i class="fas fa-key" style="margin-right: 8px;"></i>
+                    CHANGE PASSWORD
+                </button>
             </div>
+        </div>
+
+        <hr>
+
+        <div class="account-section">
+            <button type="button" class="btn-delete-account" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                <i class="fas fa-trash" style="margin-right: 8px;"></i>
+                DELETE ACCOUNT
+            </button>
         </div>
     </div>
 </div>
 
-<!-- Modal Ganti Password -->
+<!-- Modal Change Password -->
 <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="changePasswordModalLabel">Ganti Kata Kunci</h5>
+                <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST" action="#">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="currentPassword" class="form-label">Kata Kunci Lama</label>
+                        <label for="currentPassword" class="form-label">Current Password</label>
                         <input type="password" class="form-control" id="currentPassword" name="current_password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="newPassword" class="form-label">Kata Kunci Baru</label>
+                        <label for="newPassword" class="form-label">New Password</label>
                         <input type="password" class="form-control" id="newPassword" name="new_password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Konfirmasi Kata Kunci Baru</label>
+                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
                         <input type="password" class="form-control" id="confirmPassword" name="new_password_confirmation" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-primary">SAVE</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal Hapus Akun -->
+<!-- Modal Delete Account -->
 <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteAccountModalLabel">Hapus Akun</h5>
+                <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-warning">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    <strong>Pengingat!</strong> Tindakan ini tidak dapat dibatalkan.
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Warning!</strong> This action cannot be undone.
                 </div>
-                <p>Apakah Anda yakin ingin menghapus akun Anda? Semua data Anda akan dihapus secara permanen.</p>
+                <p>Are you sure you want to delete your account? All your data will be permanently deleted.</p>
                 <form method="POST" action="#" id="deleteAccountForm">
                     @csrf
                     @method('DELETE')
                     <div class="mb-3">
-                        <label for="passwordConfirm" class="form-label">Masukkan kata kunci Anda untuk konfirmasi:</label>
+                        <label for="passwordConfirm" class="form-label">Enter your password to confirm:</label>
                         <input type="password" class="form-control" id="passwordConfirm" name="password" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" form="deleteAccountForm" class="btn btn-danger">Hapus Akun</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                <button type="submit" form="deleteAccountForm" class="btn btn-danger">DELETE ACCOUNT</button>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-.list-group-item-action:hover {
-    background-color: #f8f9fa;
+.modal {
+    background: rgba(0,0,0,0.5);
 }
-.list-group-item-action.active {
-    background-color: #e7f3ff;
-    border-left: 3px solid #0d6efd;
-    color: #0d6efd;
+
+.modal-content {
+    border-radius: 8px;
+}
+
+.form-control {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px 15px;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffc107;
+    color: #856404;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
 }
 </style>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

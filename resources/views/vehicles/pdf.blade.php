@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Kendaraan - {{ $vehicle->license_plate }}</title>
+    <title>Vehicle Data - {{ $vehicle->license_plate }}</title>
     <style>
         * {
             margin: 0;
@@ -116,17 +116,17 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <h1>LAPORAN DATA KENDARAAN</h1>
+        <h1>VEHICLE DATA REPORT</h1>
         <p>{{ $vehicle->brand }} {{ $vehicle->model }} - {{ $vehicle->license_plate }}</p>
-        <p style="font-size: 11px;">Dicetak pada: {{ date('d F Y, H:i') }} WIB</p>
+        <p style="font-size: 11px;">Printed on: {{ date('d F Y, H:i') }} WIB</p>
     </div>
 
-    <!-- Informasi Kendaraan -->
+    <!-- Vehicle Information -->
     <div class="info-section">
-        <h2>Informasi Kendaraan</h2>
+        <h2>Vehicle Information</h2>
         <div class="info-grid">
             <div class="info-row">
-                <div class="info-label">Nama Kendaraan</div>
+                <div class="info-label">Vehicle Name</div>
                 <div class="info-value">{{ $vehicle->name }}</div>
             </div>
             <div class="info-row">
@@ -138,7 +138,7 @@
                 <div class="info-value">{{ $vehicle->model }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Tahun</div>
+                <div class="info-label">Year</div>
                 <div class="info-value">{{ $vehicle->year }}</div>
             </div>
             <div class="info-row">
@@ -146,7 +146,7 @@
                 <div class="info-value"><strong>{{ $vehicle->license_plate }}</strong></div>
             </div>
             <div class="info-row">
-                <div class="info-label">Jenis Mesin</div>
+                <div class="info-label">Engine Type</div>
                 <div class="info-value">{{ $vehicle->engine_type }}</div>
             </div>
             <div class="info-row">
@@ -155,10 +155,10 @@
             </div>
             <div class="info-row">
                 <div class="info-label">Kapasitas Tangki</div>
-                <div class="info-value">{{ $vehicle->tank_capacity }} Liter</div>
+                <div class="info-value">{{ $vehicle->tank_capacity }} Liters</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Odometer Terakhir</div>
+                <div class="info-label">Latest Odometer</div>
                 <div class="info-value">{{ number_format($stats['latest_odometer'], 0, ',', '.') }} km</div>
             </div>
             <div class="info-row">
@@ -169,7 +169,7 @@
                 <div class="info-label">Status</div>
                 <div class="info-value">
                     <span class="badge {{ $vehicle->is_active ? 'badge-success' : 'badge-danger' }}">
-                        {{ $vehicle->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                        {{ $vehicle->is_active ? 'Active' : 'Inactive' }}
                     </span>
                 </div>
             </div>
@@ -178,37 +178,37 @@
 
     <!-- Statistik -->
     <div class="info-section">
-        <h2>Statistik Kendaraan</h2>
+        <h2>Vehicle Statistics</h2>
         <div class="stats-grid">
             <div class="stat-item">
                 <div class="stat-value">{{ $stats['total_fuel_fills'] }}</div>
-                <div class="stat-label">Total Pengisian BBM</div>
+                <div class="stat-label">Total Fuel Fills</div>
             </div>
             <div class="stat-item">
                 <div class="stat-value">{{ number_format($stats['avg_fuel_efficiency'], 1) }}</div>
-                <div class="stat-label">Rata-rata Konsumsi (km/L)</div>
+                <div class="stat-label">Average Consumption (km/L)</div>
             </div>
             <div class="stat-item">
                 <div class="stat-value">{{ $vehicle->maintenances->count() }}</div>
-                <div class="stat-label">Total Perawatan</div>
+                <div class="stat-label">Total Maintenance</div>
             </div>
         </div>
     </div>
 
-    <!-- Ringkasan Biaya -->
+    <!-- Ringkasan Cost -->
     <div class="info-section">
-        <h2>Ringkasan Biaya</h2>
+        <h2>Ringkasan Cost</h2>
         <div class="info-grid">
             <div class="info-row">
-                <div class="info-label">Biaya BBM</div>
+                <div class="info-label">Fuel Cost</div>
                 <div class="info-value">Rp {{ number_format($stats['total_fuel_cost'], 0, ',', '.') }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Biaya Perawatan</div>
+                <div class="info-label">Cost Maintenance</div>
                 <div class="info-value">Rp {{ number_format($stats['total_maintenance_cost'], 0, ',', '.') }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label" style="background: #e3f2fd; font-size: 14px;">Total Pengeluaran</div>
+                <div class="info-label" style="background: #e3f2fd; font-size: 14px;">Total Expenses</div>
                 <div class="info-value" style="background: #e3f2fd; font-weight: bold; font-size: 14px; color: #e74c3c;">
                     Rp {{ number_format($stats['total_expenses'], 0, ',', '.') }}
                 </div>
@@ -217,9 +217,9 @@
     </div>
 
     @if($vehicle->notes)
-    <!-- Catatan -->
+    <!-- Notes -->
     <div class="info-section">
-        <h2>Catatan</h2>
+        <h2>Notes</h2>
         <div style="padding: 12px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
             {{ $vehicle->notes }}
         </div>
@@ -228,8 +228,36 @@
 
     <!-- Footer -->
     <div class="footer">
-        <p>Dokumen ini dibuat secara otomatis oleh Raja BlindVan Dashboard</p>
+        <p>This document is automatically generated by Raja BlindVan Dashboard</p>
         <p>© {{ date('Y') }} Radja Blind Van. All rights reserved.</p>
     </div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

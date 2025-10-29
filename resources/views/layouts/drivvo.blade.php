@@ -33,12 +33,15 @@
         .drivvo-sidebar {
             background-color: #2c3e50;
             width: 240px;
-            min-height: 100vh;
+            height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
             z-index: 1000;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
         }
 
         .drivvo-brand {
@@ -49,6 +52,7 @@
             justify-content: center;
             min-height: 100px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .app-logo {
@@ -65,7 +69,6 @@
         }
 
         .app-brand-logo {
-            /* Ukuran Logo - Extra Large */
             max-width: 200px !important;
             max-height: 70px !important;
             width: auto !important;
@@ -73,10 +76,7 @@
             object-fit: contain;
             display: block;
             margin: 0 auto;
-            
-            /* White Logo Filter */
             filter: brightness(0) invert(1);
-        }
         }
 
         .brand-text {
@@ -98,10 +98,10 @@
             margin-right: 12px;
         }
 
-
-
         .drivvo-nav {
             padding: 20px 0;
+            flex: 1;
+            overflow-y: auto;
         }
 
         .drivvo-nav-item {
@@ -128,8 +128,6 @@
             background-color: rgba(255,255,255,0.15);
             color: white;
         }
-
-
 
         .drivvo-nav-link i {
             width: 20px;
@@ -164,6 +162,50 @@
             margin-right: 8px;
         }
 
+        /* Language Switcher */
+        .language-switcher {
+            padding: 20px 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+            background-color: #2c3e50;
+        }
+
+        .language-label {
+            color: rgba(255,255,255,0.5);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .language-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.9);
+        }
+
+        .lang-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
         .main-content {
             margin-left: 240px;
             padding: 20px;
@@ -171,6 +213,37 @@
             background-color: #f8f9fa;
             width: calc(100vw - 240px);
             overflow: visible;
+        }
+
+        /* Page Header Styles */
+        .page-header {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-title i {
+            font-size: 28px;
+            color: #007bff;
+        }
+
+        .page-subtitle {
+            font-size: 15px;
+            color: #7f8c8d;
+            margin: 0;
+            font-weight: 400;
         }
 
         .content-header {
@@ -352,6 +425,24 @@
             object-fit: contain;
             flex-shrink: 0;
         }
+
+        /* Scrollbar Styles */
+        .drivvo-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .drivvo-sidebar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .drivvo-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        .drivvo-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
     </style>
 
     @stack('styles')
@@ -381,7 +472,15 @@
                     </a>
                 </div>
 
-                <!-- Tambah Baru Button -->
+                <!-- History -->
+                <div class="drivvo-nav-item">
+                    <a href="{{ route('history.index') }}" class="drivvo-nav-link {{ request()->routeIs('history.*') ? 'active' : '' }}">
+                        <i class="fas fa-history"></i>
+                        History
+                    </a>
+                </div>
+
+                <!-- ADD NEW Button -->
                 <div class="drivvo-nav-item">
                     <button type="button" class="drivvo-add-btn" data-bs-toggle="modal" data-bs-target="#quickAddModal">
                         <i class="fas fa-plus"></i>
@@ -421,35 +520,30 @@
                     </a>
                 </div>
 
+                <!-- Order List -->
+                <div class="drivvo-nav-item">
+                    <a href="{{ route('rentals.index') }}" class="drivvo-nav-link {{ request()->routeIs('rentals.*') ? 'active' : '' }}">
+                        <i class="fas fa-clipboard-list"></i>
+                        Order List
+                    </a>
+                </div>
+
+                <!-- Users -->
+                <div class="drivvo-nav-item">
+                    <a href="{{ route('users.index') }}" class="drivvo-nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                        <i class="fas fa-user"></i>
+                        Users
+                    </a>
+                </div>
+
                 <div class="nav-divider"></div>
 
                 <!-- Settings -->
                 <div class="drivvo-nav-item">
                     <a href="{{ route('settings.index') }}" class="drivvo-nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                         <i class="fas fa-cog"></i>
-                        {{ __('common.settings') }}
+                        Settings
                     </a>
-                </div>
-
-                <div class="nav-divider"></div>
-
-                <!-- Language Switcher -->
-                <div class="drivvo-nav-item">
-                    <div style="padding: 0 16px;">
-                        <div style="color: rgba(255,255,255,0.5); font-size: 12px; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Bahasa / Language</div>
-                        <div class="btn-group w-100" role="group">
-                            <a href="{{ route('locale.switch', 'id') }}" 
-                               class="btn btn-sm {{ app()->getLocale() == 'id' ? 'btn-light' : 'btn-outline-light' }}"
-                               style="flex: 1; font-size: 13px; font-weight: 600;">
-                                🇮🇩 ID
-                            </a>
-                            <a href="{{ route('locale.switch', 'en') }}" 
-                               class="btn btn-sm {{ app()->getLocale() == 'en' ? 'btn-light' : 'btn-outline-light' }}"
-                               style="flex: 1; font-size: 13px; font-weight: 600;">
-                                🇬🇧 EN
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </nav>
         </div>
@@ -468,60 +562,28 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body pt-0">
-                    <!-- Pengisian -->
-                    <a href="{{ route('fuel-fills.create') }}" class="quick-add-item">
-                        <div class="quick-add-icon fuel">
-                            <i class="fas fa-gas-pump"></i>
-                        </div>
-                        <div class="quick-add-text">{{ __('quick_add.fuel_fill') }}</div>
-                    </a>
-
-                    <!-- Layanan -->
-                    <a href="{{ route('maintenances.create') }}" class="quick-add-item">
-                        <div class="quick-add-icon service">
-                            <i class="fas fa-wrench"></i>
-                        </div>
-                        <div class="quick-add-text">{{ __('quick_add.maintenance') }}</div>
-                    </a>
-
-                    <!-- Biaya -->
-                    <a href="{{ route('expenses.create') }}" class="quick-add-item">
-                        <div class="quick-add-icon expense">
-                            <i class="fas fa-credit-card"></i>
-                        </div>
-                        <div class="quick-add-text">{{ __('quick_add.expense') }}</div>
-                    </a>
-
-                    <!-- Pendapatan -->
+                    <!-- Income -->
                     <a href="{{ route('incomes.create') }}" class="quick-add-item">
                         <div class="quick-add-icon income">
                             <i class="fas fa-wallet"></i>
                         </div>
-                        <div class="quick-add-text">{{ __('quick_add.income') }}</div>
+                        <div class="quick-add-text">Income</div>
                     </a>
 
-                    <!-- Rute -->
-                    <a href="{{ route('trips.create') }}" class="quick-add-item">
-                        <div class="quick-add-icon route">
-                            <i class="fas fa-map-marked-alt"></i>
+                    <!-- Service (Maintenance) -->
+                    <a href="{{ route('maintenances.create') }}" class="quick-add-item">
+                        <div class="quick-add-icon service">
+                            <i class="fas fa-wrench"></i>
                         </div>
-                        <div class="quick-add-text">{{ __('quick_add.trip') }}</div>
+                        <div class="quick-add-text">Service</div>
                     </a>
 
-                    <!-- Daftar cek -->
-                    <a href="{{ route('checklists.create') }}" class="quick-add-item">
-                        <div class="quick-add-icon checklist">
-                            <i class="fas fa-tasks"></i>
+                    <!-- Expense -->
+                    <a href="{{ route('expenses.create') }}" class="quick-add-item">
+                        <div class="quick-add-icon expense">
+                            <i class="fas fa-credit-card"></i>
                         </div>
-                        <div class="quick-add-text">{{ __('quick_add.checklist') }}</div>
-                    </a>
-
-                    <!-- Pengingat -->
-                    <a href="{{ route('reminders.create') }}" class="quick-add-item">
-                        <div class="quick-add-icon reminder">
-                            <i class="fas fa-bell"></i>
-                        </div>
-                        <div class="quick-add-text">{{ __('quick_add.reminder') }}</div>
+                        <div class="quick-add-text">Expense</div>
                     </a>
                 </div>
             </div>
@@ -533,7 +595,7 @@
         <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
             <div class="modal-content">
                 <div class="modal-header border-0 pb-2">
-                    <h5 class="modal-title fw-semibold" id="vehicleModalLabel">Kendaraan</h5>
+                    <h5 class="modal-title fw-semibold" id="vehicleModalLabel">{{ __('common.vehicles') }}</h5>
                     <div class="d-flex align-items-center">
                         <button type="button" class="btn btn-link p-0 me-3" style="text-decoration: none;">
                             <i class="fas fa-search text-primary"></i>
@@ -563,10 +625,10 @@
                 <div class="modal-footer border-0 pt-0">
                     <div class="d-grid gap-2 w-100">
                         <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('vehicles.create') }}'">
-                            TAMBAH BARU
+                            {{ __('vehicle.add_vehicle_new') }}
                         </button>
                         <button type="button" class="btn btn-outline-primary" onclick="window.location.href='{{ route('vehicles.index') }}'">
-                            KELOLA KENDARAAN
+                            {{ __('vehicle.manage_vehicles') }}
                         </button>
                     </div>
                 </div>
@@ -580,3 +642,30 @@
     @stack('scripts')
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,9 +1,9 @@
 @extends('layouts.drivvo')
-@section('title', 'Daftar Cek')
+@section('title', 'Checklist')
 @section('content')
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4><i class="fas fa-tasks me-2"></i>Daftar Checklist</h4>
+        <h4><i class="fas fa-tasks me-2"></i>List Checklist</h4>
         <a href="{{ route('checklists.create') }}" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i>Tambah Checklist
         </a>
@@ -18,9 +18,9 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Tanggal</th>
-                                <th>Kendaraan</th>
-                                <th>Jenis</th>
+                                <th>Date</th>
+                                <th>Vehicle</th>
+                                <th>Type</th>
                                 <th>Diperiksa Oleh</th>
                             </tr>
                         </thead>
@@ -38,9 +38,37 @@
                 </div>
                 {{ $checklists->links() }}
             @else
-                <p class="text-center text-muted py-5">Belum ada data checklist</p>
+                <p class="text-center text-muted py-5">No data yet checklist</p>
             @endif
         </div>
     </div>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,6 +6,7 @@
     // Set default values for optional variables
     $modalRoute = $modalRoute ?? request()->url();
     $hideVehicleSelector = $hideVehicleSelector ?? false;
+    $cancelRoute = $cancelRoute ?? url()->previous();
 @endphp
 
 @push('styles')
@@ -44,6 +45,20 @@
         border-radius: 8px;
         padding: 10px 14px;
         font-size: 14px;
+    }
+    
+    /* Dropdown/Select styling with arrow indicator */
+    select.form-control, .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23555' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 40px;
+        cursor: pointer;
+    }
+    
+    select.form-control:hover, .form-select:hover {
+        border-color: #aaa;
     }
     
     .form-control:focus, .form-select:focus {
@@ -330,7 +345,7 @@
         @endif
         <div>
             <h1 style="font-size: 24px; font-weight: 700; color: #333; margin: 0;">{{ $pageTitle ?? 'Form' }}</h1>
-            <p style="font-size: 14px; color: #999; margin: 4px 0 0 0;">{{ $pageSubtitle ?? 'Isi formulir di bawah ini' }}</p>
+            <p style="font-size: 14px; color: #999; margin: 4px 0 0 0;">{{ $pageSubtitle ?? 'Fill out the form below' }}</p>
         </div>
     </div>
 </div>
@@ -338,6 +353,9 @@
 <div class="content-area">
     <form action="{{ $formAction }}" method="POST" id="{{ $formId ?? 'mainForm' }}" enctype="multipart/form-data">
         @csrf
+        @if(isset($formMethod) && strtoupper($formMethod) !== 'POST')
+            @method($formMethod)
+        @endif
 
         @if(!isset($hideVehicleSelector) || !$hideVehicleSelector)
         <!-- Vehicle Selector Header -->
@@ -356,7 +374,7 @@
                 <div style="flex: 1;">
                     <h4 style="margin-bottom: 2px;">{{ $vehicle->name }}</h4>
                     <div style="font-size: 13px; color: #007bff; display: flex; align-items: center; gap: 4px;">
-                        <span>Kendaraan</span>
+                        <span>Vehicle</span>
                         <i class="fas fa-chevron-right" style="font-size: 10px; color: #6c757d;"></i>
                         <span>{{ $vehicle->license_plate }}</span>
                     </div>
@@ -366,7 +384,7 @@
                 <div class="title-icon">
                     <i class="fas fa-car"></i>
                 </div>
-                <h4 style="flex: 1;">Pilih Kendaraan</h4>
+                <h4 style="flex: 1;">Select Vehicle</h4>
                 <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 14px;"></i>
             @endif
         </div>
@@ -382,7 +400,7 @@
 
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>Terjadi Kesalahan!</h6>
+                <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>An Error Occurred!</h6>
                 <ul class="mb-0 ps-3">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -403,10 +421,10 @@
         <!-- Action Buttons -->
         <div class="d-flex gap-2 justify-content-end mt-4 mb-5" style="padding-bottom: 40px;">
             <a href="{{ $cancelRoute }}" class="btn btn-cancel">
-                BATAL
+                CANCEL
             </a>
             <button type="submit" class="btn btn-save">
-                DAFTAR
+                SAVE
             </button>
         </div>
     </form>
@@ -416,12 +434,12 @@
 <div id="vehicleModal" class="vehicle-modal">
     <div class="vehicle-modal-content">
         <div class="vehicle-modal-header">
-            <h5 class="vehicle-modal-title">Kendaraan</h5>
+            <h5 class="vehicle-modal-title">Vehicle</h5>
             <button class="vehicle-modal-close" onclick="closeVehicleModal()">&times;</button>
         </div>
         <div class="vehicle-modal-search" style="position: relative;">
             <i class="fas fa-search vehicle-search-icon"></i>
-            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Cari kendaraan..." onkeyup="filterVehicles()">
+            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." onkeyup="filterVehicles()">
         </div>
         <div class="vehicle-modal-body">
             @php
@@ -454,7 +472,7 @@
                     <i class="fas fa-plus" style="color: #007bff;"></i>
                 </div>
                 <div class="vehicle-item-info">
-                    <div class="vehicle-item-name" style="color: #007bff;">Tambah Kendaraan Baru</div>
+                    <div class="vehicle-item-name" style="color: #007bff;">Add New Vehicles</div>
                 </div>
                 <i class="fas fa-chevron-right vehicle-item-icon" style="color: #007bff;"></i>
             </a>
@@ -512,3 +530,31 @@ document.addEventListener('keydown', function(e) {
 
 @yield('modals')
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

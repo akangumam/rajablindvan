@@ -1,5 +1,5 @@
 @extends('layouts.drivvo-form', [
-    'pageTitle' => 'Layanan',
+    'pageTitle' => 'Add New Service',
     'pageIcon' => 'fas fa-wrench',
     'formAction' => route('maintenances.store'),
     'formId' => 'maintenanceForm',
@@ -32,17 +32,17 @@
 <input type="hidden" name="cost" value="0">
 <input type="hidden" name="description" value="-">
 
-<!-- Tanggal dan Waktu -->
+<!-- Date dan Waktu -->
 <div class="row">
     <div class="col-md-6">
         <div class="field-group">
-            <label class="form-label">Tanggal</label>
+            <label class="form-label">Date</label>
             <input type="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
         </div>
     </div>
     <div class="col-md-6">
         <div class="field-group">
-            <label class="form-label">Jam</label>
+            <label class="form-label">Time</label>
             <div class="input-group">
                 <input type="time" name="time" id="timeInput" class="form-control" value="{{ old('time', date('H:i')) }}" required style="border-right: 0;">
                 <button type="button" class="input-group-text" onclick="openTimePicker()" style="cursor: pointer; background: white; border-left: 0;">
@@ -60,31 +60,31 @@
         <input type="number" step="0.01" name="odometer" id="odometerInput" class="form-control" 
                value="{{ old('odometer') }}" 
                min="{{ $lastOdometer }}" 
-               placeholder="Masukkan odometer saat ini" required>
+               placeholder="Enter Current Odometer" required>
         <span class="input-group-text">km</span>
     </div>
     @if($lastOdometer > 0)
-        <small class="text-muted">Odometer terakhir: {{ number_format($lastOdometer, 0, ',', '.') }} km</small>
+        <small class="text-muted">Latest Odometer: {{ number_format($lastOdometer, 0, ',', '.') }} km</small>
     @else
-        <small class="text-muted">Odometer terakhir: 0 km</small>
+        <small class="text-muted">Latest Odometer: 0 km</small>
     @endif
 </div>
 
-<!-- Jenis Layanan -->
+<!-- Service Type -->
 <div class="field-group">
-    <label class="form-label">Jenis layanan</label>
+    <label class="form-label">Service Type</label>
     <div id="serviceTypesDisplay" class="form-control" 
          onclick="openServiceTypesModal()" 
          style="cursor: pointer; background: white; min-height: 45px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
-        <span class="text-muted" id="serviceTypesPlaceholder">Pilih jenis layanan</span>
+        <span class="text-muted" id="serviceTypesPlaceholder">Select Service Type</span>
     </div>
     <input type="hidden" name="service_types" id="serviceTypesInput" required>
 </div>
 
-<!-- Tempat -->
+<!-- Place -->
 <div class="field-group">
-    <label class="form-label">Tempat</label>
-    <input type="text" name="location" class="form-control" value="{{ old('location') }}" placeholder="Nama bengkel atau lokasi">
+    <label class="form-label">Place</label>
+    <input type="text" name="location" class="form-control" value="{{ old('location') }}" placeholder="Workshop name or location">
 </div>
 
 <!-- Driver -->
@@ -92,37 +92,37 @@
     <label class="form-label">Driver</label>
     <input type="text" name="driver" id="driverInput" class="form-control"
            value="{{ old('driver') }}"
-           placeholder="Pilih driver"
+           placeholder="Select driver"
            readonly
            onclick="openDriverModal()"
            style="cursor: pointer; background: white;">
 </div>
 
-<!-- Metode Pembayaran -->
+<!-- Payment Method -->
 <div class="field-group">
-    <label class="form-label">Metode pembayaran</label>
+    <label class="form-label">Payment Method</label>
     <input type="text" name="payment_method" id="paymentMethodInput" class="form-control"
            value="{{ old('payment_method') }}"
-           placeholder="Pilih metode pembayaran"
+           placeholder="Select Payment Method"
            readonly
            onclick="openPaymentMethodModal()"
            style="cursor: pointer; background: white;">
 </div>
 
-<!-- Upload Lampiran -->
+<!-- Upload Attachment -->
 <div class="field-group">
-    <label class="form-label">Lampiran</label>
+    <label class="form-label">Attachment</label>
     <button type="button" class="btn" onclick="document.getElementById('attachmentInput').click();" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
         <i class="fas fa-paperclip" style="margin-right: 8px;"></i>
-        <span id="attachmentButtonText">LAMPIRKAN FILE</span>
+        <span id="attachmentButtonText">ATTACH FILE</span>
     </button>
     <input type="file" name="attachment" id="attachmentInput" style="display: none;" accept="image/*,.pdf" onchange="updateAttachmentButtonText(this)">
 </div>
 
-<!-- Catatan -->
+<!-- Notes -->
 <div class="field-group">
-    <label class="form-label">Catatan</label>
-    <textarea name="notes" class="form-control" rows="3" placeholder="Tambahkan catatan (opsional)">{{ old('notes') }}</textarea>
+    <label class="form-label">Notes</label>
+    <textarea name="notes" class="form-control" rows="3" placeholder="Add notes (optional)">{{ old('notes') }}</textarea>
 </div>
 @endsection
 
@@ -132,7 +132,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="serviceTypesModalLabel" style="font-size: 18px; font-weight: 500;">Jenis layanan</h5>
+                <h5 class="modal-title" id="serviceTypesModalLabel" style="font-size: 18px; font-weight: 500;">Service Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 0;">
@@ -142,7 +142,7 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="serviceTypeSearch" class="form-control" placeholder="Cari jenis layanan..." style="border-left: 0;">
+                        <input type="text" id="serviceTypeSearch" class="form-control" placeholder="Search Service Type..." style="border-left: 0;">
                     </div>
                 </div>
                 
@@ -160,8 +160,8 @@
                     <!-- Ban Baru -->
                     <div class="service-type-item" data-value="Ban Baru" data-price="0" style="padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
-                            <input type="checkbox" class="form-check-input service-checkbox" id="service_ban_baru" style="width: 20px; height: 20px; cursor: pointer; margin: 0;">
-                            <label for="service_ban_baru" style="color: #5B7C99; font-size: 15px; cursor: pointer; margin: 0; flex: 1;">Ban Baru</label>
+                            <input type="checkbox" class="form-check-input service-checkbox" id="service_new_tires" style="width: 20px; height: 20px; cursor: pointer; margin: 0;">
+                            <label for="service_new_tires" style="color: #5B7C99; font-size: 15px; cursor: pointer; margin: 0; flex: 1;">New Tires</label>
                         </div>
                         <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
                     </div>
@@ -175,11 +175,11 @@
                         <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
                     </div>
                     
-                    <!-- Biaya Tenaga Kerja -->
-                    <div class="service-type-item" data-value="Biaya Tenaga Kerja" data-price="0" style="padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between;">
+                    <!-- Cost Tenaga Kerja -->
+                    <div class="service-type-item" data-value="Cost Tenaga Kerja" data-price="0" style="padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
                             <input type="checkbox" class="form-check-input service-checkbox" id="service_tenaga_kerja" style="width: 20px; height: 20px; cursor: pointer; margin: 0;">
-                            <label for="service_tenaga_kerja" style="color: #5B7C99; font-size: 15px; cursor: pointer; margin: 0; flex: 1;">Biaya Tenaga Kerja</label>
+                            <label for="service_tenaga_kerja" style="color: #5B7C99; font-size: 15px; cursor: pointer; margin: 0; flex: 1;">Cost Tenaga Kerja</label>
                         </div>
                         <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
                     </div>
@@ -197,10 +197,10 @@
                 <!-- Footer with Buttons -->
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0; display: flex; gap: 12px;">
                     <button type="button" class="btn" onclick="showAddServiceTypeForm()" style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 24px; background: white; color: #6c757d; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                        TAMBAH LAYANAN
+                        ADD SERVICE
                     </button>
                     <button type="button" class="btn" onclick="confirmServiceSelection()" style="flex: 1; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: #1976d2; color: white; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                        PILIH
+                        Select
                     </button>
                 </div>
             </div>
@@ -213,21 +213,21 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="addServiceTypeModalLabel" style="font-size: 18px; font-weight: 500;">Tambah Jenis Layanan</h5>
+                <h5 class="modal-title" id="addServiceTypeModalLabel" style="font-size: 18px; font-weight: 500;">Add Service Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="mb-3">
-                    <label for="newServiceTypeName" class="form-label" style="color: #5B7C99; font-size: 14px;">Nama Jenis Layanan</label>
-                    <input type="text" id="newServiceTypeName" class="form-control" placeholder="Masukkan nama jenis layanan" style="border-radius: 8px; padding: 12px;">
+                    <label for="newServiceTypeName" class="form-label" style="color: #5B7C99; font-size: 14px;">Service Type Name</label>
+                    <input type="text" id="newServiceTypeName" class="form-control" placeholder="Enter service type name" style="border-radius: 8px; padding: 12px;">
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #e0e0e0; padding: 16px 20px;">
                 <button type="button" class="btn" data-bs-dismiss="modal" style="padding: 10px 24px; border: 2px solid #e0e0e0; border-radius: 24px; background: white; color: #6c757d; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                    BATAL
+                    CANCEL
                 </button>
                 <button type="button" class="btn" onclick="addNewServiceType()" style="padding: 10px 24px; border: 2px solid #1976d2; border-radius: 24px; background: #1976d2; color: white; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                    SIMPAN
+                    Save
                 </button>
             </div>
         </div>
@@ -239,7 +239,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="driverModalLabel" style="font-size: 18px; font-weight: 500;">Pengendara</h5>
+                <h5 class="modal-title" id="driverModalLabel" style="font-size: 18px; font-weight: 500;">Driver</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 0;">
@@ -248,26 +248,26 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="driverSearch" class="form-control" placeholder="Cari pengendara..." style="border-left: 0;">
+                        <input type="text" id="driverSearch" class="form-control" placeholder="Search driver..." style="border-left: 0;">
                     </div>
                 </div>
                 <div id="driverList" style="max-height: 300px; overflow-y: auto;">
                     @forelse($users ?? [] as $user)
                     <div class="driver-item" data-value="{{ $user->name }}" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">{{ $user->name }}</span>
-                        @if($user->email)
-                        <br><small style="color: #9e9e9e; font-size: 13px;">{{ $user->email }}</small>
+                        @if($user->Email)
+                        <br><small style="color: #9e9e9e; font-size: 13px;">{{ $user->Email }}</small>
                         @endif
                     </div>
                     @empty
                     <div style="padding: 16px 20px; text-align: center; color: #9e9e9e;">
-                        <small>Belum ada data pengendara</small>
+                        <small>No driver data yet</small>
                     </div>
                     @endforelse
                 </div>
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0;">
                     <button type="button" class="btn" onclick="showAddDriverForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                        TAMBAH BARU
+                        ADD NEW
                     </button>
                 </div>
             </div>
@@ -280,18 +280,18 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="addDriverModalLabel" style="font-size: 18px; font-weight: 500;">Tambah Pengendara</h5>
+                <h5 class="modal-title" id="addDriverModalLabel" style="font-size: 18px; font-weight: 500;">Add Driver</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="mb-3">
-                    <label for="newDriverName" class="form-label">Nama Pengendara</label>
-                    <input type="text" class="form-control" id="newDriverName" placeholder="Masukkan nama pengendara">
+                    <label for="newDriverName" class="form-label">Driver Name</label>
+                    <input type="text" class="form-control" id="newDriverName" placeholder="Enter driver name">
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #e0e0e0; padding: 12px 16px;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" onclick="addNewDriver()">Simpan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" class="btn btn-primary" onclick="addNewDriver()">Save</button>
             </div>
         </div>
     </div>
@@ -302,7 +302,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="paymentMethodModalLabel" style="font-size: 18px; font-weight: 500;">Cara Pembayaran</h5>
+                <h5 class="modal-title" id="paymentMethodModalLabel" style="font-size: 18px; font-weight: 500;">Payment Methods</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 0;">
@@ -311,7 +311,7 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="paymentMethodSearch" class="form-control" placeholder="Cari cara pembayaran..." style="border-left: 0;">
+                        <input type="text" id="paymentMethodSearch" class="form-control" placeholder="Search Payment Methods..." style="border-left: 0;">
                     </div>
                 </div>
                 <div id="paymentMethodList" style="max-height: 300px; overflow-y: auto;">
@@ -333,7 +333,7 @@
                 </div>
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0;">
                     <button type="button" class="btn" onclick="showAddPaymentMethodForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
-                        TAMBAH BARU
+                        ADD NEW
                     </button>
                 </div>
             </div>
@@ -346,18 +346,18 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="addPaymentMethodModalLabel" style="font-size: 18px; font-weight: 500;">Tambah Cara Pembayaran</h5>
+                <h5 class="modal-title" id="addPaymentMethodModalLabel" style="font-size: 18px; font-weight: 500;">Add Payment Method</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="mb-3">
-                    <label for="newPaymentMethodName" class="form-label">Cara Pembayaran</label>
-                    <input type="text" class="form-control" id="newPaymentMethodName" placeholder="Masukkan cara pembayaran">
+                    <label for="newPaymentMethodName" class="form-label">Payment Methods</label>
+                    <input type="text" class="form-control" id="newPaymentMethodName" placeholder="Enter payment method">
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #e0e0e0; padding: 12px 16px;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" onclick="addNewPaymentMethod()">Simpan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" class="btn btn-primary" onclick="addNewPaymentMethod()">Save</button>
             </div>
         </div>
     </div>
@@ -419,7 +419,7 @@ function showAddServiceTypeForm() {
 function addNewServiceType() {
     const newName = document.getElementById('newServiceTypeName').value.trim();
     if (!newName) {
-        alert('Mohon masukkan nama jenis layanan');
+        alert('Mohon Enter service type name');
         return;
     }
     
@@ -427,7 +427,7 @@ function addNewServiceType() {
     const existingServices = document.querySelectorAll('.service-type-item span:first-child');
     for (let service of existingServices) {
         if (service.textContent.toLowerCase() === newName.toLowerCase()) {
-            alert('Jenis layanan "' + newName + '" sudah ada!');
+            alert('Service Type "' + newName + '" already exists!');
             return;
         }
     }
@@ -442,7 +442,7 @@ function addNewServiceType() {
             <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
             <span style="color: #5B7C99; font-size: 15px;">${newName}</span>
         </div>
-        <input type="number" class="service-price-input" placeholder="Harga" style="display: none; width: 150px; padding: 8px; border: 1px solid #e0e0e0; border-radius: 8px; text-align: right;">
+        <input type="number" class="service-price-input" placeholder="Price" style="display: none; width: 150px; padding: 8px; border: 1px solid #e0e0e0; border-radius: 8px; text-align: right;">
     `;
     
     serviceTypeList.appendChild(newItem);
@@ -476,7 +476,7 @@ function addNewServiceType() {
     document.getElementById('newServiceTypeName').value = '';
     new bootstrap.Modal(document.getElementById('serviceTypesModal')).show();
     
-    alert('Jenis layanan "' + newName + '" berhasil ditambahkan!');
+    alert('Service Type "' + newName + '" successfully added!');
 }
 
 // Select all services
@@ -505,7 +505,7 @@ function confirmServiceSelection() {
     const checkboxes = document.querySelectorAll('.service-checkbox:checked');
     
     if (checkboxes.length === 0) {
-        alert('Pilih minimal satu jenis layanan');
+        alert('Select at least one Service Type');
         return;
     }
     
@@ -522,7 +522,7 @@ function confirmServiceSelection() {
     });
     
     if (hasError) {
-        alert('Mohon masukkan nilai untuk semua layanan yang dipilih');
+        alert('Please enter values for all checked services');
         return;
     }
     
@@ -590,16 +590,16 @@ function updateServiceTypesDisplay() {
     const totalRow = document.createElement('div');
     totalRow.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; border-top: 2px solid #1976d2;';
     totalRow.innerHTML = `
-        <span style="color: #1976d2; font-size: 15px; font-weight: 600;">Total biaya</span>
+        <span style="color: #1976d2; font-size: 15px; font-weight: 600;">Total Cost</span>
         <span style="color: #1976d2; font-size: 15px; font-weight: 600;">Rp ${Number(totalCost).toLocaleString('id-ID')}</span>
     `;
     summaryDiv.appendChild(totalRow);
     
-    // Add "+ JENIS LAYANAN" button
+    // Add "+ SERVICE TYPE" button
     const addButton = document.createElement('button');
     addButton.type = 'button';
     addButton.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: white; border: 1px solid #1976d2; border-radius: 6px; color: #1976d2; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 4px;';
-    addButton.innerHTML = '<i class="fas fa-plus"></i> JENIS LAYANAN';
+    addButton.innerHTML = '<i class="fas fa-plus"></i> SERVICE TYPE';
     addButton.onclick = function(e) {
         e.stopPropagation();
         openServiceTypesModal();
@@ -615,7 +615,7 @@ function updateAttachmentButtonText(input) {
     if (input.files && input.files[0]) {
         buttonText.textContent = input.files[0].name;
     } else {
-        buttonText.textContent = 'LAMPIRKAN FILE';
+        buttonText.textContent = 'ATTACH FILE';
     }
 }
 
@@ -650,7 +650,7 @@ function showAddDriverForm() {
 
 function addNewDriver() {
     const newName = document.getElementById('newDriverName').value.trim();
-    if (!newName) { alert('Mohon masukkan nama pengendara'); return; }
+    if (!newName) { alert('Mohon Enter driver name'); return; }
     
     const driverList = document.getElementById('driverList');
     const newItem = document.createElement('div');
@@ -670,7 +670,7 @@ function addNewDriver() {
     bootstrap.Modal.getInstance(document.getElementById('addDriverModal')).hide();
     document.getElementById('driverInput').value = newName;
     document.getElementById('newDriverName').value = '';
-    alert('Pengendara "' + newName + '" berhasil ditambahkan!');
+    alert('Driver "' + newName + '" successfully added!');
 }
 
 // ===== PAYMENT METHOD MODAL FUNCTIONS =====
@@ -704,7 +704,7 @@ function showAddPaymentMethodForm() {
 
 function addNewPaymentMethod() {
     const newName = document.getElementById('newPaymentMethodName').value.trim();
-    if (!newName) { alert('Mohon masukkan cara pembayaran'); return; }
+    if (!newName) { alert('Mohon Enter payment method'); return; }
     
     const paymentMethodList = document.getElementById('paymentMethodList');
     const newItem = document.createElement('div');
@@ -724,7 +724,7 @@ function addNewPaymentMethod() {
     bootstrap.Modal.getInstance(document.getElementById('addPaymentMethodModal')).hide();
     document.getElementById('paymentMethodInput').value = newName;
     document.getElementById('newPaymentMethodName').value = '';
-    alert('Cara pembayaran "' + newName + '" berhasil ditambahkan!');
+    alert('Payment Method "' + newName + '" successfully added!');
 }
 
 // Validate odometer
@@ -734,7 +734,7 @@ const lastOdometer = parseFloat(odometerInput.getAttribute('min')) || 0;
 odometerInput.addEventListener('blur', function() {
     const currentValue = parseFloat(this.value) || 0;
     if (currentValue < lastOdometer) {
-        alert('Odometer tidak boleh kurang dari odometer terakhir: ' + lastOdometer.toFixed(0) + ' km');
+        alert('Odometer cannot be less than Latest Odometer: ' + lastOdometer.toFixed(0) + ' km');
         this.value = lastOdometer;
         this.focus();
     }
@@ -752,7 +752,7 @@ function openTimePicker() {
         <div class="time-picker-overlay" onclick="closeTimePicker()"></div>
         <div class="time-picker-content">
             <div class="time-picker-header">
-                <h5>Pilih</h5>
+                <h5>Select</h5>
                 <button type="button" class="time-picker-close" onclick="closeTimePicker()">&times;</button>
             </div>
             <div class="time-display">
@@ -764,7 +764,7 @@ function openTimePicker() {
                 </div>
             </div>
             <div class="time-picker-footer">
-                <button type="button" class="btn-time-cancel" onclick="closeTimePicker()">BATAL</button>
+                <button type="button" class="btn-time-cancel" onclick="closeTimePicker()">CANCEL</button>
                 <button type="button" class="btn-time-ok" onclick="confirmTime()">OK</button>
             </div>
         </div>
@@ -854,15 +854,15 @@ function drawClock(hour, minute) {
         }
     }
     
-    const handAngle = selectingHour 
+    const hyoungle = selectingHour 
         ? (selectedHour - 3) * Math.PI / 6
         : (selectedMinute / 5 - 3) * Math.PI / 6;
     
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(
-        centerX + radius * 0.5 * Math.cos(handAngle),
-        centerY + radius * 0.5 * Math.sin(handAngle)
+        centerX + radius * 0.5 * Math.cos(hyoungle),
+        centerY + radius * 0.5 * Math.sin(hyoungle)
     );
     ctx.strokeStyle = '#1976d2';
     ctx.lineWidth = 2;
@@ -928,3 +928,31 @@ input[type="time"]::-webkit-inner-spin-button{display:none}
 input[type="time"]::-webkit-clear-button{display:none}
 </style>
 @endpush
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

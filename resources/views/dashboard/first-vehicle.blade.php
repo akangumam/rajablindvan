@@ -1,6 +1,6 @@
 @extends('layouts.fullscreen')
 
-@section('title', 'Tambah Kendaraan Pertama')
+@section('title', 'Add Vehicle Pertama')
 
 @section('content')
 <div class="d-flex justify-content-center align-items-center min-vh-100" style="padding: 20px;">
@@ -16,15 +16,15 @@
                                     <img src="{{ asset('assets/logos/brands/Radja-Blind-Van-Logo.png') }}" alt="Radja Blind Van" class="logo-image">
                                 </div>
                             </div>
-                            <h3 class="fw-semibold text-dark mb-2" style="font-size: 1.5rem;">Tambah kendaraan pertama anda</h3>
-                            <p class="text-muted mb-0" style="font-size: 14px;">Mulai kelola kendaraan dengan menambahkan informasi dasar berikut.</p>
+                            <h3 class="fw-semibold text-dark mb-2" style="font-size: 1.5rem;">Add Vehicle pertama you</h3>
+                            <p class="text-muted mb-0" style="font-size: 14px;">Start Manage Vehicle dengan menambahkan Basic Information berikut.</p>
                         </div>
 
                         <!-- Form -->
                         <form action="{{ route('vehicles.store') }}" method="POST" id="firstVehicleForm">
                             @csrf
                             
-                            <!-- Tipe Kendaraan -->
+                            <!-- Tipe Vehicle -->
                             <div class="mb-3">
                                 <div class="input-group position-relative">
                                     <span class="input-icon vehicle-type-icon" style="background: #f8f9fa; border-radius: 4px; padding: 4px 6px; border: 1px solid #dee2e6; font-size: 16px; color: #495057; font-weight: bold;">
@@ -35,7 +35,7 @@
                                             id="vehicleTypeBtn"
                                             data-bs-toggle="modal" 
                                             data-bs-target="#vehicleTypeModal">
-                                        <span id="selectedVehicleType" class="text-muted">Tipe kendaraan</span>
+                                        <span id="selectedVehicleType" class="text-muted">Tipe Vehicle</span>
                                     </button>
                                     <input type="hidden" name="type" id="vehicleTypeInput" required>
                                 </div>
@@ -95,8 +95,8 @@
                                                 <img src="{{ asset('assets/logos/brands/mercedes-benz.svg') }}" alt="Mercedes-Benz" class="brand-logo-small">
                                                 <span>Mercedes-Benz</span>
                                             </div>
-                                            <div class="brand-option" data-value="Lainnya">
-                                                <span>Lainnya</span>
+                                            <div class="brand-option" data-value="Others">
+                                                <span>Others</span>
                                             </div>
                                         </div>
                                     </div>
@@ -118,7 +118,7 @@
                                 </div>
                             </div>
 
-                            <!-- Nama Mobil -->
+                            <!-- Name Mobil -->
                             <div class="mb-4">
                                 <div class="input-group position-relative">
                                     <span class="input-icon" style="background: #f8f9fa; border-radius: 4px; padding: 4px 6px; border: 1px solid #dee2e6; font-size: 16px; color: #495057; font-weight: bold;">
@@ -127,7 +127,7 @@
                                     <input type="text" 
                                            class="form-control custom-input" 
                                            name="name" 
-                                           placeholder="Nama mobil"
+                                           placeholder="Name mobil"
                                            required>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@
 
                             <!-- Error Message -->
                             <div id="errorMessage" class="alert alert-danger d-none" style="border-radius: 8px; margin-bottom: 16px;">
-                                <strong>Harap lengkapi semua field berikut:</strong>
+                                <strong>Please lengkapi All field berikut:</strong>
                                 <ul id="errorList" class="mb-0 mt-2"></ul>
                             </div>
 
@@ -153,13 +153,13 @@
                                         class="btn btn-outline-secondary flex-fill custom-btn-outline"
                                         onclick="resetForm()"
                                         style="border-radius: 8px; font-weight: 500; text-transform: uppercase; font-size: 14px; padding: 14px;">
-                                    BATAL
+                                    CANCEL
                                 </button>
                                 <button type="submit"
                                         class="btn btn-primary flex-fill custom-btn-primary"
                                         id="submitBtn"
                                         style="border-radius: 8px; font-weight: 500; text-transform: uppercase; font-size: 14px; padding: 14px; background-color: #007bff; border-color: #007bff;">
-                                    DAFTAR
+                                    List
                                 </button>
                             </div>
                         </form>
@@ -175,7 +175,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: none;">
             <div class="modal-header border-0 pb-2">
-                <h5 class="modal-title fw-semibold text-dark" id="vehicleTypeModalLabel">Tipe kendaraan</h5>
+                <h5 class="modal-title fw-semibold text-dark" id="vehicleTypeModalLabel">Tipe Vehicle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body px-4 py-3">
@@ -208,8 +208,8 @@
             </div>
             <div class="modal-footer border-0 pt-2">
                 <div class="d-flex gap-3 w-100">
-                    <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal" style="border-radius: 25px; font-weight: 500; text-transform: uppercase;">BATAL</button>
-                    <button type="button" class="btn btn-primary flex-fill" id="confirmVehicleType" style="border-radius: 25px; font-weight: 500; text-transform: uppercase; background-color: #007bff;">DAFTAR</button>
+                    <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal" style="border-radius: 25px; font-weight: 500; text-transform: uppercase;">CANCEL</button>
+                    <button type="button" class="btn btn-primary flex-fill" id="confirmVehicleType" style="border-radius: 25px; font-weight: 500; text-transform: uppercase; background-color: #007bff;">List</button>
                 </div>
             </div>
         </div>
@@ -550,12 +550,12 @@
 }
 
 /* Specific z-index for each form group - higher elements get higher z-index */
-.mb-3:nth-child(1) { z-index: 100; } /* Tipe Kendaraan */
+.mb-3:nth-child(1) { z-index: 100; } /* Tipe Vehicle */
 .mb-3:nth-child(2) .brand-dropdown { z-index: 90; } /* Brand dropdown */
 .mb-3:nth-child(2) .input-icon { z-index: 3 !important; } /* Brand icon */
 .mb-3:nth-child(3) { z-index: 80; } /* Model */
 .mb-3:nth-child(3) .input-icon { z-index: 2 !important; }
-.mb-4:nth-child(4) { z-index: 70; } /* Nama Mobil */
+.mb-4:nth-child(4) { z-index: 70; } /* Name Mobil */
 .mb-4:nth-child(4) .input-icon { z-index: 1 !important; }
 
 .custom-input::placeholder {
@@ -770,7 +770,7 @@ function resetForm() {
     const selectedVehicleType = document.getElementById('selectedVehicleType');
     const vehicleTypeInput = document.getElementById('vehicleTypeInput');
     const vehicleTypeIconElement = document.getElementById('vehicleTypeIconElement');
-    selectedVehicleType.textContent = 'Tipe kendaraan';
+    selectedVehicleType.textContent = 'Tipe Vehicle';
     selectedVehicleType.className = 'text-muted';
     vehicleTypeInput.value = '';
     
@@ -930,25 +930,25 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check vehicle type
         const vehicleType = document.getElementById('vehicleTypeInput').value;
         if (!vehicleType) {
-            errors.push('Tipe kendaraan harus dipilih');
+            errors.push('Tipe Vehicle harus checked');
         }
         
         // Check brand
         const brand = document.getElementById('brandInput').value;
         if (!brand) {
-            errors.push('Brand kendaraan harus dipilih');
+            errors.push('Brand Vehicle harus checked');
         }
         
         // Check model
         const model = document.querySelector('input[name="model"]').value.trim();
         if (!model) {
-            errors.push('Model kendaraan harus diisi');
+            errors.push('Model Vehicle harus diisi');
         }
         
         // Check name
         const name = document.querySelector('input[name="name"]').value.trim();
         if (!name) {
-            errors.push('Nama mobil harus diisi');
+            errors.push('Name mobil harus diisi');
         }
         
         return errors;
@@ -979,7 +979,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (errors.length > 0) {
             submitBtn.style.opacity = '0.6';
             submitBtn.style.cursor = 'not-allowed';
-            submitBtn.title = 'Harap lengkapi semua field terlebih dahulu';
+            submitBtn.title = 'Please lengkapi All field terlebih dahulu';
         } else {
             submitBtn.style.opacity = '1';
             submitBtn.style.cursor = 'pointer';
@@ -1006,3 +1006,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

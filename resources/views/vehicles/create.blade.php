@@ -1,4 +1,4 @@
-﻿@extends('layouts.drivvo')
+@extends('layouts.drivvo')
 
 @section('title', __('vehicle.add_vehicle'))
 
@@ -202,7 +202,7 @@
 
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>{{ __('common.error_occurred') }}</h6>
+            <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>{{ __('vehicle.error_occurred') }}</h6>
             <ul class="mb-0 ps-3">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -215,7 +215,7 @@
     <form action="{{ route('vehicles.store') }}" method="POST" id="vehicleForm">
         @csrf
         
-        <!-- Informasi Dasar -->
+        <!-- Basic Information -->
         <div class="form-section mb-4">
             <h5 class="section-title">
                 <i class="fas fa-car me-2 text-primary"></i>{{ __('vehicle.basic_info') }}
@@ -261,10 +261,10 @@
             </div>
         </div>
 
-        <!-- Spesifikasi Teknis -->
+        <!-- Technical Specifications -->
         <div class="form-section mb-4">
             <h5 class="section-title">
-                <i class="fas fa-cog me-2 text-primary"></i>{{ __('vehicle.technical_specs') }}
+                <i class="fas fa-cog me-2 text-primary"></i>{{ __('vehicle.technical_specifications') }}
             </h5>
             
             <div class="row">
@@ -280,24 +280,24 @@
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Transmisi <span class="text-danger">*</span></label>
+                    <label class="form-label">{{ __('vehicle.transmission') }} <span class="text-danger">*</span></label>
                     <select class="form-select" name="transmission" required>
-                        <option value="">Pilih...</option>
-                        <option value="Manual" {{ old('transmission') == 'Manual' ? 'selected' : '' }}>Manual</option>
-                        <option value="Automatic" {{ old('transmission') == 'Automatic' ? 'selected' : '' }}>Automatic</option>
-                        <option value="CVT" {{ old('transmission') == 'CVT' ? 'selected' : '' }}>CVT</option>
+                        <option value="">{{ __('vehicle.select_option') }}</option>
+                        <option value="Manual" {{ old('transmission') == 'Manual' ? 'selected' : '' }}>{{ __('vehicle.transmission_manual') }}</option>
+                        <option value="Automatic" {{ old('transmission') == 'Automatic' ? 'selected' : '' }}>{{ __('vehicle.transmission_automatic') }}</option>
+                        <option value="CVT" {{ old('transmission') == 'CVT' ? 'selected' : '' }}>{{ __('vehicle.transmission_cvt') }}</option>
                     </select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Kapasitas Tangki (Liter)</label>
+                    <label class="form-label">{{ __('vehicle.fuel_tank_capacity') }}</label>
                     <input type="number" class="form-control" name="tank_capacity" value="{{ old('tank_capacity') }}" step="0.1" min="0" placeholder="45">
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Odometer Awal (km) <span class="text-danger">*</span></label>
+                    <label class="form-label">{{ __('vehicle.initial_odometer') }} <span class="text-danger">*</span></label>
                     <input type="number" class="form-control" name="odometer" value="{{ old('odometer', 0) }}" step="0.1" min="0" required placeholder="0">
                 </div>
             </div>
@@ -306,73 +306,73 @@
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" name="dual_tank" id="dual_tank" value="1" {{ old('dual_tank') ? 'checked' : '' }}>
                     <label class="form-check-label" for="dual_tank">
-                        <strong>Kendaraan memiliki dua tangki</strong>
-                        <p class="text-muted small mb-0">Centang jika kendaraan dilengkapi dengan tangki bahan bakar ganda</p>
+                        <strong>{{ __('vehicle.dual_fuel_tanks') }}</strong>
+                        <p class="text-muted small mb-0">{{ __('vehicle.dual_fuel_tanks_hint') }}</p>
                     </label>
                 </div>
             </div>
 
             <div class="mb-4">
-                <label class="form-label">Unit Jarak</label>
+                <label class="form-label">{{ __('vehicle.distance_unit') }}</label>
                 <div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="distance_unit" value="km" id="unit_km" {{ old('distance_unit', 'km') == 'km' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="unit_km">Kilometer (km)</label>
+                        <label class="form-check-label" for="unit_km">{{ __('vehicle.kilometer') }}</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="distance_unit" value="mil" id="unit_mil" {{ old('distance_unit') == 'mil' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="unit_mil">Mil (mil)</label>
+                        <label class="form-check-label" for="unit_mil">{{ __('vehicle.mile') }}</label>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Identitas Kendaraan -->
+        <!-- Vehicle Identity -->
         <div class="form-section mb-4">
             <h5 class="section-title">
-                <i class="fas fa-id-card me-2 text-primary"></i>Identitas Kendaraan
+                <i class="fas fa-id-card me-2 text-primary"></i>{{ __('vehicle.vehicle_identity') }}
             </h5>
             
             <div class="mb-4">
-                <label class="form-label">Nomor Mesin</label>
-                <input type="text" class="form-control" name="engine_number" value="{{ old('engine_number') }}" placeholder="Nomor mesin kendaraan">
+                <label class="form-label">{{ __('vehicle.engine_number') }}</label>
+                <input type="text" class="form-control" name="engine_number" value="{{ old('engine_number') }}" placeholder="{{ __('vehicle.engine_number_placeholder') }}">
             </div>
             
             <div class="mb-4">
-                <label class="form-label">Nomor Rangka</label>
-                <input type="text" class="form-control" name="chassis_number" value="{{ old('chassis_number') }}" placeholder="Nomor rangka/chassis kendaraan">
+                <label class="form-label">{{ __('vehicle.chassis_number') }}</label>
+                <input type="text" class="form-control" name="chassis_number" value="{{ old('chassis_number') }}" placeholder="{{ __('vehicle.chassis_number_placeholder') }}">
             </div>
         </div>
 
-        <!-- Status dan Catatan -->
+        <!-- Status and Notes -->
         <div class="form-section mb-4">
             <h5 class="section-title">
-                <i class="fas fa-info-circle me-2 text-primary"></i>Status dan Catatan
+                <i class="fas fa-info-circle me-2 text-primary"></i>{{ __('vehicle.additional_information') }}
             </h5>
             
             <div class="mb-4">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
                     <label class="form-check-label" for="is_active">
-                        <strong>Status Aktif</strong>
-                        <p class="text-muted small mb-0">Kendaraan aktif akan ditampilkan dalam daftar kendaraan tersedia</p>
+                        <strong>{{ __('common.Status_active') }}</strong>
+                        <p class="text-muted small mb-0">{{ __('vehicle.active_vehicle_hint') }}</p>
                     </label>
                 </div>
             </div>
 
             <div class="mb-4">
-                <label class="form-label">Catatan</label>
-                <textarea class="form-control" name="notes" rows="4" placeholder="Tambahkan catatan tentang kendaraan ini...">{{ old('notes') }}</textarea>
+                <label class="form-label">{{ __('common.notes') }}</label>
+                <textarea class="form-control" name="notes" rows="4" placeholder="{{ __('vehicle.notes_placeholder') }}">{{ old('notes') }}</textarea>
             </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="d-flex gap-3 justify-content-end">
             <a href="{{ route('vehicles.index') }}" class="btn btn-cancel">
-                <i class="fas fa-times me-2"></i>Batal
+                <i class="fas fa-times me-2"></i>{{ __('common.cancel') }}
             </a>
             <button type="submit" class="btn btn-save">
-                <i class="fas fa-save me-2"></i>Simpan Kendaraan
+                <i class="fas fa-save me-2"></i>{{ __('vehicle.save_vehicle') }}
             </button>
         </div>
     </form>
@@ -382,13 +382,13 @@
 <div id="brandPopup" class="brand-popup">
     <div class="brand-popup-content">
         <div class="brand-popup-header">
-            <h5>Brand</h5>
+            <h5>{{ __('vehicle.brand') }}</h5>
             <button class="close-popup" id="closeBrandPopup">&times;</button>
         </div>
         
         <div class="brand-search-container">
             <div class="brand-search-wrapper">
-                <input type="text" class="brand-search-input" id="brandSearchInput" placeholder="Cari brand...">
+                <input type="text" class="brand-search-input" id="brandSearchInput" placeholder="{{ __('common.search_placeholder') }}">
                 <i class="fas fa-search brand-search-icon"></i>
             </div>
         </div>
@@ -443,7 +443,7 @@
         </div>
         
         <div class="brand-popup-footer">
-            <a href="#" class="add-new-brand-btn" id="addNewBrand">TAMBAH BARU</a>
+            <a href="#" class="add-new-brand-btn" id="addNewBrand">{{ __('common.add_new') }}</a>
         </div>
     </div>
 </div>
@@ -508,7 +508,7 @@ addNewBrand.addEventListener('click', function(e) {
     brandInput.removeAttribute('readonly');
     brandInput.value = '';
     brandInput.focus();
-    brandInput.setAttribute('placeholder', 'Ketik brand manual...');
+    brandInput.setAttribute('placeholder', '{{ __('vehicle.type_brand_manual') }}');
     brandPopup.style.display = 'none';
 });
 
@@ -534,3 +534,30 @@ vehicleForm.addEventListener('submit', function(e) {
 </script>
 @endpush
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

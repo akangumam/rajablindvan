@@ -144,7 +144,7 @@
                             <a class="nav-link {{ request()->routeIs('vehicles.*') ? 'active' : '' }}" 
                                href="{{ route('vehicles.index') }}">
                                 <i class="bi bi-car-front me-2"></i>
-                                Kendaraan
+                                Vehicle
                             </a>
                         </li>
                         
@@ -160,7 +160,7 @@
                             <a class="nav-link {{ request()->routeIs('maintenances.*') ? 'active' : '' }}" 
                                href="{{ route('maintenances.index') }}">
                                 <i class="bi bi-tools me-2"></i>
-                                Perawatan
+                                Maintenance
                             </a>
                         </li>
                         
@@ -168,7 +168,7 @@
                             <a class="nav-link {{ request()->routeIs('expenses.*') ? 'active' : '' }}" 
                                href="{{ route('expenses.index') }}">
                                 <i class="bi bi-wallet2 me-2"></i>
-                                Pengeluaran
+                                Expenses
                             </a>
                         </li>
                         
@@ -200,7 +200,7 @@
                         
                         <li class="nav-item">
                             <div class="nav-link text-white-50 fw-bold small">
-                                LAPORAN
+                                Report
                             </div>
                         </li>
                         
@@ -208,7 +208,7 @@
                             <a class="nav-link {{ request()->routeIs('reports.dashboard') ? 'active' : '' }}" 
                                href="{{ route('reports.dashboard') }}">
                                 <i class="bi bi-speedometer2 me-2"></i>
-                                Dashboard Laporan
+                                Dashboard Report
                             </a>
                         </li>
                         
@@ -216,7 +216,7 @@
                             <a class="nav-link {{ request()->routeIs('reports.rentals') ? 'active' : '' }}" 
                                href="{{ route('reports.rentals') }}">
                                 <i class="bi bi-calendar-check me-2"></i>
-                                Laporan Rental
+                                Report Rental
                             </a>
                         </li>
                         
@@ -224,7 +224,7 @@
                             <a class="nav-link {{ request()->routeIs('reports.vehicles') ? 'active' : '' }}" 
                                href="{{ route('reports.vehicles') }}">
                                 <i class="bi bi-car-front me-2"></i>
-                                Laporan Kendaraan
+                                Report Vehicle
                             </a>
                         </li>
                         
@@ -232,7 +232,7 @@
                             <a class="nav-link {{ request()->routeIs('reports.financial') ? 'active' : '' }}" 
                                href="{{ route('reports.financial') }}">
                                 <i class="bi bi-currency-dollar me-2"></i>
-                                Laporan Keuangan
+                                Report Keuangan
                             </a>
                         </li>
                         
@@ -240,7 +240,7 @@
                             <a class="nav-link {{ request()->routeIs('reports.customers') ? 'active' : '' }}" 
                                href="{{ route('reports.customers') }}">
                                 <i class="bi bi-people me-2"></i>
-                                Laporan Customer
+                                Report Customer
                             </a>
                         </li>
                         
@@ -250,7 +250,7 @@
                             <a class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}" 
                                href="{{ route('settings.index') }}">
                                 <i class="bi bi-gear-fill me-2"></i>
-                                Pengaturan
+                                Settings
                             </a>
                         </li>
                     </ul>
@@ -288,3 +288,30 @@
     @stack('scripts')
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

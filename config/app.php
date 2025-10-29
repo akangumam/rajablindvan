@@ -71,19 +71,19 @@ return [
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
-    |
-    | The application locale determines the default locale that will be used
-    | by Laravel's translation / localization methods. This option can be
-    | set to any locale for which you plan to have translation strings.
-    |
     */
 
-    'locale' => env('APP_LOCALE', 'id'),
+    'locale' => 'en', // Default to English
 
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'id'),
+    'fallback_locale' => 'en', // Fallback to English
 
-    'faker_locale' => env('APP_FAKER_LOCALE', 'id_ID'),
+    /*
+    |--------------------------------------------------------------------------
+    | Available Locales
+    |--------------------------------------------------------------------------
+    */
 
+    'available_locales' => ['en'],
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

@@ -7,18 +7,18 @@
         <div>
             <h2 class="mb-2">
                 <i class="fas fa-users-cog text-primary"></i>
-                Kelola Sopir - {{ $vehicle->name }}
+                Manage Drivers - {{ $vehicle->name }}
             </h2>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('vehicles.index') }}"><i class="fas fa-car"></i> Kendaraan</a></li>
-                    <li class="breadcrumb-item active">Kelola Sopir</li>
+                    <li class="breadcrumb-item"><a href="{{ route('vehicles.index') }}"><i class="fas fa-car"></i> Vehicle</a></li>
+                    <li class="breadcrumb-item active">Manage Drivers</li>
                 </ol>
             </nav>
         </div>
         <a href="{{ route('vehicles.index') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left"></i> Kembali
+            <i class="fas fa-arrow-left"></i> Back
         </a>
     </div>
 
@@ -42,7 +42,7 @@
                             <strong class="text-dark">{{ $vehicle->license_plate }}</strong>
                         </div>
                         <div class="col-md-4">
-                            <small class="text-muted d-block">Tahun</small>
+                            <small class="text-muted d-block">Year</small>
                             <strong class="text-dark">{{ $vehicle->year }}</strong>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0">
                         <i class="fas fa-user-check"></i>
-                        Sopir yang Ditugaskan
+                        driver assigned
                         <span class="badge bg-light text-success ms-2">{{ $assignedDrivers->count() }}</span>
                     </h5>
                 </div>
@@ -66,8 +66,8 @@
                     @if($assignedDrivers->isEmpty())
                         <div class="text-center py-5">
                             <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
-                            <p class="text-muted mb-0">Belum ada sopir yang ditugaskan</p>
-                            <small class="text-muted">Pilih sopir dari daftar sebelah untuk menugaskan</small>
+                            <p class="text-muted mb-0">No driver assigned</p>
+                            <small class="text-muted">Select driver from the list to assign</small>
                         </div>
                     @else
                         <div class="list-group list-group-flush">
@@ -81,7 +81,7 @@
                                             <div>
                                                 <h6 class="mb-1">{{ $driver->name }}</h6>
                                                 <div class="small text-muted">
-                                                    <i class="fas fa-envelope me-1"></i> {{ $driver->email }}
+                                                    <i class="fas fa-envelope me-1"></i> {{ $driver->Email }}
                                                 </div>
                                                 @if($driver->phone)
                                                     <div class="small text-muted">
@@ -92,11 +92,11 @@
                                         </div>
                                         <form action="{{ route('vehicles.remove-driver-assignment', [$vehicle, $driver]) }}" 
                                               method="POST" 
-                                              onsubmit="return confirm('Yakin ingin menghapus penugasan sopir ini?');"
+                                              onsubmit="return confirm('Yakin want to delete penugasan driver ini?');"
                                               class="ms-3">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus Penugasan">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Penugasan">
                                                 <i class="fas fa-user-minus"></i>
                                             </button>
                                         </form>
@@ -115,7 +115,7 @@
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
                         <i class="fas fa-users"></i>
-                        Sopir Tersedia
+                        driver Available
                         <span class="badge bg-light text-primary ms-2">{{ $availableDrivers->count() }}</span>
                     </h5>
                 </div>
@@ -123,8 +123,8 @@
                     @if($availableDrivers->isEmpty())
                         <div class="text-center py-5">
                             <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-                            <p class="text-muted mb-0">Semua sopir sudah ditugaskan</p>
-                            <small class="text-muted">Atau belum ada data sopir di sistem</small>
+                            <p class="text-muted mb-0">All drivers already assigned</p>
+                            <small class="text-muted">Atau No data yet driver di sistem</small>
                         </div>
                     @else
                         <div class="list-group list-group-flush" style="max-height: 600px; overflow-y: auto;">
@@ -138,7 +138,7 @@
                                             <div>
                                                 <h6 class="mb-1">{{ $driver->name }}</h6>
                                                 <div class="small text-muted">
-                                                    <i class="fas fa-envelope me-1"></i> {{ $driver->email }}
+                                                    <i class="fas fa-envelope me-1"></i> {{ $driver->Email }}
                                                 </div>
                                                 @if($driver->phone)
                                                     <div class="small text-muted">
@@ -152,7 +152,7 @@
                                               class="ms-3">
                                             @csrf
                                             <input type="hidden" name="driver_id" value="{{ $driver->id }}">
-                                            <button type="submit" class="btn btn-sm btn-primary" title="Tugaskan Sopir">
+                                            <button type="submit" class="btn btn-sm btn-primary" title="Tugaskan driver">
                                                 <i class="fas fa-user-plus"></i> Tugaskan
                                             </button>
                                         </form>
@@ -231,3 +231,31 @@
     }
 </style>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

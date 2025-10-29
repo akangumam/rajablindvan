@@ -90,23 +90,43 @@ class ExpenseController extends Controller
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'expense_date' => 'required|date',
+            'expense_time' => 'nullable',
             'odometer' => 'nullable|numeric|min:0',
+            'expense_type' => 'nullable|string|max:255',
+            'place' => 'nullable|string|max:255',
+            'user_id' => 'nullable|exists:users,id',
             'category' => 'required|string|max:255',
             'subcategory' => 'nullable|string|max:255',
             'description' => 'required|string',
             'amount' => 'required|numeric|min:0',
+            'total_cost' => 'nullable|numeric|min:0',
             'vendor' => 'nullable|string|max:255',
             'payment_method' => 'nullable|string|max:255',
             'receipt_number' => 'nullable|string|max:255',
             'is_recurring' => 'boolean',
             'recurring_period' => 'nullable|string|max:255',
-            'notes' => 'nullable|string'
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
+            'notes' => 'nullable|string',
+            'stnk_expiry_date' => 'nullable|date',
+            'kir_expiry_date' => 'nullable|date'
         ]);
+
+        // Handle file upload
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $validated['attachment'] = $file->storeAs('expenses', $filename, 'public');
+        }
+
+        // Set user_id if not provided
+        if (!isset($validated['user_id'])) {
+            $validated['user_id'] = auth()->id();
+        }
 
         Expense::create($validated);
 
         return redirect()->route('expenses.index')
-            ->with('success', 'Data pengeluaran berhasil ditambahkan!');
+            ->with('success', 'Expense data successfully added!');
     }
 
     /**

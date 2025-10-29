@@ -37,4 +37,8 @@ return [
     // Messages
     'no_customers' => 'No customers yet',
     'add_first_customer' => 'Add your first customer',
+    'add_first' => 'Add First User',
+    'delete_customer' => 'Delete User',
+    'delete_confirm' => 'Are you sure you want to delete user',
+    'delete_note' => 'Data associated with this user will remain but will no longer be connected',
 ];

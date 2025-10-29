@@ -1,6 +1,7 @@
 @extends('layouts.drivvo-form', [
-    'pageTitle' => 'Pendapatan',
-    'pageIcon' => 'fas fa-money-bill-wave',
+    'pageTitle' => 'Income',
+    'pageSubtitle' => 'Add new income entry',
+    'pageIcon' => 'fas fa-wallet',
     'formAction' => route('incomes.store'),
     'formId' => 'incomeForm',
     'cancelRoute' => route('incomes.index'),
@@ -9,76 +10,116 @@
 ])
 
 @section('form-fields')
-<!-- Tanggal -->
-<div class="field-group">
-    <label class="form-label">Tanggal</label>
-    <input type="date" name="income_date" class="form-control" value="{{ old('income_date', date('Y-m-d')) }}" required>
+<!-- 1. Date (Calendar selection, default today) -->
+<div class="mb-4">
+    <label class="form-label">Date <span class="text-danger">*</span></label>
+    <input type="date" name="income_date" class="form-control @error('income_date') is-invalid @enderror" value="{{ old('income_date', date('Y-m-d')) }}" required>
+    @error('income_date')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 </div>
 
-<!-- Odometer -->
-<div class="field-group">
+<!-- 2. Time (automatic time, default now) -->
+<div class="mb-4">
+    <label class="form-label">Time <span class="text-danger">*</span></label>
+    <input type="time" name="income_time" class="form-control @error('income_time') is-invalid @enderror" value="{{ old('income_time', date('H:i')) }}" required>
+    @error('income_time')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+
+<!-- 3. Odometer (Free Text) -->
+<div class="mb-4">
     <label class="form-label">Odometer</label>
     <div class="input-group">
-        <input type="number" step="0.01" name="odometer" class="form-control" value="{{ old('odometer') }}" placeholder="0">
+        <input type="number" step="0.01" name="odometer" class="form-control @error('odometer') is-invalid @enderror" value="{{ old('odometer') }}" placeholder="Enter odometer reading">
         <span class="input-group-text">km</span>
     </div>
+    @error('odometer')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 </div>
 
-<!-- Kategori -->
-<div class="field-group">
-    <label class="form-label">Kategori</label>
-    <select name="category" class="form-select" required>
-        <option value="">Pilih kategori</option>
-        <option value="Rental" {{ old('category') == 'Rental' ? 'selected' : '' }}>Rental</option>
-        <option value="Service" {{ old('category') == 'Service' ? 'selected' : '' }}>Service</option>
-        <option value="Transport" {{ old('category') == 'Transport' ? 'selected' : '' }}>Transport</option>
-        <option value="Delivery" {{ old('category') == 'Delivery' ? 'selected' : '' }}>Delivery</option>
-        <option value="Lainnya" {{ old('category') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+<!-- 4. Type of Income (Dropdown - will be based on setting menu) -->
+<div class="mb-4">
+    <label class="form-label">Type of Income <span class="text-danger">*</span></label>
+    <select name="type" class="form-control @error('type') is-invalid @enderror" required>
+        <option value="">Select Type</option>
+        <option value="Rental" {{ old('type') == 'Rental' ? 'selected' : '' }}>Rental</option>
+        <option value="Service" {{ old('type') == 'Service' ? 'selected' : '' }}>Service</option>
+        <option value="Transport" {{ old('type') == 'Transport' ? 'selected' : '' }}>Transport</option>
+        <option value="Delivery" {{ old('type') == 'Delivery' ? 'selected' : '' }}>Delivery</option>
+        <option value="Others" {{ old('type') == 'Others' ? 'selected' : '' }}>Others</option>
     </select>
+    @error('type')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    <small class="text-muted">Income type will be configurable from Settings menu</small>
 </div>
 
-<!-- Sumber/Customer -->
-<div class="field-group">
-    <label class="form-label">Sumber/Customer</label>
-    <input type="text" name="source" class="form-control" value="{{ old('source') }}" placeholder="Nama customer atau sumber pendapatan">
-</div>
-
-<!-- Deskripsi -->
-<div class="field-group">
-    <label class="form-label">Deskripsi</label>
-    <input type="text" name="description" class="form-control" value="{{ old('description') }}" placeholder="Deskripsi pendapatan" required>
-</div>
-
-<!-- Jumlah -->
-<div class="field-group">
-    <label class="form-label">Jumlah</label>
+<!-- 5. Value (Free Text - Number) -->
+<div class="mb-4">
+    <label class="form-label">Value <span class="text-danger">*</span></label>
     <div class="input-group">
         <span class="input-group-text">Rp</span>
-        <input type="number" step="0.01" name="amount" class="form-control" value="{{ old('amount') }}" placeholder="0" required>
+        <input type="number" step="0.01" name="amount" class="form-control @error('amount') is-invalid @enderror" value="{{ old('amount') }}" placeholder="0" required>
     </div>
+    @error('amount')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 </div>
 
-<!-- Metode Pembayaran -->
-<div class="field-group">
-    <label class="form-label">Metode pembayaran</label>
-    <select name="payment_method" class="form-select">
-        <option value="">Pilih metode</option>
-        <option value="Tunai" {{ old('payment_method') == 'Tunai' ? 'selected' : '' }}>Tunai</option>
-        <option value="Transfer" {{ old('payment_method') == 'Transfer' ? 'selected' : '' }}>Transfer</option>
-        <option value="Kartu Kredit" {{ old('payment_method') == 'Kartu Kredit' ? 'selected' : '' }}>Kartu Kredit</option>
-        <option value="E-Wallet" {{ old('payment_method') == 'E-Wallet' ? 'selected' : '' }}>E-Wallet</option>
-    </select>
+<!-- 6. User (based on account logged in - readonly display) -->
+<div class="mb-4">
+    <label class="form-label">User</label>
+    <input type="text" class="form-control" value="{{ auth()->check() ? auth()->user()->name : 'Guest' }}" readonly style="background-color: #f8f9fa;">
+    <small class="text-muted">Automatically set to logged in user</small>
 </div>
 
-<!-- Nomor Invoice -->
-<div class="field-group">
-    <label class="form-label">Nomor invoice</label>
-    <input type="text" name="invoice_number" class="form-control" value="{{ old('invoice_number') }}" placeholder="Nomor invoice">
+<!-- 7. Notes (free Text) -->
+<div class="mb-4">
+    <label class="form-label">Notes</label>
+    <textarea name="notes" class="form-control @error('notes') is-invalid @enderror" rows="3" placeholder="Add notes (optional)">{{ old('notes') }}</textarea>
+    @error('notes')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 </div>
 
-<!-- Catatan -->
-<div class="field-group">
-    <label class="form-label">Catatan</label>
-    <textarea name="notes" class="form-control" rows="3" placeholder="Tambahkan catatan (opsional)">{{ old('notes') }}</textarea>
+<!-- 8. Attach File Button -->
+<div class="mb-4">
+    <label class="form-label">Attach File</label>
+    <input type="file" name="attachment" class="form-control @error('attachment') is-invalid @enderror" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+    @error('attachment')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    <small class="text-muted">Accepted: JPG, PNG, PDF, DOC, DOCX (Max: 5MB)</small>
 </div>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

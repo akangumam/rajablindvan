@@ -1,528 +1,642 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Pengaturan - Jenis layanan')
+@section('title', 'Settings - Types of Service')
 
-@section('content')
-<div class="container-fluid py-4">
-    <div class="row">
-        <!-- Sidebar Menu -->
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">
-                        <i class="bi bi-gear-fill text-primary me-2"></i>
-                        Pengaturan
-                    </h5>
-                </div>
-                <div class="list-group list-group-flush">
-                    <!-- Sub-menu Pengaturan -->
-                    <a href="{{ route('settings.units') }}" class="list-group-item list-group-item-action ps-4">
-                        <i class="bi bi-speedometer2 text-muted me-2"></i>
-                        Satuan
-                    </a>
-                    <a href="{{ route('settings.reminders') }}" class="list-group-item list-group-item-action ps-4">
-                        <i class="bi bi-bell text-muted me-2"></i>
-                        Pengingat
-                    </a>
-                    <a href="{{ route('settings.format') }}" class="list-group-item list-group-item-action ps-4">
-                        <i class="bi bi-calendar3 text-muted me-2"></i>
-                        Format
-                    </a>
-                    
-                    <!-- Divider -->
-                    <div class="list-group-item bg-light py-1"></div>
-                    
-                    <a href="{{ route('settings.account') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-person-circle text-muted me-2"></i>
-                        Akun saya
-                    </a>
-                    <a href="{{ route('settings.index') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-file-earmark-text text-muted me-2"></i>
-                        File dan penyimpanan
-                    </a>
-                    <a href="{{ route('settings.fuel-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-fuel-pump text-muted me-2"></i>
-                        Bahan bakar
-                    </a>
-                    <a href="{{ route('settings.fuel-stations') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-shop text-muted me-2"></i>
-                        Spbu
-                    </a>
-                    <a href="{{ route('settings.locations') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-geo-alt text-muted me-2"></i>
-                        Lokasi
-                    </a>
-                    <a href="{{ route('settings.service-types') }}" class="list-group-item list-group-item-action active">
-                        <i class="bi bi-wrench text-primary me-2"></i>
-                        Jenis layanan
-                    </a>
-                    <a href="{{ route('settings.expense-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-wallet2 text-muted me-2"></i>
-                        Jenis biaya
-                    </a>
-                    <a href="{{ route('settings.income-types') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-cash-stack text-muted me-2"></i>
-                        Jenis pendapatan
-                    </a>
-                    <a href="{{ route('settings.reasons') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-briefcase text-muted me-2"></i>
-                        Alasan
-                    </a>
-                    <a href="{{ route('settings.payment-methods') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-credit-card text-muted me-2"></i>
-                        Cara Pembayaran
-                    </a>
-                    <a href="{{ route('settings.forms') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-file-earmark text-muted me-2"></i>
-                        Formulir
-                    </a>
-                    <a href="{{ route('settings.contacts') }}" class="list-group-item list-group-item-action">
-                        <i class="bi bi-envelope text-muted me-2"></i>
-                        Menghubungi
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="col-md-9">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <h5 class="mb-0 me-3">Jenis layanan</h5>
-                        <button type="button" class="btn btn-link text-primary p-0" id="toggleSearch">
-                            <i class="bi bi-search fs-5"></i>
-                        </button>
-                    </div>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addServiceTypeModal">
-                        TAMBAH BARU
-                    </button>
-                </div>
-                
-                <!-- Search Bar (Hidden by default) -->
-                <div class="card-body border-bottom bg-light" id="searchBar" style="display: none;">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white">
-                            <i class="bi bi-search"></i>
-                        </span>
-                        <input type="text" class="form-control" id="searchInput" placeholder="Cari jenis layanan...">
-                    </div>
-                </div>
-
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0" id="serviceTable">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width: 60px;">#</th>
-                                    <th>Nama <i class="bi bi-arrow-up-short"></i></th>
-                                    <th style="width: 120px;" class="text-end">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">AC</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2" data-bs-toggle="modal" data-bs-target="#editServiceTypeModal1">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0" data-bs-toggle="modal" data-bs-target="#deleteServiceTypeModal1">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Ban Baru</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Batere</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Biaya Tenaga Kerja</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Brake Fluid</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Brake Pad</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>7</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Cuci Mobil</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>8</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Inspeksi</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>9</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Lampu</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>10</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Penggantian Oli</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>11</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">perpanjang</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>12</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Rotasi Ban</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>13</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Sabuk</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>14</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Saringan Bahan Bakar</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>15</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Saringan oli</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>16</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Saringan Udara</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>17</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Sistem suspensi</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>18</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Spooring/Balancing</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>19</td>
-                                    <td><a href="#" class="text-primary text-decoration-none">Tekanan Ban</a></td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-link p-0 me-2">
-                                            <i class="bi bi-pencil-fill text-primary"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-link p-0">
-                                            <i class="bi bi-info-circle-fill text-primary"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Tambah Jenis Layanan -->
-<div class="modal fade" id="addServiceTypeModal" tabindex="-1" aria-labelledby="addServiceTypeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addServiceTypeModalLabel">Tambah Jenis Layanan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="POST" action="#">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="serviceName" class="form-label">Nama Jenis Layanan <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="serviceName" name="name" required placeholder="Contoh: Tune Up">
-                    </div>
-                    <div class="mb-3">
-                        <label for="serviceDescription" class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="serviceDescription" name="description" rows="3" placeholder="Deskripsi jenis layanan (opsional)"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Edit Jenis Layanan (Example for first item) -->
-<div class="modal fade" id="editServiceTypeModal1" tabindex="-1" aria-labelledby="editServiceTypeModalLabel1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editServiceTypeModalLabel1">Edit Jenis Layanan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="POST" action="#">
-                @csrf
-                @method('PUT')
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="editServiceName1" class="form-label">Nama Jenis Layanan <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="editServiceName1" name="name" value="AC" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editServiceDescription1" class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="editServiceDescription1" name="description" rows="3" placeholder="Deskripsi jenis layanan (opsional)"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Info/Delete Jenis Layanan (Example for first item) -->
-<div class="modal fade" id="deleteServiceTypeModal1" tabindex="-1" aria-labelledby="deleteServiceTypeModalLabel1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title" id="deleteServiceTypeModalLabel1">Info Jenis Layanan</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h6 class="fw-bold">AC</h6>
-                <p class="text-muted mb-3">Jenis layanan untuk perawatan dan perbaikan sistem AC kendaraan.</p>
-                
-                <hr>
-                
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="text-muted">Total penggunaan:</span>
-                    <strong>0 kali</strong>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteServiceModal1">
-                    Hapus
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Confirm Delete -->
-<div class="modal fade" id="confirmDeleteServiceModal1" tabindex="-1" aria-labelledby="confirmDeleteServiceModalLabel1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="confirmDeleteServiceModalLabel1">Konfirmasi Hapus</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Apakah Anda yakin ingin menghapus jenis layanan <strong>"AC"</strong>?</p>
-                <p class="text-muted small mb-0">Data yang sudah dihapus tidak dapat dikembalikan.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <form method="POST" action="#" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Hapus</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
+@push('styles')
 <style>
-.list-group-item-action:hover {
-    background-color: #f8f9fa;
+.settings-page-layout {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
 }
-.list-group-item-action.active {
-    background-color: #e7f3ff;
-    border-left: 3px solid #0d6efd;
-    color: #0d6efd;
+
+.settings-page-sidebar {
+    flex: 0 0 320px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    height: fit-content;
 }
-.table tbody tr:hover {
-    background-color: #f8f9fa;
+
+.settings-page-sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.settings-page-sidebar-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.settings-page-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.settings-page-menu-item {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.settings-page-menu-item:last-child {
+    border-bottom: none;
+}
+
+.settings-page-menu-link {
+    display: block;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    transition: background 0.2s;
+}
+
+.settings-page-menu-link:hover {
+    background: #f8f9fa;
+    color: #333;
+}
+
+.settings-page-menu-link.active {
+    background: #e7f3ff;
+    color: #007bff;
+    font-weight: 500;
+}
+
+.settings-page-content {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.settings-page-content-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.settings-page-content-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.service-section {
+    margin-bottom: 30px;
+}
+
+.service-field {
+    margin-bottom: 20px;
+}
+
+.service-field-label {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 500;
+}
+
+.service-list {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.service-list-header {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.service-list-item {
+    padding: 15px 20px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.service-list-item:hover {
+    background: #f8f9fa;
+}
+
+.service-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.service-icon {
+    width: 40px;
+    height: 40px;
+    background: #f1f3f5;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #95a5a6;
+    font-size: 18px;
+}
+
+.service-name {
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+}
+
+.service-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-add {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-add:hover {
+    background: #0056b3;
+}
+
+.btn-edit {
+    background: transparent;
+    color: #007bff;
+    border: 1px solid #007bff;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+    background: #007bff;
+    color: white;
+}
+
+.btn-delete {
+    background: transparent;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-delete:hover {
+    background: #dc3545;
+    color: white;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    overflow: auto;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
 }
 </style>
+@endpush
 
+@section('content')
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="fas fa-cog"></i>
+        Settings
+    </h1>
+    <p class="page-subtitle">Configure your application preferences and formatting options</p>
+</div>
+
+<div class="settings-page-layout">
+    <div class="settings-page-sidebar">
+        <div class="settings-page-sidebar-header">
+            <h2 class="settings-page-sidebar-title">Settings</h2>
+        </div>
+        <ul class="settings-page-menu">
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.format') }}" class="settings-page-menu-link">
+                    <i class="fas fa-sliders-h" style="color: #667eea; font-size: 14px; margin-right: 12px;"></i>
+                    Apps Format
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.account') }}" class="settings-page-menu-link">
+                    <i class="fas fa-user-circle" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
+                    My Account
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.file-storage') }}" class="settings-page-menu-link">
+                    <i class="fas fa-folder-open" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
+                    File and Storage
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.locations') }}" class="settings-page-menu-link">
+                    <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 14px; margin-right: 12px;"></i>
+                    Place
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link active">
+                    <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
+                    Types of Service
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link">
+                    <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
+                    Type of Expense
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
+                    <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
+                    Type of Income
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.payment-methods') }}" class="settings-page-menu-link">
+                    <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
+                    Payment Methods
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="settings-page-content">
+        <div class="settings-page-content-header">
+            <h1 class="settings-page-content-title">Types of Service</h1>
+        </div>
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <div class="service-section">
+            <div class="service-field">
+                <label class="service-field-label">List of Service Types</label>
+                <div class="service-list">
+                    <div class="service-list-header">
+                        <span>Service Types</span>
+                        <button class="btn-add" onclick="openAddModal()">
+                            <i class="fas fa-plus me-1"></i> ADD NEW SERVICE
+                        </button>
+                    </div>
+                    
+                    @if($serviceTypes->isEmpty())
+                        <div class="service-list-item" style="justify-content: center; color: #999;">
+                            No service types found. Click "ADD NEW SERVICE" to create one.
+                        </div>
+                    @else
+                        @foreach($serviceTypes as $serviceType)
+                        <div class="service-list-item" data-id="{{ $serviceType->id }}">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <i class="fas fa-wrench"></i>
+                                </div>
+                                <div class="service-name">{{ $serviceType->name }}</div>
+                            </div>
+                            <div class="service-actions">
+                                <button class="btn-edit" onclick="openEditModal({{ $serviceType->id }}, '{{ $serviceType->name }}', '{{ $serviceType->description }}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-delete" onclick="confirmDelete({{ $serviceType->id }}, '{{ $serviceType->name }}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div id="serviceModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Add New Service Type</h2>
+            <button class="close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="serviceForm">
+                <input type="hidden" id="serviceId" value="">
+                <div class="form-group">
+                    <label class="form-label">Service Type Name *</label>
+                    <input type="text" class="form-control" id="serviceName" placeholder="Enter service type name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="serviceDescription" placeholder="Enter description (optional)" rows="3"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="closeModal()">CANCEL</button>
+            <button type="button" class="btn-primary" onclick="saveService()">SAVE</button>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Toggle search bar
-    const toggleSearchBtn = document.getElementById('toggleSearch');
-    const searchBar = document.getElementById('searchBar');
-    const searchInput = document.getElementById('searchInput');
+let isEditMode = false;
+
+function openAddModal() {
+    isEditMode = false;
+    document.getElementById('modalTitle').textContent = 'Add New Service Type';
+    document.getElementById('serviceId').value = '';
+    document.getElementById('serviceName').value = '';
+    document.getElementById('serviceDescription').value = '';
+    document.getElementById('serviceModal').classList.add('show');
+}
+
+function openEditModal(id, name, description) {
+    isEditMode = true;
+    document.getElementById('modalTitle').textContent = 'Edit Service Type';
+    document.getElementById('serviceId').value = id;
+    document.getElementById('serviceName').value = name;
+    document.getElementById('serviceDescription').value = description || '';
+    document.getElementById('serviceModal').classList.add('show');
+}
+
+function closeModal() {
+    document.getElementById('serviceModal').classList.remove('show');
+}
+
+function saveService() {
+    const id = document.getElementById('serviceId').value;
+    const name = document.getElementById('serviceName').value.trim();
+    const description = document.getElementById('serviceDescription').value.trim();
     
-    toggleSearchBtn.addEventListener('click', function() {
-        if (searchBar.style.display === 'none') {
-            searchBar.style.display = 'block';
-            searchInput.focus();
-        } else {
-            searchBar.style.display = 'none';
-            searchInput.value = '';
-            filterTable('');
-        }
-    });
-    
-    // Search functionality
-    searchInput.addEventListener('keyup', function() {
-        const searchTerm = this.value.toLowerCase();
-        filterTable(searchTerm);
-    });
-    
-    function filterTable(searchTerm) {
-        const table = document.getElementById('serviceTable');
-        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-        
-        for (let i = 0; i < rows.length; i++) {
-            const nameCell = rows[i].getElementsByTagName('td')[1];
-            if (nameCell) {
-                const nameText = nameCell.textContent || nameCell.innerText;
-                if (nameText.toLowerCase().indexOf(searchTerm) > -1) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
-                }
-            }
-        }
+    if (!name) {
+        alert('Please enter service type name');
+        return;
     }
-});
+
+    const url = isEditMode 
+        ? '{{ route("settings.service-types.update", ":id") }}'.replace(':id', id)
+        : '{{ route("settings.service-types.store") }}';
+    
+    const method = isEditMode ? 'PUT' : 'POST';
+
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            description: description
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            closeModal();
+            location.reload();
+        } else {
+            alert('Error: ' + (data.message || 'Something went wrong'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to save service type. Please try again.');
+    });
+}
+
+function confirmDelete(id, name) {
+    if (confirm('Are you sure you want to delete "' + name + '"?')) {
+        fetch('{{ route("settings.service-types.destroy", ":id") }}'.replace(':id', id), {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + (data.message || 'Something went wrong'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to delete service type. Please try again.');
+        });
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('serviceModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
 </script>
+@endpush
+
 @endsection

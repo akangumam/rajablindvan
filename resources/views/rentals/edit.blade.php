@@ -27,13 +27,13 @@
                                 
                                 <div class="mb-3">
                                     <label for="customer_id" class="form-label">
-                                        Pilih Customer <span class="text-danger">*</span>
+                                        Select Customer <span class="text-danger">*</span>
                                     </label>
                                     <select class="form-select @error('customer_id') is-invalid @enderror" 
                                             id="customer_id" 
                                             name="customer_id" 
                                             required>
-                                        <option value="">-- Pilih Customer --</option>
+                                        <option value="">-- Select Customer --</option>
                                         @foreach($customers as $customer)
                                             <option value="{{ $customer->id }}" 
                                                     {{ old('customer_id', $rental->customer_id) == $customer->id ? 'selected' : '' }}>
@@ -50,18 +50,18 @@
                             <!-- Vehicle Selection -->
                             <div class="col-md-6">
                                 <h6 class="text-success mb-3">
-                                    <i class="fas fa-car me-2"></i>Kendaraan
+                                    <i class="fas fa-car me-2"></i>Vehicle
                                 </h6>
                                 
                                 <div class="mb-3">
                                     <label for="vehicle_id" class="form-label">
-                                        Pilih Kendaraan <span class="text-danger">*</span>
+                                        Select Vehicle <span class="text-danger">*</span>
                                     </label>
                                     <select class="form-select @error('vehicle_id') is-invalid @enderror" 
                                             id="vehicle_id" 
                                             name="vehicle_id" 
                                             required>
-                                        <option value="">-- Pilih Kendaraan --</option>
+                                        <option value="">-- Select Vehicle --</option>
                                         @foreach($vehicles as $vehicle)
                                             <option value="{{ $vehicle->id }}" 
                                                     data-daily-rate="{{ $vehicle->daily_rental_rate }}"
@@ -90,7 +90,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="start_date" class="form-label">
-                                                Tanggal Mulai <span class="text-danger">*</span>
+                                                Date Start <span class="text-danger">*</span>
                                             </label>
                                             <input type="date" 
                                                    class="form-control @error('start_date') is-invalid @enderror" 
@@ -107,7 +107,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="end_date" class="form-label">
-                                                Tanggal Selesai <span class="text-danger">*</span>
+                                                Date End <span class="text-danger">*</span>
                                             </label>
                                             <input type="date" 
                                                    class="form-control @error('end_date') is-invalid @enderror" 
@@ -131,13 +131,13 @@
                                             name="rental_type" 
                                             required>
                                         <option value="daily" {{ old('rental_type', $rental->rental_type) == 'daily' ? 'selected' : '' }}>
-                                            Harian (Per Hari)
+                                            Daily (Per Hari)
                                         </option>
                                         <option value="weekly" {{ old('rental_type', $rental->rental_type) == 'weekly' ? 'selected' : '' }}>
-                                            Mingguan (Per Minggu)
+                                            Weekly (Per Minggu)
                                         </option>
                                         <option value="monthly" {{ old('rental_type', $rental->rental_type) == 'monthly' ? 'selected' : '' }}>
-                                            Bulanan (Per Bulan)
+                                            Monthly (Per Bulan)
                                         </option>
                                     </select>
                                     @error('rental_type')
@@ -147,22 +147,22 @@
 
                                 <div class="mb-3">
                                     <div class="alert alert-info" id="durationInfo">
-                                        <strong>Durasi:</strong> <span id="durationDays">{{ $rental->duration_days }}</span> hari
+                                        <strong>Duration:</strong> <span id="durationDays">{{ $rental->duration_days }}</span> hari
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Tarif -->
+                            <!-- Rate -->
                             <div class="col-md-6">
                                 <h6 class="text-info mb-3">
-                                    <i class="fas fa-money-bill me-2"></i>Tarif & Deposit
+                                    <i class="fas fa-money-bill me-2"></i>Rate & Deposit
                                 </h6>
 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="daily_rate" class="form-label">
-                                                <span id="rateLabel">Tarif per Hari</span> (Rp) <span class="text-danger">*</span>
+                                                <span id="rateLabel">Rate per Day</span> (Rp) <span class="text-danger">*</span>
                                             </label>
                                             <input type="number" 
                                                    class="form-control @error('daily_rate') is-invalid @enderror" 
@@ -180,7 +180,7 @@
                                         <!-- Weekly Rate -->
                                         <div class="mb-3" id="weeklyRateField" style="display: none;">
                                             <label for="weekly_rate" class="form-label">
-                                                Tarif per Minggu (Rp)
+                                                Rate per Week (Rp)
                                             </label>
                                             <input type="number" 
                                                    class="form-control @error('weekly_rate') is-invalid @enderror" 
@@ -197,7 +197,7 @@
                                         <!-- Monthly Rate -->
                                         <div class="mb-3" id="monthlyRateField" style="display: none;">
                                             <label for="monthly_rate" class="form-label">
-                                                Tarif per Bulan (Rp)
+                                                Rate per Month (Rp)
                                             </label>
                                             <input type="number" 
                                                    class="form-control @error('monthly_rate') is-invalid @enderror" 
@@ -233,25 +233,25 @@
 
                                 <div class="mb-3">
                                     <div class="alert alert-success" id="totalInfo">
-                                        <strong>Total Biaya:</strong> Rp <span id="totalAmount">{{ number_format($rental->total_amount, 0, ',', '.') }}</span>
+                                        <strong>Total Cost:</strong> Rp <span id="totalAmount">{{ number_format($rental->total_amount, 0, ',', '.') }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Lokasi -->
+                        <!-- Locations -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="pickup_location" class="form-label">
                                         <i class="fas fa-map-marker-alt text-success me-1"></i>
-                                        Lokasi Pengambilan
+                                        Locations Pengambilan
                                     </label>
                                     <textarea class="form-control @error('pickup_location') is-invalid @enderror" 
                                               id="pickup_location" 
                                               name="pickup_location" 
                                               rows="3" 
-                                              placeholder="Alamat pengambilan kendaraan...">{{ old('pickup_location', $rental->pickup_location) }}</textarea>
+                                              placeholder="Address pengambilan Vehicle...">{{ old('pickup_location', $rental->pickup_location) }}</textarea>
                                     @error('pickup_location')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -261,13 +261,13 @@
                                 <div class="mb-3">
                                     <label for="return_location" class="form-label">
                                         <i class="fas fa-map-marker-alt text-warning me-1"></i>
-                                        Lokasi Pengembalian
+                                        Locations Pengembalian
                                     </label>
                                     <textarea class="form-control @error('return_location') is-invalid @enderror" 
                                               id="return_location" 
                                               name="return_location" 
                                               rows="3" 
-                                              placeholder="Alamat pengembalian kendaraan...">{{ old('return_location', $rental->return_location) }}</textarea>
+                                              placeholder="Address pengembalian Vehicle...">{{ old('return_location', $rental->return_location) }}</textarea>
                                     @error('return_location')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -275,19 +275,19 @@
                             </div>
                         </div>
 
-                        <!-- Catatan -->
+                        <!-- Notes -->
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-3">
                                     <label for="notes" class="form-label">
                                         <i class="fas fa-sticky-note text-info me-1"></i>
-                                        Catatan
+                                        Notes
                                     </label>
                                     <textarea class="form-control @error('notes') is-invalid @enderror" 
                                               id="notes" 
                                               name="notes" 
                                               rows="3" 
-                                              placeholder="Catatan tambahan...">{{ old('notes', $rental->notes) }}</textarea>
+                                              placeholder="Additional notes...">{{ old('notes', $rental->notes) }}</textarea>
                                     @error('notes')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -297,7 +297,7 @@
 
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('rentals.show', $rental) }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-1"></i>Kembali
+                                <i class="fas fa-arrow-left me-1"></i>Back
                             </a>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save me-1"></i>Update Rental
@@ -332,19 +332,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update label and show appropriate fields
         switch(rentalType) {
             case 'daily':
-                rateLabel.textContent = 'Tarif per Hari';
+                rateLabel.textContent = 'Rate per Day';
                 dailyRateField.querySelector('input').required = true;
                 break;
                 
             case 'weekly':
-                rateLabel.textContent = 'Tarif per Minggu';
+                rateLabel.textContent = 'Rate per Week';
                 dailyRateField.style.display = 'block';
                 weeklyRateField.style.display = 'block';
                 weeklyRateField.querySelector('input').required = true;
                 break;
                 
             case 'monthly':
-                rateLabel.textContent = 'Tarif per Bulan';
+                rateLabel.textContent = 'Rate per Month';
                 dailyRateField.style.display = 'block';
                 monthlyRateField.style.display = 'block';
                 monthlyRateField.querySelector('input').required = true;
@@ -425,3 +425,30 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

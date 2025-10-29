@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Edit Kendaraan')
+@section('title', 'Edit Vehicle')
 
 @push('styles')
 <style>
@@ -192,17 +192,17 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4 class="mb-1">Edit Kendaraan</h4>
-            <p class="text-muted mb-0">Update informasi kendaraan {{ $vehicle->brand }} {{ $vehicle->model }}</p>
+            <h4 class="mb-1">Edit Vehicle</h4>
+            <p class="text-muted mb-0">Update Vehicle Information {{ $vehicle->brand }} {{ $vehicle->model }}</p>
         </div>
         <a href="{{ route('vehicles.index') }}" class="btn btn-cancel">
-            <i class="fas fa-arrow-left me-2"></i>Kembali
+            <i class="fas fa-arrow-left me-2"></i>Back
         </a>
     </div>
 
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>Terjadi Kesalahan!</h6>
+            <h6 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle me-2"></i>An Error Occurred!</h6>
             <ul class="mb-0 ps-3">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -216,17 +216,17 @@
         @csrf
         @method('PUT')
         
-        <!-- Informasi Dasar -->
+        <!-- Basic Information -->
         <div class="form-section mb-4">
             <h5 class="section-title">
-                <i class="fas fa-car me-2 text-primary"></i>Informasi Dasar
+                <i class="fas fa-car me-2 text-primary"></i>Basic Information
             </h5>
             
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <label class="form-label">Brand <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="brandInput" name="brand" value="{{ old('brand', $vehicle->brand) }}" required readonly style="cursor: pointer;">
-                    <small class="text-muted">Klik untuk memilih dari daftar brand</small>
+                    <small class="text-muted">Click to select from list brand</small>
                 </div>
                 
                 <div class="col-md-6 mb-4">
@@ -237,13 +237,13 @@
 
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Nama Kendaraan <span class="text-danger">*</span></label>
+                    <label class="form-label">Vehicle Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" name="name" value="{{ old('name', $vehicle->name) }}" required>
                     <small class="text-muted">Contoh: Avanza Jakarta 1</small>
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Tahun <span class="text-danger">*</span></label>
+                    <label class="form-label">Year <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" name="year" value="{{ old('year', $vehicle->year) }}" maxlength="4" pattern="[0-9]{4}" required>
                 </div>
             </div>
@@ -270,20 +270,20 @@
             
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Jenis Mesin <span class="text-danger">*</span></label>
+                    <label class="form-label">Engine Type <span class="text-danger">*</span></label>
                     <select class="form-select" name="engine_type" required>
-                        <option value="">Pilih...</option>
-                        <option value="Gasoline" {{ old('engine_type', $vehicle->engine_type) == 'Gasoline' ? 'selected' : '' }}>Bensin</option>
+                        <option value="">Select...</option>
+                        <option value="Gasoline" {{ old('engine_type', $vehicle->engine_type) == 'Gasoline' ? 'selected' : '' }}>Gasoline</option>
                         <option value="Diesel" {{ old('engine_type', $vehicle->engine_type) == 'Diesel' ? 'selected' : '' }}>Diesel</option>
                         <option value="Hybrid" {{ old('engine_type', $vehicle->engine_type) == 'Hybrid' ? 'selected' : '' }}>Hybrid</option>
-                        <option value="Electric" {{ old('engine_type', $vehicle->engine_type) == 'Electric' ? 'selected' : '' }}>Listrik</option>
+                        <option value="Electric" {{ old('engine_type', $vehicle->engine_type) == 'Electric' ? 'selected' : '' }}>Electric</option>
                     </select>
                 </div>
                 
                 <div class="col-md-6 mb-4">
                     <label class="form-label">Transmisi <span class="text-danger">*</span></label>
                     <select class="form-select" name="transmission" required>
-                        <option value="">Pilih...</option>
+                        <option value="">Select...</option>
                         <option value="Manual" {{ old('transmission', $vehicle->transmission) == 'Manual' ? 'selected' : '' }}>Manual</option>
                         <option value="Automatic" {{ old('transmission', $vehicle->transmission) == 'Automatic' ? 'selected' : '' }}>Automatic</option>
                         <option value="CVT" {{ old('transmission', $vehicle->transmission) == 'CVT' ? 'selected' : '' }}>CVT</option>
@@ -293,46 +293,46 @@
 
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Kapasitas Tangki (Liter)</label>
+                    <label class="form-label">Tank Capacity (Liters)</label>
                     <input type="number" class="form-control" name="tank_capacity" value="{{ old('tank_capacity', $vehicle->tank_capacity) }}" step="0.1" min="0">
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Odometer Saat Ini (km) <span class="text-danger">*</span></label>
+                    <label class="form-label">Current Odometer (km) <span class="text-danger">*</span></label>
                     <input type="number" class="form-control" name="odometer" value="{{ old('odometer', $vehicle->odometer) }}" step="0.1" min="0" required>
                 </div>
             </div>
         </div>
 
-        <!-- Status dan Catatan -->
+        <!-- Status and Notes -->
         <div class="form-section mb-4">
             <h5 class="section-title">
-                <i class="fas fa-info-circle me-2 text-primary"></i>Status dan Catatan
+                <i class="fas fa-info-circle me-2 text-primary"></i>Status dan Notes
             </h5>
             
             <div class="mb-4">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $vehicle->is_active) ? 'checked' : '' }}>
                     <label class="form-check-label" for="is_active">
-                        <strong>Status Aktif</strong>
-                        <p class="text-muted small mb-0">Kendaraan aktif akan ditampilkan dalam daftar kendaraan tersedia</p>
+                        <strong>Status Active</strong>
+                        <p class="text-muted small mb-0">Active Vehicle will be displayed in list available vehicles</p>
                     </label>
                 </div>
             </div>
 
             <div class="mb-4">
-                <label class="form-label">Catatan</label>
-                <textarea class="form-control" name="notes" rows="4" placeholder="Tambahkan catatan tentang kendaraan ini...">{{ old('notes', $vehicle->notes) }}</textarea>
+                <label class="form-label">Notes</label>
+                <textarea class="form-control" name="notes" rows="4" placeholder="Add notes about this vehicle...">{{ old('notes', $vehicle->notes) }}</textarea>
             </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="d-flex gap-3 justify-content-end">
             <a href="{{ route('vehicles.index') }}" class="btn btn-cancel">
-                <i class="fas fa-times me-2"></i>Batal
+                <i class="fas fa-times me-2"></i>CANCEL
             </a>
             <button type="submit" class="btn btn-save">
-                <i class="fas fa-save me-2"></i>Simpan Perubahan
+                <i class="fas fa-save me-2"></i>Save Changes
             </button>
         </div>
     </form>
@@ -342,13 +342,13 @@
 <div id="brandPopup" class="brand-popup">
     <div class="brand-popup-content">
         <div class="brand-popup-header">
-            <h5>Pilih Brand</h5>
+            <h5>Select Brand</h5>
             <button class="close-popup" id="closeBrandPopup">&times;</button>
         </div>
         
         <div class="brand-search-container">
             <div class="brand-search-wrapper">
-                <input type="text" class="brand-search-input" id="brandSearchInput" placeholder="Cari brand...">
+                <input type="text" class="brand-search-input" id="brandSearchInput" placeholder="Search brand...">
                 <i class="fas fa-search brand-search-icon"></i>
             </div>
         </div>
@@ -403,7 +403,7 @@
         </div>
         
         <div class="brand-popup-footer">
-            <a href="#" class="add-new-brand-btn" id="addNewBrand">TAMBAH BARU</a>
+            <a href="#" class="add-new-brand-btn" id="addNewBrand">ADD NEW</a>
         </div>
     </div>
 </div>
@@ -468,9 +468,37 @@ addNewBrand.addEventListener('click', function(e) {
     brandInput.removeAttribute('readonly');
     brandInput.value = '';
     brandInput.focus();
-    brandInput.setAttribute('placeholder', 'Ketik brand manual...');
+    brandInput.setAttribute('placeholder', 'Type brand manually...');
     brandPopup.style.display = 'none';
 });
 </script>
 @endpush
 @endsection
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
