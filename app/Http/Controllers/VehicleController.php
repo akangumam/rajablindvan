@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
+use Illuminate\Support\Facades\Storage;
 
 class VehicleController extends Controller
 {
@@ -63,11 +64,21 @@ class VehicleController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name' => 'required|string|max:255',
+                'name' => 'nullable|string|max:255',
                 'brand' => 'required|string|max:255',
                 'model' => 'required|string|max:255',
                 'year' => 'nullable|string|max:4',
                 'license_plate' => 'nullable|string|max:20',
+                'vehicle_type' => 'nullable|string|max:255',
+                'chassis_number' => 'nullable|string|max:255',
+                'engine_number' => 'nullable|string|max:255',
+                'stnk_number' => 'nullable|string|max:255',
+                'stnk_expiry_date' => 'nullable|date',
+                'kir_number' => 'nullable|string|max:255',
+                'kir_expiry_date' => 'nullable|date',
+                'document_name' => 'nullable|string|max:255',
+                'barcode_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'vehicle_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
                 'engine_type' => 'nullable|string|max:255',
                 'transmission' => 'nullable|string|max:255',
                 'tank_capacity' => 'nullable|numeric|min:0',
@@ -76,6 +87,23 @@ class VehicleController extends Controller
                 'notes' => 'nullable|string',
                 'is_active' => 'nullable|boolean'
             ]);
+
+            // Auto-generate name if not provided
+            if (empty($validated['name'])) {
+                $validated['name'] = $validated['brand'] . ' ' . $validated['model'];
+            }
+
+            // Handle barcode image upload
+            if ($request->hasFile('barcode_image')) {
+                $barcodePath = $request->file('barcode_image')->store('vehicle_barcodes', 'public');
+                $validated['barcode_path'] = $barcodePath;
+            }
+
+            // Handle vehicle document upload
+            if ($request->hasFile('vehicle_document')) {
+                $documentPath = $request->file('vehicle_document')->store('vehicle_documents', 'public');
+                $validated['document_path'] = $documentPath;
+            }
 
             // Set defaults for first vehicle form
             $validated['year'] = $validated['year'] ?? date('Y');
@@ -142,16 +170,46 @@ class VehicleController extends Controller
             'name' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'model' => 'required|string|max:255',
-            'year' => 'required|string|max:4',
-            'license_plate' => 'required|string|max:20|unique:vehicles,license_plate,' . $vehicle->id,
-            'engine_type' => 'required|string|max:255',
-            'transmission' => 'required|string|max:255',
+            'year' => 'nullable|string|max:4',
+            'license_plate' => 'nullable|string|max:20|unique:vehicles,license_plate,' . $vehicle->id,
+            'vehicle_type' => 'nullable|string|max:255',
+            'chassis_number' => 'nullable|string|max:255',
+            'engine_number' => 'nullable|string|max:255',
+            'stnk_number' => 'nullable|string|max:255',
+            'stnk_expiry_date' => 'nullable|date',
+            'kir_number' => 'nullable|string|max:255',
+            'kir_expiry_date' => 'nullable|date',
+            'document_name' => 'nullable|string|max:255',
+            'barcode_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'vehicle_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
+            'engine_type' => 'nullable|string|max:255',
+            'transmission' => 'nullable|string|max:255',
             'tank_capacity' => 'nullable|numeric|min:0',
-            'odometer' => 'required|numeric|min:0',
+            'odometer' => 'nullable|numeric|min:0',
             'color' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
             'is_active' => 'boolean'
         ]);
+
+        // Handle barcode image upload
+        if ($request->hasFile('barcode_image')) {
+            // Delete old barcode if exists
+            if ($vehicle->barcode_path) {
+                Storage::disk('public')->delete($vehicle->barcode_path);
+            }
+            $barcodePath = $request->file('barcode_image')->store('vehicle_barcodes', 'public');
+            $validated['barcode_path'] = $barcodePath;
+        }
+
+        // Handle vehicle document upload
+        if ($request->hasFile('vehicle_document')) {
+            // Delete old document if exists
+            if ($vehicle->document_path) {
+                Storage::disk('public')->delete($vehicle->document_path);
+            }
+            $documentPath = $request->file('vehicle_document')->store('vehicle_documents', 'public');
+            $validated['document_path'] = $documentPath;
+        }
 
         $vehicle->update($validated);
 

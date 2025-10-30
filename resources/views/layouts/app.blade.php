@@ -205,6 +205,14 @@
                         </li>
                         
                         <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('reports.index') || request()->routeIs('reports.generate') ? 'active' : '' }}" 
+                               href="{{ route('reports.index') }}">
+                                <i class="bi bi-file-earmark-bar-graph me-2"></i>
+                                Reports (New)
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('reports.dashboard') ? 'active' : '' }}" 
                                href="{{ route('reports.dashboard') }}">
                                 <i class="bi bi-speedometer2 me-2"></i>
@@ -232,7 +240,7 @@
                             <a class="nav-link {{ request()->routeIs('reports.financial') ? 'active' : '' }}" 
                                href="{{ route('reports.financial') }}">
                                 <i class="bi bi-currency-dollar me-2"></i>
-                                Report Keuangan
+                                Report Keuangan (Old)
                             </a>
                         </li>
                         

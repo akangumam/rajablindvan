@@ -1,0 +1,263 @@
+@extends('layouts.drivvo')
+
+@section('title', 'Order List')
+
+@section('content')
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0 0 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .page-title i {
+        font-size: 28px;
+        color: #007bff;
+    }
+    .page-subtitle {
+        font-size: 15px;
+        color: #7f8c8d;
+        margin: 0;
+        font-weight: 400;
+    }
+</style>
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">
+            <i class="fas fa-clipboard-list"></i>
+            Order List
+        </h1>
+        <p class="page-subtitle">List of order based on Vehicle</p>
+    </div>
+</div>
+
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+@endif
+
+<div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Active Orders</h5>
+            <a href="{{ route('orders.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Add New Order
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Vehicle Name</th>
+                            <th>License Plate</th>
+                            <th>Year of Manufacture</th>
+                            <th>Customer</th>
+                            <th>Rental Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($orders as $index => $order)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $order->vehicle->name ?? '-' }}</td>
+                            <td>{{ $order->vehicle->license_plate ?? '-' }}</td>
+                            <td>{{ $order->vehicle->year ?? '-' }}</td>
+                            <td>
+                                {{ $order->customer->name ?? '-' }}
+                                <a href="{{ route('customers.index') }}" class="btn btn-sm btn-link p-0 ms-1" title="Manage Customer">
+                                    <i class="bi bi-person-gear"></i>
+                                </a>
+                            </td>
+                            <td>
+                                @if($order->rental_type === 'Sewa Harian')
+                                    <span class="badge bg-info">{{ $order->rental_type }}</span>
+                                @else
+                                    <span class="badge bg-warning text-dark">{{ $order->rental_type }}</span>
+                                @endif
+                            </td>
+                            <td>{{ $order->start_date->format('d M Y') }}</td>
+                            <td>{{ $order->end_date->format('d M Y') }}</td>
+                            <td>
+                                <span class="badge bg-{{ $order->status_color }}" 
+                                    @if($order->rental_type === 'Sewa Harian')
+                                        title="Hijau (Untuk semua sewa Harian)"
+                                    @elseif($order->remaining_days < 0)
+                                        title="Merah (Lewat Jatuh tempo)"
+                                    @elseif($order->remaining_days <= 7)
+                                        title="Kuning (akan jatuh tempo 7 hari sebelum)"
+                                    @endif
+                                >
+                                    <i class="bi bi-circle-fill"></i> {{ $order->status_text }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ route('orders.edit', $order->id) }}" class="action-icon-btn btn-edit" title="Edit">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <form action="{{ route('orders.destroy', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this order?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="action-icon-btn btn-delete" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="10" class="text-center text-muted">No active orders found</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keterangan Indikator Section -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-tachometer-alt"></i> Keterangan Indikator</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="fw-bold">SEWA BULANAN</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <span class="badge bg-warning text-dark">
+                                <i class="bi bi-circle-fill"></i>
+                            </span>
+                            <strong>Kuning</strong> (akan jatuh tempo 7 hari sebelum)
+                        </li>
+                        <li>
+                            <span class="badge bg-danger">
+                                <i class="bi bi-circle-fill"></i>
+                            </span>
+                            <strong>Merah</strong> (Lewat Jatuh tempo)
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="fw-bold">SEWA HARIAN</h6>
+                    <ul class="list-unstyled">
+                        <li>
+                            <span class="badge bg-success">
+                                <i class="bi bi-circle-fill"></i>
+                            </span>
+                            <strong>Hijau</strong> (Untuk semua sewa Harian)
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<style>
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 2px solid #f0f0f0;
+    padding: 1rem 1.5rem;
+}
+
+.card-header h5 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: #495057;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.badge {
+    padding: 0.4em 0.8em;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.action-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
+    background: #3498db;
+    color: white;
+}
+
+.action-icon-btn:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+}
+
+.action-icon-btn.btn-edit {
+    background: #3498db;
+}
+
+.action-icon-btn.btn-edit:hover {
+    background: #2980b9;
+}
+
+.action-icon-btn.btn-delete {
+    background: #e74c3c;
+}
+
+.action-icon-btn.btn-delete:hover {
+    background: #c0392b;
+}
+</style>
+@endsection

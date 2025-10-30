@@ -134,6 +134,10 @@
                 <div class="info-value">{{ $vehicle->brand }}</div>
             </div>
             <div class="info-row">
+                <div class="info-label">Type</div>
+                <div class="info-value">{{ $vehicle->vehicle_type ?? '-' }}</div>
+            </div>
+            <div class="info-row">
                 <div class="info-label">Model</div>
                 <div class="info-value">{{ $vehicle->model }}</div>
             </div>
@@ -142,27 +146,51 @@
                 <div class="info-value">{{ $vehicle->year }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Plat Nomor</div>
+                <div class="info-label">License Plate</div>
                 <div class="info-value"><strong>{{ $vehicle->license_plate }}</strong></div>
             </div>
             <div class="info-row">
+                <div class="info-label">Chassis Number</div>
+                <div class="info-value">{{ $vehicle->chassis_number ?? '-' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Engine Number</div>
+                <div class="info-value">{{ $vehicle->engine_number ?? '-' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">STNK Number</div>
+                <div class="info-value">{{ $vehicle->stnk_number ?? '-' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">STNK Expiry Date</div>
+                <div class="info-value">{{ $vehicle->stnk_expiry_date ? date('d F Y', strtotime($vehicle->stnk_expiry_date)) : '-' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">KIR Number</div>
+                <div class="info-value">{{ $vehicle->kir_number ?? '-' }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">KIR Expiry Date</div>
+                <div class="info-value">{{ $vehicle->kir_expiry_date ? date('d F Y', strtotime($vehicle->kir_expiry_date)) : '-' }}</div>
+            </div>
+            <div class="info-row">
                 <div class="info-label">Engine Type</div>
-                <div class="info-value">{{ $vehicle->engine_type }}</div>
+                <div class="info-value">{{ $vehicle->engine_type ?? '-' }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Transmisi</div>
-                <div class="info-value">{{ $vehicle->transmission }}</div>
+                <div class="info-label">Transmission</div>
+                <div class="info-value">{{ $vehicle->transmission ?? '-' }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Kapasitas Tangki</div>
-                <div class="info-value">{{ $vehicle->tank_capacity }} Liters</div>
+                <div class="info-label">Tank Capacity</div>
+                <div class="info-value">{{ $vehicle->tank_capacity ? $vehicle->tank_capacity . ' Liters' : '-' }}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Latest Odometer</div>
                 <div class="info-value">{{ number_format($stats['latest_odometer'], 0, ',', '.') }} km</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Warna</div>
+                <div class="info-label">Color</div>
                 <div class="info-value">{{ $vehicle->color ?? '-' }}</div>
             </div>
             <div class="info-row">

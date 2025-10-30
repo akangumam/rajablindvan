@@ -212,135 +212,129 @@
         </div>
     @endif
 
-    <form action="{{ route('vehicles.store') }}" method="POST" id="vehicleForm">
+    <form action="{{ route('vehicles.store') }}" method="POST" id="vehicleForm" enctype="multipart/form-data">
         @csrf
         
-        <!-- Basic Information -->
+        <!-- Vehicle Information -->
         <div class="form-section mb-4">
             <h5 class="section-title">
-                <i class="fas fa-car me-2 text-primary"></i>{{ __('vehicle.basic_info') }}
+                <i class="fas fa-car me-2 text-primary"></i>Vehicle Information
             </h5>
             
+            <!-- Row 1: Brand & Type -->
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.brand') }} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="brandInput" name="brand" value="{{ old('brand') }}" required readonly style="cursor: pointer;" placeholder="{{ __('vehicle.click_to_select_brand') }}">
-                    <small class="text-muted">{{ __('vehicle.click_to_select_from_list') }}</small>
+                    <label class="form-label">Brand <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="brandInput" name="brand" value="{{ old('brand') }}" required readonly style="cursor: pointer;" placeholder="Click to select brand">
+                    <small class="text-muted">Click to select from list</small>
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.model') }} <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="modelInput" name="model" value="{{ old('model') }}" required placeholder="{{ __('vehicle.model_placeholder') }}">
+                    <label class="form-label">Type</label>
+                    <select class="form-select" name="vehicle_type">
+                        <option value="">Select vehicle type</option>
+                        <option value="MPV" {{ old('vehicle_type') == 'MPV' ? 'selected' : '' }}>MPV</option>
+                        <option value="SUV" {{ old('vehicle_type') == 'SUV' ? 'selected' : '' }}>SUV</option>
+                        <option value="Sedan" {{ old('vehicle_type') == 'Sedan' ? 'selected' : '' }}>Sedan</option>
+                        <option value="Hatchback" {{ old('vehicle_type') == 'Hatchback' ? 'selected' : '' }}>Hatchback</option>
+                        <option value="Crossover" {{ old('vehicle_type') == 'Crossover' ? 'selected' : '' }}>Crossover</option>
+                        <option value="Van" {{ old('vehicle_type') == 'Van' ? 'selected' : '' }}>Van</option>
+                        <option value="BOX" {{ old('vehicle_type') == 'BOX' ? 'selected' : '' }}>BOX</option>
+                        <option value="Light Truck" {{ old('vehicle_type') == 'Light Truck' ? 'selected' : '' }}>Light Truck</option>
+                        <option value="Medium Truck" {{ old('vehicle_type') == 'Medium Truck' ? 'selected' : '' }}>Medium Truck</option>
+                        <option value="Heavy Truck" {{ old('vehicle_type') == 'Heavy Truck' ? 'selected' : '' }}>Heavy Truck</option>
+                    </select>
                 </div>
             </div>
 
+            <!-- Row 2: Vehicle Name & Model -->
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.vehicle_name') }}</label>
-                    <input type="text" class="form-control" id="nameInput" name="name" value="{{ old('name') }}" placeholder="{{ __('vehicle.auto_generate') }}">
-                    <small class="text-muted">{{ __('vehicle.leave_blank_auto') }}</small>
+                    <label class="form-label">Vehicle Name</label>
+                    <input type="text" class="form-control" id="nameInput" name="name" value="{{ old('name') }}" placeholder="Enter vehicle name or nickname">
+                    <small class="text-muted">Leave blank to auto-generate from Brand + Model</small>
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.year') }}</label>
-                    <input type="text" class="form-control" name="year" value="{{ old('year') }}" maxlength="4" pattern="[0-9]{4}" placeholder="2024">
+                    <label class="form-label">Model <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="modelInput" name="model" value="{{ old('model') }}" required placeholder="Enter vehicle model">
                 </div>
             </div>
 
+            <!-- Row 3: Year & License Plate -->
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.license_plate') }}</label>
+                    <label class="form-label">Year of Manufacture</label>
+                    <select class="form-select" name="year">
+                        <option value="">Select year</option>
+                        @for($y = date('Y'); $y >= 1980; $y--)
+                            <option value="{{ $y }}" {{ old('year') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">License Plate/Plat Nomor</label>
                     <input type="text" class="form-control" name="license_plate" value="{{ old('license_plate') }}" placeholder="B 1234 ABC" style="text-transform: uppercase;">
-                    <small class="text-muted">{{ __('vehicle.license_plate_example') }}</small>
-                </div>
-                
-                <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.color') }}</label>
-                    <input type="text" class="form-control" name="color" value="{{ old('color') }}" placeholder="{{ __('vehicle.color_placeholder') }}">
                 </div>
             </div>
-        </div>
 
-        <!-- Technical Specifications -->
-        <div class="form-section mb-4">
-            <h5 class="section-title">
-                <i class="fas fa-cog me-2 text-primary"></i>{{ __('vehicle.technical_specifications') }}
-            </h5>
-            
+            <!-- Row 4: Chassis Number & Engine Number -->
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.engine_type') }} <span class="text-danger">*</span></label>
-                    <select class="form-select" name="engine_type" required>
-                        <option value="">{{ __('vehicle.select_option') }}</option>
-                        <option value="Gasoline" {{ old('engine_type') == 'Gasoline' ? 'selected' : '' }}>{{ __('vehicle.gasoline') }}</option>
-                        <option value="Diesel" {{ old('engine_type') == 'Diesel' ? 'selected' : '' }}>{{ __('vehicle.diesel') }}</option>
-                        <option value="Hybrid" {{ old('engine_type') == 'Hybrid' ? 'selected' : '' }}>{{ __('vehicle.hybrid') }}</option>
-                        <option value="Electric" {{ old('engine_type') == 'Electric' ? 'selected' : '' }}>{{ __('vehicle.electric') }}</option>
-                    </select>
+                    <label class="form-label">Chassis Number/Nomor Rangka</label>
+                    <input type="text" class="form-control" name="chassis_number" value="{{ old('chassis_number') }}" placeholder="Enter chassis number" style="text-transform: uppercase;">
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.transmission') }} <span class="text-danger">*</span></label>
-                    <select class="form-select" name="transmission" required>
-                        <option value="">{{ __('vehicle.select_option') }}</option>
-                        <option value="Manual" {{ old('transmission') == 'Manual' ? 'selected' : '' }}>{{ __('vehicle.transmission_manual') }}</option>
-                        <option value="Automatic" {{ old('transmission') == 'Automatic' ? 'selected' : '' }}>{{ __('vehicle.transmission_automatic') }}</option>
-                        <option value="CVT" {{ old('transmission') == 'CVT' ? 'selected' : '' }}>{{ __('vehicle.transmission_cvt') }}</option>
-                    </select>
+                    <label class="form-label">Engine Number/Nomor Mesin</label>
+                    <input type="text" class="form-control" name="engine_number" value="{{ old('engine_number') }}" placeholder="Enter engine number" style="text-transform: uppercase;">
                 </div>
             </div>
 
+            <!-- Row 5: STNK Number & STNK Expiry -->
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.fuel_tank_capacity') }}</label>
-                    <input type="number" class="form-control" name="tank_capacity" value="{{ old('tank_capacity') }}" step="0.1" min="0" placeholder="45">
+                    <label class="form-label">Vehicle Registration Certificate Number/Nomor STNK</label>
+                    <input type="text" class="form-control" name="stnk_number" value="{{ old('stnk_number') }}" placeholder="Enter STNK number" style="text-transform: uppercase;">
                 </div>
                 
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">{{ __('vehicle.initial_odometer') }} <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" name="odometer" value="{{ old('odometer', 0) }}" step="0.1" min="0" required placeholder="0">
+                    <label class="form-label">VRCN Expiry Date/Masa Berlaku STNK</label>
+                    <input type="date" class="form-control" name="stnk_expiry_date" value="{{ old('stnk_expiry_date') }}">
                 </div>
             </div>
 
-            <div class="mb-4">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" name="dual_tank" id="dual_tank" value="1" {{ old('dual_tank') ? 'checked' : '' }}>
-                    <label class="form-check-label" for="dual_tank">
-                        <strong>{{ __('vehicle.dual_fuel_tanks') }}</strong>
-                        <p class="text-muted small mb-0">{{ __('vehicle.dual_fuel_tanks_hint') }}</p>
-                    </label>
+            <!-- Row 6: KIR Number & KIR Expiry -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">Vehicle Inspection Number/Nomor KIR</label>
+                    <input type="text" class="form-control" name="kir_number" value="{{ old('kir_number') }}" placeholder="Enter KIR number" style="text-transform: uppercase;">
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">VIN Expiry Date/Masa Berlaku KIR</label>
+                    <input type="date" class="form-control" name="kir_expiry_date" value="{{ old('kir_expiry_date') }}">
                 </div>
             </div>
 
-            <div class="mb-4">
-                <label class="form-label">{{ __('vehicle.distance_unit') }}</label>
-                <div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="distance_unit" value="km" id="unit_km" {{ old('distance_unit', 'km') == 'km' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="unit_km">{{ __('vehicle.kilometer') }}</label>
+            <!-- Row 7: Barcode Upload -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">Upload Barcode</label>
+                    <input type="file" class="form-control" name="barcode_image" accept="image/*" id="barcodeUpload">
+                    <small class="text-muted">Automatically view Barcode after Upload</small>
+                    <div id="barcodePreview" class="mt-2" style="display: none;">
+                        <img id="barcodeImg" src="" alt="Barcode Preview" style="max-width: 200px; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="distance_unit" value="mil" id="unit_mil" {{ old('distance_unit') == 'mil' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="unit_mil">{{ __('vehicle.mile') }}</label>
-                    </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Vehicle Identity -->
-        <div class="form-section mb-4">
-            <h5 class="section-title">
-                <i class="fas fa-id-card me-2 text-primary"></i>{{ __('vehicle.vehicle_identity') }}
-            </h5>
-            
-            <div class="mb-4">
-                <label class="form-label">{{ __('vehicle.engine_number') }}</label>
-                <input type="text" class="form-control" name="engine_number" value="{{ old('engine_number') }}" placeholder="{{ __('vehicle.engine_number_placeholder') }}">
-            </div>
-            
-            <div class="mb-4">
-                <label class="form-label">{{ __('vehicle.chassis_number') }}</label>
-                <input type="text" class="form-control" name="chassis_number" value="{{ old('chassis_number') }}" placeholder="{{ __('vehicle.chassis_number_placeholder') }}">
+                
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">Upload Dokumen Kendaraan</label>
+                    <input type="text" class="form-control mb-2" name="document_name" value="{{ old('document_name') }}" placeholder="Enter document name">
+                    <input type="file" class="form-control" name="vehicle_document" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                    <small class="text-muted">Supported formats: PDF, DOC, DOCX, JPG, PNG</small>
+                </div>
             </div>
         </div>
 
@@ -511,6 +505,24 @@ addNewBrand.addEventListener('click', function(e) {
     brandInput.setAttribute('placeholder', '{{ __('vehicle.type_brand_manual') }}');
     brandPopup.style.display = 'none';
 });
+
+// Barcode preview
+const barcodeUpload = document.getElementById('barcodeUpload');
+if (barcodeUpload) {
+    barcodeUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('barcodeImg').src = event.target.result;
+                document.getElementById('barcodePreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            document.getElementById('barcodePreview').style.display = 'none';
+        }
+    });
+}
 
 // Form submission - auto generate name if empty
 const vehicleForm = document.getElementById('vehicleForm');

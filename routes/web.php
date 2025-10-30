@@ -120,8 +120,17 @@ Route::post('rentals/{rental}/start', [\App\Http\Controllers\RentalController::c
 Route::post('rentals/{rental}/complete', [\App\Http\Controllers\RentalController::class, 'completeRental'])
     ->name('rentals.complete');
 
+// Orders
+Route::resource('orders', \App\Http\Controllers\OrderController::class);
+
 // Reports routes
 Route::prefix('reports')->name('reports.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\ReportController::class, 'index'])->name('index');
+    Route::post('generate', [\App\Http\Controllers\ReportController::class, 'generate'])->name('generate');
+    Route::get('download/general', [\App\Http\Controllers\ReportController::class, 'downloadGeneral'])->name('download.general');
+    Route::get('download/detail', [\App\Http\Controllers\ReportController::class, 'downloadDetail'])->name('download.detail');
+    
+    // Old routes (keep for backward compatibility)
     Route::get('dashboard', [\App\Http\Controllers\ReportController::class, 'dashboard'])->name('dashboard');
     Route::get('rentals', [\App\Http\Controllers\ReportController::class, 'rentals'])->name('rentals');
     Route::get('vehicles', [\App\Http\Controllers\ReportController::class, 'vehicles'])->name('vehicles');

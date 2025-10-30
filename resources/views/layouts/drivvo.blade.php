@@ -497,7 +497,7 @@
                 </div>
 
                 <div class="drivvo-nav-item">
-                    <a href="{{ route('reports.financial') }}" class="drivvo-nav-link">
+                    <a href="{{ route('reports.index') }}" class="drivvo-nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
                         <i class="fas fa-chart-line"></i>
                         {{ __('common.reports') }}
                     </a>
@@ -522,7 +522,7 @@
 
                 <!-- Order List -->
                 <div class="drivvo-nav-item">
-                    <a href="{{ route('rentals.index') }}" class="drivvo-nav-link {{ request()->routeIs('rentals.*') ? 'active' : '' }}">
+                    <a href="{{ route('orders.index') }}" class="drivvo-nav-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
                         <i class="fas fa-clipboard-list"></i>
                         Order List
                     </a>

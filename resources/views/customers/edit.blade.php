@@ -1,5 +1,5 @@
 @extends('layouts.drivvo-form', [
-    'pageTitle' => '{{ __('customer.edit_customer') }}',
+    'pageTitle' => __('customer.edit_customer'),
     'pageIcon' => 'fa-users',
     'formAction' => route('customers.update', $customer),
     'formId' => 'customerForm',

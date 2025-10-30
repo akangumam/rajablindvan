@@ -539,7 +539,7 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>{{ __('vehicle.type') }}</th>
+                <th>Type</th>
                 <th>
                     <a href="{{ route('vehicles.index', array_merge(request()->except(['sort_by', 'sort_order', 'page']), [
                         'sort_by' => 'name',
@@ -553,10 +553,11 @@
                         @endif
                     </a>
                 </th>
+                <th>License Plate</th>
+                <th>Year</th>
                 <th>{{ __('vehicle.brand') }}</th>
                 <th>{{ __('vehicle.model') }}</th>
-                <th>{{ __('vehicle.last_update') }}</th>
-                <th>{{ __('common.Status') }}</th>
+                <th>STATUS</th>
                 <th></th>
             </tr>
         </thead>
@@ -564,33 +565,19 @@
             @foreach($vehicles as $index => $vehicle)
             <tr>
                 <td class="vehicle-icon-cell">{{ ($vehicles->currentPage() - 1) * $vehicles->perPage() + $index + 1 }}</td>
-                <td class="vehicle-icon-cell">
-                    <div class="vehicle-icon">
-                        @php
-                            // Detect vehicle type from model name
-                            $modelLower = strtolower($vehicle->model);
-                            $isTruck = str_contains($modelLower, 'colt') || 
-                                      str_contains($modelLower, 'dyna') || 
-                                      str_contains($modelLower, 'elf') || 
-                                      str_contains($modelLower, 'dutro') ||
-                                      str_contains($modelLower, 'truck') ||
-                                      str_contains($vehicle->license_plate, 'TRK');
-                            $isBus = str_contains($modelLower, 'bus') || str_contains($modelLower, 'bis');
-                        @endphp
-                        
-                        @if($isTruck)
-                            <i class="fas fa-truck"></i>
-                        @elseif($isBus)
-                            <i class="fas fa-bus"></i>
-                        @else
-                            <i class="fas fa-car"></i>
-                        @endif
-                    </div>
+                <td>
+                    <span style="font-weight: 500; color: #333;">{{ $vehicle->vehicle_type ?: '-' }}</span>
                 </td>
                 <td>
                     <a href="{{ route('vehicles.show', $vehicle) }}" class="vehicle-name">
                         {{ $vehicle->name }}
                     </a>
+                </td>
+                <td>
+                    <span style="font-weight: 500; color: #333; text-transform: uppercase;">{{ $vehicle->license_plate ?: '-' }}</span>
+                </td>
+                <td>
+                    <span style="color: #666;">{{ $vehicle->year ?: '-' }}</span>
                 </td>
                 <td>
                     <div class="d-flex align-items-center">
@@ -611,7 +598,6 @@
                     </div>
                 </td>
                 <td class="model-text">{{ $vehicle->model }}</td>
-                <td class="last-update">{{ $vehicle->updated_at->diffForHumans() }}</td>
                 <td>
                     <span class="Status-badge {{ $vehicle->is_active ? 'Status-Active' : 'Status-nonActive' }}">
                         {{ $vehicle->is_active ? __('common.active') : __('common.inactive') }}

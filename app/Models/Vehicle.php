@@ -13,8 +13,16 @@ class Vehicle extends Model
         'model',
         'year',
         'license_plate',
+        'vehicle_type',
+        'chassis_number',
+        'engine_number',
+        'stnk_number',
         'stnk_expiry_date',
+        'kir_number',
         'kir_expiry_date',
+        'barcode_path',
+        'document_name',
+        'document_path',
         'engine_type',
         'transmission',
         'tank_capacity',
@@ -101,7 +109,7 @@ class Vehicle extends Model
         $fuelOdo = $latestFuel ? $latestFuel->odometer : 0;
         $maintenanceOdo = $latestMaintenance ? $latestMaintenance->odometer : 0;
         
-        return max($this->odometer, $fuelOdo, $maintenanceOdo);
+        return (float) max($this->odometer ?? 0, $fuelOdo, $maintenanceOdo);
     }
 
     public function getTotalExpenses(): float
