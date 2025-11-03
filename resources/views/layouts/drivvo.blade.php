@@ -45,6 +45,75 @@
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .drivvo-sidebar.collapsed {
+            width: 70px;
+        }
+
+        .drivvo-sidebar.collapsed .brand-text,
+        .drivvo-sidebar.collapsed .nav-text,
+        .drivvo-sidebar.collapsed .language-label,
+        .drivvo-sidebar.collapsed .language-buttons {
+            opacity: 0;
+            visibility: hidden;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .drivvo-sidebar.collapsed .app-brand-logo {
+            max-width: 40px !important;
+            max-height: 40px !important;
+        }
+
+        .drivvo-sidebar.collapsed .drivvo-nav-link {
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .drivvo-sidebar.collapsed .drivvo-nav-link i {
+            margin-right: 0;
+        }
+
+        .drivvo-sidebar.collapsed .drivvo-add-btn {
+            width: auto;
+            padding: 12px;
+            border-radius: 50%;
+        }
+
+        .drivvo-sidebar.collapsed .drivvo-add-btn .btn-text {
+            display: none;
+        }
+
+        .drivvo-sidebar.collapsed .language-switcher {
+            padding: 10px;
+        }
+
+        /* Tooltip for collapsed sidebar */
+        .drivvo-sidebar.collapsed .drivvo-nav-link::after {
+            content: attr(title);
+            position: absolute;
+            left: 70px;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 1001;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .drivvo-sidebar.collapsed .drivvo-nav-link:hover::after {
+            opacity: 1;
+        }
+
+        .drivvo-sidebar.collapsed .drivvo-brand {
+            padding: 20px 10px;
+            min-height: 80px;
         }
 
         .drivvo-brand {
@@ -120,6 +189,8 @@
             border-radius: 8px;
             transition: all 0.2s ease;
             font-weight: 500;
+            white-space: nowrap;
+            position: relative;
         }
 
         .drivvo-nav-link:hover {
@@ -136,6 +207,12 @@
             width: 20px;
             margin-right: 12px;
             text-align: center;
+            flex-shrink: 0;
+        }
+
+        .drivvo-nav-link .nav-text {
+            transition: opacity 0.2s ease, width 0.2s ease;
+            white-space: nowrap;
         }
 
         .drivvo-add-btn {
@@ -153,6 +230,7 @@
             border: none;
             cursor: pointer;
             width: 100%;
+            white-space: nowrap;
         }
 
         .drivvo-add-btn:hover {
@@ -163,6 +241,12 @@
 
         .drivvo-add-btn i {
             margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .drivvo-add-btn .btn-text {
+            transition: opacity 0.2s ease, width 0.2s ease;
+            white-space: nowrap;
         }
 
         /* Language Switcher */
@@ -216,6 +300,50 @@
             background-color: #f8f9fa;
             width: calc(100vw - 240px);
             overflow: visible;
+            transition: margin-left 0.3s ease, width 0.3s ease;
+        }
+
+        .main-content.sidebar-collapsed {
+            margin-left: 70px;
+            width: calc(100vw - 70px);
+        }
+
+        /* Sidebar Toggle Button for Desktop */
+        .sidebar-toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 250px;
+            z-index: 999;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background: #f8f9fa;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .sidebar-toggle-btn.collapsed {
+            left: 80px;
+        }
+
+        .sidebar-toggle-btn i {
+            color: #2c3e50;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-toggle-btn.collapsed i {
+            transform: rotate(180deg);
         }
 
         /* Page Header Styles */
@@ -479,6 +607,10 @@
 
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
+            .sidebar-toggle-btn {
+                display: none;
+            }
+
             .mobile-menu-toggle {
                 display: block;
             }
@@ -494,6 +626,10 @@
                 transform: translateX(0);
             }
 
+            .drivvo-sidebar.collapsed {
+                width: 280px;
+            }
+
             .mobile-menu-close {
                 display: block;
             }
@@ -503,6 +639,11 @@
                 width: 100%;
                 padding: 15px;
                 padding-top: 70px;
+            }
+
+            .main-content.sidebar-collapsed {
+                margin-left: 0;
+                width: 100%;
             }
 
             .page-header {
@@ -633,6 +774,11 @@
 </head>
 
 <body>
+    <!-- Desktop Sidebar Toggle Button -->
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
     <!-- Mobile Menu Toggle -->
     <button class="mobile-menu-toggle" id="mobileMenuToggle">
         <i class="fas fa-bars"></i>
@@ -665,7 +811,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('dashboard') }}" class="drivvo-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <i class="fas fa-tachometer-alt"></i>
-                        {{ __('common.dashboard') }}
+                        <span class="nav-text">{{ __('common.dashboard') }}</span>
                     </a>
                 </div>
 
@@ -673,7 +819,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('history.index') }}" class="drivvo-nav-link {{ request()->routeIs('history.*') ? 'active' : '' }}">
                         <i class="fas fa-history"></i>
-                        History
+                        <span class="nav-text">History</span>
                     </a>
                 </div>
 
@@ -681,7 +827,7 @@
                 <div class="drivvo-nav-item">
                     <button type="button" class="drivvo-add-btn" data-bs-toggle="modal" data-bs-target="#quickAddModal">
                         <i class="fas fa-plus"></i>
-                        {{ __('common.add_new') }}
+                        <span class="btn-text">{{ __('common.add_new') }}</span>
                     </button>
                 </div>
 
@@ -689,14 +835,14 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('reminders.index') }}" class="drivvo-nav-link {{ request()->routeIs('reminders.*') ? 'active' : '' }}">
                         <i class="fas fa-bell"></i>
-                        {{ __('common.reminders') }}
+                        <span class="nav-text">{{ __('common.reminders') }}</span>
                     </a>
                 </div>
 
                 <div class="drivvo-nav-item">
                     <a href="{{ route('reports.index') }}" class="drivvo-nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
                         <i class="fas fa-chart-line"></i>
-                        {{ __('common.reports') }}
+                        <span class="nav-text">{{ __('common.reports') }}</span>
                     </a>
                 </div>
 
@@ -706,14 +852,14 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('vehicles.index') }}" class="drivvo-nav-link {{ request()->routeIs('vehicles.*') ? 'active' : '' }}">
                         <i class="fas fa-car"></i>
-                        {{ __('common.vehicles') }}
+                        <span class="nav-text">{{ __('common.vehicles') }}</span>
                     </a>
                 </div>
 
                 <div class="drivvo-nav-item">
                     <a href="{{ route('customers.index') }}" class="drivvo-nav-link {{ request()->routeIs('customers.*') ? 'active' : '' }}">
                         <i class="fas fa-users"></i>
-                        {{ __('common.customers') }}
+                        <span class="nav-text">{{ __('common.customers') }}</span>
                     </a>
                 </div>
 
@@ -721,7 +867,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('orders.index') }}" class="drivvo-nav-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
                         <i class="fas fa-clipboard-list"></i>
-                        Order List
+                        <span class="nav-text">Order List</span>
                     </a>
                 </div>
 
@@ -731,7 +877,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('users.index') }}" class="drivvo-nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
                         <i class="fas fa-user"></i>
-                        Users
+                        <span class="nav-text">Users</span>
                     </a>
                 </div>
                 @endif
@@ -743,7 +889,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('settings.index') }}" class="drivvo-nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                         <i class="fas fa-cog"></i>
-                        Settings
+                        <span class="nav-text">Settings</span>
                     </a>
                 </div>
 
@@ -751,7 +897,7 @@
                 <div class="drivvo-nav-item">
                     <button type="button" class="drivvo-nav-link" onclick="showLogoutModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: inherit; padding: 12px 20px;">
                         <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                        <span class="nav-text">Logout</span>
                     </button>
                     
                     <!-- Hidden logout form -->
@@ -930,13 +1076,37 @@
             document.getElementById('logoutForm').submit();
         }
 
-        // Mobile Menu Toggle
+        // Sidebar Toggle and Mobile Menu
         document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
             const mobileMenuToggle = document.getElementById('mobileMenuToggle');
             const mobileMenuClose = document.getElementById('mobileMenuClose');
             const sidebar = document.querySelector('.drivvo-sidebar');
+            const mainContent = document.querySelector('.main-content');
             const overlay = document.getElementById('sidebarOverlay');
 
+            // Load sidebar state from localStorage (for desktop)
+            const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (sidebarCollapsed && window.innerWidth > 768) {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('sidebar-collapsed');
+                sidebarToggleBtn.classList.add('collapsed');
+            }
+
+            // Desktop Sidebar Toggle
+            if (sidebarToggleBtn) {
+                sidebarToggleBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('sidebar-collapsed');
+                    sidebarToggleBtn.classList.toggle('collapsed');
+                    
+                    // Save state to localStorage
+                    const isCollapsed = sidebar.classList.contains('collapsed');
+                    localStorage.setItem('sidebarCollapsed', isCollapsed);
+                });
+            }
+
+            // Mobile Menu Functions
             function openSidebar() {
                 sidebar.classList.add('active');
                 overlay.classList.add('active');
@@ -978,9 +1148,31 @@
                 resizeTimer = setTimeout(function() {
                     if (window.innerWidth > 768) {
                         closeSidebar();
+                        // Restore collapsed state on desktop
+                        const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                        if (isCollapsed) {
+                            sidebar.classList.add('collapsed');
+                            mainContent.classList.add('sidebar-collapsed');
+                            sidebarToggleBtn.classList.add('collapsed');
+                        }
+                    } else {
+                        // Remove collapsed state on mobile
+                        sidebar.classList.remove('collapsed');
+                        mainContent.classList.remove('sidebar-collapsed');
                     }
                 }, 250);
             });
+
+            // Tooltip for collapsed sidebar (optional enhancement)
+            if (window.innerWidth > 768) {
+                const navLinks = sidebar.querySelectorAll('.drivvo-nav-link');
+                navLinks.forEach(link => {
+                    const text = link.querySelector('.nav-text');
+                    if (text) {
+                        link.setAttribute('title', text.textContent.trim());
+                    }
+                });
+            }
         });
     </script>
     
