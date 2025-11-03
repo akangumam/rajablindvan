@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Git Hook: post-merge
+# Runs automatically after 'git pull' or 'git merge'
+# This will cache Laravel configs after pulling latest code
+#
+
+echo "🚀 Running post-merge deployment tasks..."
+
+# Check if composer.lock changed
+if git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet "composer.lock"; then
+    echo "📦 composer.lock changed, running composer install..."
+    composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+fi
+
+# Clear and cache Laravel configurations
+echo "🔧 Clearing old cache..."
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+
+echo "⚡ Caching configurations..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Set permissions if needed
+echo "🔒 Setting storage permissions..."
+chmod -R 775 storage bootstrap/cache 2>/dev/null || true
+
+echo "✅ Deployment complete!"
+echo ""
