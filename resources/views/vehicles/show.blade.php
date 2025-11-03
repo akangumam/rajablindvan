@@ -52,6 +52,10 @@
                                 <div class="card-body">
                                     <table class="table table-borderless mb-0">
                                         <tr>
+                                            <td class="fw-bold" style="width: 40%;">Vehicle Type:</td>
+                                            <td>{{ $vehicle->vehicle_type ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
                                             <td class="fw-bold">Name:</td>
                                             <td>{{ $vehicle->name }}</td>
                                         </tr>
@@ -72,6 +76,34 @@
                                             <td><span class="badge bg-dark">{{ $vehicle->license_plate }}</span></td>
                                         </tr>
                                         <tr>
+                                            <td class="fw-bold">Chassis Number:</td>
+                                            <td>
+                                                @if($vehicle->chassis_number)
+                                                    <span class="badge bg-secondary">{{ $vehicle->chassis_number }}</span>
+                                                @else
+                                                    <span class="text-muted">Not Set</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">Engine Number / Nomor Mesin:</td>
+                                            <td>
+                                                @if($vehicle->engine_number)
+                                                    <span class="badge bg-info">{{ $vehicle->engine_number }}</span>
+                                                @else
+                                                    <span class="text-muted">Not Set</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">STNK Number:</td>
+                                            <td>{{ $vehicle->stnk_number ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-bold">KIR Number:</td>
+                                            <td>{{ $vehicle->kir_number ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
                                             <td class="fw-bold">Engine Type:</td>
                                             <td>{{ $vehicle->engine_type }}</td>
                                         </tr>
@@ -79,18 +111,14 @@
                                             <td class="fw-bold">Transmisi:</td>
                                             <td>{{ $vehicle->transmission }}</td>
                                         </tr>
-                                        @if($vehicle->tank_capacity)
                                         <tr>
                                             <td class="fw-bold">Kapasitas Tangki:</td>
-                                            <td>{{ $vehicle->tank_capacity }} Liters</td>
+                                            <td>{{ $vehicle->tank_capacity ? $vehicle->tank_capacity . ' Liters' : '-' }}</td>
                                         </tr>
-                                        @endif
-                                        @if($vehicle->color)
                                         <tr>
                                             <td class="fw-bold">Warna:</td>
-                                            <td>{{ $vehicle->color }}</td>
+                                            <td>{{ $vehicle->color ?? '-' }}</td>
                                         </tr>
-                                        @endif
                                         <tr>
                                             <td class="fw-bold">Status:</td>
                                             <td>
@@ -100,6 +128,44 @@
                                             </td>
                                         </tr>
                                     </table>
+                                </div>
+                            </div>
+
+                            <!-- Barcode Section -->
+                            <div class="card border-success mt-3">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="fas fa-qrcode me-2"></i>Barcode untuk Isi BBM</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    @if($vehicle->barcode_path)
+                                        <div class="p-3 bg-white border rounded d-inline-block">
+                                            <img src="{{ asset('storage/' . $vehicle->barcode_path) }}" 
+                                                 alt="Vehicle Barcode" 
+                                                 style="max-width: 100%; height: auto; max-height: 200px;"
+                                                 class="img-fluid">
+                                        </div>
+                                        <div class="mt-3">
+                                            <p class="text-muted mb-2">
+                                                <i class="fas fa-info-circle"></i> Scan barcode ini saat isi BBM di SPBU
+                                            </p>
+                                            <a href="{{ asset('storage/' . $vehicle->barcode_path) }}" 
+                                               download="barcode-{{ $vehicle->license_plate }}.png"
+                                               class="btn btn-sm btn-outline-success">
+                                                <i class="fas fa-download me-1"></i>Download Barcode
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="printBarcode()">
+                                                <i class="fas fa-print me-1"></i>Print Barcode
+                                            </button>
+                                        </div>
+                                    @else
+                                        <div class="py-4">
+                                            <i class="fas fa-qrcode display-4 text-muted mb-3"></i>
+                                            <p class="text-muted mb-3">Barcode belum di-upload</p>
+                                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-success">
+                                                <i class="fas fa-upload me-1"></i>Upload Barcode
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -144,6 +210,89 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Document Expiry Dates -->
+                            <div class="card border-warning mt-3">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6 class="mb-0"><i class="fas fa-calendar-times me-2"></i>Document Expiry Dates</h6>
+                                </div>
+                                <div class="card-body">
+                                    @if($vehicle->stnk_expiry_date || $vehicle->kir_expiry_date)
+                                        <table class="table table-borderless mb-0">
+                                            <tr>
+                                                <td class="fw-bold" style="width: 40%;">STNK Expiry:</td>
+                                                <td>
+                                                    @if($vehicle->stnk_expiry_date)
+                                                        @php
+                                                            $stnkExpiry = \Carbon\Carbon::parse($vehicle->stnk_expiry_date);
+                                                            $daysUntilExpiry = now()->diffInDays($stnkExpiry, false);
+                                                            $badgeClass = 'bg-success';
+                                                            if ($daysUntilExpiry < 0) {
+                                                                $badgeClass = 'bg-danger';
+                                                            } elseif ($daysUntilExpiry <= 30) {
+                                                                $badgeClass = 'bg-warning text-dark';
+                                                            }
+                                                        @endphp
+                                                        <span class="badge {{ $badgeClass }}">
+                                                            {{ $stnkExpiry->format('d M Y') }}
+                                                        </span>
+                                                        @if($daysUntilExpiry < 0)
+                                                            <small class="text-danger d-block mt-1">
+                                                                <i class="fas fa-exclamation-triangle"></i> Expired {{ abs($daysUntilExpiry) }} days ago
+                                                            </small>
+                                                        @elseif($daysUntilExpiry <= 30)
+                                                            <small class="text-warning d-block mt-1">
+                                                                <i class="fas fa-clock"></i> Expires in {{ $daysUntilExpiry }} days
+                                                            </small>
+                                                        @endif
+                                                    @else
+                                                        <span class="text-muted">Not Set</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">KIR Expiry:</td>
+                                                <td>
+                                                    @if($vehicle->kir_expiry_date)
+                                                        @php
+                                                            $kirExpiry = \Carbon\Carbon::parse($vehicle->kir_expiry_date);
+                                                            $daysUntilExpiry = now()->diffInDays($kirExpiry, false);
+                                                            $badgeClass = 'bg-success';
+                                                            if ($daysUntilExpiry < 0) {
+                                                                $badgeClass = 'bg-danger';
+                                                            } elseif ($daysUntilExpiry <= 30) {
+                                                                $badgeClass = 'bg-warning text-dark';
+                                                            }
+                                                        @endphp
+                                                        <span class="badge {{ $badgeClass }}">
+                                                            {{ $kirExpiry->format('d M Y') }}
+                                                        </span>
+                                                        @if($daysUntilExpiry < 0)
+                                                            <small class="text-danger d-block mt-1">
+                                                                <i class="fas fa-exclamation-triangle"></i> Expired {{ abs($daysUntilExpiry) }} days ago
+                                                            </small>
+                                                        @elseif($daysUntilExpiry <= 30)
+                                                            <small class="text-warning d-block mt-1">
+                                                                <i class="fas fa-clock"></i> Expires in {{ $daysUntilExpiry }} days
+                                                            </small>
+                                                        @endif
+                                                    @else
+                                                        <span class="text-muted">Not Set</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    @else
+                                        <div class="text-center py-3">
+                                            <i class="fas fa-calendar-times display-6 text-muted mb-2"></i>
+                                            <p class="text-muted mb-2">Tanggal expiry dokumen belum diisi</p>
+                                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit me-1"></i>Update Document Dates
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -387,6 +536,88 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+function printBarcode() {
+    const barcodeImg = document.querySelector('.card-body img[alt="Vehicle Barcode"]');
+    if (!barcodeImg) {
+        alert('Barcode not found');
+        return;
+    }
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Print Barcode - {{ $vehicle->license_plate }}</title>
+            <style>
+                body {
+                    margin: 0;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 100vh;
+                    font-family: Arial, sans-serif;
+                }
+                .barcode-container {
+                    text-align: center;
+                    page-break-inside: avoid;
+                }
+                img {
+                    max-width: 400px;
+                    height: auto;
+                    border: 2px solid #000;
+                    padding: 10px;
+                    background: white;
+                }
+                .vehicle-info {
+                    margin-top: 20px;
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+                .instruction {
+                    margin-top: 10px;
+                    font-size: 14px;
+                    color: #666;
+                }
+                @media print {
+                    body {
+                        padding: 0;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="barcode-container">
+                <img src="${barcodeImg.src}" alt="Vehicle Barcode">
+                <div class="vehicle-info">
+                    {{ $vehicle->brand }} {{ $vehicle->model }} - {{ $vehicle->license_plate }}
+                </div>
+                <div class="instruction">
+                    Scan barcode ini saat isi BBM di SPBU
+                </div>
+            </div>
+        </body>
+        </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.focus();
+    
+    // Wait for image to load before printing
+    printWindow.onload = function() {
+        setTimeout(function() {
+            printWindow.print();
+            printWindow.close();
+        }, 250);
+    };
+}
+</script>
+@endpush
 @endsection
 
 

@@ -895,7 +895,7 @@
 
                 <!-- Logout -->
                 <div class="drivvo-nav-item">
-                    <button type="button" class="drivvo-nav-link" onclick="showLogoutModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: inherit; padding: 12px 20px;">
+                    <button type="button" class="drivvo-nav-link" onclick="showLogoutModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: red; padding: 12px 20px;">
                         <i class="fas fa-sign-out-alt"></i>
                         <span class="nav-text">Logout</span>
                     </button>
