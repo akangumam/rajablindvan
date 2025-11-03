@@ -214,6 +214,152 @@
         margin-bottom: 16px;
         opacity: 0.5;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .dashboard-header {
+            padding: 20px 15px;
+        }
+
+        .dashboard-title {
+            font-size: 24px;
+        }
+
+        .dashboard-title i {
+            font-size: 22px;
+        }
+
+        .dashboard-subtitle {
+            font-size: 13px;
+        }
+
+        .monitoring-card {
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-header-custom {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .card-title-custom {
+            font-size: 16px;
+        }
+
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 16px;
+        }
+
+        .vehicle-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .vehicle-info {
+            width: 100%;
+        }
+
+        .vehicle-name {
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .vehicle-status {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .status-info {
+            font-size: 12px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .status-info small {
+            display: block;
+            margin-top: 2px;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            white-space: nowrap;
+        }
+
+        .vehicle-action {
+            width: 100%;
+        }
+
+        .vehicle-action .btn {
+            width: 100%;
+            font-size: 13px;
+            padding: 8px 12px;
+        }
+
+        .fleet-overview {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .fleet-stat {
+            padding: 16px;
+        }
+
+        .fleet-number {
+            font-size: 28px;
+        }
+
+        .fleet-label {
+            font-size: 12px;
+        }
+
+        .empty-state {
+            padding: 30px 15px;
+        }
+
+        .empty-icon {
+            font-size: 36px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dashboard-title {
+            font-size: 20px;
+        }
+
+        .monitoring-card {
+            padding: 12px;
+        }
+
+        .card-title-custom {
+            font-size: 14px;
+        }
+
+        .vehicle-name {
+            font-size: 14px;
+        }
+
+        .status-info {
+            font-size: 11px;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+        }
+
+        .fleet-number {
+            font-size: 24px;
+        }
+    }
 </style>
 
 @if(session('success'))
