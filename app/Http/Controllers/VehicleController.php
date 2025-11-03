@@ -213,7 +213,7 @@ class VehicleController extends Controller
 
         $vehicle->update($validated);
 
-        return redirect()->route('vehicles.index')
+        return redirect()->route('vehicles.show', $vehicle)
             ->with('success', 'Kendaraan berhasil diperbarui!');
     }
 
