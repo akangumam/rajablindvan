@@ -128,14 +128,58 @@ class UserController extends Controller
                     ->with('error', 'You cannot delete your own account.');
             }
 
+            // Prevent deleting Administrator (protection)
+            if ($user->role === 'super_admin') {
+                return redirect()->route('users.index')
+                    ->with('error', 'Administrator account cannot be deleted for security reasons.');
+            }
+
             $userName = $user->name;
             $user->delete();
 
             return redirect()->route('users.index')
                 ->with('success', 'User "' . $userName . '" has been deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('users.index')
+            return redirect()->back()
                 ->with('error', 'Failed to delete user. Please try again.');
         }
+    }
+
+    /**
+     * Show reset password form for specific user
+     */
+    public function showResetPasswordForm(User $user)
+    {
+        // Only Administrator can reset password
+        if (!auth()->user()->isSuperAdmin()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('users.reset-password', compact('user'));
+    }
+
+    /**
+     * Reset password for specific user (Administrator feature)
+     */
+    public function resetPassword(Request $request, User $user)
+    {
+        // Only Administrator can reset password
+        if (!auth()->user()->isSuperAdmin()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $user->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+
+        // TODO: Send email notification to user (when email is configured)
+        // Mail::to($user->email)->send(new PasswordResetByAdmin($user));
+
+        return redirect()->route('users.show', $user)
+            ->with('success', 'Password for user "' . $user->name . '" has been reset successfully.');
     }
 }

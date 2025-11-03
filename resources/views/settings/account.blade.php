@@ -231,27 +231,37 @@
             <h3 class="account-section-title">My Details</h3>
         <div class="account-section">
             <div class="account-field">
-                <label class="account-field-label">1. Nama</label>
+                <label class="account-field-label">1. Name</label>
                 <a href="#" class="account-field-value">
-                    Khaerul Umam
+                    {{ Auth::user()->name ?? (Auth::user()->first_name . ' ' . Auth::user()->last_name) }}
                 </a>
             </div>
 
             <div class="account-field">
                 <label class="account-field-label">2. Email</label>
                 <a href="#" class="account-field-value">
-                    napsterweb.id@gmail.com
+                    {{ Auth::user()->email }}
                 </a>
             </div>
 
             <div class="account-field">
-                <label class="account-field-label">3. Posisi</label>
-                <a href="#" class="account-field-value">Administrator</a>
+                <label class="account-field-label">3. Position</label>
+                <a href="#" class="account-field-value">{{ Auth::user()->title ?? '-' }}</a>
             </div>
 
             <div class="account-field">
-                <label class="account-field-label">4. User Authorization/ User Type</label>
-                <a href="#" class="account-field-value">Super Admin</a>
+                <label class="account-field-label">4. User Authorization / User Type</label>
+                <a href="#" class="account-field-value">
+                    @if(Auth::user()->role === 'super_admin')
+                        Administrator
+                    @elseif(Auth::user()->role === 'manager')
+                        Sales
+                    @elseif(Auth::user()->role === 'operator')
+                        Operation
+                    @else
+                        {{ ucfirst(Auth::user()->role ?? Auth::user()->user_type ?? 'User') }}
+                    @endif
+                </a>
             </div>
         </div>
 
@@ -270,12 +280,24 @@
 
         <hr>
 
+        @if(!Auth::user()->isSuperAdmin())
         <div class="account-section">
             <button type="button" class="btn-delete-account" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
                 <i class="fas fa-trash" style="margin-right: 8px;"></i>
                 DELETE ACCOUNT
             </button>
+            <p class="text-muted mt-2" style="font-size: 13px;">
+                <i class="fas fa-info-circle"></i> This will permanently delete your account and all associated data.
+            </p>
         </div>
+        @else
+        <div class="account-section">
+            <div class="alert alert-warning">
+                <i class="fas fa-shield-alt"></i>
+                <strong>Administrator Protection:</strong> Administrator account cannot be deleted for security reasons.
+            </div>
+        </div>
+        @endif
     </div>
 </div>
 

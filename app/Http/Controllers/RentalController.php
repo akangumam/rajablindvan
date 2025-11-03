@@ -192,6 +192,11 @@ class RentalController extends Controller
      */
     public function destroy(Rental $rental)
     {
+        // Only Administrator & Sales can delete
+        if (!auth()->user()->canDeleteRecords()) {
+            abort(403, 'Unauthorized action. Only Administrator and Sales can delete rentals.');
+        }
+        
         if ($rental->status === 'active') {
             return redirect()->route('rentals.index')
                 ->with('error', 'Rental aktif tidak dapat dihapus!');

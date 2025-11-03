@@ -115,6 +115,15 @@
         background: #2980b9;
         color: white;
     }
+    .btn-reset-password {
+        background: #f39c12;
+        color: white;
+        border: none;
+    }
+    .btn-reset-password:hover {
+        background: #e67e22;
+        color: white;
+    }
 </style>
 
 <div class="user-details-card">
@@ -128,6 +137,12 @@
                 <i class="fas fa-arrow-left"></i>
                 Back to List
             </a>
+            @if(auth()->user()->isSuperAdmin())
+            <a href="{{ route('users.reset-password.form', $user) }}" class="btn-custom btn-reset-password">
+                <i class="fas fa-key"></i>
+                Reset Password
+            </a>
+            @endif
             <a href="{{ route('users.edit', $user) }}" class="btn-custom btn-edit-custom">
                 <i class="fas fa-edit"></i>
                 Edit User

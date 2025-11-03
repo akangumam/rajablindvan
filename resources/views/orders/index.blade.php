@@ -33,6 +33,46 @@
         margin: 0;
         font-weight: 400;
     }
+    .search-form {
+        margin-bottom: 20px;
+    }
+    .search-input-wrapper {
+        position: relative;
+        max-width: 400px;
+    }
+    .search-input {
+        width: 100%;
+        padding: 10px 40px 10px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    .search-input:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    .search-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #3498db;
+        border: none;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .search-btn:hover {
+        background: #2980b9;
+    }
 </style>
 
 <div class="page-header">
@@ -43,6 +83,9 @@
         </h1>
         <p class="page-subtitle">List of order based on Vehicle</p>
     </div>
+    <a href="{{ route('orders.create') }}" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Add New Order
+    </a>
 </div>
 
 @if(session('success'))
@@ -52,12 +95,43 @@
 </div>
 @endif
 
+<!-- Status Filter Tabs -->
+<div class="status-tabs mb-4">
+    <a href="{{ route('orders.index', ['status' => 'Active']) }}" 
+       class="status-tab {{ $status === 'Active' ? 'active' : '' }}">
+        <i class="fas fa-play-circle"></i> Active Orders
+        <span class="badge">{{ \App\Models\Order::where('status', 'Active')->count() }}</span>
+    </a>
+    <a href="{{ route('orders.index', ['status' => 'Completed']) }}" 
+       class="status-tab {{ $status === 'Completed' ? 'active' : '' }}">
+        <i class="fas fa-check-circle"></i> History (Completed)
+        <span class="badge">{{ \App\Models\Order::where('status', 'Completed')->count() }}</span>
+    </a>
+    <a href="{{ route('orders.index', ['status' => 'All']) }}" 
+       class="status-tab {{ $status === 'All' ? 'active' : '' }}">
+        <i class="fas fa-list"></i> All Orders
+        <span class="badge">{{ \App\Models\Order::count() }}</span>
+    </a>
+</div>
+
+<!-- Search Form -->
+<form action="{{ route('orders.index') }}" method="GET" class="search-form">
+    <input type="hidden" name="status" value="{{ $status }}">
+    <div class="search-input-wrapper">
+        <input type="text" 
+               name="search" 
+               class="search-input" 
+               placeholder="Search by vehicle name, license plate, or customer..." 
+               value="{{ request('search') }}">
+        <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</form>
+
 <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Active Orders</h5>
-            <a href="{{ route('orders.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Add New Order
-            </a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -113,9 +187,22 @@
                             </td>
                             <td>
                                 <div class="action-buttons">
+                                    @if($order->status === 'Active')
+                                    <form action="{{ route('orders.complete', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Mark this order as completed?')">
+                                        @csrf
+                                        <button type="submit" class="action-icon-btn btn-complete" title="Complete Order">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                    @endif
+                                    
+                                    @if(auth()->user()->canManageVehicles())
                                     <a href="{{ route('orders.edit', $order->id) }}" class="action-icon-btn btn-edit" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
+                                    @endif
+                                    
+                                    @if(auth()->user()->canDeleteRecords())
                                     <form action="{{ route('orders.destroy', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this order?')">
                                         @csrf
                                         @method('DELETE')
@@ -123,6 +210,7 @@
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -252,12 +340,73 @@
     background: #2980b9;
 }
 
+.action-icon-btn.btn-complete {
+    background: #27ae60;
+}
+
+.action-icon-btn.btn-complete:hover {
+    background: #229954;
+}
+
 .action-icon-btn.btn-delete {
     background: #e74c3c;
 }
 
 .action-icon-btn.btn-delete:hover {
     background: #c0392b;
+}
+
+/* Status Tabs */
+.status-tabs {
+    display: flex;
+    gap: 12px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.status-tab {
+    flex: 1;
+    padding: 16px 24px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.status-tab:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.status-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+}
+
+.status-tab i {
+    font-size: 18px;
+}
+
+.status-tab .badge {
+    margin-left: auto;
+    background: rgba(0,0,0,0.2);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.status-tab.active .badge {
+    background: rgba(255,255,255,0.3);
 }
 </style>
 @endsection

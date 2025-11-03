@@ -528,13 +528,17 @@
                     </a>
                 </div>
 
-                <!-- Users -->
+                <!-- Users (Only for Administrator) -->
+                @auth
+                @if(Auth::user()->canManageUsers())
                 <div class="drivvo-nav-item">
                     <a href="{{ route('users.index') }}" class="drivvo-nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
                         <i class="fas fa-user"></i>
                         Users
                     </a>
                 </div>
+                @endif
+                @endauth
 
                 <div class="nav-divider"></div>
 
@@ -545,11 +549,58 @@
                         Settings
                     </a>
                 </div>
+
+                <!-- Logout -->
+                <div class="drivvo-nav-item">
+                    <button type="button" class="drivvo-nav-link" onclick="showLogoutModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: inherit; padding: 12px 20px;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                    
+                    <!-- Hidden logout form -->
+                    <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </div>
             </nav>
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
+            <!-- User Info Bar -->
+            @auth
+            <div style="background: white; padding: 12px 24px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px;">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; color: #2c3e50; font-size: 15px;">{{ Auth::user()->name }}</div>
+                        <div style="font-size: 13px; color: #7f8c8d;">{{ Auth::user()->email }}</div>
+                    </div>
+                </div>
+                <div>
+                    @php
+                        $roleColors = [
+                            'super_admin' => 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            'admin' => 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                            'manager' => 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                            'operator' => 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                        ];
+                        $roleNames = [
+                            'super_admin' => 'Administrator',
+                            'manager' => 'Sales',
+                            'operator' => 'Operation',
+                        ];
+                        $userRole = Auth::user()->role ?? 'operator';
+                    @endphp
+                    <span style="padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; color: white; background: {{ $roleColors[$userRole] ?? '#999' }}; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                        <i class="fas fa-crown"></i> {{ $roleNames[$userRole] ?? 'User' }}
+                    </span>
+                </div>
+            </div>
+            @endauth
+            
             @yield('content')
         </div>
     </div>
@@ -636,8 +687,52 @@
         </div>
     </div>
 
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Konfirmasi Logout
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="padding: 30px; text-align: center;">
+                    <div style="font-size: 60px; color: #667eea; margin-bottom: 20px;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <h5 style="margin-bottom: 15px; color: #333;">Apakah Anda yakin ingin keluar?</h5>
+                    <p style="color: #666; margin-bottom: 0;">Anda akan keluar dari sistem dan perlu login kembali untuk mengakses dashboard.</p>
+                </div>
+                <div class="modal-footer" style="border: none; padding: 0 30px 30px; justify-content: center; gap: 10px;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="min-width: 120px; padding: 10px 20px;">
+                        <i class="fas fa-times"></i>
+                        Batal
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmLogout()" style="min-width: 120px; padding: 10px 20px;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Ya, Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Logout Modal Script -->
+    <script>
+        function showLogoutModal() {
+            const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+            logoutModal.show();
+        }
+
+        function confirmLogout() {
+            document.getElementById('logoutForm').submit();
+        }
+    </script>
     
     @stack('scripts')
 </body>

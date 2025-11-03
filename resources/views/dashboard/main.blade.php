@@ -216,6 +216,14 @@
     }
 </style>
 
+@if(session('success'))
+<div class="alert alert-success alert-dismissible fade show" style="background: #d4edda; border: none; border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;" role="alert">
+    <i class="fas fa-check-circle" style="font-size: 20px; color: #155724;"></i>
+    <div style="flex: 1; color: #155724; font-weight: 500;">{{ session('success') }}</div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
 <div class="dashboard-header">
     <h1 class="dashboard-title">
         <i class="fas fa-tachometer-alt me-2"></i>
@@ -251,9 +259,9 @@
                     </div>
                     <div class="d-flex align-items-center gap-3">
                         <span class="status-badge status-{{ $item['status'] }}">
-                            {{ $item['status'] == 'yellow' ? 'Kuning' : 'Merah' }}
+                            {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
                         </span>
-                        <a href="{{ route('vehicles.edit', ['vehicle' => $item['license_plate']]) }}" class="action-link">
+                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
                             Vehicle Details <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -296,9 +304,9 @@
                     </div>
                     <div class="d-flex align-items-center gap-3">
                         <span class="status-badge status-{{ $item['status'] }}">
-                            {{ $item['status'] == 'yellow' ? 'Kuning' : 'Merah' }}
+                            {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
                         </span>
-                        <a href="{{ route('vehicles.edit', ['vehicle' => $item['license_plate']]) }}" class="action-link">
+                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
                             Vehicle Details <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -321,7 +329,7 @@
             <div class="card-header-custom">
                 <div class="card-title-custom">
                     <div class="card-icon icon-orange">
-                        <i class="fas fa-cars"></i>
+                        <i class="fas fa-car-side"></i>
                     </div>
                     <span>Monitoring Vehicle BOOKED and AVAILABLE</span>
                 </div>
@@ -329,16 +337,19 @@
             
             <div class="fleet-summary">
                 <div class="fleet-stat">
+                    <i class="fas fa-calendar-check" style="font-size: 36px; color: #e74c3c; margin-bottom: 12px;"></i>
                     <div class="fleet-number booked-number">{{ $bookedVehicles }}</div>
                     <div class="fleet-label">Booked</div>
                 </div>
                 <div class="fleet-stat">
+                    <i class="fas fa-check-circle" style="font-size: 36px; color: #27ae60; margin-bottom: 12px;"></i>
                     <div class="fleet-number available-number">{{ $availableVehicles }}</div>
                     <div class="fleet-label">Available</div>
                 </div>
                 <div class="fleet-stat">
+                    <i class="fas fa-car-side" style="font-size: 36px; color: #3498db; margin-bottom: 12px;"></i>
                     <div class="fleet-number total-number">{{ $totalFleet }}</div>
-                    <div class="fleet-label">Total Fleet (Booked + Available)</div>
+                    <div class="fleet-label">Total Fleet</div>
                 </div>
             </div>
         </div>

@@ -42,3 +42,7 @@ Thumbs.db
 !/storage/framework/sessions/.gitkeep
 !/storage/framework/views/.gitkeep
 !/storage/logs/.gitkeep
+
+rajablindvan_temp/
+*.sqlite
+.env.production

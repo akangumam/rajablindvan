@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'user.type' => \App\Http\Middleware\CheckUserType::class,
             'vehicle.access' => \App\Http\Middleware\CheckVehicleAccess::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

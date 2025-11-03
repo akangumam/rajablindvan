@@ -209,6 +209,118 @@
         color: #999;
         margin-bottom: 24px;
     }
+    .search-form {
+        margin-bottom: 20px;
+    }
+    .search-input-wrapper {
+        position: relative;
+        max-width: 400px;
+    }
+    .search-input {
+        width: 100%;
+        padding: 10px 40px 10px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    .search-input:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    .search-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #3498db;
+        border: none;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .search-btn:hover {
+        background: #2980b9;
+    }
+    .pagination-wrapper {
+        margin-top: 24px;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .pagination-info {
+        color: #666;
+        font-size: 14px;
+    }
+    .pagination-controls {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+    .pagination-btn {
+        padding: 8px 16px;
+        border: 1px solid #e9ecef;
+        background: white;
+        color: #3498db;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .pagination-btn:hover:not(.disabled) {
+        background: #3498db;
+        color: white;
+        border-color: #3498db;
+    }
+    .pagination-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        color: #999;
+    }
+    .pagination-numbers {
+        display: flex;
+        gap: 4px;
+    }
+    .pagination-number {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        background: white;
+    }
+    .pagination-number:hover {
+        border-color: #3498db;
+        color: #3498db;
+        background: #f8f9fa;
+    }
+    .pagination-number.active {
+        background: #3498db;
+        color: white;
+        border-color: #3498db;
+    }
 </style>
 
 <div class="page-header">
@@ -219,9 +331,11 @@
         </h1>
         <p class="page-subtitle">Manage customer information and contact details</p>
     </div>
-    <a href="{{ route('customers.create') }}" class="btn-add-user">
-        {{ strtoupper(__('common.add_new')) }}
+    @if(auth()->user()->canManageVehicles())
+    <a href="{{ route('customers.create') }}" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Add New Customer
     </a>
+    @endif
 </div>
 
 @if(session('success'))
@@ -238,65 +352,49 @@
 </div>
 @endif
 
+<!-- Search Form -->
+<form action="{{ route('customers.index') }}" method="GET" class="search-form">
+    <div class="search-input-wrapper">
+        <input type="text" 
+               name="search" 
+               class="search-input" 
+               placeholder="Search by company name, PIC name, or contact number..." 
+               value="{{ request('search') }}">
+        <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</form>
+
 @if($customers->count() > 0)
 <div class="user-table-container">
     <table class="user-table">
         <thead>
             <tr>
-                <th>
-                    <span class="sortable-header">
-                        # Name
-                        <i class="fas fa-sort sort-icon"></i>
-                    </span>
-                </th>
-                <th>Email</th>
-                <th>Tipe Pengguna</th>
-                <th>Masa berlaku izin mengemudi</th>
-                <th>Vehicle / Pengguna</th>
+                <th>#</th>
+                <th>Company Name</th>
+                <th>Company Address</th>
+                <th>PIC Name</th>
+                <th>Contact Number</th>
                 <th>Active</th>
                 <th style="text-align: right;">Action</th>
             </tr>
         </thead>
         <tbody>
             @foreach($customers as $index => $customer)
-            @php
-                $user = \App\Models\User::where('Email', $customer->Email)->first();
-                $userType = $user ? $user->user_type : 'Customer';
-                $assignedVehicles = $user ? $user->vehicles()->count() : 0;
-            @endphp
             <tr>
+                <td>{{ $index + 1 }}</td>
                 <td>
-                    <div class="user-name">{{ $index + 1 }}. {{ $customer->name }}</div>
+                    <div class="user-name">{{ $customer->company_name ?? $customer->name }}</div>
                 </td>
                 <td>
-                    <div class="user-Email">{{ $customer->Email ?? '-' }}</div>
+                    <div class="user-email">{{ $customer->company_address ?? '-' }}</div>
                 </td>
                 <td>
-                    @if($userType == 'Pengelola')
-                        <span class="badge-type badge-pengelola">Administrator</span>
-                    @elseif($userType == 'driver')
-                        <span class="badge-type badge-driver">driver</span>
-                    @else
-                        <span class="badge-type" style="background: #f5f5f5; color: #666;">Customer</span>
-                    @endif
+                    <div style="color: #666;">{{ $customer->pic_name ?? '-' }}</div>
                 </td>
                 <td>
-                    <div style="color: #666;">
-                        @if($userType == 'driver' && isset($customer->license_category))
-                            SIM {{ $customer->license_category }}
-                        @else
-                            -
-                        @endif
-                    </div>
-                </td>
-                <td>
-                    <div style="color: #666;">
-                        @if($assignedVehicles > 0)
-                            {{ $assignedVehicles }} Vehicle
-                        @else
-                            -
-                        @endif
-                    </div>
+                    <div style="color: #666;">{{ $customer->contact_number ?? $customer->phone ?? '-' }}</div>
                 </td>
                 <td>
                     <span class="Status-badge {{ $customer->is_active ? 'Status-Active' : 'Status-nonActive' }}">
@@ -305,13 +403,15 @@
                 </td>
                 <td>
                     <div class="action-buttons">
+                        @if(auth()->user()->canManageVehicles())
                         <a href="{{ route('customers.edit', $customer) }}" class="action-icon-btn btn-edit" title="{{ __('customer.edit_customer') }}">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
+                        @endif
                         @php
                             $activeRentals = $customer->getActiveRentals()->count();
                         @endphp
-                        @if($activeRentals == 0)
+                        @if($activeRentals == 0 && auth()->user()->canDeleteRecords())
                         <form action="{{ route('customers.destroy', $customer) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event, '{{ $customer->name }}')">
                             @csrf
                             @method('DELETE')
@@ -328,10 +428,47 @@
     </table>
 </div>
 
-<!-- Pagination -->
+<!-- Custom Pagination -->
 @if($customers->hasPages())
-<div class="d-flex justify-content-center mt-4">
-    {{ $customers->links() }}
+<div class="pagination-wrapper">
+    <div class="pagination-info">
+        Showing {{ $customers->firstItem() }} to {{ $customers->lastItem() }} of {{ $customers->total() }} results
+    </div>
+    
+    <div class="pagination-controls">
+        <!-- Previous Button -->
+        @if($customers->onFirstPage())
+            <span class="pagination-btn disabled">
+                <i class="fas fa-chevron-left"></i> Previous
+            </span>
+        @else
+            <a href="{{ $customers->previousPageUrl() }}" class="pagination-btn">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+        @endif
+        
+        <!-- Page Numbers -->
+        <div class="pagination-numbers">
+            @foreach(range(1, $customers->lastPage()) as $page)
+                @if($page == $customers->currentPage())
+                    <span class="pagination-number active">{{ $page }}</span>
+                @else
+                    <a href="{{ $customers->url($page) }}" class="pagination-number">{{ $page }}</a>
+                @endif
+            @endforeach
+        </div>
+        
+        <!-- Next Button -->
+        @if($customers->hasMorePages())
+            <a href="{{ $customers->nextPageUrl() }}" class="pagination-btn">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+        @else
+            <span class="pagination-btn disabled">
+                Next <i class="fas fa-chevron-right"></i>
+            </span>
+        @endif
+    </div>
 </div>
 @endif
 
@@ -342,8 +479,8 @@
     <p class="empty-description">
         Start dengan menambahkan pengguna pertama you untuk mengelola sistem.
     </p>
-    <a href="{{ route('customers.create') }}" class="btn-add-user">
-        {{ strtoupper(__('customer.add_first')) }}
+    <a href="{{ route('customers.create') }}" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> {{ strtoupper(__('customer.add_first')) }}
     </a>
 </div>
 @endif

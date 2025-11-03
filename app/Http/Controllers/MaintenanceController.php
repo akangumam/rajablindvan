@@ -208,6 +208,11 @@ class MaintenanceController extends Controller
      */
     public function destroy(Maintenance $maintenance)
     {
+        // Only Administrator & Sales can delete
+        if (!auth()->user()->canDeleteRecords()) {
+            abort(403, 'Unauthorized action. Only Administrator and Sales can delete maintenance records.');
+        }
+        
         $maintenance->delete();
 
         return redirect()->route('maintenances.index')

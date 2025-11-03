@@ -9,15 +9,29 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 24px;
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     .page-title {
-        font-size: 28px;
+        font-size: 32px;
         font-weight: 700;
-        color: #333;
-        margin: 0;
+        color: #2c3e50;
+        margin: 0 0 8px 0;
         display: flex;
         align-items: center;
         gap: 12px;
+    }
+    .page-title i {
+        font-size: 28px;
+        color: #007bff;
+    }
+    .page-subtitle {
+        font-size: 15px;
+        color: #7f8c8d;
+        margin: 0;
+        font-weight: 400;
     }
     .search-icon {
         color: #3498db;
@@ -254,13 +268,15 @@
 </style>
 
 <div class="page-header">
-    <h1 class="page-title">
-        <i class="fas fa-users-cog"></i>
-        Users Management
-    </h1>
-    <a href="{{ route('users.create') }}" class="btn-add-user">
-        <i class="fas fa-plus me-2"></i>
-        Add New User
+    <div>
+        <h1 class="page-title">
+            <i class="fas fa-users-cog"></i>
+            Users Management
+        </h1>
+        <p class="page-subtitle">Manage system users and their permissions</p>
+    </div>
+    <a href="{{ route('users.create') }}" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Add New User
     </a>
 </div>
 
@@ -399,9 +415,8 @@
     <p class="empty-description">
         Start by adding your first user to manage the system.
     </p>
-    <a href="{{ route('users.create') }}" class="btn-add-user">
-        <i class="fas fa-plus me-2"></i>
-        Add First User
+    <a href="{{ route('users.create') }}" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Add First User
     </a>
 </div>
 @endif

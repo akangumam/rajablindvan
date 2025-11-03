@@ -83,6 +83,11 @@ class Vehicle extends Model
         return $this->hasMany(Rental::class);
     }
 
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public function trips(): HasMany
     {
         return $this->hasMany(Trip::class);

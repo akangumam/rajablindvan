@@ -7,7 +7,20 @@ use App\Http\Controllers\FuelFillController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\Auth\LoginController;
 
+// =====================================================
+// Authentication Routes
+// =====================================================
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// =====================================================
+// Protected Routes (Require Authentication)
+// =====================================================
+Route::middleware(['auth'])->group(function () {
+    
 // Language Switcher
 Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
 
@@ -64,66 +77,91 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
 Route::get('/history/download', [HistoryController::class, 'downloadDetail'])->name('history.download');
 
-// Vehicles
-Route::get('vehicles/{vehicle}/export-pdf', [VehicleController::class, 'exportPdf'])->name('vehicles.export-pdf');
-Route::get('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'assignDrivers'])->name('vehicles.assign-drivers');
-Route::post('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'storeDriverAssignment'])->name('vehicles.store-driver-assignment');
-Route::delete('vehicles/{vehicle}/drivers/{user}', [VehicleController::class, 'removeDriverAssignment'])->name('vehicles.remove-driver-assignment');
-Route::resource('vehicles', VehicleController::class);
+// ========================================
+// ADMINISTRATOR & SALES ONLY
+// ========================================
+Route::middleware(['role:super_admin,manager'])->group(function () {
+    
+    // Vehicles - Administrator & Sales can manage
+    Route::get('vehicles/{vehicle}/export-pdf', [VehicleController::class, 'exportPdf'])->name('vehicles.export-pdf');
+    Route::get('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'assignDrivers'])->name('vehicles.assign-drivers');
+    Route::post('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'storeDriverAssignment'])->name('vehicles.store-driver-assignment');
+    Route::delete('vehicles/{vehicle}/drivers/{user}', [VehicleController::class, 'removeDriverAssignment'])->name('vehicles.remove-driver-assignment');
+    Route::resource('vehicles', VehicleController::class);
+    
+    // Customers - Administrator & Sales can manage
+    Route::resource('customers', \App\Http\Controllers\CustomerController::class);
+    
+    // Expenses & Incomes - Administrator & Sales can manage
+    Route::resource('expenses', ExpenseController::class);
+    Route::get('vehicles/{vehicle}/expenses/create', [ExpenseController::class, 'createForVehicle'])
+        ->name('expenses.create-for-vehicle');
+    
+    Route::resource('incomes', \App\Http\Controllers\IncomeController::class);
+    Route::get('vehicles/{vehicle}/incomes/create', [\App\Http\Controllers\IncomeController::class, 'createForVehicle'])
+        ->name('incomes.create-for-vehicle');
+    
+    // Locations - Administrator & Sales can manage
+    Route::resource('locations', \App\Http\Controllers\LocationController::class);
+    Route::get('locations/{location}/compare', [\App\Http\Controllers\LocationController::class, 'compare'])->name('locations.compare');
+    Route::get('multi-location/dashboard', [\App\Http\Controllers\LocationController::class, 'compare'])->name('multi-location.dashboard');
+});
 
-// Fuel Fills
+// ========================================
+// ALL ROLES CAN ACCESS (with controller-level checks)
+// ========================================
+
+// Fuel Fills - All can view, Operation can create
 Route::resource('fuel-fills', FuelFillController::class);
 Route::get('vehicles/{vehicle}/fuel-fills/create', [FuelFillController::class, 'createForVehicle'])
     ->name('fuel-fills.create-for-vehicle');
 
-// Maintenances
+// Maintenances - All can view, Operation can create
 Route::resource('maintenances', MaintenanceController::class);
 Route::get('vehicles/{vehicle}/maintenances/create', [MaintenanceController::class, 'createForVehicle'])
     ->name('maintenances.create-for-vehicle');
-
-// Expenses
-Route::resource('expenses', ExpenseController::class);
-Route::get('vehicles/{vehicle}/expenses/create', [ExpenseController::class, 'createForVehicle'])
-    ->name('expenses.create-for-vehicle');
-
-// Incomes
-Route::resource('incomes', \App\Http\Controllers\IncomeController::class);
-Route::get('vehicles/{vehicle}/incomes/create', [\App\Http\Controllers\IncomeController::class, 'createForVehicle'])
-    ->name('incomes.create-for-vehicle');
 
 // Trips (Rute)
 Route::resource('trips', \App\Http\Controllers\TripController::class);
 Route::get('vehicles/{vehicle}/trips/create', [\App\Http\Controllers\TripController::class, 'createForVehicle'])
     ->name('trips.create-for-vehicle');
 
-// Checklists
+// Checklists - All roles
 Route::resource('checklists', \App\Http\Controllers\ChecklistController::class);
 
-// Reminders
+// Reminders - All roles
 Route::resource('reminders', \App\Http\Controllers\ReminderController::class);
 
-// Customers
-Route::resource('customers', \App\Http\Controllers\CustomerController::class);
+// Orders - All roles can view and create
+Route::post('orders/{order}/complete', [\App\Http\Controllers\OrderController::class, 'complete'])
+    ->name('orders.complete');
+Route::resource('orders', \App\Http\Controllers\OrderController::class);
 
-// Users
-Route::resource('users', \App\Http\Controllers\UserController::class);
-
-// Locations
-Route::resource('locations', \App\Http\Controllers\LocationController::class);
-Route::get('locations/{location}/compare', [\App\Http\Controllers\LocationController::class, 'compare'])->name('locations.compare');
-Route::get('multi-location/dashboard', [\App\Http\Controllers\LocationController::class, 'compare'])->name('multi-location.dashboard');
-
-// Rentals
-Route::resource('rentals', \App\Http\Controllers\RentalController::class);
+// Rentals - All roles can view and create
 Route::post('rentals/{rental}/start', [\App\Http\Controllers\RentalController::class, 'startRental'])
     ->name('rentals.start');
 Route::post('rentals/{rental}/complete', [\App\Http\Controllers\RentalController::class, 'completeRental'])
     ->name('rentals.complete');
+Route::resource('rentals', \App\Http\Controllers\RentalController::class);
 
-// Orders
-Route::resource('orders', \App\Http\Controllers\OrderController::class);
+// ========================================
+// ADMINISTRATOR ONLY
+// ========================================
 
-// Reports routes
+// ========================================
+// ADMINISTRATOR ONLY
+// ========================================
+
+// Users (Only Administrator)
+Route::middleware(['role:super_admin'])->group(function () {
+    Route::get('users/{user}/reset-password', [\App\Http\Controllers\UserController::class, 'showResetPasswordForm'])
+        ->name('users.reset-password.form');
+    Route::post('users/{user}/reset-password', [\App\Http\Controllers\UserController::class, 'resetPassword'])
+        ->name('users.reset-password');
+    Route::resource('users', \App\Http\Controllers\UserController::class);
+});
+
+// Reports routes - All roles can view
 Route::prefix('reports')->name('reports.')->group(function () {
     Route::get('/', [\App\Http\Controllers\ReportController::class, 'index'])->name('index');
     Route::post('generate', [\App\Http\Controllers\ReportController::class, 'generate'])->name('generate');
@@ -208,3 +246,5 @@ Route::prefix('settings')->name('settings.')->group(function () {
     Route::get('/contacts', [\App\Http\Controllers\SettingsController::class, 'contacts'])->name('contacts');
     Route::get('/translations', [\App\Http\Controllers\SettingsController::class, 'translations'])->name('translations');
 });
+
+}); // End of auth middleware group

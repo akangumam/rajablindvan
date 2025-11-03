@@ -334,6 +334,12 @@
     .action-icon-btn.btn-download:hover {
         background: #229954;
     }
+    .action-icon-btn.btn-view {
+        background: #9b59b6;
+    }
+    .action-icon-btn.btn-view:hover {
+        background: #8e44ad;
+    }
     .action-icon-btn.btn-edit {
         background: #3498db;
     }
@@ -500,9 +506,11 @@
         </h1>
         <p class="page-subtitle">Manage your fleet vehicles and track their information</p>
     </div>
-    <a href="{{ route('vehicles.create') }}" class="btn btn-add-vehicle">
-        {{ strtoupper(__('common.add_new')) }}
+    @if(auth()->user()->canManageVehicles())
+    <a href="{{ route('vehicles.create') }}" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Add New Vehicle
     </a>
+    @endif
 </div>
 
 @if(session('success'))
@@ -608,9 +616,15 @@
                         <a href="{{ route('vehicles.export-pdf', $vehicle) }}" class="action-icon-btn btn-download" title="{{ __('vehicle.export_pdf') }}" target="_blank">
                             <i class="fas fa-download"></i>
                         </a>
+                        <a href="{{ route('vehicles.show', $vehicle) }}" class="action-icon-btn btn-view" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        @if(auth()->user()->canManageVehicles())
                         <a href="{{ route('vehicles.edit', $vehicle) }}" class="action-icon-btn btn-edit" title="{{ __('vehicle.edit_vehicle') }}">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
+                        @endif
+                        @if(auth()->user()->canDeleteRecords())
                         <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event, '{{ $vehicle->name }}')">
                             @csrf
                             @method('DELETE')
@@ -618,6 +632,7 @@
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
+                        @endif
                     </div>
                 </td>
             </tr>
@@ -693,7 +708,7 @@
         </a>
     @else
         <a href="{{ route('vehicles.create') }}" class="btn btn-primary btn-lg px-4">
-            <i class="fas fa-plus me-2"></i>{{ __('vehicle.add_first_vehicle') }}
+            <i class="fas fa-plus-circle me-2"></i>{{ __('vehicle.add_first_vehicle') }}
         </a>
     @endif
 </div>

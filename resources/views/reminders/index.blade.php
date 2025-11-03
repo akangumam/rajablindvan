@@ -7,6 +7,63 @@
         padding: 24px 32px;
     }
 
+    /* Search Form */
+    .search-form {
+        margin-bottom: 20px;
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        max-width: 500px;
+    }
+
+    .search-input-wrapper input {
+        width: 100%;
+        padding: 12px 45px 12px 45px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 14px;
+        transition: all 0.3s;
+        background: white;
+    }
+
+    .search-input-wrapper input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-input-wrapper .search-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 16px;
+    }
+
+    .search-input-wrapper .clear-search {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 0;
+        display: none;
+    }
+
+    .search-input-wrapper input:not(:placeholder-shown) ~ .clear-search {
+        display: block;
+    }
+
+    .search-input-wrapper .clear-search:hover {
+        color: #667eea;
+    }
+
     /* Vehicle Selector Dropdown */
     .vehicle-selector-header {
         background: white;
@@ -227,6 +284,107 @@
         background: #d4edda;
         color: #155724;
     }
+
+    .reminder-actions {
+        display: flex;
+        gap: 8px;
+        margin-left: 16px;
+    }
+
+    .btn-action {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+    }
+
+    .btn-edit {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+
+    .btn-edit:hover {
+        background: #1976d2;
+        color: white;
+    }
+
+    .btn-delete {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .btn-delete:hover {
+        background: #c62828;
+        color: white;
+    }
+
+    /* Custom Pagination */
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 24px;
+        padding: 20px 24px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .pagination-info {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .pagination-links {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .pagination-links a,
+    .pagination-links span {
+        min-width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .pagination-links a {
+        background: white;
+        border: 2px solid #e0e0e0;
+        color: #666;
+    }
+
+    .pagination-links a:hover {
+        border-color: #667eea;
+        color: #667eea;
+        background: #f8f9ff;
+    }
+
+    .pagination-links .active {
+        background: #667eea;
+        border: 2px solid #667eea;
+        color: white;
+    }
+
+    .pagination-links .disabled {
+        background: #f5f5f5;
+        border: 2px solid #e0e0e0;
+        color: #ccc;
+        cursor: not-allowed;
+    }
 </style>
 
 <div class="reminders-container">
@@ -252,6 +410,24 @@
             <i class="fas fa-chevron-right" style="font-size: 10px;"></i>
             <span>Reminders</span>
         </div>
+    @endif
+
+    <!-- Search Bar -->
+    @if(isset($selectedVehicle))
+        <form action="{{ route('reminders.index') }}" method="GET" class="search-form">
+            <input type="hidden" name="vehicle" value="{{ $selectedVehicle->id }}">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" 
+                       name="search" 
+                       placeholder="Search by title, category, or notes..." 
+                       value="{{ request('search') }}"
+                       autocomplete="off">
+                <button type="button" class="clear-search" onclick="this.previousElementSibling.value=''; this.closest('form').submit();">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </form>
     @endif
 
     <!-- Page Header -->
@@ -296,21 +472,73 @@
                             <i class="fas fa-tag me-1"></i>{{ $reminder->category }}
                             <span class="mx-2">•</span>
                             <i class="far fa-calendar me-1"></i>{{ $reminder->due_date->format('d/m/Y') }}
+                            @if($reminder->estimated_cost)
+                                <span class="mx-2">•</span>
+                                <i class="fas fa-dollar-sign me-1"></i>Rp {{ number_format($reminder->estimated_cost, 0, ',', '.') }}
+                            @endif
                         </div>
                     </div>
-                    <div>
+                    <div class="d-flex align-items-center">
                         @if($reminder->is_completed)
-                            <span class="reminder-badge completed">End</span>
+                            <span class="reminder-badge completed">Completed</span>
                         @else
                             <span class="reminder-badge pending">Pending</span>
                         @endif
+                        
+                        <div class="reminder-actions">
+                            <a href="{{ route('reminders.edit', $reminder->id) }}" class="btn-action btn-edit" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('reminders.destroy', $reminder->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this reminder?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-action btn-delete" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             @endforeach
         </div>
-        <div class="mt-3">
-            {{ $reminders->links() }}
-        </div>
+
+        <!-- Custom Pagination -->
+        @if($reminders->hasPages())
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Showing {{ $reminders->firstItem() }} to {{ $reminders->lastItem() }} of {{ $reminders->total() }} results
+                </div>
+                <div class="pagination-links">
+                    @if ($reminders->onFirstPage())
+                        <span class="disabled">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    @else
+                        <a href="{{ $reminders->appends(request()->query())->previousPageUrl() }}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    @endif
+
+                    @foreach ($reminders->getUrlRange(1, $reminders->lastPage()) as $page => $url)
+                        @if ($page == $reminders->currentPage())
+                            <span class="active">{{ $page }}</span>
+                        @else
+                            <a href="{{ $reminders->appends(request()->query())->url($page) }}">{{ $page }}</a>
+                        @endif
+                    @endforeach
+
+                    @if ($reminders->hasMorePages())
+                        <a href="{{ $reminders->appends(request()->query())->nextPageUrl() }}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    @else
+                        <span class="disabled">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    @endif
+                </div>
+            </div>
+        @endif
     @else
         <!-- Empty State: No Reminders -->
         <div class="empty-state">

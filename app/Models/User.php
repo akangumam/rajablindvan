@@ -30,6 +30,9 @@ class User extends Authenticatable
         'is_active',
         'status',
         'password',
+        'verification_code',
+        'code_expires_at',
+        'is_verified',
     ];
 
     /**
@@ -95,11 +98,59 @@ class User extends Authenticatable
     }
 
     // Helper methods
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin';
+    }
+    
     public function isAdmin()
     {
-        return $this->role === 'admin';
+        return $this->isSuperAdmin(); // Only super_admin now (Administrator)
     }
 
+    public function isManager()
+    {
+        return $this->role === 'manager' || $this->isAdmin(); // Sales role
+    }
+
+    public function isOperator()
+    {
+        return $this->role === 'operator'; // Operation role
+    }
+    
+    public function hasRole($role)
+    {
+        if (is_array($role)) {
+            return in_array($this->role, $role);
+        }
+        return $this->role === $role;
+    }
+    
+    public function canManageUsers()
+    {
+        return $this->isSuperAdmin(); // Only Administrator
+    }
+    
+    public function canManageVehicles()
+    {
+        return $this->isAdmin() || $this->isManager(); // Administrator & Sales
+    }
+    
+    public function canViewReports()
+    {
+        return true; // All users can view reports
+    }
+    
+    public function canCreateOrders()
+    {
+        return true; // All 3 roles can create orders
+    }
+    
+    public function canDeleteRecords()
+    {
+        return $this->isAdmin() || $this->isManager(); // Administrator & Sales
+    }
+    
     public function isPengelola()
     {
         return $this->user_type === 'Pengelola';
@@ -117,21 +168,6 @@ class User extends Authenticatable
         }
 
         return $this->vehicles()->where('vehicle_id', $vehicleId)->exists();
-    }
-
-    public function canManageUsers()
-    {
-        return $this->isPengelola();
-    }
-
-    public function canManageVehicles()
-    {
-        return $this->isPengelola();
-    }
-
-    public function isManager()
-    {
-        return $this->role === 'manager';
     }
 
     public function isStaff()

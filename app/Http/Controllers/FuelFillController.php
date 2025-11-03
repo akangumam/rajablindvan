@@ -175,6 +175,15 @@ class FuelFillController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Only Administrator & Sales can delete
+        if (!auth()->user()->canDeleteRecords()) {
+            abort(403, 'Unauthorized action. Only Administrator and Sales can delete fuel records.');
+        }
+        
+        $fuelFill = FuelFill::findOrFail($id);
+        $fuelFill->delete();
+        
+        return redirect()->route('fuel-fills.index')
+            ->with('success', 'Fuel fill record deleted successfully.');
     }
 }

@@ -12,12 +12,14 @@ class Order extends Model
         'rental_type',
         'start_date',
         'end_date',
-        'status'
+        'status',
+        'completed_at'
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'completed_at' => 'datetime',
     ];
 
     public function vehicle()

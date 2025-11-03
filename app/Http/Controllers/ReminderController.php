@@ -18,9 +18,20 @@ class ReminderController extends Controller
         if ($request->has('vehicle')) {
             $selectedVehicle = Vehicle::find($request->vehicle);
             if ($selectedVehicle) {
-                $reminders = Reminder::where('vehicle_id', $selectedVehicle->id)
-                    ->latest('due_date')
-                    ->paginate(20);
+                $query = Reminder::where('vehicle_id', $selectedVehicle->id);
+                
+                // Search functionality
+                if ($request->has('search') && $request->search != '') {
+                    $searchTerm = $request->search;
+                    $query->where(function($q) use ($searchTerm) {
+                        $q->where('title', 'like', '%' . $searchTerm . '%')
+                          ->orWhere('category', 'like', '%' . $searchTerm . '%')
+                          ->orWhere('notes', 'like', '%' . $searchTerm . '%')
+                          ->orWhere('description', 'like', '%' . $searchTerm . '%');
+                    });
+                }
+                
+                $reminders = $query->latest('due_date')->paginate(20);
             }
         }
         
@@ -56,38 +67,60 @@ class ReminderController extends Controller
         ]);
 
         Reminder::create($validated);
-        return redirect()->route('reminders.index')->with('success', 'Pengingat berhasil ditambahkan!');
+        
+        return redirect()
+            ->route('reminders.index', ['vehicle' => $request->vehicle_id])
+            ->with('success', 'Reminder successfully added!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Reminder $reminder)
     {
-        //
+        return view('reminders.show', compact('reminder'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Reminder $reminder)
     {
-        //
+        return view('reminders.edit', compact('reminder'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Reminder $reminder)
     {
-        //
+        $validated = $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'title' => 'required|string',
+            'category' => 'required|string',
+            'due_date' => 'required|date',
+            'due_odometer' => 'nullable|numeric',
+            'advance_notice_days' => 'nullable|integer',
+            'is_recurring' => 'boolean',
+            'recurring_interval' => 'nullable|string',
+            'estimated_cost' => 'nullable|numeric',
+            'description' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'is_completed' => 'boolean'
+        ]);
+
+        // Set completed_date if marked as completed
+        if ($request->has('is_completed') && $request->is_completed) {
+            $validated['completed_date'] = now();
+        } else {
+            $validated['completed_date'] = null;
+        }
+
+        $reminder->update($validated);
+        
+        return redirect()
+            ->route('reminders.index', ['vehicle' => $reminder->vehicle_id])
+            ->with('success', 'Reminder successfully updated!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Reminder $reminder)
     {
-        //
+        $vehicleId = $reminder->vehicle_id;
+        $reminder->delete();
+        
+        return redirect()
+            ->route('reminders.index', ['vehicle' => $vehicleId])
+            ->with('success', 'Reminder successfully deleted!');
     }
 }

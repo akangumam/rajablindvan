@@ -12,14 +12,34 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with(['vehicle', 'customer'])
-            ->where('status', 'Active')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = Order::with(['vehicle', 'customer']);
+        
+        // Filter by status (default: Active)
+        $status = $request->get('status', 'Active');
+        if ($status !== 'All') {
+            $query->where('status', $status);
+        }
 
-        return view('orders.index', compact('orders'));
+        // Search functionality
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('vehicle', function($vehicleQuery) use ($search) {
+                    $vehicleQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('license_plate', 'like', "%{$search}%");
+                })
+                ->orWhereHas('customer', function($customerQuery) use ($search) {
+                    $customerQuery->where('name', 'like', "%{$search}%")
+                                 ->orWhere('company_name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')->get();
+
+        return view('orders.index', compact('orders', 'status'));
     }
 
     /**
@@ -79,7 +99,7 @@ class OrderController extends Controller
             'rental_type' => 'required|in:Sewa Harian,Sewa Bulanan',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'status' => 'required|in:Active,Inactive',
+            'status' => 'required|in:Active,Completed,Cancelled',
         ]);
 
         $order->update($validated);
@@ -88,10 +108,28 @@ class OrderController extends Controller
     }
 
     /**
+     * Mark order as completed
+     */
+    public function complete(Order $order)
+    {
+        $order->update([
+            'status' => 'Completed',
+            'completed_at' => now()
+        ]);
+
+        return redirect()->route('orders.index')->with('success', 'Order marked as completed successfully.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Order $order)
     {
+        // Only Administrator & Sales can delete
+        if (!auth()->user()->canDeleteRecords()) {
+            abort(403, 'Unauthorized action. Only Administrator and Sales can delete orders.');
+        }
+        
         $order->delete();
         return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }

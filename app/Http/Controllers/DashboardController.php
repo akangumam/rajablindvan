@@ -35,6 +35,7 @@ class DashboardController extends Controller
                 }
                 
                 $stnkMonitoring[] = [
+                    'id' => $vehicle->id,
                     'vehicle_name' => $vehicle->name,
                     'license_plate' => $vehicle->license_plate,
                     'days_until_expiry' => abs($daysUntilExpiry),
@@ -58,6 +59,7 @@ class DashboardController extends Controller
                 }
                 
                 $kirMonitoring[] = [
+                    'id' => $vehicle->id,
                     'vehicle_name' => $vehicle->name,
                     'license_plate' => $vehicle->license_plate,
                     'days_until_expiry' => abs($daysUntilExpiry),
@@ -68,15 +70,23 @@ class DashboardController extends Controller
         }
         
         // Section 3: Monitoring Vehicle BOOKED and AVAILABLE
-        $bookedVehicles = Vehicle::whereHas('rentals', function($query) {
-            $query->where('status', 'active')
+        $bookedVehicles = Vehicle::where(function($query) {
+            $query->whereHas('rentals', function($q) {
+                $q->where('status', 'active')
                   ->orWhere('status', 'booked');
+            })
+            ->orWhereHas('orders', function($q) {
+                $q->where('status', 'Active');
+            });
         })->count();
         
         $availableVehicles = Vehicle::where('is_active', true)
             ->whereDoesntHave('rentals', function($query) {
                 $query->where('status', 'active')
                       ->orWhere('status', 'booked');
+            })
+            ->whereDoesntHave('orders', function($query) {
+                $query->where('status', 'Active');
             })->count();
         
         $totalFleet = $bookedVehicles + $availableVehicles;
