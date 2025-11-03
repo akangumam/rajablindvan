@@ -623,10 +623,15 @@
                 height: 100vh;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
+                padding-bottom: 80px;
             }
 
             .drivvo-sidebar.active {
                 transform: translateX(0);
+            }
+
+            .drivvo-nav {
+                padding-bottom: 100px !important;
             }
 
             .drivvo-sidebar.collapsed {

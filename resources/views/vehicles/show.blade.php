@@ -138,24 +138,34 @@
                                 </div>
                                 <div class="card-body text-center">
                                     @if($vehicle->barcode_path)
-                                        <div class="p-3 bg-white border rounded d-inline-block">
-                                            <img src="{{ asset('storage/' . $vehicle->barcode_path) }}" 
-                                                 alt="Vehicle Barcode" 
-                                                 style="max-width: 100%; height: auto; max-height: 200px;"
-                                                 class="img-fluid">
-                                        </div>
-                                        <div class="mt-3">
-                                            <p class="text-muted mb-2">
-                                                <i class="fas fa-info-circle"></i> Scan barcode ini saat isi BBM di SPBU
-                                            </p>
-                                            <a href="{{ asset('storage/' . $vehicle->barcode_path) }}" 
-                                               download="barcode-{{ $vehicle->license_plate }}.png"
-                                               class="btn btn-sm btn-outline-success">
-                                                <i class="fas fa-download me-1"></i>Download Barcode
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="printBarcode()">
-                                                <i class="fas fa-print me-1"></i>Print Barcode
-                                            </button>
+                                        <div class="text-center">
+                                            <!-- Barcode Image - Optimized for Scanning -->
+                                            <div class="p-4 bg-white border rounded d-inline-block mb-3" style="box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                                <img src="{{ asset('storage/' . $vehicle->barcode_path) }}" 
+                                                     alt="Vehicle Barcode" 
+                                                     style="max-width: 100%; height: auto; max-height: 300px; display: block;"
+                                                     class="img-fluid"
+                                                     id="vehicleBarcode">
+                                            </div>
+                                            
+                                            <!-- Barcode Info -->
+                                            <div class="alert alert-info d-inline-block mb-3" style="max-width: 400px;">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                <strong>Cara Scan:</strong><br>
+                                                <small>Tap gambar untuk memperbesar, lalu scan dengan scanner SPBU</small>
+                                            </div>
+                                            
+                                            <!-- Actions -->
+                                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                                <button type="button" class="btn btn-primary" onclick="viewBarcodeFullscreen()">
+                                                    <i class="fas fa-expand me-1"></i>View Fullscreen
+                                                </button>
+                                                <a href="{{ asset('storage/' . $vehicle->barcode_path) }}" 
+                                                   download="barcode-{{ $vehicle->license_plate }}.png"
+                                                   class="btn btn-success">
+                                                    <i class="fas fa-download me-1"></i>Download
+                                                </a>
+                                            </div>
                                         </div>
                                     @else
                                         <div class="py-4">
@@ -539,83 +549,127 @@
 
 @push('scripts')
 <script>
-function printBarcode() {
-    const barcodeImg = document.querySelector('.card-body img[alt="Vehicle Barcode"]');
+// Fullscreen Barcode View for Easy Scanning
+function viewBarcodeFullscreen() {
+    const barcodeImg = document.getElementById('vehicleBarcode');
     if (!barcodeImg) {
         alert('Barcode not found');
         return;
     }
     
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Print Barcode - {{ $vehicle->license_plate }}</title>
-            <style>
-                body {
-                    margin: 0;
-                    padding: 20px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    min-height: 100vh;
-                    font-family: Arial, sans-serif;
-                }
-                .barcode-container {
-                    text-align: center;
-                    page-break-inside: avoid;
-                }
-                img {
-                    max-width: 400px;
-                    height: auto;
-                    border: 2px solid #000;
-                    padding: 10px;
-                    background: white;
-                }
-                .vehicle-info {
-                    margin-top: 20px;
-                    font-size: 18px;
-                    font-weight: bold;
-                }
-                .instruction {
-                    margin-top: 10px;
-                    font-size: 14px;
-                    color: #666;
-                }
-                @media print {
-                    body {
-                        padding: 0;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            <div class="barcode-container">
-                <img src="${barcodeImg.src}" alt="Vehicle Barcode">
-                <div class="vehicle-info">
-                    {{ $vehicle->brand }} {{ $vehicle->model }} - {{ $vehicle->license_plate }}
-                </div>
-                <div class="instruction">
-                    Scan barcode ini saat isi BBM di SPBU
-                </div>
-            </div>
-        </body>
-        </html>
-    `);
+    // Create fullscreen overlay
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.95);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    `;
     
-    printWindow.document.close();
-    printWindow.focus();
+    // Create close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '<i class="fas fa-times"></i> Close';
+    closeBtn.style.cssText = `
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+    `;
+    closeBtn.onclick = () => document.body.removeChild(overlay);
     
-    // Wait for image to load before printing
-    printWindow.onload = function() {
-        setTimeout(function() {
-            printWindow.print();
-            printWindow.close();
-        }, 250);
+    // Create barcode container
+    const barcodeContainer = document.createElement('div');
+    barcodeContainer.style.cssText = `
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        text-align: center;
+        max-width: 90%;
+        max-height: 90%;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    `;
+    
+    // Clone barcode image
+    const barcodeClone = barcodeImg.cloneNode(true);
+    barcodeClone.style.cssText = `
+        max-width: 100%;
+        max-height: 70vh;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    `;
+    
+    // Add vehicle info
+    const vehicleInfo = document.createElement('div');
+    vehicleInfo.style.cssText = `
+        margin-top: 24px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+    `;
+    vehicleInfo.textContent = '{{ $vehicle->brand }} {{ $vehicle->model }} - {{ $vehicle->license_plate }}';
+    
+    // Add instruction
+    const instruction = document.createElement('div');
+    instruction.style.cssText = `
+        margin-top: 12px;
+        font-size: 14px;
+        color: #7f8c8d;
+    `;
+    instruction.innerHTML = '<i class="fas fa-info-circle"></i> Tunjukkan barcode ini ke scanner SPBU';
+    
+    // Assemble elements
+    barcodeContainer.appendChild(barcodeClone);
+    barcodeContainer.appendChild(vehicleInfo);
+    barcodeContainer.appendChild(instruction);
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(barcodeContainer);
+    
+    // Add to body
+    document.body.appendChild(overlay);
+    
+    // Close on overlay click (but not on container)
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            document.body.removeChild(overlay);
+        }
+    });
+    
+    // Close on ESC key
+    const escHandler = (e) => {
+        if (e.key === 'Escape') {
+            document.body.removeChild(overlay);
+            document.removeEventListener('keydown', escHandler);
+        }
     };
+    document.addEventListener('keydown', escHandler);
 }
+
+// Click barcode image to view fullscreen
+document.addEventListener('DOMContentLoaded', function() {
+    const barcodeImg = document.getElementById('vehicleBarcode');
+    if (barcodeImg) {
+        barcodeImg.style.cursor = 'pointer';
+        barcodeImg.onclick = viewBarcodeFullscreen;
+        barcodeImg.title = 'Click to view fullscreen';
+    }
+});
 </script>
 @endpush
 @endsection
