@@ -496,6 +496,167 @@
         color: white;
         border-color: #3498db;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px 15px;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 24px;
+        }
+
+        .page-title i {
+            font-size: 22px;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+        }
+
+        .btn-add-vehicle {
+            width: 100%;
+            justify-content: center;
+            display: flex;
+        }
+
+        .filters-section {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .search-container {
+            width: 100%;
+        }
+
+        /* Hide table, show card view */
+        .vehicle-table-container table {
+            display: none;
+        }
+
+        /* Card view for mobile */
+        .vehicle-mobile-cards {
+            display: block;
+        }
+
+        .vehicle-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .vehicle-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .vehicle-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .vehicle-card-subtitle {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        .vehicle-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .vehicle-card-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .vehicle-card-label {
+            font-size: 11px;
+            color: #95a5a6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .vehicle-card-value {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .vehicle-card-actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .vehicle-card-actions .btn {
+            flex: 1;
+            font-size: 13px;
+            padding: 8px 12px;
+            justify-content: center;
+        }
+
+        .pagination-wrapper {
+            flex-direction: column;
+            gap: 16px;
+            padding: 15px;
+        }
+
+        .pagination-controls {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .pagination-numbers {
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .page-title {
+            font-size: 20px;
+        }
+
+        .vehicle-card {
+            padding: 12px;
+        }
+
+        .vehicle-card-title {
+            font-size: 15px;
+        }
+
+        .vehicle-card-body {
+            grid-template-columns: 1fr;
+        }
+
+        .vehicle-card-actions {
+            flex-direction: column;
+        }
+    }
+
+    /* Desktop: hide mobile cards */
+    @media (min-width: 769px) {
+        .vehicle-mobile-cards {
+            display: none;
+        }
+    }
 </style>
 
 <div class="page-header">
@@ -639,6 +800,66 @@
             @endforeach
         </tbody>
     </table>
+
+    <!-- Mobile Card View -->
+    <div class="vehicle-mobile-cards">
+        @foreach($vehicles as $index => $vehicle)
+        <div class="vehicle-card">
+            <div class="vehicle-card-header">
+                <div>
+                    <div class="vehicle-card-title">
+                        <a href="{{ route('vehicles.show', $vehicle) }}" style="color: inherit; text-decoration: none;">
+                            {{ $vehicle->name }}
+                        </a>
+                    </div>
+                    <div class="vehicle-card-subtitle">{{ $vehicle->license_plate }}</div>
+                </div>
+                <span class="Status-badge {{ $vehicle->is_active ? 'Status-Active' : 'Status-nonActive' }}">
+                    {{ $vehicle->is_active ? __('common.active') : __('common.inactive') }}
+                </span>
+            </div>
+
+            <div class="vehicle-card-body">
+                <div class="vehicle-card-field">
+                    <div class="vehicle-card-label">Type</div>
+                    <div class="vehicle-card-value">{{ $vehicle->vehicle_type ?: '-' }}</div>
+                </div>
+                <div class="vehicle-card-field">
+                    <div class="vehicle-card-label">Year</div>
+                    <div class="vehicle-card-value">{{ $vehicle->year ?: '-' }}</div>
+                </div>
+                <div class="vehicle-card-field">
+                    <div class="vehicle-card-label">{{ __('vehicle.brand') }}</div>
+                    <div class="vehicle-card-value">{{ $vehicle->brand }}</div>
+                </div>
+                <div class="vehicle-card-field">
+                    <div class="vehicle-card-label">{{ __('vehicle.model') }}</div>
+                    <div class="vehicle-card-value">{{ $vehicle->model }}</div>
+                </div>
+            </div>
+
+            <div class="vehicle-card-actions">
+                <a href="{{ route('vehicles.show', $vehicle) }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-eye me-1"></i> View
+                </a>
+                @if(auth()->user()->canManageVehicles())
+                <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-warning">
+                    <i class="fas fa-pencil-alt me-1"></i> Edit
+                </a>
+                @endif
+                @if(auth()->user()->canDeleteRecords())
+                <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline" style="flex: 1;" onsubmit="return confirmDelete(event, '{{ $vehicle->name }}')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-danger" style="width: 100%;">
+                        <i class="fas fa-trash me-1"></i> Delete
+                    </button>
+                </form>
+                @endif
+            </div>
+        </div>
+        @endforeach
+    </div>
 </div>
 
 <!-- Custom Pagination -->

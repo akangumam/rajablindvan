@@ -620,6 +620,9 @@
                 transition: transform 0.3s ease;
                 width: 280px;
                 z-index: 1050;
+                height: 100vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .drivvo-sidebar.active {
