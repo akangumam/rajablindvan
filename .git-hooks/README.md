@@ -15,6 +15,7 @@ bash .git-hooks/setup-hooks.sh
 ## ✅ Setelah Setup
 
 **Sebelumnya (Manual):**
+
 ```bash
 cd ~/rajafleet.khaerulumam.id
 git pull origin master
@@ -24,6 +25,7 @@ php artisan view:cache
 ```
 
 **Sekarang (Otomatis):**
+
 ```bash
 cd ~/rajafleet.khaerulumam.id
 git pull origin master
@@ -41,9 +43,9 @@ Setelah `git pull`, hook akan otomatis:
 
 ## 📝 Hook Files
 
-- `.git-hooks/post-merge` - Script yang dijalankan setelah pull/merge
-- `.git-hooks/setup-hooks.sh` - Script untuk install hooks
-- `.git/hooks/post-merge` - Hook aktif (dibuat oleh setup script)
+-   `.git-hooks/post-merge` - Script yang dijalankan setelah pull/merge
+-   `.git-hooks/setup-hooks.sh` - Script untuk install hooks
+-   `.git/hooks/post-merge` - Hook aktif (dibuat oleh setup script)
 
 ## 🔄 Update Hook
 
@@ -81,10 +83,10 @@ mv .git/hooks/post-merge.disabled .git/hooks/post-merge
 
 ## 🎯 Benefits
 
-- ⚡ **Faster deployment** - 1 command instead of 4
-- 🎯 **No missed steps** - Semua cache otomatis
-- 🚀 **Consistent** - Sama setiap deploy
-- 💚 **Developer friendly** - Tinggal git pull!
+-   ⚡ **Faster deployment** - 1 command instead of 4
+-   🎯 **No missed steps** - Semua cache otomatis
+-   🚀 **Consistent** - Sama setiap deploy
+-   💚 **Developer friendly** - Tinggal git pull!
 
 ## 📚 Custom Hooks
 
