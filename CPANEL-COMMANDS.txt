@@ -2,22 +2,21 @@
   PERINTAH UNTUK CPANEL TERMINAL
 ═══════════════════════════════════════════════════════
 
-COPY & PASTE SATU PER SATU:
+⚠️  JIKA ADA ERROR "would be overwritten by merge":
+    Gunakan perintah ini (FORCE RESET):
 
-cd rajafleet.khaerulumam.id
-
-git pull origin master
-
+git fetch origin
+git reset --hard origin/master
 php artisan migrate --force
-
 php artisan optimize:clear
 
 ═══════════════════════════════════════════════════════
 
-JIKA 'Already up to date' TAPI BELUM UPDATE:
+ATAU JIKA TIDAK ADA ERROR:
+    Gunakan perintah normal ini:
 
-git fetch origin
-git reset --hard origin/master
+cd rajafleet.khaerulumam.id
+git pull origin master
 php artisan migrate --force
 php artisan optimize:clear
 
