@@ -18,6 +18,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Mobile Responsive CSS -->
+    <link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
+    
     <!-- Custom CSS -->
     <style>
         * {
@@ -443,15 +446,209 @@
         .drivvo-sidebar::-webkit-scrollbar-thumb:hover {
             background: rgba(255,255,255,0.3);
         }
+
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1100;
+            background: #2c3e50;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .mobile-menu-close {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .drivvo-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                width: 280px;
+                z-index: 1050;
+            }
+
+            .drivvo-sidebar.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-close {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+                padding-top: 70px;
+            }
+
+            .page-header {
+                padding: 20px 15px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .page-title i {
+                font-size: 22px;
+            }
+
+            .page-subtitle {
+                font-size: 13px;
+            }
+
+            /* User Info Bar Mobile */
+            .user-info-bar {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 12px !important;
+                padding: 15px !important;
+            }
+
+            .user-info-bar .user-details {
+                width: 100%;
+            }
+
+            .user-info-bar .role-badge {
+                align-self: flex-start;
+            }
+
+            /* Modal adjustments */
+            .modal-dialog {
+                margin: 10px;
+            }
+
+            /* Sidebar overlay when open */
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 1040;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            /* Table responsive */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Cards */
+            .card {
+                margin-bottom: 15px;
+            }
+
+            /* Buttons */
+            .btn {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            /* Forms */
+            .form-control, .form-select {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .drivvo-sidebar {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .main-content {
+                padding: 10px;
+                padding-top: 65px;
+            }
+
+            .page-header {
+                padding: 15px 10px;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+
+            .page-title i {
+                font-size: 18px;
+            }
+
+            .user-info-bar {
+                padding: 12px !important;
+            }
+
+            .user-info-bar .user-avatar {
+                width: 36px !important;
+                height: 36px !important;
+                font-size: 14px !important;
+            }
+
+            .user-info-bar .user-name {
+                font-size: 14px !important;
+            }
+
+            .user-info-bar .user-email {
+                font-size: 12px !important;
+            }
+
+            .role-badge {
+                font-size: 12px !important;
+                padding: 5px 12px !important;
+            }
+        }
     </style>
 
     @stack('styles')
 </head>
 
 <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="drivvo-sidebar">
+            <!-- Mobile Close Button -->
+            <button class="mobile-menu-close" id="mobileMenuClose">
+                <i class="fas fa-times"></i>
+            </button>
+
             <!-- Brand -->
             <div class="drivvo-brand">
                 <a href="{{ route('dashboard') }}" class="app-logo" style="text-decoration: none; color: inherit; cursor: pointer;">
@@ -569,14 +766,14 @@
         <div class="main-content">
             <!-- User Info Bar -->
             @auth
-            <div style="background: white; padding: 12px 24px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px;">
+            <div class="user-info-bar" style="background: white; padding: 12px 24px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
+                <div class="user-details" style="display: flex; align-items: center; gap: 12px;">
+                    <div class="user-avatar" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px;">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
                     <div>
-                        <div style="font-weight: 600; color: #2c3e50; font-size: 15px;">{{ Auth::user()->name }}</div>
-                        <div style="font-size: 13px; color: #7f8c8d;">{{ Auth::user()->email }}</div>
+                        <div class="user-name" style="font-weight: 600; color: #2c3e50; font-size: 15px;">{{ Auth::user()->name }}</div>
+                        <div class="user-email" style="font-size: 13px; color: #7f8c8d;">{{ Auth::user()->email }}</div>
                     </div>
                 </div>
                 <div>
@@ -594,7 +791,7 @@
                         ];
                         $userRole = Auth::user()->role ?? 'operator';
                     @endphp
-                    <span style="padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; color: white; background: {{ $roleColors[$userRole] ?? '#999' }}; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                    <span class="role-badge" style="padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; color: white; background: {{ $roleColors[$userRole] ?? '#999' }}; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
                         <i class="fas fa-crown"></i> {{ $roleNames[$userRole] ?? 'User' }}
                     </span>
                 </div>
@@ -732,6 +929,59 @@
         function confirmLogout() {
             document.getElementById('logoutForm').submit();
         }
+
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenuClose = document.getElementById('mobileMenuClose');
+            const sidebar = document.querySelector('.drivvo-sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', openSidebar);
+            }
+
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', closeSidebar);
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebar);
+            }
+
+            // Close sidebar when clicking a link on mobile
+            const sidebarLinks = sidebar.querySelectorAll('.drivvo-nav-link, .quick-add-item');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeSidebar();
+                    }
+                });
+            });
+
+            // Handle window resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    if (window.innerWidth > 768) {
+                        closeSidebar();
+                    }
+                }, 250);
+            });
+        });
     </script>
     
     @stack('scripts')
