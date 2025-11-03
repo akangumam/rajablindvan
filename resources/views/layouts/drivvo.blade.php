@@ -1053,7 +1053,7 @@
                     <div style="font-size: 60px; color: #667eea; margin-bottom: 20px;">
                         <i class="fas fa-sign-out-alt"></i>
                     </div>
-                    <h5 style="margin-bottom: 15px; color: #333;">Apakah Anda yakin ingin keluar?</h5>
+                    <h5 style="margin-bottom: 15px; color: #333;">Apakah anda yakin ingin keluar?</h5>
                     <p style="color: #666; margin-bottom: 0;">Anda akan keluar dari sistem dan perlu login kembali untuk mengakses dashboard.</p>
                 </div>
                 <div class="modal-footer" style="border: none; padding: 0 30px 30px; justify-content: center; gap: 10px;">
