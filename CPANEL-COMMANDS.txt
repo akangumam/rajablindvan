@@ -1,0 +1,31 @@
+═══════════════════════════════════════════════════════
+  PERINTAH UNTUK CPANEL TERMINAL
+═══════════════════════════════════════════════════════
+
+COPY & PASTE SATU PER SATU:
+
+cd rajafleet.khaerulumam.id
+
+git pull origin master
+
+php artisan migrate --force
+
+php artisan optimize:clear
+
+═══════════════════════════════════════════════════════
+
+JIKA 'Already up to date' TAPI BELUM UPDATE:
+
+git fetch origin
+git reset --hard origin/master
+php artisan migrate --force
+php artisan optimize:clear
+
+═══════════════════════════════════════════════════════
+
+SETELAH SELESAI, TEST DI:
+https://rajafleet.khaerulumam.id/settings/investors
+
+(Login sebagai Administrator)
+
+═══════════════════════════════════════════════════════
