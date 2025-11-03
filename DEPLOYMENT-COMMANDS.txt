@@ -1,0 +1,47 @@
+═══════════════════════════════════════════════════════════════
+    PERINTAH DEPLOYMENT CPANEL - JALANKAN SATU PER SATU
+═══════════════════════════════════════════════════════════════
+
+STEP 1: Masuk ke direktori project
+cd rajafleet.khaerulumam.id
+
+STEP 2: Pull dari GitHub  
+git pull origin master
+
+STEP 3: Jalankan migrasi database
+php artisan migrate --force
+
+STEP 4: Clear cache
+php artisan optimize:clear
+
+STEP 5: (Opsional) Fix permissions jika ada error
+chmod -R 775 storage bootstrap/cache
+
+═══════════════════════════════════════════════════════════════
+JIKA GIT PULL GAGAL / TIDAK UPDATE:
+═══════════════════════════════════════════════════════════════
+
+Cek commit terbaru:
+git log --oneline -n 3
+
+Commit terbaru harus:
+f53d033 - Add database migration to auto-deployment script
+687a634 - Add Investor Management feature
+
+Jika belum update, force update:
+git fetch origin
+git reset --hard origin/master
+php artisan migrate --force
+php artisan optimize:clear
+
+═══════════════════════════════════════════════════════════════
+VERIFIKASI SETELAH DEPLOYMENT:
+═══════════════════════════════════════════════════════════════
+
+Buka browser dan akses:
+https://rajafleet.khaerulumam.id/settings/investors
+
+Login sebagai Administrator
+Menu Investors harus muncul di Settings
+
+═══════════════════════════════════════════════════════════════
