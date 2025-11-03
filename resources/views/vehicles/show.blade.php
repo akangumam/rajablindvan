@@ -131,6 +131,62 @@
                                 </div>
                             </div>
 
+                            <!-- Ownership Information -->
+                            <div class="card border-info mt-3">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0"><i class="fas fa-user-tie me-2"></i>Ownership Information</h6>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-borderless mb-0">
+                                        <tr>
+                                            <td class="fw-bold" style="width: 40%;">Ownership Type:</td>
+                                            <td>
+                                                @if($vehicle->ownership_type === 'investor')
+                                                    <span class="badge bg-warning text-dark">
+                                                        <i class="fas fa-user-tie me-1"></i>Investor Owned
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-primary">
+                                                        <i class="fas fa-building me-1"></i>Company Owned
+                                                    </span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @if($vehicle->ownership_type === 'investor' && $vehicle->investor)
+                                        <tr>
+                                            <td class="fw-bold">Investor:</td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div>
+                                                        <strong class="text-dark">{{ $vehicle->investor->name }}</strong>
+                                                        <div class="text-muted small">
+                                                            <i class="fas fa-percent me-1"></i>Profit Share: {{ $vehicle->investor->investment_percentage }}%
+                                                        </div>
+                                                        @if($vehicle->investor->status === 'active')
+                                                            <span class="badge bg-success mt-1">Active Investor</span>
+                                                        @else
+                                                            <span class="badge bg-secondary mt-1">Inactive</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @if(auth()->user()->hasRole(['super_admin']))
+                                        <tr>
+                                            <td class="fw-bold">Investor Report:</td>
+                                            <td>
+                                                <a href="{{ route('settings.investors.show', $vehicle->investor) }}" 
+                                                   class="btn btn-sm btn-outline-warning">
+                                                    <i class="fas fa-chart-line me-1"></i>View Investor Report
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                        @endif
+                                    </table>
+                                </div>
+                            </div>
+
                             <!-- Barcode Section -->
                             <div class="card border-success mt-3">
                                 <div class="card-header bg-success text-white">

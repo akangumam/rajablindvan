@@ -76,6 +76,8 @@ class VehicleController extends Controller
                 'stnk_expiry_date' => 'nullable|date',
                 'kir_number' => 'nullable|string|max:255',
                 'kir_expiry_date' => 'nullable|date',
+                'ownership_type' => 'required|in:company,investor',
+                'investor_id' => 'nullable|exists:investors,id',
                 'document_name' => 'nullable|string|max:255',
                 'barcode_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'vehicle_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
@@ -91,6 +93,11 @@ class VehicleController extends Controller
             // Auto-generate name if not provided
             if (empty($validated['name'])) {
                 $validated['name'] = $validated['brand'] . ' ' . $validated['model'];
+            }
+            
+            // Set investor_id to null if ownership_type is company
+            if ($validated['ownership_type'] === 'company') {
+                $validated['investor_id'] = null;
             }
 
             // Handle barcode image upload
@@ -179,6 +186,8 @@ class VehicleController extends Controller
             'stnk_expiry_date' => 'nullable|date',
             'kir_number' => 'nullable|string|max:255',
             'kir_expiry_date' => 'nullable|date',
+            'ownership_type' => 'required|in:company,investor',
+            'investor_id' => 'nullable|exists:investors,id',
             'document_name' => 'nullable|string|max:255',
             'barcode_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'vehicle_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
@@ -190,6 +199,11 @@ class VehicleController extends Controller
             'notes' => 'nullable|string',
             'is_active' => 'boolean'
         ]);
+        
+        // Set investor_id to null if ownership_type is company
+        if ($validated['ownership_type'] === 'company') {
+            $validated['investor_id'] = null;
+        }
 
         // Handle barcode image upload
         if ($request->hasFile('barcode_image')) {

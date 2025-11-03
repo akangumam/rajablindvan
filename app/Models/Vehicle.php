@@ -32,7 +32,9 @@ class Vehicle extends Model
         'location_id',
         'is_active',
         'daily_rate',
-        'monthly_rate'
+        'monthly_rate',
+        'investor_id',
+        'ownership_type'
     ];
 
     protected $casts = [
@@ -50,6 +52,11 @@ class Vehicle extends Model
     public function location()
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function investor()
+    {
+        return $this->belongsTo(Investor::class);
     }
 
     public function users()

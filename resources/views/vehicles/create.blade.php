@@ -279,6 +279,47 @@
                 </div>
             </div>
 
+            <!-- Row 3.5: Ownership Type & Investor -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">Tipe Kepemilikan <span class="text-danger">*</span></label>
+                    <select class="form-select" name="ownership_type" id="ownershipType" required>
+                        <option value="company" {{ old('ownership_type') == 'company' ? 'selected' : '' }}>Company Owned</option>
+                        <option value="investor" {{ old('ownership_type') == 'investor' ? 'selected' : '' }}>Investor Owned</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-6 mb-4" id="investorField" style="display: {{ old('ownership_type') == 'investor' ? 'block' : 'none' }};">
+                    <label class="form-label">Pilih Investor <span class="text-danger">*</span></label>
+                    <select class="form-select" name="investor_id" id="investorSelect">
+                        <option value="">-- Pilih Investor --</option>
+                        @foreach(\App\Models\Investor::where('status', 'active')->orderBy('name')->get() as $inv)
+                            <option value="{{ $inv->id }}" {{ old('investor_id') == $inv->id ? 'selected' : '' }}>
+                                {{ $inv->name }} ({{ $inv->investment_percentage }}%)
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            @push('scripts')
+            <script>
+                document.getElementById('ownershipType').addEventListener('change', function() {
+                    const investorField = document.getElementById('investorField');
+                    const investorSelect = document.getElementById('investorSelect');
+                    
+                    if (this.value === 'investor') {
+                        investorField.style.display = 'block';
+                        investorSelect.required = true;
+                    } else {
+                        investorField.style.display = 'none';
+                        investorSelect.required = false;
+                        investorSelect.value = '';
+                    }
+                });
+            </script>
+            @endpush
+
             <!-- Row 4: Chassis Number & Engine Number -->
             <div class="row">
                 <div class="col-md-6 mb-4">

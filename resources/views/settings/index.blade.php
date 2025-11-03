@@ -138,7 +138,7 @@ body {
 <div class="settings-container">
     <!-- Header -->
     <div class="settings-header">
-        <h4>SETTINGS <span class="settings-count">- (8)</span></h4>
+        <h4>SETTINGS <span class="settings-count">- (9)</span></h4>
     </div>
 
     <!-- Section 1-3: Apps Settings -->
@@ -222,9 +222,19 @@ body {
                 </a>
             </li>
             <li class="settings-item">
-                <a href="{{ route('settings.payment-methods') }}" class="settings-link">
+                <a href="{{ route('settings.investors.index') }}" class="settings-link">
                     <div class="settings-link-content">
                         <span class="settings-number">8.</span>
+                        <i class="fas fa-user-tie" style="color: #f39c12; font-size: 16px;"></i>
+                        <span class="settings-label">Investors</span>
+                    </div>
+                    <i class="fas fa-chevron-right settings-arrow"></i>
+                </a>
+            </li>
+            <li class="settings-item">
+                <a href="{{ route('settings.payment-methods') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">9.</span>
                         <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 16px;"></i>
                         <span class="settings-label">Payment Methods</span>
                     </div>

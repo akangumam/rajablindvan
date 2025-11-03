@@ -268,6 +268,14 @@
                     Type of Income
                 </a>
             </li>
+            @if(auth()->user()->hasRole(['super_admin']))
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.investors.index') }}" class="settings-page-menu-link">
+                    <i class="fas fa-user-tie" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
+                    Investors
+                </a>
+            </li>
+            @endif
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.payment-methods') }}" class="settings-page-menu-link">
                     <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>

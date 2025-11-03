@@ -159,6 +159,18 @@ Route::middleware(['role:super_admin'])->group(function () {
     Route::post('users/{user}/reset-password', [\App\Http\Controllers\UserController::class, 'resetPassword'])
         ->name('users.reset-password');
     Route::resource('users', \App\Http\Controllers\UserController::class);
+    
+    // Investors - Administrator Only (Financial & Strategic Data)
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/investors', [\App\Http\Controllers\InvestorController::class, 'index'])->name('investors.index');
+        Route::get('/investors/create', [\App\Http\Controllers\InvestorController::class, 'create'])->name('investors.create');
+        Route::post('/investors', [\App\Http\Controllers\InvestorController::class, 'store'])->name('investors.store');
+        Route::get('/investors/{investor}', [\App\Http\Controllers\InvestorController::class, 'show'])->name('investors.show');
+        Route::get('/investors/{investor}/edit', [\App\Http\Controllers\InvestorController::class, 'edit'])->name('investors.edit');
+        Route::put('/investors/{investor}', [\App\Http\Controllers\InvestorController::class, 'update'])->name('investors.update');
+        Route::delete('/investors/{investor}', [\App\Http\Controllers\InvestorController::class, 'destroy'])->name('investors.destroy');
+        Route::get('/investors/{investor}/report', [\App\Http\Controllers\InvestorController::class, 'generateReport'])->name('investors.report');
+    });
 });
 
 // Reports routes - All roles can view

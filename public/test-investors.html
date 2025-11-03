@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Investor Feature</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .success { color: green; }
+        .info { color: blue; }
+        ul { list-style: none; padding: 0; }
+        li { padding: 10px; margin: 5px 0; background: #f0f0f0; border-radius: 5px; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>✅ Investor Feature - Test Links</h1>
+    
+    <h2 class="success">Feature Status: INSTALLED</h2>
+    
+    <h3 class="info">Quick Access Links:</h3>
+    <ul>
+        <li><a href="/settings" target="_blank">1. Settings Menu (should show Investors at #8)</a></li>
+        <li><a href="/settings/investors" target="_blank">2. Investors List Page</a></li>
+        <li><a href="/settings/investors/create" target="_blank">3. Create New Investor</a></li>
+        <li><a href="/vehicles/create" target="_blank">4. Create Vehicle (with investor field)</a></li>
+    </ul>
+    
+    <h3 class="info">Features Installed:</h3>
+    <ul>
+        <li>✅ Investor Management (CRUD)</li>
+        <li>✅ Investor Reports with financial breakdown</li>
+        <li>✅ Vehicle ownership assignment</li>
+        <li>✅ Profit sharing calculation</li>
+        <li>✅ Date range filtering</li>
+        <li>✅ 3 Sample investors in database</li>
+    </ul>
+    
+    <h3 class="info">Database Tables:</h3>
+    <ul>
+        <li>✅ investors table created</li>
+        <li>✅ vehicles.investor_id added</li>
+        <li>✅ vehicles.ownership_type added</li>
+    </ul>
+    
+    <h3 class="info">Troubleshooting:</h3>
+    <ul>
+        <li>Clear browser cache (Ctrl+F5)</li>
+        <li>Check Settings page - scroll down to see menu #8 "Investors"</li>
+        <li>Access directly: <a href="/settings/investors">/settings/investors</a></li>
+    </ul>
+    
+    <hr>
+    <p><small>Created: <?php echo date('Y-m-d H:i:s'); ?></small></p>
+</body>
+</html>
