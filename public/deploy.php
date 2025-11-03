@@ -50,17 +50,20 @@ function deploy() {
         // 2. Check if composer.lock changed
         'COMPOSER_CHANGED=$(git diff HEAD@{1} HEAD --name-only | grep composer.lock); if [ ! -z "$COMPOSER_CHANGED" ]; then composer install --no-dev --optimize-autoloader --ignore-platform-reqs 2>&1; else echo "Composer not changed, skipping..."; fi',
         
-        // 3. Clear cache
+        // 3. Run database migrations
+        'php artisan migrate --force 2>&1',
+        
+        // 4. Clear cache
         'php artisan config:clear 2>&1',
         'php artisan route:clear 2>&1',
         'php artisan view:clear 2>&1',
         
-        // 4. Rebuild cache
+        // 5. Rebuild cache
         'php artisan config:cache 2>&1',
         'php artisan route:cache 2>&1',
         'php artisan view:cache 2>&1',
         
-        // 5. Fix permissions
+        // 6. Fix permissions
         'chmod -R 775 storage bootstrap/cache 2>&1',
     ];
     
