@@ -11,6 +11,23 @@
 body {
     background-color: #f8f9fa;
     overflow-x: hidden;
+    width: 100%;
+}
+
+.page-header {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+.page-title {
+    overflow-x: hidden;
+    word-wrap: break-word;
+}
+
+.page-subtitle {
+    overflow-x: hidden;
+    word-wrap: break-word;
 }
 
 .settings-container {
@@ -145,15 +162,43 @@ body {
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
+    html {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
     body {
         overflow-x: hidden;
+        width: 100%;
     }
 
     .main-content {
         width: 100% !important;
+        max-width: 100vw !important;
         margin-left: 0 !important;
         padding: 15px 10px !important;
         overflow-x: hidden !important;
+    }
+
+    .page-header {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 20px 15px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .page-title {
+        font-size: 22px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
+    .page-subtitle {
+        font-size: 14px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
 
     .settings-container {
