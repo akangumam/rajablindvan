@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
+use App\Models\Location;
+use App\Http\Middleware\LocationFilter;
 use Illuminate\Support\Facades\Storage;
 
 class VehicleController extends Controller
@@ -18,13 +20,19 @@ class VehicleController extends Controller
         // Build query based on user type
         if ($user && $user->isPengelola()) {
             // Pengelola sees all vehicles
-            $query = Vehicle::with(['fuelFills', 'maintenances', 'expenses']);
+            $query = Vehicle::with(['fuelFills', 'maintenances', 'expenses', 'location']);
         } elseif ($user && $user->isSopir()) {
             // Sopir only sees assigned vehicles
-            $query = $user->vehicles()->with(['fuelFills', 'maintenances', 'expenses']);
+            $query = $user->vehicles()->with(['fuelFills', 'maintenances', 'expenses', 'location']);
         } else {
             // Guest or no user_type - show all (fallback)
-            $query = Vehicle::with(['fuelFills', 'maintenances', 'expenses']);
+            $query = Vehicle::with(['fuelFills', 'maintenances', 'expenses', 'location']);
+        }
+        
+        // Apply location filter
+        $locationId = LocationFilter::getLocationId();
+        if ($locationId) {
+            $query->where('location_id', $locationId);
         }
         
         // Search functionality
@@ -45,8 +53,12 @@ class VehicleController extends Controller
         $query->orderBy($sortBy, $sortOrder);
         
         $vehicles = $query->paginate(10)->appends($request->except('page'));
+        
+        // Get locations for filter dropdown
+        $locations = Location::active()->get();
+        $selectedLocation = $locationId;
 
-        return view('vehicles.index', compact('vehicles', 'sortBy', 'sortOrder'));
+        return view('vehicles.index', compact('vehicles', 'sortBy', 'sortOrder', 'locations', 'selectedLocation'));
     }
 
     /**
@@ -54,7 +66,8 @@ class VehicleController extends Controller
      */
     public function create()
     {
-        return view('vehicles.create');
+        $locations = Location::active()->get();
+        return view('vehicles.create', compact('locations'));
     }
 
     /**
@@ -78,6 +91,7 @@ class VehicleController extends Controller
                 'kir_expiry_date' => 'nullable|date',
                 'ownership_type' => 'required|in:company,investor',
                 'investor_id' => 'nullable|exists:investors,id',
+                'location_id' => 'required|exists:locations,id',
                 'document_name' => 'nullable|string|max:255',
                 'barcode_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'vehicle_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',

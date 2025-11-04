@@ -1,0 +1,73 @@
+===========================================
+PRODUCTION UPDATE COMMANDS
+===========================================
+
+Server: rajafleet.khaerulumam.id
+Path: /home/srherba3/rajafleet/
+
+===========================================
+STEP 1: SSH ke cPanel Terminal
+===========================================
+Login ke cPanel → Terminal
+
+===========================================
+STEP 2: Navigate ke Folder Project
+===========================================
+cd rajafleet.khaerulumam.id
+
+===========================================
+STEP 3: Pull Latest Changes dari GitHub
+===========================================
+git pull origin master
+
+===========================================
+STEP 4: Clear Cache
+===========================================
+php artisan config:clear
+php artisan view:clear
+php artisan cache:clear
+
+===========================================
+STEP 5: Optimize (Optional)
+===========================================
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+===========================================
+STEP 6: Test Website
+===========================================
+Buka browser:
+https://rajafleet.khaerulumam.id
+
+Test di mobile:
+- Customers page
+- Orders page  
+- Users page
+
+===========================================
+TROUBLESHOOTING
+===========================================
+
+Jika ada error "Git not tracking":
+git status
+git reset --hard origin/master
+git pull origin master
+
+Jika permission error:
+chmod -R 775 storage bootstrap/cache
+
+Jika .env berubah:
+nano .env
+# Pastikan APP_URL benar
+php artisan key:generate (jika perlu)
+
+===========================================
+ROLLBACK (Jika ada masalah)
+===========================================
+# Kembali ke commit sebelumnya
+git log --oneline -5
+git reset --hard COMMIT_HASH
+git pull origin master
+
+===========================================

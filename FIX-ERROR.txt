@@ -1,0 +1,29 @@
+════════════════════════════════════════════════════════
+  SOLUSI ERROR: "would be overwritten by merge"
+════════════════════════════════════════════════════════
+
+COPY & PASTE PERINTAH INI SATU PER SATU KE CPANEL:
+
+git fetch origin
+
+git reset --hard origin/master
+
+php artisan migrate --force
+
+php artisan optimize:clear
+
+════════════════════════════════════════════════════════
+
+PENJELASAN:
+- Error terjadi karena file deploy.php di server berbeda
+- Solusi: Timpa dengan versi terbaru dari GitHub
+- AMAN: Semua fitur Investor Management akan ter-install
+
+════════════════════════════════════════════════════════
+
+SETELAH SELESAI:
+1. Test di browser: https://rajafleet.khaerulumam.id/settings/investors
+2. Login sebagai Administrator
+3. Menu Investors harus muncul
+
+════════════════════════════════════════════════════════

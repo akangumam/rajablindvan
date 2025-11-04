@@ -8,6 +8,7 @@ use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Middleware\LocationFilter;
 
 // =====================================================
 // Authentication Routes
@@ -19,7 +20,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // =====================================================
 // Protected Routes (Require Authentication)
 // =====================================================
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', LocationFilter::class])->group(function () {
     
 // Language Switcher
 Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');

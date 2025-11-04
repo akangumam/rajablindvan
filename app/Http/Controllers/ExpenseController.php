@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Expense;
 use App\Models\Vehicle;
+use App\Models\Location;
+use App\Http\Middleware\LocationFilter;
 
 class ExpenseController extends Controller
 {
@@ -15,24 +17,43 @@ class ExpenseController extends Controller
     {
         $user = auth()->user();
         
+        // Apply location filter
+        $locationId = LocationFilter::getLocationId();
+        
         // Filter expenses based on user type
         if ($user && $user->isPengelola()) {
-            $expenses = Expense::with('vehicle')
-                ->latest('expense_date')
-                ->paginate(20);
+            $query = Expense::with(['vehicle', 'location']);
+            
+            if ($locationId) {
+                $query->where('location_id', $locationId);
+            }
+            
+            $expenses = $query->latest('expense_date')->paginate(20);
         } elseif ($user && $user->isSopir()) {
             $vehicleIds = $user->vehicles()->pluck('vehicles.id');
-            $expenses = Expense::with('vehicle')
-                ->whereIn('vehicle_id', $vehicleIds)
-                ->latest('expense_date')
-                ->paginate(20);
+            $query = Expense::with(['vehicle', 'location'])
+                ->whereIn('vehicle_id', $vehicleIds);
+            
+            if ($locationId) {
+                $query->where('location_id', $locationId);
+            }
+            
+            $expenses = $query->latest('expense_date')->paginate(20);
         } else {
-            $expenses = Expense::with('vehicle')
-                ->latest('expense_date')
-                ->paginate(20);
+            $query = Expense::with(['vehicle', 'location']);
+            
+            if ($locationId) {
+                $query->where('location_id', $locationId);
+            }
+            
+            $expenses = $query->latest('expense_date')->paginate(20);
         }
+        
+        // Get locations for filter dropdown
+        $locations = Location::active()->get();
+        $selectedLocation = $locationId;
 
-        return view('expenses.index', compact('expenses'));
+        return view('expenses.index', compact('expenses', 'locations', 'selectedLocation'));
     }
 
     /**
@@ -122,6 +143,9 @@ class ExpenseController extends Controller
         if (!isset($validated['user_id'])) {
             $validated['user_id'] = auth()->id();
         }
+        
+        // Set location_id from vehicle
+        $validated['location_id'] = $vehicle->location_id;
 
         Expense::create($validated);
 

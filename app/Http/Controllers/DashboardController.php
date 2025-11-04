@@ -7,6 +7,8 @@ use App\Models\Vehicle;
 use App\Models\FuelFill;
 use App\Models\Maintenance;
 use App\Models\Expense;
+use App\Models\Location;
+use App\Http\Middleware\LocationFilter;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -14,12 +16,51 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
+        $locationId = LocationFilter::getLocationId();
         
-        // Get all vehicles for monitoring
-        $vehicles = Vehicle::with(['maintenances' => function($query) {
+        // Get vehicles based on location filter
+        $vehiclesQuery = Vehicle::with(['maintenances' => function($query) {
             $query->where('service_date', '>=', Carbon::now())
                   ->orderBy('service_date', 'asc');
-        }])->where('is_active', true)->get();
+        }])->where('is_active', true);
+        
+        if ($locationId) {
+            $vehiclesQuery->where('location_id', $locationId);
+        }
+        
+        $vehicles = $vehiclesQuery->get();
+        
+        // Get location statistics for super admin
+        $locationStats = [];
+        if (LocationFilter::canAccessAllLocations() && !$locationId) {
+            $locations = Location::active()->get();
+            foreach ($locations as $location) {
+                $locationVehicles = Vehicle::where('location_id', $location->id)
+                    ->where('is_active', true)
+                    ->count();
+                
+                $locationBooked = Vehicle::where('location_id', $location->id)
+                    ->where(function($query) {
+                        $query->whereHas('rentals', function($q) {
+                            $q->where('status', 'active')
+                              ->orWhere('status', 'booked');
+                        })
+                        ->orWhereHas('orders', function($q) {
+                            $q->where('status', 'Active');
+                        });
+                    })->count();
+                
+                $locationAvailable = $locationVehicles - $locationBooked;
+                
+                $locationStats[] = [
+                    'name' => $location->name,
+                    'code' => $location->code,
+                    'total' => $locationVehicles,
+                    'booked' => $locationBooked,
+                    'available' => $locationAvailable
+                ];
+            }
+        }
         
         // Section 1: Monitoring STNK Journey Time
         $stnkMonitoring = [];
@@ -38,6 +79,7 @@ class DashboardController extends Controller
                     'id' => $vehicle->id,
                     'vehicle_name' => $vehicle->name,
                     'license_plate' => $vehicle->license_plate,
+                    'location' => $vehicle->location ? $vehicle->location->name : '-',
                     'days_until_expiry' => abs($daysUntilExpiry),
                     'status' => $status,
                     'expiry_date' => Carbon::parse($vehicle->stnk_expiry_date)->format('d M Y')
@@ -62,6 +104,7 @@ class DashboardController extends Controller
                     'id' => $vehicle->id,
                     'vehicle_name' => $vehicle->name,
                     'license_plate' => $vehicle->license_plate,
+                    'location' => $vehicle->location ? $vehicle->location->name : '-',
                     'days_until_expiry' => abs($daysUntilExpiry),
                     'status' => $status,
                     'expiry_date' => Carbon::parse($vehicle->kir_expiry_date)->format('d M Y')
@@ -70,7 +113,7 @@ class DashboardController extends Controller
         }
         
         // Section 3: Monitoring Vehicle BOOKED and AVAILABLE
-        $bookedVehicles = Vehicle::where(function($query) {
+        $bookedQuery = Vehicle::where(function($query) {
             $query->whereHas('rentals', function($q) {
                 $q->where('status', 'active')
                   ->orWhere('status', 'booked');
@@ -78,25 +121,39 @@ class DashboardController extends Controller
             ->orWhereHas('orders', function($q) {
                 $q->where('status', 'Active');
             });
-        })->count();
+        });
         
-        $availableVehicles = Vehicle::where('is_active', true)
+        $availableQuery = Vehicle::where('is_active', true)
             ->whereDoesntHave('rentals', function($query) {
                 $query->where('status', 'active')
                       ->orWhere('status', 'booked');
             })
             ->whereDoesntHave('orders', function($query) {
                 $query->where('status', 'Active');
-            })->count();
+            });
         
+        if ($locationId) {
+            $bookedQuery->where('location_id', $locationId);
+            $availableQuery->where('location_id', $locationId);
+        }
+        
+        $bookedVehicles = $bookedQuery->count();
+        $availableVehicles = $availableQuery->count();
         $totalFleet = $bookedVehicles + $availableVehicles;
+        
+        // Get locations for filter dropdown
+        $locations = Location::active()->get();
+        $selectedLocation = $locationId;
         
         return view('dashboard.main', compact(
             'stnkMonitoring',
             'kirMonitoring',
             'bookedVehicles',
             'availableVehicles',
-            'totalFleet'
+            'totalFleet',
+            'locationStats',
+            'locations',
+            'selectedLocation'
         ));
     }
 

@@ -930,7 +930,34 @@
                         <div class="user-email" style="font-size: 13px; color: #7f8c8d;">{{ Auth::user()->email }}</div>
                     </div>
                 </div>
-                <div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <!-- Location Selector (Only for Super Admin) -->
+                    @if(Auth::user()->isSuperAdmin())
+                    <div class="location-selector" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-map-marker-alt" style="color: #e74c3c;"></i>
+                        <select id="locationFilter" class="form-select form-select-sm" style="min-width: 150px; border-radius: 6px; border: 1px solid #ddd; padding: 6px 12px;" onchange="changeLocation(this.value)">
+                            <option value="">Semua Lokasi</option>
+                            @php
+                                $locations = \App\Models\Location::active()->get();
+                                $selectedLocationId = session('selected_location_id');
+                            @endphp
+                            @foreach($locations as $location)
+                                <option value="{{ $location->id }}" {{ $selectedLocationId == $location->id ? 'selected' : '' }}>
+                                    {{ $location->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @else
+                    <!-- Show current location for staff -->
+                    @if(Auth::user()->location)
+                    <div class="location-badge" style="padding: 6px 14px; border-radius: 6px; background: #ecf0f1; color: #2c3e50; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-map-marker-alt" style="color: #e74c3c;"></i>
+                        {{ Auth::user()->location->name }}
+                    </div>
+                    @endif
+                    @endif
+                    
                     @php
                         $roleColors = [
                             'super_admin' => 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -1072,6 +1099,21 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Location Filter Script -->
+    <script>
+        function changeLocation(locationId) {
+            const currentUrl = new URL(window.location.href);
+            
+            if (locationId) {
+                currentUrl.searchParams.set('location_id', locationId);
+            } else {
+                currentUrl.searchParams.delete('location_id');
+            }
+            
+            window.location.href = currentUrl.toString();
+        }
+    </script>
     
     <!-- Logout Modal Script -->
     <script>
