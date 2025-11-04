@@ -15,9 +15,17 @@ class LocationFilter
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Store selected location in session if provided
+        // Store selected location in session if provided in URL
         if ($request->has('location_id')) {
-            session(['selected_location_id' => $request->location_id]);
+            $locationId = $request->get('location_id');
+            
+            // If empty string or null, clear the session (Semua Lokasi)
+            if ($locationId === '' || $locationId === null) {
+                session()->forget('selected_location_id');
+            } else {
+                // Store the selected location
+                session(['selected_location_id' => $locationId]);
+            }
         }
 
         return $next($request);
@@ -25,7 +33,7 @@ class LocationFilter
 
     /**
      * Get the location ID for filtering queries
-     * Returns null for super admin (to show all)
+     * Returns null for super admin when "Semua Lokasi" is selected
      * Returns user's location_id for staff
      */
     public static function getLocationId(): ?int
@@ -34,8 +42,15 @@ class LocationFilter
         
         // Super admin can select location
         if ($user && $user->isSuperAdmin()) {
-            // Check if location is selected in session
-            return session('selected_location_id', null);
+            // Get location from session, return null if not set (Semua Lokasi)
+            $locationId = session('selected_location_id', null);
+            
+            // Convert empty string to null
+            if ($locationId === '' || $locationId === null) {
+                return null;
+            }
+            
+            return (int) $locationId;
         }
         
         // Staff can only see their own location

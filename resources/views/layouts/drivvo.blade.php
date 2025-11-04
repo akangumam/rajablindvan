@@ -936,11 +936,15 @@
                     <div class="location-selector" style="display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-map-marker-alt" style="color: #e74c3c;"></i>
                         <select id="locationFilter" class="form-select form-select-sm" style="min-width: 150px; border-radius: 6px; border: 1px solid #ddd; padding: 6px 12px;" onchange="changeLocation(this.value)">
-                            <option value="">Semua Lokasi</option>
                             @php
                                 $locations = \App\Models\Location::active()->get();
                                 $selectedLocationId = session('selected_location_id');
+                                // Check if location_id in URL parameter (takes priority)
+                                if (request()->has('location_id')) {
+                                    $selectedLocationId = request()->get('location_id');
+                                }
                             @endphp
+                            <option value="" {{ empty($selectedLocationId) ? 'selected' : '' }}>Semua Lokasi</option>
                             @foreach($locations as $location)
                                 <option value="{{ $location->id }}" {{ $selectedLocationId == $location->id ? 'selected' : '' }}>
                                     {{ $location->name }}
@@ -1103,16 +1107,43 @@
     <!-- Location Filter Script -->
     <script>
         function changeLocation(locationId) {
-            const currentUrl = new URL(window.location.href);
-            
-            if (locationId) {
-                currentUrl.searchParams.set('location_id', locationId);
-            } else {
-                currentUrl.searchParams.delete('location_id');
+            // Show loading indicator
+            const select = document.getElementById('locationFilter');
+            if (select) {
+                select.disabled = true;
+                select.style.opacity = '0.6';
             }
             
+            // Build URL with location parameter
+            const currentUrl = new URL(window.location.href);
+            
+            // Remove existing location parameter
+            currentUrl.searchParams.delete('location_id');
+            
+            // Add new location parameter only if not "Semua Lokasi"
+            if (locationId && locationId !== '') {
+                currentUrl.searchParams.set('location_id', locationId);
+            }
+            
+            // Redirect to update page
             window.location.href = currentUrl.toString();
         }
+        
+        // Preserve location filter on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const locationId = urlParams.get('location_id');
+            const select = document.getElementById('locationFilter');
+            
+            if (select) {
+                // Set selected value based on URL parameter
+                if (locationId) {
+                    select.value = locationId;
+                } else {
+                    select.value = ''; // Semua Lokasi
+                }
+            }
+        });
     </script>
     
     <!-- Logout Modal Script -->
