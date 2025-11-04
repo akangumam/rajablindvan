@@ -48,7 +48,7 @@ class DashboardController extends Controller
         $currentMonth = Carbon::now()->format('Y-m');
         $monthlyRevenue = $rentalsQuery
             ->where('status', 'completed')
-            ->whereRaw("DATE_FORMAT(start_date, '%Y-%m') = ?", [$currentMonth])
+            ->whereRaw("strftime('%Y-%m', start_date) = ?", [$currentMonth])
             ->sum('total_price');
 
         // Monthly expenses
@@ -140,7 +140,7 @@ class DashboardController extends Controller
             $monthYear = $date->format('Y-m');
             
             $query = Rental::where('status', 'completed')
-                ->whereRaw("DATE_FORMAT(start_date, '%Y-%m') = ?", [$monthYear]);
+                ->whereRaw("strftime('%Y-%m', start_date) = ?", [$monthYear]);
 
             if ($locationId) {
                 $query->whereHas('vehicle', function ($q) use ($locationId) {
