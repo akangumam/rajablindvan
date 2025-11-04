@@ -373,6 +373,174 @@
     background-color: #d4edda;
     border-color: #c3e6cb;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 968px) {
+    .settings-page-layout {
+        flex-direction: column;
+        padding: 15px 10px;
+    }
+
+    .settings-page-sidebar {
+        flex: none;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .settings-page-sidebar-header {
+        padding: 15px;
+    }
+
+    .settings-page-sidebar-title {
+        font-size: 18px;
+    }
+
+    .settings-page-menu-link {
+        padding: 14px 15px;
+        font-size: 14px;
+    }
+
+    .settings-page-menu-link i {
+        font-size: 13px !important;
+        margin-right: 10px !important;
+    }
+
+    .settings-page-content {
+        padding: 20px 15px;
+    }
+
+    .settings-page-content-header {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+
+    .settings-page-content-title {
+        font-size: 20px;
+    }
+
+    .payment-list-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 12px 15px;
+    }
+
+    .btn-add {
+        width: 100%;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+    }
+
+    .payment-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .payment-info {
+        width: 100%;
+    }
+
+    .payment-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10px;
+    }
+
+    .modal-header {
+        padding: 15px;
+    }
+
+    .modal-title {
+        font-size: 16px;
+    }
+
+    .modal-body {
+        padding: 15px;
+    }
+
+    .modal-footer {
+        padding: 12px 15px;
+        flex-wrap: wrap;
+    }
+
+    .btn-secondary,
+    .btn-primary {
+        flex: 1;
+        min-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-page-layout {
+        padding: 10px 5px;
+    }
+
+    .settings-page-sidebar-header {
+        padding: 12px;
+    }
+
+    .settings-page-sidebar-title {
+        font-size: 16px;
+    }
+
+    .settings-page-content {
+        padding: 15px 10px;
+    }
+
+    .settings-page-content-title {
+        font-size: 18px;
+    }
+
+    .payment-list-header {
+        padding: 10px 12px;
+    }
+
+    .payment-list-item {
+        padding: 12px;
+    }
+
+    .payment-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .payment-name {
+        font-size: 14px;
+    }
+
+    .btn-add,
+    .btn-edit,
+    .btn-delete {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+
+    .modal-body {
+        padding: 12px;
+    }
+
+    .form-control {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
 </style>
 @endpush
 

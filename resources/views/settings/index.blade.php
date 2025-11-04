@@ -122,6 +122,108 @@ body {
     line-height: 1.8;
     margin: 0;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .settings-container {
+        padding: 15px 10px;
+        max-width: 100%;
+    }
+
+    .settings-header {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .settings-header h4 {
+        font-size: 16px;
+    }
+
+    .settings-count {
+        font-size: 16px;
+    }
+
+    .settings-section {
+        margin-bottom: 15px;
+    }
+
+    .settings-section-title {
+        padding: 12px 15px;
+        font-size: 13px;
+    }
+
+    .settings-link {
+        padding: 14px 15px;
+    }
+
+    .settings-link-content {
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .settings-number {
+        width: 20px;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    .settings-label {
+        font-size: 14px;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
+    .settings-link-content i {
+        font-size: 14px !important;
+        flex-shrink: 0;
+    }
+
+    .settings-arrow {
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .settings-note {
+        padding: 15px;
+    }
+
+    .settings-note-title {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .settings-note-text {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-container {
+        padding: 10px 5px;
+    }
+
+    .settings-header {
+        padding: 12px;
+    }
+
+    .settings-header h4 {
+        font-size: 15px;
+    }
+
+    .settings-link {
+        padding: 12px;
+    }
+
+    .settings-label {
+        font-size: 13px;
+    }
+
+    .settings-note {
+        padding: 12px;
+    }
+}
 </style>
 @endpush
 
