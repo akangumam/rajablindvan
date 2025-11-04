@@ -265,6 +265,146 @@
         cursor: not-allowed;
         pointer-events: none;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px 15px;
+            gap: 15px;
+        }
+
+        .page-title {
+            font-size: 24px;
+        }
+
+        .page-title i {
+            font-size: 22px;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+        }
+
+        .btn-add-user {
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Hide table, show card layout */
+        .user-table-container {
+            overflow: visible;
+        }
+
+        .user-table thead {
+            display: none;
+        }
+
+        .user-table tbody {
+            display: block;
+        }
+
+        .user-table tbody tr {
+            display: block;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+        }
+
+        .user-table tbody td {
+            display: block;
+            padding: 8px 0;
+            border: none;
+            text-align: left !important;
+        }
+
+        .user-table tbody td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 11px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .user-table tbody td:first-child {
+            display: none; /* Hide number column */
+        }
+
+        .action-buttons {
+            justify-content: flex-start;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .pagination-container {
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .pagination-info {
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .pagination-links {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pagination-links .page-link {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .empty-state {
+            padding: 40px 15px;
+            min-height: 300px;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            font-size: 40px;
+        }
+
+        .empty-title {
+            font-size: 20px;
+        }
+
+        .empty-description {
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .page-header {
+            padding: 15px 10px;
+        }
+
+        .page-title {
+            font-size: 20px;
+        }
+
+        .action-icon-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 14px;
+        }
+
+        .badge-role,
+        .badge-status {
+            font-size: 11px;
+            padding: 5px 12px;
+        }
+    }
 </style>
 
 <div class="page-header">
@@ -314,16 +454,16 @@
             @foreach($users as $index => $user)
             <tr>
                 <td>{{ $users->firstItem() + $index }}</td>
-                <td>
+                <td data-label="Name">
                     <div class="user-name">{{ $user->name }}</div>
                 </td>
-                <td>
+                <td data-label="Email">
                     <div class="user-email">{{ $user->email }}</div>
                 </td>
-                <td>
+                <td data-label="Title">
                     <div class="user-title">{{ $user->title ?? '-' }}</div>
                 </td>
-                <td>
+                <td data-label="Role">
                     @if($user->user_type == 'admin')
                         <span class="badge-role badge-admin">Administrator</span>
                     @elseif($user->user_type == 'manager')
@@ -334,14 +474,14 @@
                         <span class="badge-role" style="background: #f5f5f5; color: #666;">User</span>
                     @endif
                 </td>
-                <td>
+                <td data-label="Status">
                     @if(($user->status ?? 'active') == 'active')
                         <span class="badge-status badge-active">Active</span>
                     @else
                         <span class="badge-status badge-inactive">Inactive</span>
                     @endif
                 </td>
-                <td>
+                <td data-label="Actions">
                     <div class="action-buttons">
                         <a href="{{ route('users.show', $user) }}" class="action-icon-btn btn-view" title="View User">
                             <i class="fas fa-eye"></i>

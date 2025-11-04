@@ -321,6 +321,155 @@
         color: white;
         border-color: #3498db;
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px 15px;
+            gap: 15px;
+        }
+
+        .page-title {
+            font-size: 24px;
+        }
+
+        .page-title i {
+            font-size: 22px;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+        }
+
+        .btn-add-user {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .search-input-wrapper {
+            max-width: 100%;
+        }
+
+        /* Hide table, show card layout on mobile */
+        .user-table-container {
+            overflow: visible;
+        }
+
+        .user-table thead {
+            display: none;
+        }
+
+        .user-table tbody {
+            display: block;
+        }
+
+        .user-table tbody tr {
+            display: block;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+        }
+
+        .user-table tbody td {
+            display: block;
+            padding: 8px 0;
+            border: none;
+            text-align: left !important;
+        }
+
+        .user-table tbody td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 12px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .user-table tbody td:first-child {
+            display: none; /* Hide number column */
+        }
+
+        .action-buttons {
+            justify-content: flex-start;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .pagination-wrapper {
+            flex-direction: column;
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .pagination-info {
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .pagination-controls {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .pagination-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .pagination-numbers {
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            padding: 40px 15px;
+            min-height: 300px;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            font-size: 40px;
+        }
+
+        .empty-title {
+            font-size: 20px;
+        }
+
+        .empty-description {
+            font-size: 14px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .page-header {
+            padding: 15px 10px;
+        }
+
+        .page-title {
+            font-size: 20px;
+        }
+
+        .action-icon-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 14px;
+        }
+
+        .pagination-number {
+            width: 32px;
+            height: 32px;
+            font-size: 13px;
+        }
+    }
 </style>
 
 <div class="page-header">
@@ -384,24 +533,24 @@
             @foreach($customers as $index => $customer)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>
+                <td data-label="Company Name">
                     <div class="user-name">{{ $customer->company_name ?? $customer->name }}</div>
                 </td>
-                <td>
+                <td data-label="Company Address">
                     <div class="user-email">{{ $customer->company_address ?? '-' }}</div>
                 </td>
-                <td>
+                <td data-label="PIC Name">
                     <div style="color: #666;">{{ $customer->pic_name ?? '-' }}</div>
                 </td>
-                <td>
+                <td data-label="Contact Number">
                     <div style="color: #666;">{{ $customer->contact_number ?? $customer->phone ?? '-' }}</div>
                 </td>
-                <td>
+                <td data-label="Active">
                     <span class="Status-badge {{ $customer->is_active ? 'Status-Active' : 'Status-nonActive' }}">
                         {{ $customer->is_active ? 'Ya' : 'Tidak' }}
                     </span>
                 </td>
-                <td>
+                <td data-label="Actions">
                     <div class="action-buttons">
                         @if(auth()->user()->canManageVehicles())
                         <a href="{{ route('customers.edit', $customer) }}" class="action-icon-btn btn-edit" title="{{ __('customer.edit_customer') }}">

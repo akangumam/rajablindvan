@@ -154,25 +154,25 @@
                         @forelse($orders as $index => $order)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $order->vehicle->name ?? '-' }}</td>
-                            <td>{{ $order->vehicle->license_plate ?? '-' }}</td>
-                            <td>{{ $order->vehicle->year ?? '-' }}</td>
-                            <td>
+                            <td data-label="Vehicle Name">{{ $order->vehicle->name ?? '-' }}</td>
+                            <td data-label="License Plate">{{ $order->vehicle->license_plate ?? '-' }}</td>
+                            <td data-label="Year">{{ $order->vehicle->year ?? '-' }}</td>
+                            <td data-label="Customer">
                                 {{ $order->customer->name ?? '-' }}
                                 <a href="{{ route('customers.index') }}" class="btn btn-sm btn-link p-0 ms-1" title="Manage Customer">
                                     <i class="bi bi-person-gear"></i>
                                 </a>
                             </td>
-                            <td>
+                            <td data-label="Rental Type">
                                 @if($order->rental_type === 'Sewa Harian')
                                     <span class="badge bg-info">{{ $order->rental_type }}</span>
                                 @else
                                     <span class="badge bg-warning text-dark">{{ $order->rental_type }}</span>
                                 @endif
                             </td>
-                            <td>{{ $order->start_date->format('d M Y') }}</td>
-                            <td>{{ $order->end_date->format('d M Y') }}</td>
-                            <td>
+                            <td data-label="Start Date">{{ $order->start_date->format('d M Y') }}</td>
+                            <td data-label="End Date">{{ $order->end_date->format('d M Y') }}</td>
+                            <td data-label="Status">
                                 <span class="badge bg-{{ $order->status_color }}" 
                                     @if($order->rental_type === 'Sewa Harian')
                                         title="Hijau (Untuk semua sewa Harian)"
@@ -185,7 +185,7 @@
                                     <i class="bi bi-circle-fill"></i> {{ $order->status_text }}
                                 </span>
                             </td>
-                            <td>
+                            <td data-label="Actions">
                                 <div class="action-buttons">
                                     @if($order->status === 'Active')
                                     <form action="{{ route('orders.complete', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Mark this order as completed?')">
@@ -407,6 +407,194 @@
 
 .status-tab.active .badge {
     background: rgba(255,255,255,0.3);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px 15px;
+        gap: 15px;
+    }
+
+    .page-title {
+        font-size: 24px;
+    }
+
+    .page-title i {
+        font-size: 22px;
+    }
+
+    .page-subtitle {
+        font-size: 13px;
+    }
+
+    .page-header .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-input-wrapper {
+        max-width: 100%;
+    }
+
+    /* Status Tabs Mobile */
+    .status-tabs {
+        flex-direction: column;
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .status-tab {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    .status-tab i {
+        font-size: 16px;
+    }
+
+    .status-tab .badge {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+
+    /* Card Layout for Mobile */
+    .card {
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .card-header {
+        padding: 15px;
+    }
+
+    .card-header h5 {
+        font-size: 16px;
+    }
+
+    .card-body {
+        padding: 0;
+    }
+
+    /* Hide table, show card layout */
+    .table-responsive {
+        overflow: visible;
+    }
+
+    .table {
+        display: block;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody {
+        display: block;
+    }
+
+    .table tbody tr {
+        display: block;
+        margin: 0;
+        padding: 15px;
+        border-bottom: 8px solid #f8f9fa;
+        background: white;
+    }
+
+    .table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table tbody td {
+        display: block;
+        padding: 8px 0;
+        border: none;
+        text-align: left !important;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #6c757d;
+        font-size: 11px;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+    }
+
+    .table tbody td:first-child {
+        display: none; /* Hide number column */
+    }
+
+    .action-buttons {
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .action-icon-btn {
+        width: auto;
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .action-icon-btn i {
+        margin-right: 6px;
+    }
+
+    /* Keterangan Indikator Mobile */
+    .card.mt-4 .row {
+        flex-direction: column;
+    }
+
+    .card.mt-4 .col-md-6 {
+        margin-bottom: 15px;
+    }
+
+    .card.mt-4 h6 {
+        font-size: 14px;
+    }
+
+    .card.mt-4 .list-unstyled li {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: 15px 10px;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .status-tabs {
+        padding: 10px;
+    }
+
+    .status-tab {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .card-header {
+        padding: 12px;
+    }
+
+    .table tbody tr {
+        padding: 12px;
+    }
+
+    .badge {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
 }
 </style>
 @endsection
