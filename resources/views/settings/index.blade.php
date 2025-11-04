@@ -4,14 +4,21 @@
 
 @push('styles')
 <style>
+* {
+    box-sizing: border-box;
+}
+
 body {
     background-color: #f8f9fa;
+    overflow-x: hidden;
 }
 
 .settings-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .settings-header {
@@ -84,6 +91,9 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .settings-number {
@@ -91,10 +101,20 @@ body {
     font-weight: 500;
     color: #6c757d;
     font-size: 14px;
+    flex-shrink: 0;
 }
 
 .settings-label {
     font-size: 15px;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.settings-link-content i {
+    flex-shrink: 0;
 }
 
 .settings-arrow {
@@ -125,18 +145,33 @@ body {
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .main-content {
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding: 15px 10px !important;
+        overflow-x: hidden !important;
+    }
+
     .settings-container {
-        padding: 15px 10px;
+        padding: 10px;
         max-width: 100%;
+        width: 100%;
+        overflow-x: hidden;
     }
 
     .settings-header {
         padding: 15px;
         margin-bottom: 15px;
+        overflow-x: hidden;
     }
 
     .settings-header h4 {
         font-size: 16px;
+        word-wrap: break-word;
     }
 
     .settings-count {
@@ -145,6 +180,7 @@ body {
 
     .settings-section {
         margin-bottom: 15px;
+        overflow-x: hidden;
     }
 
     .settings-section-title {
@@ -152,14 +188,20 @@ body {
         font-size: 13px;
     }
 
+    .settings-item {
+        overflow-x: hidden;
+    }
+
     .settings-link {
         padding: 14px 15px;
+        overflow-x: hidden;
     }
 
     .settings-link-content {
         gap: 10px;
         flex: 1;
         min-width: 0;
+        overflow: hidden;
     }
 
     .settings-number {
@@ -172,6 +214,8 @@ body {
         font-size: 14px;
         white-space: normal;
         word-wrap: break-word;
+        overflow-wrap: break-word;
+        line-height: 1.4;
     }
 
     .settings-link-content i {
@@ -186,22 +230,25 @@ body {
 
     .settings-note {
         padding: 15px;
+        overflow-x: hidden;
     }
 
     .settings-note-title {
         font-size: 13px;
         margin-bottom: 10px;
+        word-wrap: break-word;
     }
 
     .settings-note-text {
         font-size: 13px;
         line-height: 1.6;
+        word-wrap: break-word;
     }
 }
 
 @media (max-width: 480px) {
     .settings-container {
-        padding: 10px 5px;
+        padding: 5px;
     }
 
     .settings-header {
