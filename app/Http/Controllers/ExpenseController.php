@@ -76,6 +76,10 @@ class ExpenseController extends Controller
         $expenseTypes = \App\Models\ExpenseType::active()->orderBy('name')->get();
         $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
         
+        // Get reference data for dropdowns
+        $expenseTypes = \App\Models\ExpenseType::active()->orderBy('name')->get();
+        $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
+        
         // If vehicle_id is provided in query string
         if ($request->has('vehicle_id')) {
             $vehicle = Vehicle::findOrFail($request->vehicle_id);

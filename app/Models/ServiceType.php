@@ -19,6 +19,9 @@ class ServiceType extends Model
         'is_active' => 'boolean',
     ];
 
+    /**
+     * Scope untuk data yang aktif
+     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

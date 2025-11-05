@@ -77,7 +77,6 @@
     @error('expense_type_id')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-    <small class="text-muted">Expense type will be configurable from Settings menu</small>
 </div>
 
 <!-- STNK Expiry Date (Hidden by default) -->
@@ -126,7 +125,6 @@
     @error('payment_method_id')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-    <small class="text-muted">Payment method will be configurable from Settings menu</small>
 </div>
 
 <!-- Notes -->
