@@ -72,6 +72,10 @@ class ExpenseController extends Controller
             $vehicles = Vehicle::active()->orderBy('name')->get();
         }
         
+        // Get reference data for dropdowns
+        $expenseTypes = \App\Models\ExpenseType::active()->orderBy('name')->get();
+        $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
+        
         // If vehicle_id is provided in query string
         if ($request->has('vehicle_id')) {
             $vehicle = Vehicle::findOrFail($request->vehicle_id);
@@ -81,10 +85,10 @@ class ExpenseController extends Controller
                 abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
             }
             
-            return view('expenses.create-new', compact('vehicles', 'vehicle'));
+            return view('expenses.create-new', compact('vehicles', 'vehicle', 'expenseTypes', 'paymentMethods'));
         }
         
-        return view('expenses.create-new', compact('vehicles'));
+        return view('expenses.create-new', compact('vehicles', 'expenseTypes', 'paymentMethods'));
     }
 
     /**

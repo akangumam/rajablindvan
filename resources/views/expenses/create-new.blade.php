@@ -66,7 +66,18 @@
 <!-- Type of Expense -->
 <div class="field-group">
     <label class="form-label">Type of Expense</label>
-    <input type="text" name="expense_type" id="expenseTypeField" class="form-control" value="{{ old('expense_type') }}" placeholder="Select expense type" onclick="openExpenseTypeModal()" readonly required>
+    <select name="expense_type_id" class="form-control @error('expense_type_id') is-invalid @enderror" required>
+        <option value="">Select Expense Type</option>
+        @foreach($expenseTypes as $expenseType)
+            <option value="{{ $expenseType->id }}" {{ old('expense_type_id') == $expenseType->id ? 'selected' : '' }}>
+                {{ $expenseType->name }}
+            </option>
+        @endforeach
+    </select>
+    @error('expense_type_id')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    <small class="text-muted">Expense type will be configurable from Settings menu</small>
 </div>
 
 <!-- STNK Expiry Date (Hidden by default) -->
@@ -104,7 +115,18 @@
 <!-- Payment Method -->
 <div class="field-group">
     <label class="form-label">Payment Method</label>
-    <input type="text" name="payment_method" class="form-control" value="{{ old('payment_method') }}" placeholder="Select payment method" onclick="openPaymentMethodModal()" readonly required>
+    <select name="payment_method_id" class="form-control @error('payment_method_id') is-invalid @enderror" required>
+        <option value="">Select Payment Method</option>
+        @foreach($paymentMethods as $paymentMethod)
+            <option value="{{ $paymentMethod->id }}" {{ old('payment_method_id') == $paymentMethod->id ? 'selected' : '' }}>
+                {{ $paymentMethod->name }}
+            </option>
+        @endforeach
+    </select>
+    @error('payment_method_id')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    <small class="text-muted">Payment method will be configurable from Settings menu</small>
 </div>
 
 <!-- Notes -->

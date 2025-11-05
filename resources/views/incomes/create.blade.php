@@ -40,18 +40,18 @@
     @enderror
 </div>
 
-<!-- 4. Type of Income (Dropdown - will be based on setting menu) -->
+<!-- 4. Type of Income (Dropdown - from income_types table) -->
 <div class="mb-4">
     <label class="form-label">Type of Income <span class="text-danger">*</span></label>
-    <select name="type" class="form-control @error('type') is-invalid @enderror" required>
-        <option value="">Select Type</option>
-        <option value="Rental" {{ old('type') == 'Rental' ? 'selected' : '' }}>Rental</option>
-        <option value="Service" {{ old('type') == 'Service' ? 'selected' : '' }}>Service</option>
-        <option value="Transport" {{ old('type') == 'Transport' ? 'selected' : '' }}>Transport</option>
-        <option value="Delivery" {{ old('type') == 'Delivery' ? 'selected' : '' }}>Delivery</option>
-        <option value="Others" {{ old('type') == 'Others' ? 'selected' : '' }}>Others</option>
+    <select name="income_type_id" class="form-control @error('income_type_id') is-invalid @enderror" required>
+        <option value="">Select Income Type</option>
+        @foreach($incomeTypes as $incomeType)
+            <option value="{{ $incomeType->id }}" {{ old('income_type_id') == $incomeType->id ? 'selected' : '' }}>
+                {{ $incomeType->name }}
+            </option>
+        @endforeach
     </select>
-    @error('type')
+    @error('income_type_id')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
     <small class="text-muted">Income type will be configurable from Settings menu</small>
@@ -69,14 +69,31 @@
     @enderror
 </div>
 
-<!-- 6. User (based on account logged in - readonly display) -->
+<!-- 6. Payment Method (Dropdown - from payment_methods table) -->
+<div class="mb-4">
+    <label class="form-label">Payment Method <span class="text-danger">*</span></label>
+    <select name="payment_method_id" class="form-control @error('payment_method_id') is-invalid @enderror" required>
+        <option value="">Select Payment Method</option>
+        @foreach($paymentMethods as $paymentMethod)
+            <option value="{{ $paymentMethod->id }}" {{ old('payment_method_id') == $paymentMethod->id ? 'selected' : '' }}>
+                {{ $paymentMethod->name }}
+            </option>
+        @endforeach
+    </select>
+    @error('payment_method_id')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    <small class="text-muted">Payment method will be configurable from Settings menu</small>
+</div>
+
+<!-- 7. User (based on account logged in - readonly display) -->
 <div class="mb-4">
     <label class="form-label">User</label>
     <input type="text" class="form-control" value="{{ auth()->check() ? auth()->user()->name : 'Guest' }}" readonly style="background-color: #f8f9fa;">
     <small class="text-muted">Automatically set to logged in user</small>
 </div>
 
-<!-- 7. Notes (free Text) -->
+<!-- 8. Notes (free Text) -->
 <div class="mb-4">
     <label class="form-label">Notes</label>
     <textarea name="notes" class="form-control @error('notes') is-invalid @enderror" rows="3" placeholder="Add notes (optional)">{{ old('notes') }}</textarea>

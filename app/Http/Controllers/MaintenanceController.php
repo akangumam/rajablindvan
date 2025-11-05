@@ -53,6 +53,10 @@ class MaintenanceController extends Controller
         
         $users = \App\Models\User::orderBy('name')->get();
         
+        // Get reference data for dropdowns
+        $serviceTypes = \App\Models\ServiceType::active()->orderBy('name')->get();
+        $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
+        
         // If vehicle_id is provided in query string
         if ($request->has('vehicle_id')) {
             $vehicle = Vehicle::findOrFail($request->vehicle_id);
@@ -62,10 +66,10 @@ class MaintenanceController extends Controller
                 abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
             }
             
-            return view('maintenances.create-new', compact('vehicles', 'vehicle', 'users'));
+            return view('maintenances.create-new', compact('vehicles', 'vehicle', 'users', 'serviceTypes', 'paymentMethods'));
         }
         
-        return view('maintenances.create-new', compact('vehicles', 'users'));
+        return view('maintenances.create-new', compact('vehicles', 'users', 'serviceTypes', 'paymentMethods'));
     }
 
     /**

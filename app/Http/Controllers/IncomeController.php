@@ -51,6 +51,10 @@ class IncomeController extends Controller
             $vehicles = Vehicle::active()->orderBy('name')->get();
         }
         
+        // Get reference data for dropdowns
+        $incomeTypes = \App\Models\IncomeType::active()->orderBy('name')->get();
+        $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
+        
         // If vehicle_id is provided in query string
         if ($request->has('vehicle_id')) {
             $vehicle = Vehicle::findOrFail($request->vehicle_id);
@@ -60,10 +64,10 @@ class IncomeController extends Controller
                 abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
             }
             
-            return view('incomes.create', compact('vehicles', 'vehicle'));
+            return view('incomes.create', compact('vehicles', 'vehicle', 'incomeTypes', 'paymentMethods'));
         }
         
-        return view('incomes.create', compact('vehicles'));
+        return view('incomes.create', compact('vehicles', 'incomeTypes', 'paymentMethods'));
     }
 
     /**

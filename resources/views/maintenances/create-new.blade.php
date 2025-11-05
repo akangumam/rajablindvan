@@ -73,12 +73,18 @@
 <!-- Service Type -->
 <div class="field-group">
     <label class="form-label">Service Type</label>
-    <div id="serviceTypesDisplay" class="form-control" 
-         onclick="openServiceTypesModal()" 
-         style="cursor: pointer; background: white; min-height: 45px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
-        <span class="text-muted" id="serviceTypesPlaceholder">Select Service Type</span>
-    </div>
-    <input type="hidden" name="service_types" id="serviceTypesInput" required>
+    <select name="service_type_id" class="form-control @error('service_type_id') is-invalid @enderror" required>
+        <option value="">Select Service Type</option>
+        @foreach($serviceTypes as $serviceType)
+            <option value="{{ $serviceType->id }}" {{ old('service_type_id') == $serviceType->id ? 'selected' : '' }}>
+                {{ $serviceType->name }}
+            </option>
+        @endforeach
+    </select>
+    @error('service_type_id')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    <small class="text-muted">Service type will be configurable from Settings menu</small>
 </div>
 
 <!-- Place -->
@@ -101,12 +107,18 @@
 <!-- Payment Method -->
 <div class="field-group">
     <label class="form-label">Payment Method</label>
-    <input type="text" name="payment_method" id="paymentMethodInput" class="form-control"
-           value="{{ old('payment_method') }}"
-           placeholder="Select Payment Method"
-           readonly
-           onclick="openPaymentMethodModal()"
-           style="cursor: pointer; background: white;">
+    <select name="payment_method_id" class="form-control @error('payment_method_id') is-invalid @enderror" required>
+        <option value="">Select Payment Method</option>
+        @foreach($paymentMethods as $paymentMethod)
+            <option value="{{ $paymentMethod->id }}" {{ old('payment_method_id') == $paymentMethod->id ? 'selected' : '' }}>
+                {{ $paymentMethod->name }}
+            </option>
+        @endforeach
+    </select>
+    @error('payment_method_id')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    <small class="text-muted">Payment method will be configurable from Settings menu</small>
 </div>
 
 <!-- Upload Attachment -->
