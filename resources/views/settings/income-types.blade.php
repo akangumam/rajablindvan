@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Settings - Type of Income')
+@section('title', 'Pengaturan - Jenis Pendapatan')
 
 @push('styles')
 <style>
@@ -381,71 +381,71 @@
 <div class="page-header">
     <h1 class="page-title">
         <i class="fas fa-cog"></i>
-        Settings
+        Pengaturan
     </h1>
-    <p class="page-subtitle">Configure your application preferences and formatting options</p>
+    <p class="page-subtitle">Konfigurasi preferensi aplikasi dan opsi format</p>
 </div>
 
 <div class="settings-page-layout">
     <div class="settings-page-sidebar">
         <div class="settings-page-sidebar-header">
-            <h2 class="settings-page-sidebar-title">Settings</h2>
+            <h2 class="settings-page-sidebar-title">Pengaturan</h2>
         </div>
         <ul class="settings-page-menu">
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.format') }}" class="settings-page-menu-link">
                     <i class="fas fa-sliders-h" style="color: #667eea; font-size: 14px; margin-right: 12px;"></i>
-                    Apps Format
+                    Format Aplikasi
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.account') }}" class="settings-page-menu-link">
                     <i class="fas fa-user-circle" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
-                    My Account
+                    Akun Saya
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.file-storage') }}" class="settings-page-menu-link">
                     <i class="fas fa-folder-open" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
-                    File and Storage
+                    File dan Penyimpanan
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.locations') }}" class="settings-page-menu-link">
                     <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 14px; margin-right: 12px;"></i>
-                    Place
+                    Tempat
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
-                    Types of Service
+                    Jenis Service
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Expense
+                    Jenis Pengeluaran
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link active">
                     <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Income
+                    Jenis Pendapatan
                 </a>
             </li>
             @if(auth()->user()->hasRole(['super_admin']))
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.investors.index') }}" class="settings-page-menu-link">
                     <i class="fas fa-user-tie" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
-                    Investors
+                    Investor
                 </a>
             </li>
             @endif
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.payment-methods') }}" class="settings-page-menu-link">
                     <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
-                    Payment Methods
+                    Metode Pembayaran
                 </a>
             </li>
         </ul>
@@ -453,7 +453,7 @@
 
     <div class="settings-page-content">
         <div class="settings-page-content-header">
-            <h1 class="settings-page-content-title">Type of Income</h1>
+            <h1 class="settings-page-content-title">Jenis Pendapatan</h1>
         </div>
 
         @if(session('success'))
@@ -469,13 +469,13 @@
                     <div class="income-list-header">
                         <span>Income Types</span>
                         <button class="btn-add" onclick="openAddModal()">
-                            <i class="fas fa-plus me-1"></i> ADD NEW INCOME
+                            <i class="fas fa-plus me-1"></i> TAMBAH BARU INCOME
                         </button>
                     </div>
                     
                     @if($incomeTypes->isEmpty())
                         <div class="income-list-item" style="justify-content: center; color: #999;">
-                            No income types found. Click "ADD NEW INCOME" to create one.
+                            No income types found. Click "TAMBAH BARU INCOME" to create one.
                         </div>
                     @else
                         @foreach($incomeTypes as $incomeType)
@@ -507,20 +507,20 @@
 <div id="incomeModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title" id="modalTitle">Add New Income Type</h2>
+            <h2 class="modal-title" id="modalTitle">TAMBAH BARU Income Type</h2>
             <button class="close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
             <form id="incomeForm">
                 <div class="form-group">
                     <label class="form-label">Income Type Name</label>
-                    <input type="text" class="form-control" id="incomeName" placeholder="Enter income type name" required>
+                    <input type="text" class="form-control" id="incomeName" Tempatholder="Enter income type name" required>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn-secondary" onclick="closeModal()">CANCEL</button>
-            <button type="button" class="btn-primary" onclick="saveIncome()">SAVE</button>
+            <button type="button" class="btn-secondary" onclick="closeModal()">BATAL</button>
+            <button type="button" class="btn-primary" onclick="SIMPANIncome()">SIMPAN</button>
         </div>
     </div>
 </div>
@@ -531,7 +531,7 @@ let isEditMode = false;
 
 function openAddModal() {
     isEditMode = false;
-    document.getElementById('modalTitle').textContent = 'Add New Income Type';
+    document.getElementById('modalTitle').textContent = 'TAMBAH BARU Income Type';
     document.getElementById('incomeId').value = '';
     document.getElementById('incomeName').value = '';
     document.getElementById('incomeDescription').value = '';
@@ -540,7 +540,7 @@ function openAddModal() {
 
 function openEditModal(id, name, description) {
     isEditMode = true;
-    document.getElementById('modalTitle').textContent = 'Edit Income Type';
+    document.getElementById('modalTitle').textContent = 'Edit Jenis Pendapatan';
     document.getElementById('incomeId').value = id;
     document.getElementById('incomeName').value = name;
     document.getElementById('incomeDescription').value = description || '';
@@ -551,7 +551,7 @@ function closeModal() {
     document.getElementById('incomeModal').classList.remove('show');
 }
 
-function saveIncome() {
+function SIMPANIncome() {
     const id = document.getElementById('incomeId').value;
     const name = document.getElementById('incomeName').value.trim();
     const description = document.getElementById('incomeDescription').value.trim();
@@ -562,7 +562,7 @@ function saveIncome() {
     }
 
     const url = isEditMode 
-        ? '{{ route("settings.income-types.update", ":id") }}'.replace(':id', id)
+        ? '{{ route("settings.income-types.update", ":id") }}'.reTempat(':id', id)
         : '{{ route("settings.income-types.store") }}';
     
     const method = isEditMode ? 'PUT' : 'POST';
@@ -591,13 +591,13 @@ function saveIncome() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Failed to save income type. Please try again.');
+        alert('Failed to SIMPAN income type. Please try again.');
     });
 }
 
 function confirmDelete(id, name) {
     if (confirm('Are you sure you want to delete "' + name + '"?')) {
-        fetch('{{ route("settings.income-types.destroy", ":id") }}'.replace(':id', id), {
+        fetch('{{ route("settings.income-types.destroy", ":id") }}'.reTempat(':id', id), {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

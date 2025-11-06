@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Investor Report: ' . $investor->name)
+@section('title', __('common.investor_financial_report') . ': ' . $investor->name)
 
 @section('content')
 <div class="page-header">
@@ -8,18 +8,18 @@
         <h1 class="page-title">
             <i class="fas fa-user-tie"></i> {{ $investor->name }}
         </h1>
-        <p class="page-subtitle">Investor Financial Report</p>
+        <p class="page-subtitle">{{ __('common.investor_financial_report') }}</p>
     </div>
     <div class="d-flex gap-2">
         <a href="{{ route('settings.investors.report', $investor) }}?start_date={{ $startDate }}&end_date={{ $endDate }}" 
            class="btn btn-danger">
-            <i class="fas fa-file-pdf"></i> Download PDF
+            <i class="fas fa-file-pdf"></i> {{ __('common.download_pdf') }}
         </a>
         <a href="{{ route('settings.investors.edit', $investor) }}" class="btn btn-warning">
-            <i class="fas fa-edit"></i> Edit
+            <i class="fas fa-edit"></i> {{ __('common.edit') }}
         </a>
         <a href="{{ route('settings.investors.index') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Back
+            <i class="fas fa-arrow-left"></i> {{ __('common.back') }}
         </a>
     </div>
 </div>
@@ -34,26 +34,26 @@
 <!-- Investor Info Card -->
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">
-        <h5 class="mb-0"><i class="fas fa-info-circle"></i> Investor Information</h5>
+        <h5 class="mb-0"><i class="fas fa-info-circle"></i> {{ __('common.investor_information') }}</h5>
     </div>
     <div class="card-body">
         <div class="row">
             <div class="col-md-6">
                 <table class="table table-sm table-borderless">
                     <tr>
-                        <td class="fw-bold" style="width: 150px;">Name:</td>
+                        <td class="fw-bold" style="width: 150px;">{{ __('common.name') }}:</td>
                         <td>{{ $investor->name }}</td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">Email:</td>
+                        <td class="fw-bold">{{ __('common.email') }}:</td>
                         <td>{{ $investor->email ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">Phone:</td>
+                        <td class="fw-bold">{{ __('common.phone') }}:</td>
                         <td>{{ $investor->phone ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">ID Number:</td>
+                        <td class="fw-bold">{{ __('common.id_number') }}:</td>
                         <td>{{ $investor->id_number ?? '-' }}</td>
                     </tr>
                 </table>
@@ -61,34 +61,34 @@
             <div class="col-md-6">
                 <table class="table table-sm table-borderless">
                     <tr>
-                        <td class="fw-bold" style="width: 180px;">Profit Share:</td>
+                        <td class="fw-bold" style="width: 180px;">{{ __('common.profit_share') }}:</td>
                         <td><span class="badge bg-success fs-6">{{ $investor->investment_percentage }}%</span></td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">Status:</td>
+                        <td class="fw-bold">{{ __('common.status') }}:</td>
                         <td>
                             @if($investor->status === 'active')
-                                <span class="badge bg-success">Active</span>
+                                <span class="badge bg-success">{{ __('common.active') }}</span>
                             @else
-                                <span class="badge bg-secondary">Inactive</span>
+                                <span class="badge bg-secondary">{{ __('common.inactive') }}</span>
                             @endif
                         </td>
                     </tr>
                     <tr>
-                        <td class="fw-bold">Total Vehicles:</td>
-                        <td><span class="badge bg-info">{{ $investor->vehicles->count() }} Units</span></td>
+                        <td class="fw-bold">{{ __('common.total_vehicles') }}:</td>
+                        <td><span class="badge bg-info">{{ $investor->vehicles->count() }} {{ __('common.units') }}</span></td>
                     </tr>
                 </table>
             </div>
         </div>
         @if($investor->address)
             <div class="mt-2">
-                <strong>Address:</strong> {{ $investor->address }}
+                <strong>{{ __('common.address') }}:</strong> {{ $investor->address }}
             </div>
         @endif
         @if($investor->notes)
             <div class="mt-2">
-                <strong>Notes:</strong> {{ $investor->notes }}
+                <strong>{{ __('common.notes') }}:</strong> {{ $investor->notes }}
             </div>
         @endif
     </div>
@@ -99,19 +99,19 @@
     <div class="card-body">
         <form action="{{ route('settings.investors.show', $investor) }}" method="GET" class="row g-3">
             <div class="col-md-4">
-                <label class="form-label">Start Date</label>
+                <label class="form-label">{{ __('common.start_date') }}</label>
                 <input type="date" name="start_date" class="form-control" value="{{ $startDate }}">
             </div>
             <div class="col-md-4">
-                <label class="form-label">End Date</label>
+                <label class="form-label">{{ __('common.end_date') }}</label>
                 <input type="date" name="end_date" class="form-control" value="{{ $endDate }}">
             </div>
             <div class="col-md-4 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary me-2">
-                    <i class="fas fa-filter"></i> Filter
+                    <i class="fas fa-filter"></i> {{ __('common.filter') }}
                 </button>
                 <a href="{{ route('settings.investors.show', $investor) }}" class="btn btn-secondary">
-                    <i class="fas fa-redo"></i> Reset
+                    <i class="fas fa-redo"></i> {{ __('common.reset') }}
                 </a>
             </div>
         </form>
@@ -123,36 +123,36 @@
     <div class="col-md-3">
         <div class="card bg-success text-white">
             <div class="card-body">
-                <h6 class="card-title">Total Income</h6>
+                <h6 class="card-title">{{ __('common.total_income') }}</h6>
                 <h3>Rp {{ number_format($totalIncome, 0, ',', '.') }}</h3>
-                <small>From {{ $rentals->count() }} rentals</small>
+                <small>{{ __('common.from_rentals', ['count' => $rentals->count()]) }}</small>
             </div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card bg-danger text-white">
             <div class="card-body">
-                <h6 class="card-title">Total Expenses</h6>
+                <h6 class="card-title">{{ __('common.total_expenses') }}</h6>
                 <h3>Rp {{ number_format($totalExpenses, 0, ',', '.') }}</h3>
-                <small>Fuel, Service, Others</small>
+                <small>{{ __('common.fuel_service_others') }}</small>
             </div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card bg-info text-white">
             <div class="card-body">
-                <h6 class="card-title">Net Profit</h6>
+                <h6 class="card-title">{{ __('common.net_profit') }}</h6>
                 <h3>Rp {{ number_format($netProfit, 0, ',', '.') }}</h3>
-                <small>Income - Expenses</small>
+                <small>{{ __('common.income_minus_expenses') }}</small>
             </div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card bg-warning text-dark">
             <div class="card-body">
-                <h6 class="card-title">Investor Share ({{ $investor->investment_percentage }}%)</h6>
+                <h6 class="card-title">{{ __('common.investor_share') }} ({{ $investor->investment_percentage }}%)</h6>
                 <h3>Rp {{ number_format($investorShare, 0, ',', '.') }}</h3>
-                <small>From net profit</small>
+                <small>{{ __('common.from_net_profit') }}</small>
             </div>
         </div>
     </div>
@@ -161,7 +161,7 @@
 <!-- Vehicles List -->
 <div class="card mb-4">
     <div class="card-header">
-        <h5 class="mb-0"><i class="fas fa-car"></i> Vehicles List</h5>
+        <h5 class="mb-0"><i class="fas fa-car"></i> {{ __('common.vehicles_list') }}</h5>
     </div>
     <div class="card-body">
         @if($investor->vehicles->count() > 0)
@@ -169,11 +169,11 @@
                 <table class="table table-sm table-hover">
                     <thead>
                         <tr>
-                            <th>Vehicle Name</th>
-                            <th>License Plate</th>
-                            <th>Brand</th>
-                            <th>Year</th>
-                            <th>Status</th>
+                            <th>{{ __('common.vehicle_name') }}</th>
+                            <th>{{ __('common.license_plate') }}</th>
+                            <th>{{ __('common.brand') }}</th>
+                            <th>{{ __('common.year') }}</th>
+                            <th>{{ __('common.status') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -189,9 +189,9 @@
                                 <td>{{ $vehicle->year }}</td>
                                 <td>
                                     @if($vehicle->is_active)
-                                        <span class="badge bg-success">Active</span>
+                                        <span class="badge bg-success">{{ __('common.active') }}</span>
                                     @else
-                                        <span class="badge bg-secondary">Inactive</span>
+                                        <span class="badge bg-secondary">{{ __('common.inactive') }}</span>
                                     @endif
                                 </td>
                             </tr>
@@ -200,7 +200,7 @@
                 </table>
             </div>
         @else
-            <p class="text-muted text-center py-4">No vehicles for this investor yet</p>
+            <p class="text-muted text-center py-4">{{ __('common.no_vehicles_yet') }}</p>
         @endif
     </div>
 </div>
@@ -208,7 +208,7 @@
 <!-- Rentals Table -->
 <div class="card mb-4">
     <div class="card-header">
-        <h5 class="mb-0"><i class="fas fa-calendar-check"></i> Rental History ({{ $rentals->count() }})</h5>
+        <h5 class="mb-0"><i class="fas fa-calendar-check"></i> {{ __('common.rental_history') }} ({{ $rentals->count() }})</h5>
     </div>
     <div class="card-body">
         @if($rentals->count() > 0)
@@ -216,11 +216,11 @@
                 <table class="table table-sm table-striped">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Vehicle</th>
-                            <th>Customer</th>
-                            <th>Duration</th>
-                            <th class="text-end">Total</th>
+                            <th>{{ __('common.date') }}</th>
+                            <th>{{ __('common.vehicles') }}</th>
+                            <th>{{ __('common.customers') }}</th>
+                            <th>{{ __('common.duration') }}</th>
+                            <th class="text-end">{{ __('common.total') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -229,21 +229,21 @@
                                 <td>{{ $rental->start_date->format('d/m/Y') }}</td>
                                 <td>{{ $rental->vehicle->name }} - {{ $rental->vehicle->license_plate }}</td>
                                 <td>{{ $rental->customer->name }}</td>
-                                <td>{{ $rental->duration }} days</td>
+                                <td>{{ $rental->duration }} {{ __('common.days') }}</td>
                                 <td class="text-end">Rp {{ number_format($rental->total_price, 0, ',', '.') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr class="fw-bold bg-light">
-                            <td colspan="4" class="text-end">TOTAL INCOME:</td>
+                            <td colspan="4" class="text-end">{{ __('common.total_income_label') }}:</td>
                             <td class="text-end">Rp {{ number_format($totalIncome, 0, ',', '.') }}</td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
         @else
-            <p class="text-muted text-center py-4">No rentals in this period</p>
+            <p class="text-muted text-center py-4">{{ __('common.no_rentals_period') }}</p>
         @endif
     </div>
 </div>
@@ -254,7 +254,7 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header bg-warning">
-                <h6 class="mb-0"><i class="fas fa-gas-pump"></i> Fuel Fills ({{ $fuelFills->count() }})</h6>
+                <h6 class="mb-0"><i class="fas fa-gas-pump"></i> {{ __('common.fuel_fills') }} ({{ $fuelFills->count() }})</h6>
             </div>
             <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                 @if($fuelFills->count() > 0)
@@ -264,14 +264,14 @@
                                 <small>{{ $fuel->vehicle->license_plate }} - {{ $fuel->fill_date->format('d/m/Y') }}</small>
                                 <strong>Rp {{ number_format($fuel->total_price, 0, ',', '.') }}</strong>
                             </div>
-                            <small class="text-muted">{{ $fuel->volume }}L @ Rp {{ number_format($fuel->price_per_liter, 0, ',', '.') }}/L</small>
+                            <small class="text-muted">{{ $fuel->volume }}{{ __('common.liter') }} @ Rp {{ number_format($fuel->price_per_liter, 0, ',', '.') }}/{{ __('common.liter') }}</small>
                         </div>
                     @endforeach
                     <div class="pt-2 border-top fw-bold">
-                        Total: Rp {{ number_format($fuelFills->sum('total_price'), 0, ',', '.') }}
+                        {{ __('common.total') }}: Rp {{ number_format($fuelFills->sum('total_price'), 0, ',', '.') }}
                     </div>
                 @else
-                    <p class="text-muted text-center">No data</p>
+                    <p class="text-muted text-center">{{ __('common.no_data') }}</p>
                 @endif
             </div>
         </div>
@@ -281,7 +281,7 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header bg-info text-white">
-                <h6 class="mb-0"><i class="fas fa-wrench"></i> Maintenances ({{ $maintenances->count() }})</h6>
+                <h6 class="mb-0"><i class="fas fa-wrench"></i> {{ __('common.maintenances') }} ({{ $maintenances->count() }})</h6>
             </div>
             <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                 @if($maintenances->count() > 0)
@@ -295,10 +295,10 @@
                         </div>
                     @endforeach
                     <div class="pt-2 border-top fw-bold">
-                        Total: Rp {{ number_format($maintenances->sum('cost'), 0, ',', '.') }}
+                        {{ __('common.total') }}: Rp {{ number_format($maintenances->sum('cost'), 0, ',', '.') }}
                     </div>
                 @else
-                    <p class="text-muted text-center">No data</p>
+                    <p class="text-muted text-center">{{ __('common.no_data') }}</p>
                 @endif
             </div>
         </div>
@@ -308,24 +308,24 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header bg-secondary text-white">
-                <h6 class="mb-0"><i class="fas fa-receipt"></i> Other Expenses ({{ $expenses->count() }})</h6>
+                <h6 class="mb-0"><i class="fas fa-receipt"></i> {{ __('common.other_expenses') }} ({{ $expenses->count() }})</h6>
             </div>
             <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                 @if($expenses->count() > 0)
                     @foreach($expenses as $expense)
                         <div class="border-bottom pb-2 mb-2">
                             <div class="d-flex justify-content-between">
-                                <small>{{ $expense->vehicle->license_plate ?? 'General' }} - {{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</small>
+                                <small>{{ $expense->vehicle->license_plate ?? __('common.general') }} - {{ \Carbon\Carbon::parse($expense->date)->format('d/m/Y') }}</small>
                                 <strong>Rp {{ number_format($expense->amount, 0, ',', '.') }}</strong>
                             </div>
                             <small class="text-muted">{{ $expense->description }}</small>
                         </div>
                     @endforeach
                     <div class="pt-2 border-top fw-bold">
-                        Total: Rp {{ number_format($expenses->sum('amount'), 0, ',', '.') }}
+                        {{ __('common.total') }}: Rp {{ number_format($expenses->sum('amount'), 0, ',', '.') }}
                     </div>
                 @else
-                    <p class="text-muted text-center">No data</p>
+                    <p class="text-muted text-center">{{ __('common.no_data') }}</p>
                 @endif
             </div>
         </div>

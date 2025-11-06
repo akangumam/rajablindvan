@@ -1,11 +1,11 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Add Investor')
+@section('title', __('common.add_investor'))
 
 @section('content')
 <div class="page-header">
     <h1 class="page-title">
-        <i class="fas fa-user-tie"></i> Add New Investor
+        <i class="fas fa-user-tie"></i> {{ __('common.add_investor') }}
     </h1>
 </div>
 
@@ -16,7 +16,7 @@
             
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="name" class="form-label">Investor Name <span class="text-danger">*</span></label>
+                    <label for="name" class="form-label">{{ __('common.investor_name') }} <span class="text-danger">*</span></label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" 
                            id="name" name="name" value="{{ old('name') }}" required>
                     @error('name')
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label">{{ __('common.email') }}</label>
                     <input type="email" class="form-control @error('email') is-invalid @enderror" 
                            id="email" name="email" value="{{ old('email') }}">
                     @error('email')
@@ -36,7 +36,7 @@
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="phone" class="form-label">Phone Number</label>
+                    <label for="phone" class="form-label">{{ __('common.phone') }}</label>
                     <input type="text" class="form-control @error('phone') is-invalid @enderror" 
                            id="phone" name="phone" value="{{ old('phone') }}">
                     @error('phone')

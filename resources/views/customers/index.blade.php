@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Data Pengguna')
+@section('title', __('common.customers'))
 
 @section('content')
 <style>
@@ -476,13 +476,13 @@
     <div>
         <h1 class="page-title">
             <i class="fas fa-users"></i>
-            Customers
+            {{ __('common.customers') }}
         </h1>
-        <p class="page-subtitle">Manage customer information and contact details</p>
+        <p class="page-subtitle">{{ __('common.manage_customer_info') }}</p>
     </div>
     @if(auth()->user()->canManageVehicles())
     <a href="{{ route('customers.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus-circle"></i> Add New Customer
+        <i class="fas fa-plus-circle"></i> {{ __('common.add_new_customer') }}
     </a>
     @endif
 </div>

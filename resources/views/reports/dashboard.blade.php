@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Report Dashboard')
+@section('title', __('common.report_dashboard'))
 
 @section('content')
 <div class="container-fluid py-4">
@@ -10,26 +10,26 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="mb-0">
                     <i class="fas fa-chart-line text-primary me-2"></i>
-                    Dashboard Report
+                    {{ __('common.dashboard_report') }}
                 </h2>
                 <div class="btn-group">
                     <a href="{{ route('reports.dashboard', ['period' => 'week']) }}" 
                        class="btn btn-{{ $period == 'week' ? 'primary' : 'outline-primary' }} btn-sm">
-                        This Week
+                        {{ __('common.this_week') }}
                     </a>
                     <a href="{{ route('reports.dashboard', ['period' => 'month']) }}" 
                        class="btn btn-{{ $period == 'month' ? 'primary' : 'outline-primary' }} btn-sm">
-                        This Month
+                        {{ __('common.this_month') }}
                     </a>
                     <a href="{{ route('reports.dashboard', ['period' => 'year']) }}" 
                        class="btn btn-{{ $period == 'year' ? 'primary' : 'outline-primary' }} btn-sm">
-                        This Year
+                        {{ __('common.this_year') }}
                     </a>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('reports.dashboard.pdf', request()->query()) }}" 
                        class="btn btn-danger" target="_blank">
-                        <i class="fas fa-file-pdf me-1"></i>Export PDF
+                        <i class="fas fa-file-pdf me-1"></i>{{ __('common.export_pdf') }}
                     </a>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Rental
+                                {{ __('common.total_rental') }}
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalRentals }}</div>
                         </div>
@@ -62,7 +62,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Revenue
+                                {{ __('common.revenue') }}
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 Rp {{ number_format($totalRevenue, 0, ',', '.') }}
@@ -82,7 +82,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Rental Active
+                                {{ __('common.rental_active') }}
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $activeRentals }}</div>
                         </div>
@@ -100,7 +100,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                available vehicles
+                                {{ __('common.available_vehicles') }}
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ $availableVehicles }}/{{ $totalVehicles }}
@@ -120,7 +120,7 @@
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Daily</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ __('common.revenue_daily') }}</h6>
                 </div>
                 <div class="card-body">
                     <canvas id="revenueChart"></canvas>
@@ -132,7 +132,7 @@
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Status Rental</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ __('common.status_rental') }}</h6>
                 </div>
                 <div class="card-body">
                     <canvas id="StatusChart"></canvas>
@@ -146,7 +146,7 @@
         <div class="col-xl-6 col-lg-6">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Top Performing Vehicles</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ __('common.top_performing_vehicles') }}</h6>
                 </div>
                 <div class="card-body">
                     @forelse($topVehicles as $vehicle)
@@ -162,7 +162,7 @@
                         </div>
                     </div>
                     @empty
-                    <p class="text-muted text-center">No data available Vehicle</p>
+                    <p class="text-muted text-center">{{ __('common.no_data_available_vehicle') }}</p>
                     @endforelse
                 </div>
             </div>
@@ -172,7 +172,7 @@
         <div class="col-xl-6 col-lg-6">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Top Customers</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ __('common.top_customers') }}</h6>
                 </div>
                 <div class="card-body">
                     @forelse($topCustomers as $customer)
@@ -188,7 +188,7 @@
                         </div>
                     </div>
                     @empty
-                    <p class="text-muted text-center">No data available customer</p>
+                    <p class="text-muted text-center">{{ __('common.no_data_available_customer') }}</p>
                     @endforelse
                 </div>
             </div>
@@ -200,7 +200,7 @@
         <div class="col-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Monthly Trend (Last 12 Months)</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ __('common.monthly_trend') }}</h6>
                 </div>
                 <div class="card-body">
                     <canvas id="monthlyTrendsChart"></canvas>
@@ -214,44 +214,44 @@
         <div class="col-12">
             <div class="card shadow">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Report Detail</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">{{ __('common.report_detail') }}</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('reports.rentals') }}" class="btn btn-outline-primary w-100">
                                 <i class="fas fa-calendar-alt mb-1"></i><br>
-                                Report Rental
+                                {{ __('common.report_rental') }}
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('reports.vehicles') }}" class="btn btn-outline-success w-100">
                                 <i class="fas fa-car mb-1"></i><br>
-                                Report Vehicle
+                                {{ __('common.report_vehicle') }}
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('reports.financial') }}" class="btn btn-outline-warning w-100">
                                 <i class="fas fa-chart-pie mb-1"></i><br>
-                                Report Keuangan
+                                {{ __('common.report_financial') }}
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('reports.customers') }}" class="btn btn-outline-info w-100">
                                 <i class="fas fa-users mb-1"></i><br>
-                                Report Customer
+                                {{ __('common.report_customer') }}
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('rentals.create') }}" class="btn btn-primary w-100">
                                 <i class="fas fa-plus mb-1"></i><br>
-                                New Rentals
+                                {{ __('common.new_rentals') }}
                             </a>
                         </div>
                         <div class="col-md-2 mb-3">
                             <a href="{{ route('vehicles.create') }}" class="btn btn-secondary w-100">
                                 <i class="fas fa-plus-circle mb-1"></i><br>
-                                New Vehicles
+                                {{ __('common.new_vehicles') }}
                             </a>
                         </div>
                     </div>
@@ -266,7 +266,7 @@
             <div class="card shadow">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-success">
-                        <i class="fas fa-file-excel me-2"></i>Export Report ke Excel
+                        <i class="fas fa-file-excel me-2"></i>{{ __('common.export_report_excel') }}
                     </h6>
                 </div>
                 <div class="card-body">
@@ -274,25 +274,25 @@
                         <div class="col-md-3 mb-3">
                             <a href="{{ route('reports.rentals.excel') }}" class="btn btn-success w-100">
                                 <i class="fas fa-calendar-alt mb-1"></i><br>
-                                Export Data Sewa
+                                {{ __('common.export_rental_data') }}
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="{{ route('reports.vehicles.excel') }}" class="btn btn-success w-100">
                                 <i class="fas fa-car mb-1"></i><br>
-                                Export Vehicle Data
+                                {{ __('common.export_vehicle_data') }}
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="{{ route('reports.financial.excel') }}" class="btn btn-success w-100">
                                 <i class="fas fa-chart-pie mb-1"></i><br>
-                                Export Report Keuangan
+                                {{ __('common.export_financial_report') }}
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="{{ route('reports.customers.excel') }}" class="btn btn-success w-100">
                                 <i class="fas fa-users mb-1"></i><br>
-                                Export Data Customer
+                                {{ __('common.export_customer_data') }}
                             </a>
                         </div>
                     </div>
@@ -300,7 +300,7 @@
                         <div class="col-12">
                             <div class="alert alert-info">
                                 <i class="fas fa-info-circle me-2"></i>
-                                <strong>Tips:</strong> File Excel akan diunduh otomatis. you dapat membuka file dengan Microsoft Excel atau Google Sheets untuk analisis lebih lanjut.
+                                <strong>Tips:</strong> {{ __('common.tips_excel') }}
                             </div>
                         </div>
                     </div>
@@ -358,10 +358,10 @@ document.addEventListener('DOMContentLoaded', function() {
         data: {
             labels: StatusData.map(item => {
                 const StatusLabels = {
-                    'reserved': 'Reservasi',
-                    'active': 'Active',
-                    'completed': 'End',
-                    'cancelled': 'DiCANCELkan'
+                    'reserved': '{{ __("common.reserved") }}',
+                    'active': '{{ __("common.active") }}',
+                    'completed': '{{ __("common.completed") }}',
+                    'cancelled': '{{ __("common.cancelled_status") }}'
                 };
                 return StatusLabels[item.Status] || item.Status;
             }),

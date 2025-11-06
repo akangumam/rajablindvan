@@ -665,11 +665,11 @@
             <i class="fas fa-car"></i>
             {{ __('common.vehicles') }}
         </h1>
-        <p class="page-subtitle">Manage your fleet vehicles and track their information</p>
+        <p class="page-subtitle">{{ __('common.manage_fleet_vehicles') }}</p>
     </div>
     @if(auth()->user()->canManageVehicles())
     <a href="{{ route('vehicles.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus-circle"></i> Add New Vehicle
+        <i class="fas fa-plus-circle"></i> {{ __('common.add_new_vehicle') }}
     </a>
     @endif
 </div>
@@ -694,7 +694,7 @@
         <input type="text" 
                name="search" 
                class="search-input" 
-               placeholder="{{ __('vehicle.search_placeholder') }}" 
+               placeholder="{{ __('common.search_vehicles') }}" 
                value="{{ request('search') }}">
         <button type="submit" class="search-btn">
             <i class="fas fa-search"></i>
@@ -708,13 +708,13 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Type</th>
+                <th>{{ __('common.type') }}</th>
                 <th>
                     <a href="{{ route('vehicles.index', array_merge(request()->except(['sort_by', 'sort_order', 'page']), [
                         'sort_by' => 'name',
                         'sort_order' => (request('sort_by') == 'name' && request('sort_order') == 'asc') ? 'desc' : 'asc'
                     ])) }}" class="sortable-header">
-                        {{ __('vehicle.nickname') }}
+                        {{ __('common.nickname') }}
                         @if(request('sort_by') == 'name' || !request('sort_by'))
                             <i class="fas fa-arrow-up sort-icon {{ request('sort_order') == 'desc' ? 'desc' : '' }}"></i>
                         @else
@@ -722,12 +722,12 @@
                         @endif
                     </a>
                 </th>
-                <th>License Plate</th>
-                <th>Year</th>
-                <th>{{ __('vehicle.brand') }}</th>
-                <th>{{ __('vehicle.model') }}</th>
-                <th>STATUS</th>
-                <th></th>
+                <th>{{ __('common.license_plate') }}</th>
+                <th>{{ __('common.year') }}</th>
+                <th>{{ __('common.brand') }}</th>
+                <th>{{ __('common.model') }}</th>
+                <th>{{ __('common.status') }}</th>
+                <th>{{ __('common.actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -774,14 +774,14 @@
                 </td>
                 <td>
                     <div class="action-buttons">
-                        <a href="{{ route('vehicles.export-pdf', $vehicle) }}" class="action-icon-btn btn-download" title="{{ __('vehicle.export_pdf') }}" target="_blank">
+                        <a href="{{ route('vehicles.export-pdf', $vehicle) }}" class="action-icon-btn btn-download" title="{{ __('common.export_pdf') }}" target="_blank">
                             <i class="fas fa-download"></i>
                         </a>
-                        <a href="{{ route('vehicles.show', $vehicle) }}" class="action-icon-btn btn-view" title="View Details">
+                        <a href="{{ route('vehicles.show', $vehicle) }}" class="action-icon-btn btn-view" title="{{ __('common.view_details') }}">
                             <i class="fas fa-eye"></i>
                         </a>
                         @if(auth()->user()->canManageVehicles())
-                        <a href="{{ route('vehicles.edit', $vehicle) }}" class="action-icon-btn btn-edit" title="{{ __('vehicle.edit_vehicle') }}">
+                        <a href="{{ route('vehicles.edit', $vehicle) }}" class="action-icon-btn btn-edit" title="{{ __('common.edit_vehicle') }}">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
                         @endif
@@ -789,7 +789,7 @@
                         <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event, '{{ $vehicle->name }}')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="action-icon-btn btn-delete" title="{{ __('common.delete') }} {{ __('common.vehicles') }}">
+                            <button type="submit" class="action-icon-btn btn-delete" title="{{ __('common.delete_vehicle') }}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -821,30 +821,30 @@
 
             <div class="vehicle-card-body">
                 <div class="vehicle-card-field">
-                    <div class="vehicle-card-label">Type</div>
+                    <div class="vehicle-card-label">{{ __('common.type') }}</div>
                     <div class="vehicle-card-value">{{ $vehicle->vehicle_type ?: '-' }}</div>
                 </div>
                 <div class="vehicle-card-field">
-                    <div class="vehicle-card-label">Year</div>
+                    <div class="vehicle-card-label">{{ __('common.year') }}</div>
                     <div class="vehicle-card-value">{{ $vehicle->year ?: '-' }}</div>
                 </div>
                 <div class="vehicle-card-field">
-                    <div class="vehicle-card-label">{{ __('vehicle.brand') }}</div>
+                    <div class="vehicle-card-label">{{ __('common.brand') }}</div>
                     <div class="vehicle-card-value">{{ $vehicle->brand }}</div>
                 </div>
                 <div class="vehicle-card-field">
-                    <div class="vehicle-card-label">{{ __('vehicle.model') }}</div>
+                    <div class="vehicle-card-label">{{ __('common.model') }}</div>
                     <div class="vehicle-card-value">{{ $vehicle->model }}</div>
                 </div>
             </div>
 
             <div class="vehicle-card-actions">
                 <a href="{{ route('vehicles.show', $vehicle) }}" class="btn btn-sm btn-primary">
-                    <i class="fas fa-eye me-1"></i> View
+                    <i class="fas fa-eye me-1"></i> {{ __('common.view_details') }}
                 </a>
                 @if(auth()->user()->canManageVehicles())
                 <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-warning">
-                    <i class="fas fa-pencil-alt me-1"></i> Edit
+                    <i class="fas fa-pencil-alt me-1"></i> {{ __('common.edit') }}
                 </a>
                 @endif
                 @if(auth()->user()->canDeleteRecords())
@@ -852,7 +852,7 @@
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-sm btn-danger" style="width: 100%;">
-                        <i class="fas fa-trash me-1"></i> Delete
+                        <i class="fas fa-trash me-1"></i> {{ __('common.delete') }}
                     </button>
                 </form>
                 @endif
@@ -866,18 +866,18 @@
 @if($vehicles->hasPages())
 <div class="pagination-wrapper">
     <div class="pagination-info">
-        {{ __('pagination.showing') }} {{ $vehicles->firstItem() }} {{ __('pagination.to') }} {{ $vehicles->lastItem() }} {{ __('pagination.of') }} {{ $vehicles->total() }} {{ __('pagination.results') }}
+        {{ __('common.showing') }} {{ $vehicles->firstItem() }} {{ __('common.to') }} {{ $vehicles->lastItem() }} {{ __('common.of') }} {{ $vehicles->total() }} {{ __('common.results') }}
     </div>
     
     <div class="pagination-controls">
         <!-- Previous Button -->
         @if($vehicles->onFirstPage())
             <span class="pagination-btn disabled">
-                <i class="fas fa-chevron-left"></i> {{ __('pagination.previous') }}
+                <i class="fas fa-chevron-left"></i> {{ __('common.previous') }}
             </span>
         @else
             <a href="{{ $vehicles->previousPageUrl() }}" class="pagination-btn">
-                <i class="fas fa-chevron-left"></i> {{ __('pagination.previous') }}
+                <i class="fas fa-chevron-left"></i> {{ __('common.previous') }}
             </a>
         @endif
         
@@ -895,11 +895,11 @@
         <!-- Next Button -->
         @if($vehicles->hasMorePages())
             <a href="{{ $vehicles->nextPageUrl() }}" class="pagination-btn">
-                {{ __('pagination.next') }} <i class="fas fa-chevron-right"></i>
+                {{ __('common.next') }} <i class="fas fa-chevron-right"></i>
             </a>
         @else
             <span class="pagination-btn disabled">
-                {{ __('pagination.next') }} <i class="fas fa-chevron-right"></i>
+                {{ __('common.next') }} <i class="fas fa-chevron-right"></i>
             </span>
         @endif
     </div>
@@ -911,25 +911,25 @@
     <div class="empty-icon">🚗</div>
     <h3 class="empty-title">
         @if(request('search'))
-            {{ __('vehicle.no_results') }}
+            {{ __('common.no_results') }}
         @else
-            {{ __('vehicle.no_vehicles') }}
+            {{ __('common.no_vehicles') }}
         @endif
     </h3>
     <p class="empty-description">
         @if(request('search'))
-            {{ __('vehicle.no_results_message', ['keyword' => request('search')]) }}
+            {{ __('common.no_results_message', ['keyword' => request('search')]) }}
         @else
-            {{ __('vehicle.no_vehicles_message') }}
+            {{ __('common.no_vehicles_message') }}
         @endif
     </p>
     @if(request('search'))
         <a href="{{ route('vehicles.index') }}" class="btn btn-secondary px-4">
-            <i class="fas fa-arrow-left me-2"></i>{{ __('vehicle.back_to_all') }}
+            <i class="fas fa-arrow-left me-2"></i>{{ __('common.back_to_all') }}
         </a>
     @else
         <a href="{{ route('vehicles.create') }}" class="btn btn-primary btn-lg px-4">
-            <i class="fas fa-plus-circle me-2"></i>{{ __('vehicle.add_first_vehicle') }}
+            <i class="fas fa-plus-circle me-2"></i>{{ __('common.add_first_vehicle') }}
         </a>
     @endif
 </div>
@@ -940,7 +940,7 @@
 function confirmDelete(event, vehicleName) {
     event.preventDefault();
     
-    if (confirm('{{ __("vehicle.confirm_delete") }}'.replace(':name', vehicleName))) {
+    if (confirm('{{ __("common.confirm_delete_vehicle") }}'.replace(':name', vehicleName))) {
         event.target.submit();
     }
     

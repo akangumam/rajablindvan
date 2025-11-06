@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Settings - Income Types')
+@section('title', 'Pengaturan - Income Types')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -11,11 +11,11 @@
                 <div class="card-header bg-white py-3">
                     <h5 class="mb-0">
                         <i class="bi bi-gear-fill text-primary me-2"></i>
-                        Settings
+                        Pengaturan
                     </h5>
                 </div>
                 <div class="list-group list-group-flush">
-                    <!-- Settings Sub-menu -->
+                    <!-- Pengaturan Sub-menu -->
                     <a href="{{ route('settings.units') }}" class="list-group-item list-group-item-action ps-4">
                         <i class="bi bi-speedometer2 text-muted me-2"></i>
                         Units
@@ -34,7 +34,7 @@
                     
                     <a href="{{ route('settings.account') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-person-circle text-muted me-2"></i>
-                        My Account
+                        Akun Saya
                     </a>
                     <a href="{{ route('settings.index') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-file-earmark-text text-muted me-2"></i>
@@ -70,7 +70,7 @@
                     </a>
                     <a href="{{ route('settings.payment-methods') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-credit-card text-muted me-2"></i>
-                        Payment Methods
+                        Metode Pembayaran
                     </a>
                     <a href="{{ route('settings.forms') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-file-earmark text-muted me-2"></i>
@@ -95,7 +95,7 @@
                         </button>
                     </div>
                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addIncomeTypeModal">
-                        ADD NEW
+                        TAMBAH BARU
                     </button>
                 </div>
                 
@@ -105,7 +105,7 @@
                         <span class="input-group-text bg-white">
                             <i class="bi bi-search"></i>
                         </span>
-                        <input type="text" class="form-control" id="searchInput" placeholder="Search Income Types...">
+                        <input type="text" class="form-control" id="searchInput" Tempatholder="Search Income Types...">
                     </div>
                 </div>
 
@@ -202,28 +202,28 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="incomeName" class="form-label">Name Income Types <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="incomeName" name="name" required placeholder="Contoh: Sewa Vehicle">
+                        <input type="text" class="form-control" id="incomeName" name="name" required Tempatholder="Contoh: Sewa Vehicle">
                     </div>
                     <div class="mb-3">
                         <label for="incomeDescription" class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="incomeDescription" name="description" rows="3" placeholder="Deskripsi Income Types (opsional)"></textarea>
+                        <textarea class="form-control" id="incomeDescription" name="description" rows="3" Tempatholder="Deskripsi Income Types (opsional)"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">BATAL</button>
+                    <button type="submit" class="btn btn-primary">SIMPAN</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal Edit Income Type (Example for first item) -->
+<!-- Modal Edit Jenis Pendapatan (Example for first item) -->
 <div class="modal fade" id="editIncomeTypeModal1" tabindex="-1" aria-labelledby="editIncomeTypeModalLabel1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editIncomeTypeModalLabel1">Edit Income Type</h5>
+                <h5 class="modal-title" id="editIncomeTypeModalLabel1">Edit Jenis Pendapatan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST" action="#">
@@ -236,11 +236,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="editIncomeDescription1" class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="editIncomeDescription1" name="description" rows="3" placeholder="Deskripsi Income Types (opsional)"></textarea>
+                        <textarea class="form-control" id="editIncomeDescription1" name="description" rows="3" Tempatholder="Deskripsi Income Types (opsional)"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">BATAL</button>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>
@@ -298,7 +298,7 @@
                 <p class="text-muted small mb-0">Deleted data cannot be restored.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">BATAL</button>
                 <form method="POST" action="#" style="display: inline;">
                     @csrf
                     @method('DELETE')

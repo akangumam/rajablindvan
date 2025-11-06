@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Settings - Place')
+@section('title', 'Pengaturan - Tempat')
 
 @push('styles')
 <style>
@@ -86,15 +86,15 @@
     margin: 0;
 }
 
-.place-section {
+.Lokasi-section {
     margin-bottom: 30px;
 }
 
-.place-field {
+.Lokasi-field {
     margin-bottom: 20px;
 }
 
-.place-field-label {
+.Lokasi-field-label {
     font-size: 13px;
     color: #6c757d;
     margin-bottom: 10px;
@@ -102,43 +102,79 @@
     font-weight: 500;
 }
 
-.place-list {
+.Lokasi-list {
     border: 1px solid #e9ecef;
     border-radius: 8px;
     overflow: hidden;
 }
 
-.place-list-header {
+.Lokasi-list-header {
     background: #f8f9fa;
     padding: 15px 20px;
     font-weight: 600;
     color: #333;
     font-size: 14px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
     align-items: center;
+    gap: 20px;
 }
 
-.place-list-item {
+.Lokasi-list-header > span:nth-child(1) {
+    justify-self: start;
+    padding-left: 30px;
+}
+
+.Lokasi-list-header > span:nth-child(2) {
+    justify-self: start;
+}
+
+.Lokasi-list-header > button {
+    justify-self: end;
+}
+
+/* Removed redundant CSS - using grid positioning instead */
+
+.Lokasi-list-item {
     padding: 15px 20px;
     border-top: 1px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
     align-items: center;
+    gap: 20px;
     transition: background 0.2s;
+    position: relative;
 }
 
-.place-list-item:hover {
+.Lokasi-list-item > .Lokasi-info {
+    justify-self: start;
+}
+
+.Lokasi-list-item > .Lokasi-address {
+    justify-self: start;
+}
+
+.Lokasi-list-item > .Lokasi-actions {
+    justify-self: end;
+}
+
+.Lokasi-list-item:hover {
     background: #f8f9fa;
 }
 
-.place-info {
+.Lokasi-info {
     display: flex;
     align-items: center;
     gap: 12px;
+    padding-left: 0;
 }
 
-.place-icon {
+.Lokasi-icon {
+    width: 18px;
+    flex-shrink: 0;
+}
+
+.Lokasi-icon {
     width: 40px;
     height: 40px;
     background: #e7f3ff;
@@ -150,13 +186,27 @@
     font-size: 18px;
 }
 
-.place-name {
+.Lokasi-name {
     font-size: 15px;
     color: #333;
     font-weight: 500;
+    text-align: left !important;
 }
 
-.place-actions {
+.Lokasi-address {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+    text-align: left !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    align-self: start;
+    justify-self: start;
+    position: relative;
+    left: 0;
+}
+
+.Lokasi-actions {
     display: flex;
     gap: 10px;
 }
@@ -190,6 +240,8 @@
     font-size: 13px;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
+    pointer-events: auto;
+    z-index: 10;
 }
 
 .btn-edit:hover {
@@ -208,6 +260,8 @@
     font-size: 13px;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
+    pointer-events: auto;
+    z-index: 10;
 }
 
 .btn-delete:hover {
@@ -393,71 +447,71 @@
 <div class="page-header">
     <h1 class="page-title">
         <i class="fas fa-cog"></i>
-        Settings
+        Pengaturan
     </h1>
-    <p class="page-subtitle">Configure your application preferences and formatting options</p>
+    <p class="page-subtitle">Konfigurasi preferensi aplikasi dan opsi format</p>
 </div>
 
 <div class="settings-page-layout">
     <div class="settings-page-sidebar">
         <div class="settings-page-sidebar-header">
-            <h2 class="settings-page-sidebar-title">Settings</h2>
+            <h2 class="settings-page-sidebar-title">Pengaturan</h2>
         </div>
         <ul class="settings-page-menu">
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.format') }}" class="settings-page-menu-link">
                     <i class="fas fa-sliders-h" style="color: #667eea; font-size: 14px; margin-right: 12px;"></i>
-                    Apps Format
+                    Format Aplikasi
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.account') }}" class="settings-page-menu-link">
                     <i class="fas fa-user-circle" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
-                    My Account
+                    Akun Saya
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.file-storage') }}" class="settings-page-menu-link">
                     <i class="fas fa-folder-open" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
-                    File and Storage
+                    File dan Penyimpanan
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.locations') }}" class="settings-page-menu-link active">
                     <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 14px; margin-right: 12px;"></i>
-                    Place
+                    Tempat
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Services
+                    Jenis Services
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Expense
+                    Jenis Pengeluaran
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Income
+                    Jenis Pendapatan
                 </a>
             </li>
             @if(auth()->user()->hasRole(['super_admin']))
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.investors.index') }}" class="settings-page-menu-link">
                     <i class="fas fa-user-tie" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
-                    Investors
+                    Investor
                 </a>
             </li>
             @endif
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.payment-methods') }}" class="settings-page-menu-link">
                     <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
-                    Payment Methods
+                    Metode Pembayaran
                 </a>
             </li>
         </ul>
@@ -465,7 +519,7 @@
 
     <div class="settings-page-content">
         <div class="settings-page-content-header">
-            <h1 class="settings-page-content-title">Place</h1>
+            <h1 class="settings-page-content-title">Tempat</h1>
         </div>
 
         @if(session('success'))
@@ -474,31 +528,35 @@
             </div>
         @endif
 
-        <div class="place-section">
-            <div class="place-field">
-                <label class="place-field-label">List of Places</label>
-                <div class="place-list">
-                    <div class="place-list-header">
-                        <span>Places</span>
+        <div class="lokasi-section">
+            <div class="Lokasi-field">
+                <label class="Lokasi-field-label">List of Tempat</label>
+                <div class="Lokasi-list">
+                    <div class="Lokasi-list-header">
+                        <span>Tempat</span>
+                        <span>Alamat</span>
                         <button class="btn-add" onclick="openAddModal()">
-                            <i class="fas fa-plus me-1"></i> ADD NEW PLACE
+                            <i class="fas fa-plus me-1"></i> TAMBAH TEMPAT BARU
                         </button>
                     </div>
                     
                     @if($locations->isEmpty())
-                        <div class="place-list-item" style="justify-content: center; color: #999;">
-                            No places found. Click "ADD NEW PLACE" to create one.
+                        <div class="Lokasi-list-item" style="grid-column: 1 / -1; justify-self: center; color: #999;">
+                            No Tempat found. Click "TAMBAH TEMPAT BARU" to create one.
                         </div>
                     @else
                         @foreach($locations as $location)
-                        <div class="place-list-item" data-id="{{ $location->id }}">
-                            <div class="place-info">
-                                <div class="place-icon">
+                        <div class="Lokasi-list-item" data-id="{{ $location->id }}">
+                            <div class="Lokasi-info">
+                                <div class="Lokasi-icon">
                                     <i class="fas fa-map-marker-alt"></i>
                                 </div>
-                                <div class="place-name">{{ $location->name }}</div>
+                                <div class="Lokasi-name">{{ $location->name }}</div>
                             </div>
-                            <div class="place-actions">
+                            <div class="Lokasi-address">
+                                {{ $location->address ?? 'Tidak ada alamat' }}
+                            </div>
+                            <div class="Lokasi-actions">
                                 <button class="btn-edit" onclick="openEditModal({{ $location->id }}, '{{ $location->name }}', '{{ $location->address }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -516,28 +574,28 @@
 </div>
 
 <!-- Add/Edit Modal -->
-<div id="placeModal" class="modal">
+<div id="LokasiModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title" id="modalTitle">Add New Place</h2>
+            <h2 class="modal-title" id="modalTitle">TAMBAH BARU Lokasi</h2>
             <button class="close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="placeForm">
-                <input type="hidden" id="placeId" value="">
+            <form id="LokasiForm">
+                <input type="hidden" id="LokasiId" value="">
                 <div class="form-group">
-                    <label class="form-label">Place Name *</label>
-                    <input type="text" class="form-control" id="placeName" placeholder="Enter place name" required>
+                    <label class="form-label">Lokasi Name *</label>
+                    <input type="text" class="form-control" id="LokasiName" Lokasiholder="Enter Lokasi name" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <textarea class="form-control" id="placeDescription" placeholder="Enter description (optional)" rows="3"></textarea>
+                    <textarea class="form-control" id="LokasiDescription" Lokasiholder="Enter description (optional)" rows="3"></textarea>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn-secondary" onclick="closeModal()">CANCEL</button>
-            <button type="button" class="btn-primary" onclick="savePlace()">SAVE</button>
+            <button type="button" class="btn-secondary" onclick="closeModal()">BATAL</button>
+            <button type="button" class="btn-primary" onclick="SIMPANLokasi()">SIMPAN</button>
         </div>
     </div>
 </div>
@@ -547,34 +605,36 @@
 let isEditMode = false;
 
 function openAddModal() {
+    console.log('openAddModal called'); // Debug log
     isEditMode = false;
-    document.getElementById('modalTitle').textContent = 'Add New Place';
-    document.getElementById('placeId').value = '';
-    document.getElementById('placeName').value = '';
-    document.getElementById('placeDescription').value = '';
-    document.getElementById('placeModal').classList.add('show');
+    document.getElementById('modalTitle').textContent = 'Add New Tempat';
+    document.getElementById('LokasiId').value = '';
+    document.getElementById('LokasiName').value = '';
+    document.getElementById('LokasiDescription').value = '';
+    document.getElementById('LokasiModal').classList.add('show');
 }
 
-function openEditModal(id, name, description) {
+function openEditModal(id, name, address) {
+    console.log('openEditModal called with id:', id); // Debug log
     isEditMode = true;
-    document.getElementById('modalTitle').textContent = 'Edit Place';
-    document.getElementById('placeId').value = id;
-    document.getElementById('placeName').value = name;
-    document.getElementById('placeDescription').value = description || '';
-    document.getElementById('placeModal').classList.add('show');
+    document.getElementById('modalTitle').textContent = 'Edit Tempat';
+    document.getElementById('LokasiId').value = id;
+    document.getElementById('LokasiName').value = name;
+    document.getElementById('LokasiDescription').value = address || '';
+    document.getElementById('LokasiModal').classList.add('show');
 }
 
 function closeModal() {
-    document.getElementById('placeModal').classList.remove('show');
+    document.getElementById('LokasiModal').classList.remove('show');
 }
 
-function savePlace() {
-    const id = document.getElementById('placeId').value;
-    const name = document.getElementById('placeName').value.trim();
-    const description = document.getElementById('placeDescription').value.trim();
+function SIMPANLokasi() {
+    const id = document.getElementById('LokasiId').value;
+    const name = document.getElementById('LokasiName').value.trim();
+    const description = document.getElementById('LokasiDescription').value.trim();
     
     if (!name) {
-        alert('Please enter place name');
+        alert('Please enter Lokasi name');
         return;
     }
 
@@ -608,7 +668,7 @@ function savePlace() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Failed to save place. Please try again.');
+        alert('Failed to SIMPAN Lokasi. Please try again.');
     });
 }
 
@@ -632,14 +692,14 @@ function confirmDelete(id, name) {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to delete place. Please try again.');
+            alert('Failed to delete Lokasi. Please try again.');
         });
     }
 }
 
 // Close modal when clicking outside
 window.onclick = function(event) {
-    const modal = document.getElementById('placeModal');
+    const modal = document.getElementById('LokasiModal');
     if (event.target == modal) {
         closeModal();
     }

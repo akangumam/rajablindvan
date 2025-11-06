@@ -15,7 +15,10 @@ class Location extends Model
         'address',
         'phone',
         'manager_name',
-        'is_active'
+        'is_active',
+        'latitude',
+        'longitude',
+        'google_place_id'
     ];
 
     protected $casts = [

@@ -211,4 +211,348 @@ return [
     'available' => 'Tersedia',
     'rented' => 'Disewa',
     'full_report' => 'LAPORAN PENUH',
+    'order_list' => 'Daftar Pesanan',
+    'users' => 'Pengguna',
+    'logout' => 'Keluar',
+    'settings' => 'Pengaturan',
+    'history' => 'Riwayat',
+    'investors' => 'Investor',
+    'add_investor' => 'Tambah Investor',
+    'edit_investor' => 'Edit Investor',
+    'investor_name' => 'Nama Investor',
+    'investment_percentage' => 'Persentase Investasi',
+    'id_number' => 'Nomor ID',
+    'generate_report' => 'Generate Laporan',
+    'investment_report' => 'Laporan Investasi',
+    'investor_vehicles' => 'Kendaraan Investor',
+    'rental_revenue' => 'Pendapatan Sewa',
+    'operational_costs' => 'Biaya Operasional',
+    'net_profit' => 'Keuntungan Bersih',
+    'period' => 'Periode',
+    'fuel_costs' => 'Biaya Bahan Bakar',
+    'maintenance_costs' => 'Biaya Perawatan',
+    'other_expenses' => 'Pengeluaran Lainnya',
+    
+    // Button Actions  
+    'create' => 'Buat',
+    'edit' => 'Edit',
+    'update' => 'Perbarui',
+    'save' => 'Simpan',
+    'delete' => 'Hapus',
+    'cancel' => 'Batal',
+    'back' => 'Kembali',
+    'show' => 'Tampilkan',
+    'view_details' => 'Lihat Detail',
+    'add_new' => 'Tambah Baru',
+    'close' => 'Tutup',
+    'submit' => 'Kirim',
+    'reset' => 'Reset',
+    'clear' => 'Bersihkan',
+    'confirm' => 'Konfirmasi',
+    'yes' => 'Ya',
+    'no' => 'Tidak',
+    
+    // Form Fields
+    'name' => 'Nama',
+    'email' => 'Email',
+    'phone' => 'Telepon',
+    'address' => 'Alamat',
+    'status' => 'Status',
+    'notes' => 'Catatan',
+    'description' => 'Deskripsi',
+    'amount' => 'Jumlah',
+    'date' => 'Tanggal',
+    'time' => 'Waktu',
+    'type' => 'Tipe',
+    'category' => 'Kategori',
+    'price' => 'Harga',
+    'total' => 'Total',
+    
+    // Status Values
+    'active' => 'Aktif',
+    'inactive' => 'Tidak Aktif',
+    'pending' => 'Menunggu',
+    'completed' => 'Selesai',
+    'cancelled' => 'Dibatalkan',
+    'approved' => 'Disetujui',
+    'rejected' => 'Ditolak',
+    
+    // Messages
+    'success' => 'Berhasil',
+    'error' => 'Terjadi Kesalahan',
+    'warning' => 'Peringatan',
+    'info' => 'Informasi',
+    'no_data' => 'Tidak ada data',
+    'loading' => 'Memuat...',
+    'please_wait' => 'Mohon tunggu...',
+    
+    // Table Headers
+    'actions' => 'Aksi',
+    'created_at' => 'Dibuat Pada',
+    'updated_at' => 'Diperbarui Pada',
+    
+    // Page Titles
+    'dashboard' => 'Dashboard',
+    'vehicles' => 'Kendaraan',
+    'customers' => 'Pelanggan',
+    'reports' => 'Laporan',
+    'settings' => 'Pengaturan',
+    'profile' => 'Profil',
+    
+    // Success Messages
+    'data_saved' => 'Data berhasil disimpan!',
+    'data_updated' => 'Data berhasil diperbarui!',
+    'data_deleted' => 'Data berhasil dihapus!',
+    'investor_created' => 'Investor berhasil ditambahkan!',
+    'investor_updated' => 'Data investor berhasil diperbarui!',
+    'investor_deleted' => 'Investor berhasil dihapus!',
+    
+    // Error Messages
+    'cannot_delete_investor_with_vehicles' => 'Tidak dapat menghapus investor yang masih memiliki kendaraan!',
+    'validation_error' => 'Terjadi kesalahan validasi',
+    'server_error' => 'Terjadi kesalahan server',
+    
+    // Confirmation Messages
+    'confirm_delete' => 'Apakah Anda yakin ingin menghapus?',
+    'confirm_delete_message' => 'Data yang dihapus tidak dapat dikembalikan.',
+    'confirm_logout' => 'Konfirmasi Keluar',
+    'logout_message' => 'Apakah Anda yakin ingin keluar?',
+    'yes_logout' => 'Ya, Keluar',
+    
+    // Additional Fields
+    'id_number' => 'Nomor KTP/Paspor',
+    'profit_share_percentage' => 'Persentase Bagi Hasil (%)',
+    'profit_share_example' => 'Contoh: 50 untuk 50% bagi hasil',
+    'required_field' => 'Wajib diisi',
+    
+    // Action Titles
+    'edit_investor_title' => 'Edit Investor',
+    'create_investor_title' => 'Tambah Investor Baru',
+    'show_investor_title' => 'Detail Investor',
+    
+    // Investor Report Page
+    'investor_financial_report' => 'Laporan Keuangan Investor',
+    'download_pdf' => 'Unduh PDF',
+    'investor_information' => 'Informasi Investor',
+    'profit_share' => 'Bagi Hasil',
+    'total_vehicles' => 'Total Kendaraan',
+    'units' => 'Unit',
+    'start_date' => 'Tanggal Mulai',
+    'end_date' => 'Tanggal Selesai',
+    'filter' => 'Filter',
+    'reset' => 'Reset',
+    
+    // Financial Summary
+    'total_income' => 'Total Pendapatan',
+    'total_expenses' => 'Total Pengeluaran',
+    'net_profit' => 'Keuntungan Bersih',
+    'investor_share' => 'Bagian Investor',
+    'from_rentals' => 'Dari rental',
+    'fuel_service_others' => 'BBM, Servis, Lainnya',
+    'income_minus_expenses' => 'Pendapatan - Pengeluaran',
+    'from_net_profit' => 'Dari keuntungan bersih',
+    'from_rentals' => 'Dari :count rental',
+    
+    // Vehicle and Rental Tables
+    'vehicles_list' => 'Daftar Kendaraan',
+    'vehicle_name' => 'Nama Kendaraan',
+    'license_plate' => 'Plat Nomor',
+    'brand' => 'Merek',
+    'year' => 'Tahun',
+    'rental_history' => 'Riwayat Rental',
+    'duration' => 'Durasi',
+    'days' => 'hari',
+    'total_income_label' => 'TOTAL PENDAPATAN',
+    'no_vehicles_yet' => 'Belum ada kendaraan untuk investor ini',
+    'no_rentals_period' => 'Tidak ada rental dalam periode ini',
+    
+    // Expenses Breakdown
+    'fuel_fills' => 'Pengisian BBM',
+    'maintenances' => 'Perawatan',
+    'other_expenses' => 'Pengeluaran Lainnya',
+    'no_data' => 'Tidak ada data',
+    'liter' => 'L',
+    'general' => 'Umum',
+    
+    // Dashboard Report
+    'report_dashboard' => 'Dashboard Laporan',
+    'dashboard_report' => 'Laporan Dashboard',
+    'this_week' => 'Minggu Ini',
+    'this_month' => 'Bulan Ini',
+    'this_year' => 'Tahun Ini',
+    'export_pdf' => 'Ekspor PDF',
+    
+    // Key Metrics
+    'total_rental' => 'Total Rental',
+    'revenue' => 'Pendapatan',
+    'rental_active' => 'Rental Aktif',
+    'available_vehicles' => 'Kendaraan Tersedia',
+    
+    // Charts
+    'revenue_daily' => 'Pendapatan Harian',
+    'status_rental' => 'Status Rental',
+    'top_performing_vehicles' => 'Kendaraan Terbaik',
+    'top_customers' => 'Pelanggan Teratas',
+    'monthly_trend' => 'Tren Bulanan (12 Bulan Terakhir)',
+    'no_data_available_vehicle' => 'Tidak ada data kendaraan tersedia',
+    'no_data_available_customer' => 'Tidak ada data pelanggan tersedia',
+    
+    // Report Actions
+    'report_detail' => 'Detail Laporan',
+    'report_rental' => 'Laporan Rental',
+    'report_vehicle' => 'Laporan Kendaraan',
+    'report_financial' => 'Laporan Keuangan',
+    'report_customer' => 'Laporan Pelanggan',
+    'new_rentals' => 'Rental Baru',
+    'new_vehicles' => 'Kendaraan Baru',
+    
+    // Export Excel
+    'export_report_excel' => 'Ekspor Laporan ke Excel',
+    'export_rental_data' => 'Ekspor Data Sewa',
+    'export_vehicle_data' => 'Ekspor Data Kendaraan',
+    'export_financial_report' => 'Ekspor Laporan Keuangan',
+    'export_customer_data' => 'Ekspor Data Pelanggan',
+    'tips_excel' => 'Tips: File Excel akan diunduh otomatis. Anda dapat membuka file dengan Microsoft Excel atau Google Sheets untuk analisis lebih lanjut.',
+    
+    // Status Labels for Charts
+    'reserved' => 'Reservasi',
+    'cancelled_status' => 'Dibatalkan',
+    
+    // Vehicle Management
+    'manage_fleet_vehicles' => 'Kelola kendaraan armada dan lacak informasinya',
+    'add_new_vehicle' => 'Tambah Kendaraan Baru',
+    'search_vehicles' => 'Cari kendaraan...',
+    'vehicle_type' => 'Tipe Kendaraan',
+    'nickname' => 'Nama Panggilan',
+    'license_plate' => 'Plat Nomor',
+    'model' => 'Model',
+    'export_pdf' => 'Ekspor PDF',
+    'view_details' => 'Lihat Detail',
+    'edit_vehicle' => 'Edit Kendaraan',
+    'delete_vehicle' => 'Hapus Kendaraan',
+    'confirm_delete_vehicle' => 'Apakah Anda yakin ingin menghapus kendaraan :name?',
+    
+    // Empty States
+    'no_results' => 'Tidak Ada Hasil',
+    'no_vehicles' => 'Belum Ada Kendaraan',
+    'no_results_message' => 'Tidak ditemukan kendaraan yang cocok dengan kata kunci ":keyword"',
+    'no_vehicles_message' => 'Anda belum memiliki kendaraan. Mulai dengan menambahkan kendaraan pertama Anda.',
+    'back_to_all' => 'Kembali ke Semua',
+    'add_first_vehicle' => 'Tambah Kendaraan Pertama',
+    
+    // Pagination
+    'showing' => 'Menampilkan',
+    'to' => 'hingga',
+    'of' => 'dari',
+    'results' => 'hasil',
+    'previous' => 'Sebelumnya',
+    'next' => 'Selanjutnya',
+    
+    // Customer Management
+    'manage_customer_info' => 'Kelola informasi pelanggan dan detail kontak',
+    'add_new_customer' => 'Tambah Pelanggan Baru',
+    'search_customers' => 'Cari pelanggan...',
+    'customer_name' => 'Nama Pelanggan',
+    'customer_phone' => 'Telepon Pelanggan',
+    'customer_email' => 'Email Pelanggan',
+    'customer_address' => 'Alamat Pelanggan',
+    'edit_customer' => 'Edit Pelanggan',
+    'delete_customer' => 'Hapus Pelanggan',
+    'confirm_delete_customer' => 'Apakah Anda yakin ingin menghapus pelanggan :name?',
+    'no_customers' => 'Belum Ada Pelanggan',
+    'no_customers_message' => 'Anda belum memiliki pelanggan. Mulai dengan menambahkan pelanggan pertama Anda.',
+    'add_first_customer' => 'Tambah Pelanggan Pertama',
+    'customer_type' => 'Tipe Pelanggan',
+    'individual' => 'Perorangan',
+    'company' => 'Perusahaan',
+    
+    // Rental Management
+    'rental_data' => 'Data Rental',
+    'rentals' => 'Rental',
+    'add_new_rental' => 'Tambah Rental Baru',
+    'rental_code' => 'Kode Rental',
+    'customer' => 'Pelanggan',
+    'vehicle' => 'Kendaraan',
+    'period' => 'Periode',
+    'rental_type' => 'Tipe Rental',
+    'duration' => 'Durasi',
+    'start_date' => 'Tanggal Mulai',
+    'end_date' => 'Tanggal Selesai',
+    'total_amount' => 'Total Biaya',
+    'rental_status' => 'Status Rental',
+    'overdue_days' => 'Terlambat :days hari',
+    'days' => 'hari',
+    'detail' => 'Detail',
+    'edit_rental' => 'Edit Rental',
+    'start_rental' => 'Mulai Rental',
+    'complete_rental' => 'Selesaikan Rental',
+    'cancel_rental' => 'Batalkan Rental',
+    'additional_charges' => 'Biaya Tambahan',
+    
+    // Locations/Places
+    'places' => 'Tempat',
+    'place' => 'Tempat',
+    'add_new_place' => 'Tambah Tempat Baru',
+    'edit_place' => 'Edit Tempat',
+    'place_name' => 'Nama Tempat',
+    'place_code' => 'Kode Tempat',
+    'enter_place_name' => 'Masukkan nama tempat',
+    'enter_place_code' => 'Masukkan kode tempat',
+    'enter_address' => 'Masukkan alamat lengkap',
+    'enter_phone' => 'Masukkan nomor telepon',
+    'enter_manager_name' => 'Masukkan nama manager',
+    'place_code_help' => 'Kode singkat untuk tempat (mis: JKT, BDG)',
+    'coordinates' => 'Koordinat',
+    'coordinates_help' => 'Koordinat akan terisi otomatis saat Anda memilih lokasi di peta',
+    'select_location_map' => 'Pilih Lokasi di Peta',
+    'click_map_select_location' => 'Klik pada peta untuk memilih lokasi',
+    'manager_name' => 'Nama Manager',
+    'latitude' => 'Latitude',
+    'longitude' => 'Longitude',
+    'place_already_exists' => 'Nama tempat sudah ada',
+    'place_code_already_exists' => 'Kode tempat sudah ada',
+    
+    // Service Type
+    'service_type_name_required' => 'Nama tipe service wajib diisi',
+    'service_type_name_unique' => 'Nama tipe service sudah ada',
+    'service_type_name_max' => 'Nama tipe service maksimal 255 karakter',
+    'service_type_added_successfully' => 'Tipe service berhasil ditambahkan',
+    'service_type_updated_successfully' => 'Tipe service berhasil diperbarui',
+    
+    // Expense Type
+    'expense_type_name_required' => 'Nama tipe pengeluaran wajib diisi',
+    'expense_type_name_unique' => 'Nama tipe pengeluaran sudah ada',
+    'expense_type_name_max' => 'Nama tipe pengeluaran maksimal 255 karakter',
+    'expense_type_added_successfully' => 'Tipe pengeluaran berhasil ditambahkan',
+    'expense_type_updated_successfully' => 'Tipe pengeluaran berhasil diperbarui',
+    
+    // Income Type
+    'income_type_name_required' => 'Nama tipe pendapatan wajib diisi',
+    'income_type_name_unique' => 'Nama tipe pendapatan sudah ada',
+    'income_type_name_max' => 'Nama tipe pendapatan maksimal 255 karakter',
+    'income_type_added_successfully' => 'Tipe pendapatan berhasil ditambahkan',
+    'income_type_updated_successfully' => 'Tipe pendapatan berhasil diperbarui',
+    
+    // Service Type UI
+    'service_type_name' => 'Nama Tipe Service',
+    'enter_service_type_name' => 'Masukkan nama tipe service',
+    'enter_description_optional' => 'Masukkan deskripsi (opsional)',
+    'add_new_service_type' => 'Tambah Tipe Service Baru',
+    'edit_service_type' => 'Edit Tipe Service',
+    
+    // Expense Type UI
+    'expense_type_name' => 'Nama Tipe Pengeluaran',
+    'enter_expense_type_name' => 'Masukkan nama tipe pengeluaran',
+    'add_new_expense_type' => 'Tambah Tipe Pengeluaran Baru',
+    'edit_expense_type' => 'Edit Tipe Pengeluaran',
+    
+    // Income Type UI
+    'income_type_name' => 'Nama Tipe Pendapatan',
+    'enter_income_type_name' => 'Masukkan nama tipe pendapatan',
+    'add_new_income_type' => 'Tambah Tipe Pendapatan Baru',
+    'edit_income_type' => 'Edit Tipe Pendapatan',
+    
+    // Google Maps
+    'map_unavailable' => 'Peta tidak tersedia',
+    'enter_coordinates_manually' => 'Silakan masukkan koordinat secara manual pada form di bawah.',
 ];

@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Settings - Format')
+@section('title', 'Pengaturan - Format')
 
 @push('styles')
 <style>
@@ -215,71 +215,71 @@
 <div class="page-header">
     <h1 class="page-title">
         <i class="fas fa-cog"></i>
-        Settings
+        Pengaturan
     </h1>
-    <p class="page-subtitle">Configure your application preferences and formatting options</p>
+    <p class="page-subtitle">Konfigurasi preferensi aplikasi dan opsi format</p>
 </div>
 
 <div class="settings-page-layout">
     <div class="settings-page-sidebar">
         <div class="settings-page-sidebar-header">
-            <h2 class="settings-page-sidebar-title">Settings</h2>
+            <h2 class="settings-page-sidebar-title">Pengaturan</h2>
         </div>
         <ul class="settings-page-menu">
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.format') }}" class="settings-page-menu-link active">
                     <i class="fas fa-sliders-h" style="color: #667eea; font-size: 14px; margin-right: 12px;"></i>
-                    Apps Format
+                    Format Aplikasi
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.account') }}" class="settings-page-menu-link">
                     <i class="fas fa-user-circle" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
-                    My Account
+                    Akun Saya
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.file-storage') }}" class="settings-page-menu-link">
                     <i class="fas fa-folder-open" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
-                    File and Storage
+                    File dan Penyimpanan
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.locations') }}" class="settings-page-menu-link">
                     <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 14px; margin-right: 12px;"></i>
-                    Place
+                    Tempat
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Services
+                    Jenis Services
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Expense
+                    Jenis Pengeluaran
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Income
+                    Jenis Pendapatan
                 </a>
             </li>
             @if(auth()->user()->hasRole(['super_admin']))
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.investors.index') }}" class="settings-page-menu-link">
                     <i class="fas fa-user-tie" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
-                    Investors
+                    Investor
                 </a>
             </li>
             @endif
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.payment-methods') }}" class="settings-page-menu-link">
                     <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
-                    Payment Methods
+                    Metode Pembayaran
                 </a>
             </li>
         </ul>
@@ -336,7 +336,7 @@
 
             <div class="settings-page-section">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-2"></i>SAVE
+                    <i class="fas fa-SIMPAN me-2"></i>SIMPAN
                 </button>
             </div>
         </form>

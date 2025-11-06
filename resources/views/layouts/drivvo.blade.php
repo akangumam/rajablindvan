@@ -827,7 +827,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('history.index') }}" class="drivvo-nav-link {{ request()->routeIs('history.*') ? 'active' : '' }}">
                         <i class="fas fa-history"></i>
-                        <span class="nav-text">History</span>
+                        <span class="nav-text">{{ __('common.history') }}</span>
                     </a>
                 </div>
 
@@ -875,7 +875,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('orders.index') }}" class="drivvo-nav-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
                         <i class="fas fa-clipboard-list"></i>
-                        <span class="nav-text">Order List</span>
+                        <span class="nav-text">{{ __('common.order_list') }}</span>
                     </a>
                 </div>
 
@@ -885,7 +885,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('users.index') }}" class="drivvo-nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
                         <i class="fas fa-user"></i>
-                        <span class="nav-text">Users</span>
+                        <span class="nav-text">{{ __('common.users') }}</span>
                     </a>
                 </div>
                 @endif
@@ -897,7 +897,7 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('settings.index') }}" class="drivvo-nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                         <i class="fas fa-cog"></i>
-                        <span class="nav-text">Settings</span>
+                        <span class="nav-text">{{ __('common.settings') }}</span>
                     </a>
                 </div>
 
@@ -905,7 +905,7 @@
                 <div class="drivvo-nav-item">
                     <button type="button" class="drivvo-nav-link" onclick="showLogoutModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: red; padding: 12px 20px;">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span class="nav-text">Logout</span>
+                        <span class="nav-text">{{ __('common.logout') }}</span>
                     </button>
                     
                     <!-- Hidden logout form -->
@@ -1000,7 +1000,7 @@
                         <div class="quick-add-icon income">
                             <i class="fas fa-wallet"></i>
                         </div>
-                        <div class="quick-add-text">Income</div>
+                        <div class="quick-add-text">{{ __('common.income_label') }}</div>
                     </a>
 
                     <!-- Service (Maintenance) -->
@@ -1008,7 +1008,7 @@
                         <div class="quick-add-icon service">
                             <i class="fas fa-wrench"></i>
                         </div>
-                        <div class="quick-add-text">Service</div>
+                        <div class="quick-add-text">{{ __('common.service') }}</div>
                     </a>
 
                     <!-- Expense -->
@@ -1016,7 +1016,7 @@
                         <div class="quick-add-icon expense">
                             <i class="fas fa-credit-card"></i>
                         </div>
-                        <div class="quick-add-text">Expense</div>
+                        <div class="quick-add-text">{{ __('common.expense') }}</div>
                     </a>
                 </div>
             </div>

@@ -157,9 +157,9 @@
     <div class="settings-page-content">
         <div class="settings-page-content-header">
             <div class="d-flex justify-content-between align-items-center">
-                <h1 class="settings-page-content-title">Investors</h1>
+                <h1 class="settings-page-content-title">{{ __('common.investors') }}</h1>
                 <a href="{{ route('settings.investors.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Add Investor
+                    <i class="fas fa-plus"></i> {{ __('common.add_investor') }}
                 </a>
             </div>
         </div>

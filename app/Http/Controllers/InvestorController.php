@@ -52,7 +52,7 @@ class InvestorController extends Controller
         $investor = Investor::create($validated);
 
         return redirect()->route('settings.investors.show', $investor)
-            ->with('success', 'Investor berhasil ditambahkan!');
+            ->with('success', __('common.investor_created'));
     }
 
     /**
@@ -153,7 +153,7 @@ class InvestorController extends Controller
         $investor->update($validated);
 
         return redirect()->route('settings.investors.show', $investor)
-            ->with('success', 'Data investor berhasil diupdate!');
+            ->with('success', __('common.investor_updated'));
     }
 
     /**
@@ -166,13 +166,13 @@ class InvestorController extends Controller
         // Check if investor has vehicles
         if ($investor->vehicles()->count() > 0) {
             return redirect()->route('settings.investors.index')
-                ->with('error', 'Tidak dapat menghapus investor yang masih memiliki kendaraan!');
+                ->with('error', __('common.cannot_delete_investor_with_vehicles'));
         }
 
         $investor->delete();
 
         return redirect()->route('settings.investors.index')
-            ->with('success', 'Investor berhasil dihapus!');
+            ->with('success', __('common.investor_deleted'));
     }
 
     /**

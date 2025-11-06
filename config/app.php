@@ -73,9 +73,9 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'locale' => 'en', // Default to English
+    'locale' => 'id', // Default to Indonesian
 
-    'fallback_locale' => 'en', // Fallback to English
+    'fallback_locale' => 'id', // Fallback to Indonesian
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +83,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'available_locales' => ['en'],
+    'available_locales' => ['id', 'en'],
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

@@ -301,20 +301,37 @@ class SettingsController extends Controller
     public function storeLocation(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string'
+            'name' => 'required|string|max:255|unique:locations,name',
+            'code' => 'required|string|max:10|unique:locations,code',
+            'address' => 'required|string',
+            'phone' => 'nullable|string|max:20',
+            'manager_name' => 'nullable|string|max:255',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'google_place_id' => 'nullable|string'
+        ], [
+            'name.unique' => __('common.place_already_exists'),
+            'code.unique' => __('common.place_code_already_exists'),
+            'name.required' => __('common.name') . ' is required',
+            'code.required' => __('common.code') . ' is required',
+            'address.required' => __('common.address') . ' is required'
         ]);
 
         $location = Location::create([
             'name' => $validated['name'],
-            'code' => strtoupper(substr($validated['name'], 0, 3)),
-            'address' => $validated['description'] ?? '',
+            'code' => strtoupper($validated['code']),
+            'address' => $validated['address'],
+            'phone' => $validated['phone'] ?? null,
+            'manager_name' => $validated['manager_name'] ?? null,
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
+            'google_place_id' => $validated['google_place_id'] ?? null,
             'is_active' => true
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Place added successfully',
+            'message' => __('common.data_saved'),
             'data' => $location
         ]);
     }
@@ -324,18 +341,36 @@ class SettingsController extends Controller
         $location = Location::findOrFail($id);
         
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string'
+            'name' => 'required|string|max:255|unique:locations,name,' . $id,
+            'code' => 'required|string|max:10|unique:locations,code,' . $id,
+            'address' => 'required|string',
+            'phone' => 'nullable|string|max:20',
+            'manager_name' => 'nullable|string|max:255',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'google_place_id' => 'nullable|string'
+        ], [
+            'name.unique' => __('common.place_already_exists'),
+            'code.unique' => __('common.place_code_already_exists'),
+            'name.required' => __('common.name') . ' is required',
+            'code.required' => __('common.code') . ' is required',
+            'address.required' => __('common.address') . ' is required'
         ]);
 
         $location->update([
             'name' => $validated['name'],
-            'address' => $validated['description'] ?? ''
+            'code' => strtoupper($validated['code']),
+            'address' => $validated['address'],
+            'phone' => $validated['phone'] ?? null,
+            'manager_name' => $validated['manager_name'] ?? null,
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
+            'google_place_id' => $validated['google_place_id'] ?? null
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Place updated successfully',
+            'message' => __('common.data_updated'),
             'data' => $location
         ]);
     }
@@ -363,8 +398,12 @@ class SettingsController extends Controller
     public function storeServiceType(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:service_types,name',
             'description' => 'nullable|string'
+        ], [
+            'name.required' => __('common.service_type_name_required'),
+            'name.unique' => __('common.service_type_name_unique'),
+            'name.max' => __('common.service_type_name_max'),
         ]);
 
         $serviceType = ServiceType::create([
@@ -375,7 +414,7 @@ class SettingsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Service type added successfully',
+            'message' => __('common.service_type_added_successfully'),
             'data' => $serviceType
         ]);
     }
@@ -385,15 +424,19 @@ class SettingsController extends Controller
         $serviceType = ServiceType::findOrFail($id);
         
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:service_types,name,' . $id,
             'description' => 'nullable|string'
+        ], [
+            'name.required' => __('common.service_type_name_required'),
+            'name.unique' => __('common.service_type_name_unique'),
+            'name.max' => __('common.service_type_name_max'),
         ]);
 
         $serviceType->update($validated);
 
         return response()->json([
             'success' => true,
-            'message' => 'Service type updated successfully',
+            'message' => __('common.service_type_updated_successfully'),
             'data' => $serviceType
         ]);
     }
@@ -421,8 +464,12 @@ class SettingsController extends Controller
     public function storeExpenseType(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:expense_types,name',
             'description' => 'nullable|string'
+        ], [
+            'name.required' => __('common.expense_type_name_required'),
+            'name.unique' => __('common.expense_type_name_unique'),
+            'name.max' => __('common.expense_type_name_max'),
         ]);
 
         $expenseType = ExpenseType::create([
@@ -433,7 +480,7 @@ class SettingsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Expense type added successfully',
+            'message' => __('common.expense_type_added_successfully'),
             'data' => $expenseType
         ]);
     }
@@ -443,15 +490,19 @@ class SettingsController extends Controller
         $expenseType = ExpenseType::findOrFail($id);
         
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:expense_types,name,' . $id,
             'description' => 'nullable|string'
+        ], [
+            'name.required' => __('common.expense_type_name_required'),
+            'name.unique' => __('common.expense_type_name_unique'),
+            'name.max' => __('common.expense_type_name_max'),
         ]);
 
         $expenseType->update($validated);
 
         return response()->json([
             'success' => true,
-            'message' => 'Expense type updated successfully',
+            'message' => __('common.expense_type_updated_successfully'),
             'data' => $expenseType
         ]);
     }
@@ -479,8 +530,12 @@ class SettingsController extends Controller
     public function storeIncomeType(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:income_types,name',
             'description' => 'nullable|string'
+        ], [
+            'name.required' => __('common.income_type_name_required'),
+            'name.unique' => __('common.income_type_name_unique'),
+            'name.max' => __('common.income_type_name_max'),
         ]);
 
         $incomeType = IncomeType::create([
@@ -491,7 +546,7 @@ class SettingsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Income type added successfully',
+            'message' => __('common.income_type_added_successfully'),
             'data' => $incomeType
         ]);
     }
@@ -501,15 +556,19 @@ class SettingsController extends Controller
         $incomeType = IncomeType::findOrFail($id);
         
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:income_types,name,' . $id,
             'description' => 'nullable|string'
+        ], [
+            'name.required' => __('common.income_type_name_required'),
+            'name.unique' => __('common.income_type_name_unique'),
+            'name.max' => __('common.income_type_name_max'),
         ]);
 
         $incomeType->update($validated);
 
         return response()->json([
             'success' => true,
-            'message' => 'Income type updated successfully',
+            'message' => __('common.income_type_updated_successfully'),
             'data' => $incomeType
         ]);
     }

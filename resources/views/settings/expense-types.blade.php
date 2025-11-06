@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Settings - Type of Expense')
+@section('title', 'Pengaturan - Jenis Pengeluaran')
 
 @push('styles')
 <style>
@@ -381,71 +381,71 @@
 <div class="page-header">
     <h1 class="page-title">
         <i class="fas fa-cog"></i>
-        Settings
+        Pengaturan
     </h1>
-    <p class="page-subtitle">Configure your application preferences and formatting options</p>
+    <p class="page-subtitle">Konfigurasi preferensi aplikasi dan opsi format</p>
 </div>
 
 <div class="settings-page-layout">
     <div class="settings-page-sidebar">
         <div class="settings-page-sidebar-header">
-            <h2 class="settings-page-sidebar-title">Settings</h2>
+            <h2 class="settings-page-sidebar-title">Pengaturan</h2>
         </div>
         <ul class="settings-page-menu">
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.format') }}" class="settings-page-menu-link">
                     <i class="fas fa-sliders-h" style="color: #667eea; font-size: 14px; margin-right: 12px;"></i>
-                    Apps Format
+                    Format Aplikasi
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.account') }}" class="settings-page-menu-link">
                     <i class="fas fa-user-circle" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
-                    My Account
+                    Akun Saya
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.file-storage') }}" class="settings-page-menu-link">
                     <i class="fas fa-folder-open" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
-                    File and Storage
+                    File dan Penyimpanan
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.locations') }}" class="settings-page-menu-link">
                     <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 14px; margin-right: 12px;"></i>
-                    Place
+                    Tempat
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
-                    Types of Service
+                    Jenis Service
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link active">
                     <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Expense
+                    Jenis Pengeluaran
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
-                    Type of Income
+                    Jenis Pendapatan
                 </a>
             </li>
             @if(auth()->user()->hasRole(['super_admin']))
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.investors.index') }}" class="settings-page-menu-link">
                     <i class="fas fa-user-tie" style="color: #f39c12; font-size: 14px; margin-right: 12px;"></i>
-                    Investors
+                    Investor
                 </a>
             </li>
             @endif
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.payment-methods') }}" class="settings-page-menu-link">
                     <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
-                    Payment Methods
+                    Metode Pembayaran
                 </a>
             </li>
         </ul>
@@ -453,7 +453,7 @@
 
     <div class="settings-page-content">
         <div class="settings-page-content-header">
-            <h1 class="settings-page-content-title">Type of Expense</h1>
+            <h1 class="settings-page-content-title">Jenis Pengeluaran</h1>
         </div>
 
         @if(session('success'))
@@ -469,13 +469,13 @@
                     <div class="expense-list-header">
                         <span>Expense Types</span>
                         <button class="btn-add" onclick="openAddModal()">
-                            <i class="fas fa-plus me-1"></i> ADD NEW EXPENSE
+                            <i class="fas fa-plus me-1"></i> TAMBAH BARU EXPENSE
                         </button>
                     </div>
                     
                     @if($expenseTypes->isEmpty())
                         <div class="expense-list-item" style="justify-content: center; color: #999;">
-                            No expense types found. Click "ADD NEW EXPENSE" to create one.
+                            No expense types found. Click "TAMBAH BARU EXPENSE" to create one.
                         </div>
                     @else
                         @foreach($expenseTypes as $expenseType)
@@ -507,7 +507,7 @@
 <div id="expenseModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title" id="modalTitle">Add New Expense Type</h2>
+            <h2 class="modal-title" id="modalTitle">TAMBAH BARU Expense Type</h2>
             <button class="close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
@@ -515,17 +515,17 @@
                 <input type="hidden" id="expenseId" value="">
                 <div class="form-group">
                     <label class="form-label">Expense Type Name *</label>
-                    <input type="text" class="form-control" id="expenseName" placeholder="Enter expense type name" required>
+                    <input type="text" class="form-control" id="expenseName" Tempatholder="Enter expense type name" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <textarea class="form-control" id="expenseDescription" placeholder="Enter description (optional)" rows="3"></textarea>
+                    <textarea class="form-control" id="expenseDescription" Tempatholder="Enter description (optional)" rows="3"></textarea>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn-secondary" onclick="closeModal()">CANCEL</button>
-            <button type="button" class="btn-primary" onclick="saveExpense()">SAVE</button>
+            <button type="button" class="btn-secondary" onclick="closeModal()">BATAL</button>
+            <button type="button" class="btn-primary" onclick="SIMPANExpense()">SIMPAN</button>
         </div>
     </div>
 </div>
@@ -536,7 +536,7 @@ let isEditMode = false;
 
 function openAddModal() {
     isEditMode = false;
-    document.getElementById('modalTitle').textContent = 'Add New Expense Type';
+    document.getElementById('modalTitle').textContent = 'TAMBAH BARU Expense Type';
     document.getElementById('expenseId').value = '';
     document.getElementById('expenseName').value = '';
     document.getElementById('expenseDescription').value = '';
@@ -545,7 +545,7 @@ function openAddModal() {
 
 function openEditModal(id, name, description) {
     isEditMode = true;
-    document.getElementById('modalTitle').textContent = 'Edit Expense Type';
+    document.getElementById('modalTitle').textContent = 'Edit Jenis Pengeluaran';
     document.getElementById('expenseId').value = id;
     document.getElementById('expenseName').value = name;
     document.getElementById('expenseDescription').value = description || '';
@@ -556,7 +556,7 @@ function closeModal() {
     document.getElementById('expenseModal').classList.remove('show');
 }
 
-function saveExpense() {
+function SIMPANExpense() {
     const id = document.getElementById('expenseId').value;
     const name = document.getElementById('expenseName').value.trim();
     const description = document.getElementById('expenseDescription').value.trim();
@@ -567,7 +567,7 @@ function saveExpense() {
     }
 
     const url = isEditMode 
-        ? '{{ route("settings.expense-types.update", ":id") }}'.replace(':id', id)
+        ? '{{ route("settings.expense-types.update", ":id") }}'.reTempat(':id', id)
         : '{{ route("settings.expense-types.store") }}';
     
     const method = isEditMode ? 'PUT' : 'POST';
@@ -596,13 +596,13 @@ function saveExpense() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Failed to save expense type. Please try again.');
+        alert('Failed to SIMPAN expense type. Please try again.');
     });
 }
 
 function confirmDelete(id, name) {
     if (confirm('Are you sure you want to delete "' + name + '"?')) {
-        fetch('{{ route("settings.expense-types.destroy", ":id") }}'.replace(':id', id), {
+        fetch('{{ route("settings.expense-types.destroy", ":id") }}'.reTempat(':id', id), {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

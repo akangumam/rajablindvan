@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Settings')
+@section('title', 'Pengaturan')
 
 @push('styles')
 <style>
@@ -324,18 +324,18 @@ body {
 <div class="page-header">
     <h1 class="page-title">
         <i class="fas fa-cog"></i>
-        Settings
+        Pengaturan
     </h1>
-    <p class="page-subtitle">Configure your application preferences and formatting options</p>
+    <p class="page-subtitle">Konfigurasi preferensi aplikasi dan opsi format</p>
 </div>
 
 <div class="settings-container">
     <!-- Header -->
     <div class="settings-header">
-        <h4>SETTINGS <span class="settings-count">- (9)</span></h4>
+        <h4>Pengaturan <span class="settings-count">- (9)</span></h4>
     </div>
 
-    <!-- Section 1-3: Apps Settings -->
+    <!-- Section 1-3: Apps Pengaturan -->
     <div class="settings-section">
         <ul class="settings-list">
             <li class="settings-item">
@@ -343,9 +343,9 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">1.</span>
                         <i class="fas fa-sliders-h" style="color: #667eea; font-size: 16px;"></i>
-                        <span class="settings-label">Apps Format</span>
+                        <span class="settings-label">Format Aplikasi</span>
                     </div>
-                    <i class="fas fa-chevron-right settings-arrow"></i>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>
             </li>
             <li class="settings-item">
@@ -353,9 +353,9 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">2.</span>
                         <i class="fas fa-user-circle" style="color: #3498db; font-size: 16px;"></i>
-                        <span class="settings-label">My Account</span>
+                        <span class="settings-label">Akun Saya</span>
                     </div>
-                    <i class="fas fa-chevron-right settings-arrow"></i>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>
             </li>
             <li class="settings-item">
@@ -363,9 +363,9 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">3.</span>
                         <i class="fas fa-folder-open" style="color: #f39c12; font-size: 16px;"></i>
-                        <span class="settings-label">File and Storage</span>
+                        <span class="settings-label">File dan Penyimpanan</span>
                     </div>
-                    <i class="fas fa-chevron-right settings-arrow"></i>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>
             </li>
         </ul>
@@ -380,9 +380,9 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">4.</span>
                         <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 16px;"></i>
-                        <span class="settings-label">Place</span>
+                        <span class="settings-label">Tempat</span>
                     </div>
-                    <i class="fas fa-chevron-right settings-arrow"></i>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>
             </li>
             <li class="settings-item">
@@ -390,9 +390,9 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">5.</span>
                         <i class="fas fa-wrench" style="color: #95a5a6; font-size: 16px;"></i>
-                        <span class="settings-label">Types of Service</span>
+                        <span class="settings-label">Jenis Service</span>
                     </div>
-                    <i class="fas fa-chevron-right settings-arrow"></i>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>
             </li>
             <li class="settings-item">
@@ -400,9 +400,9 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">6.</span>
                         <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 16px;"></i>
-                        <span class="settings-label">Type of Expense</span>
+                        <span class="settings-label">Jenis Pengeluaran</span>
                     </div>
-                    <i class="fas fa-chevron-right settings-arrow"></i>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>
             </li>
             <li class="settings-item">
@@ -410,9 +410,9 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">7.</span>
                         <i class="fas fa-coins" style="color: #27ae60; font-size: 16px;"></i>
-                        <span class="settings-label">Type of Income</span>
+                        <span class="settings-label">Jenis Pendapatan</span>
                     </div>
-                    <i class="fas fa-chevron-right settings-arrow"></i>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>
             </li>
             <li class="settings-item">
@@ -420,9 +420,9 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">8.</span>
                         <i class="fas fa-user-tie" style="color: #f39c12; font-size: 16px;"></i>
-                        <span class="settings-label">Investors</span>
+                        <span class="settings-label">Investor</span>
                     </div>
-                    <i class="fas fa-chevron-right settings-arrow"></i>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>
             </li>
             <li class="settings-item">
@@ -430,9 +430,9 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">9.</span>
                         <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 16px;"></i>
-                        <span class="settings-label">Payment Methods</span>
+                        <span class="settings-label">Metode Pembayaran</span>
                     </div>
-                    <i class="fas fa-chevron-right settings-arrow"></i>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>
             </li>
         </ul>
@@ -444,7 +444,7 @@ body {
             Pada sub menu kategori Selection List terdiri atas beberapa fungsi sbb:
         </div>
         <div class="settings-note-text">
-            - Add New<br>
+            - TAMBAH BARU<br>
             - Edit<br>
             - Delete
         </div>

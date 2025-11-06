@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Rental Data')
+@section('title', __('common.rental_data'))
 
 @section('content')
 <style>
@@ -37,9 +37,9 @@
 </style>
 
 <div class="page-header">
-    <h1 class="page-title">Rental</h1>
+    <h1 class="page-title">{{ __('common.rentals') }}</h1>
     <a href="{{ route('rentals.create') }}" class="btn-add">
-        ADD NEW
+        {{ __('common.add_new_rental') }}
     </a>
 </div>
 
@@ -64,15 +64,15 @@
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Kode Rental</th>
-                        <th>Customer</th>
-                        <th>Vehicle</th>
-                        <th>Periode</th>
-                        <th>Tipe</th>
-                        <th>Duration</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>{{ __('common.rental_code') }}</th>
+                        <th>{{ __('common.customer') }}</th>
+                        <th>{{ __('common.vehicle') }}</th>
+                        <th>{{ __('common.period') }}</th>
+                        <th>{{ __('common.type') }}</th>
+                        <th>{{ __('common.duration') }}</th>
+                        <th>{{ __('common.total') }}</th>
+                        <th>{{ __('common.status') }}</th>
+                        <th>{{ __('common.actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>

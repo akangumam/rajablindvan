@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Settings - Reminders')
+@section('title', 'Pengaturan - Reminders')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -11,11 +11,11 @@
                 <div class="card-header bg-white py-3">
                     <h5 class="mb-0">
                         <i class="bi bi-gear-fill text-primary me-2"></i>
-                        Settings
+                        Pengaturan
                     </h5>
                 </div>
                 <div class="list-group list-group-flush">
-                    <!-- Settings Sub-menu -->
+                    <!-- Pengaturan Sub-menu -->
                     <a href="{{ route('settings.units') }}" class="list-group-item list-group-item-action ps-4">
                         <i class="bi bi-speedometer2 text-muted me-2"></i>
                         Units
@@ -34,7 +34,7 @@
                     
                     <a href="{{ route('settings.account') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-person-circle text-muted me-2"></i>
-                        My Account
+                        Akun Saya
                     </a>
                     <a href="{{ route('settings.index') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-file-earmark-text text-muted me-2"></i>
@@ -70,7 +70,7 @@
                     </a>
                     <a href="{{ route('settings.payment-methods') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-credit-card text-muted me-2"></i>
-                        Payment Methods
+                        Metode Pembayaran
                     </a>
                     <a href="{{ route('settings.forms') }}" class="list-group-item list-group-item-action">
                         <i class="bi bi-file-earmark text-muted me-2"></i>
@@ -98,7 +98,7 @@
                         <div class="mb-4">
                             <label for="kmReminder" class="form-label fw-bold">Kilometer Amount</label>
                             <div class="input-group">
-                                <input type="number" class="form-control" id="kmReminder" name="km_reminder" value="500" placeholder="500">
+                                <input type="number" class="form-control" id="kmReminder" name="km_reminder" value="500" Tempatholder="500">
                                 <span class="input-group-text">Km</span>
                             </div>
                             <a href="#" class="text-primary text-decoration-none small mt-1 d-inline-block">
@@ -112,7 +112,7 @@
                         <div class="mb-4">
                             <label for="daysReminder" class="form-label fw-bold">Number of days</label>
                             <div class="input-group">
-                                <input type="number" class="form-control" id="daysReminder" name="days_reminder" value="30" placeholder="30">
+                                <input type="number" class="form-control" id="daysReminder" name="days_reminder" value="30" Tempatholder="30">
                                 <span class="input-group-text">Days</span>
                             </div>
                             <a href="#" class="text-primary text-decoration-none small mt-1 d-inline-block">
@@ -122,7 +122,7 @@
 
                         <div class="mt-4">
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save me-2"></i>Save Changes
+                                <i class="bi bi-SIMPAN me-2"></i>SIMPAN Changes
                             </button>
                         </div>
                     </form>
