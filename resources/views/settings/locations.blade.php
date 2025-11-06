@@ -605,7 +605,6 @@
 let isEditMode = false;
 
 function openAddModal() {
-    console.log('openAddModal called'); // Debug log
     isEditMode = false;
     document.getElementById('modalTitle').textContent = 'Add New Tempat';
     document.getElementById('LokasiId').value = '';
@@ -615,7 +614,6 @@ function openAddModal() {
 }
 
 function openEditModal(id, name, address) {
-    console.log('openEditModal called with id:', id); // Debug log
     isEditMode = true;
     document.getElementById('modalTitle').textContent = 'Edit Tempat';
     document.getElementById('LokasiId').value = id;
