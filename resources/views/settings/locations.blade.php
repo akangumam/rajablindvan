@@ -557,7 +557,7 @@
                                 {{ $location->address ?? 'Tidak ada alamat' }}
                             </div>
                             <div class="Lokasi-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $location->id }}, '{{ $location->name }}', '{{ $location->address }}')">
+                                <button class="btn-edit" onclick="openEditModal($1, $2, $3)">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn-delete" onclick="confirmDelete({{ $location->id }}, '{{ $location->name }}')">

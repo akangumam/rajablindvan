@@ -29,6 +29,16 @@ foreach ($file in $files) {
     $content = $content -replace "Pengaturan\.([^']+)\.([^']+)", "settings.`$1.`$2"
     $content = $content -replace '"Pengaturan\.([^"]+)"', '"settings.$1"'
     
+    # Fix broken onclick handlers
+    $content = $content -replace 'onclick="openEditModal\(\$1, \$2, \$3\)"', 'onclick="openEditModal({{ $item->id }}, ''{{ $item->name }}'', ''{{ $item->description }}'')"'
+    
+    # Fix replace function calls that got translated
+    $content = $content -replace "\.reTempat\(", ".replace("
+    $content = $content -replace "\.reService\(", ".replace("
+    $content = $content -replace "\.reExpense\(", ".replace("
+    $content = $content -replace "\.reIncome\(", ".replace("
+    $content = $content -replace "\.rePayment\(", ".replace("
+    
     Set-Content -Path $file.FullName -Value $content -NoNewline
     Write-Host "Fixed: $($file.Name)"
 }

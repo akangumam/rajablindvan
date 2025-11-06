@@ -655,7 +655,7 @@
                                 <div class="payment-name">{{ $paymentMethod->name }}</div>
                             </div>
                             <div class="payment-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $paymentMethod->id }}, '{{ $paymentMethod->name }}', '{{ $paymentMethod->description }}')">
+                                <button class="btn-edit" onclick="openEditModal({{ $paymentMethod->id }}, '{{ $paymentMethod->name }}', '{{ $paymentMethod->description }}')"
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn-delete" onclick="confirmDelete({{ $paymentMethod->id }}, '{{ $paymentMethod->name }}')">
@@ -735,7 +735,7 @@ function SIMPANPayment() {
     }
 
     const url = isEditMode 
-        ? '{{ route("settings.payment-methods.update", ":id") }}'.reTempat(':id', id)
+        ? '{{ route("settings.payment-methods.update", ":id") }}'.replace(':id', id)
         : '{{ route("settings.payment-methods.store") }}';
     
     const method = isEditMode ? 'PUT' : 'POST';
@@ -770,7 +770,7 @@ function SIMPANPayment() {
 
 function confirmDelete(id, name) {
     if (confirm('Are you sure you want to delete "' + name + '"?')) {
-        fetch('{{ route("settings.payment-methods.destroy", ":id") }}'.reTempat(':id', id), {
+        fetch('{{ route("settings.payment-methods.destroy", ":id") }}'.replace(':id', id), {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

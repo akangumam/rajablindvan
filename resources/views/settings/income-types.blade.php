@@ -487,7 +487,7 @@
                                 <div class="income-name">{{ $incomeType->name }}</div>
                             </div>
                             <div class="income-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $incomeType->id }}, '{{ $incomeType->name }}', '{{ $incomeType->description }}')">
+                                <button class="btn-edit" onclick="openEditModal({{ $incomeType->id }}, '{{ $incomeType->name }}', '{{ $incomeType->description }}')"
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn-delete" onclick="confirmDelete({{ $incomeType->id }}, '{{ $incomeType->name }}')">
@@ -562,7 +562,7 @@ function SIMPANIncome() {
     }
 
     const url = isEditMode 
-        ? '{{ route("settings.income-types.update", ":id") }}'.reTempat(':id', id)
+        ? '{{ route("settings.income-types.update", ":id") }}'.replace(':id', id)
         : '{{ route("settings.income-types.store") }}';
     
     const method = isEditMode ? 'PUT' : 'POST';
@@ -597,7 +597,7 @@ function SIMPANIncome() {
 
 function confirmDelete(id, name) {
     if (confirm('Are you sure you want to delete "' + name + '"?')) {
-        fetch('{{ route("settings.income-types.destroy", ":id") }}'.reTempat(':id', id), {
+        fetch('{{ route("settings.income-types.destroy", ":id") }}'.replace(':id', id), {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

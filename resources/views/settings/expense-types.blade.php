@@ -487,7 +487,7 @@
                                 <div class="expense-name">{{ $expenseType->name }}</div>
                             </div>
                             <div class="expense-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $expenseType->id }}, '{{ $expenseType->name }}', '{{ $expenseType->description }}')">
+                                <button class="btn-edit" onclick="openEditModal({{ $expenseType->id }}, '{{ $expenseType->name }}', '{{ $expenseType->description }}')"
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn-delete" onclick="confirmDelete({{ $expenseType->id }}, '{{ $expenseType->name }}')">
@@ -567,7 +567,7 @@ function SIMPANExpense() {
     }
 
     const url = isEditMode 
-        ? '{{ route("settings.expense-types.update", ":id") }}'.reTempat(':id', id)
+        ? '{{ route("settings.expense-types.update", ":id") }}'.replace(':id', id)
         : '{{ route("settings.expense-types.store") }}';
     
     const method = isEditMode ? 'PUT' : 'POST';
@@ -602,7 +602,7 @@ function SIMPANExpense() {
 
 function confirmDelete(id, name) {
     if (confirm('Are you sure you want to delete "' + name + '"?')) {
-        fetch('{{ route("settings.expense-types.destroy", ":id") }}'.reTempat(':id', id), {
+        fetch('{{ route("settings.expense-types.destroy", ":id") }}'.replace(':id', id), {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

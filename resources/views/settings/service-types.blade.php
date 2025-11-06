@@ -579,7 +579,7 @@ function SIMPANService() {
     }
 
     const url = isEditMode 
-        ? '{{ route("settings.service-types.update", ":id") }}'.reTempat(':id', id)
+        ? '{{ route("settings.service-types.update", ":id") }}'.replace(':id', id)
         : '{{ route("settings.service-types.store") }}';
     
     const method = isEditMode ? 'PUT' : 'POST';
@@ -614,7 +614,7 @@ function SIMPANService() {
 
 function confirmDelete(id, name) {
     if (confirm('Are you sure you want to delete "' + name + '"?')) {
-        fetch('{{ route("settings.service-types.destroy", ":id") }}'.reTempat(':id', id), {
+        fetch('{{ route("settings.service-types.destroy", ":id") }}'.replace(':id', id), {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
