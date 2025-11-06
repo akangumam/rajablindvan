@@ -19,10 +19,5 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
-
-        // Seed reference data for dropdown options
-        $this->call([
-            ReferenceDataSeeder::class,
-        ]);
     }
 }

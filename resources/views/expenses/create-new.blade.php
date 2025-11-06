@@ -145,7 +145,7 @@
 
 <!-- Hidden field for amount (will be auto-filled from expense type) -->
 <input type="hidden" name="amount" id="expenseAmount" value="0">
-<input type="hidden" name="category" value="Other">
+<input type="hidden" name="category" value="expense">
 <input type="hidden" name="description" id="expenseDescription" value="">
 
 @endsection

@@ -28,7 +28,7 @@
 @endphp
 
 <!-- Hidden fields for backend compatibility -->
-<input type="hidden" name="category" value="Service">
+<input type="hidden" name="category" value="service">
 <input type="hidden" name="cost" value="0">
 <input type="hidden" name="description" value="-">
 

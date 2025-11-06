@@ -189,6 +189,7 @@
         <span id="attachmentButtonText">LAMPIRKAN FILE</span>
     </button>
     <input type="file" name="attachment" id="attachmentInput" style="display: none;" accept="image/*,.pdf" onchange="updateAttachmentButtonText(this)">
+    <input type="hidden" name="category" value="fuel">
 </div>
 
 <!-- Notes -->

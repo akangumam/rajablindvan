@@ -111,6 +111,9 @@
     @enderror
     <small class="text-muted">Accepted: JPG, PNG, PDF, DOC, DOCX (Max: 5MB)</small>
 </div>
+
+<!-- Hidden field for file category -->
+<input type="hidden" name="category" value="income">
 @endsection
 
 

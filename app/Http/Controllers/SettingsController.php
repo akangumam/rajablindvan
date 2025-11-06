@@ -89,13 +89,12 @@ class SettingsController extends Controller
         $storageLimit = 10240 / 1024; // 10240 MB = 10 GB limit
         $usagePercentage = $totalSizeGB > 0 ? ($totalSizeGB / $storageLimit) * 100 : 0;
         
-        // Calculate storage by category
+        // Calculate storage by category (only valid categories)
         $categories = [
-            'refueling' => UploadedFile::where('category', 'refueling')->sum('file_size'),
+            'fuel' => UploadedFile::where('category', 'fuel')->sum('file_size'),
             'expense' => UploadedFile::where('category', 'expense')->sum('file_size'),
             'income' => UploadedFile::where('category', 'income')->sum('file_size'),
             'service' => UploadedFile::where('category', 'service')->sum('file_size'),
-            'route' => UploadedFile::where('category', 'route')->sum('file_size'),
         ];
         
         // Convert to MB and calculate percentages
@@ -136,6 +135,7 @@ class SettingsController extends Controller
     {
         $request->validate([
             'file' => 'required|file|max:10240', // Max 10MB
+            'category' => 'required|string|in:fuel,expense,income,service'
         ]);
 
         try {
@@ -159,6 +159,7 @@ class SettingsController extends Controller
                 'mime_type' => $mimeType,
                 'file_size' => $file->getSize(),
                 'file_type' => $fileType,
+                'category' => $request->category,
             ]);
 
             return redirect()->route('settings.file-storage')

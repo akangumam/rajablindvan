@@ -51,7 +51,7 @@ class InvestorController extends Controller
 
         $investor = Investor::create($validated);
 
-        return redirect()->route('investors.show', $investor)
+        return redirect()->route('settings.investors.show', $investor)
             ->with('success', 'Investor berhasil ditambahkan!');
     }
 
@@ -152,7 +152,7 @@ class InvestorController extends Controller
 
         $investor->update($validated);
 
-        return redirect()->route('investors.show', $investor)
+        return redirect()->route('settings.investors.show', $investor)
             ->with('success', 'Data investor berhasil diupdate!');
     }
 
@@ -165,13 +165,13 @@ class InvestorController extends Controller
         
         // Check if investor has vehicles
         if ($investor->vehicles()->count() > 0) {
-            return redirect()->route('investors.index')
+            return redirect()->route('settings.investors.index')
                 ->with('error', 'Tidak dapat menghapus investor yang masih memiliki kendaraan!');
         }
 
         $investor->delete();
 
-        return redirect()->route('investors.index')
+        return redirect()->route('settings.investors.index')
             ->with('success', 'Investor berhasil dihapus!');
     }
 
