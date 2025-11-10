@@ -78,15 +78,16 @@
             <i class="fas fa-info-circle"></i> Price Reference
         </button>
     </div>
-    <select name="service_type_id" id="service_type" class="form-control @error('service_type_id') is-invalid @enderror" required onchange="updateServicePrice()">
-        <option value="" data-price="0">Select Service Type</option>
-        @foreach($serviceTypes as $serviceType)
-            <option value="{{ $serviceType->id }}" data-price="{{ $serviceType->estimated_price ?? 0 }}" {{ old('service_type_id') == $serviceType->id ? 'selected' : '' }}>
-                {{ $serviceType->name }}
-            </option>
-        @endforeach
-    </select>
-    @error('service_type_id')
+
+    <!-- Multi-select Service Types Display -->
+    <div id="serviceTypesDisplay" class="form-control @error('service_types') is-invalid @enderror" style="cursor: pointer; min-height: 44px; padding: 8px 12px; display: flex; align-items: center; justify-content: center; position: relative;" onclick="openServiceTypesModal()">
+        <span id="serviceTypesPlaceholder" style="color: #6c757d; font-size: 15px;">Select Service Types</span>
+    </div>
+
+    <!-- Hidden input to store selected service types -->
+    <input type="hidden" name="service_types" id="serviceTypesInput" value="">
+
+    @error('service_types')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
@@ -584,6 +585,17 @@ function confirmServiceSelection() {
 
     // Store in hidden input as JSON
     document.getElementById('serviceTypesInput').value = JSON.stringify(selectedServices);
+
+    // Update estimated price field with total cost
+    const estimatedPriceField = document.getElementById('estimated_price');
+    if (estimatedPriceField) {
+        estimatedPriceField.value = totalCost;
+        // Add visual feedback for auto-fill
+        estimatedPriceField.style.background = '#e3f2fd';
+        setTimeout(() => {
+            estimatedPriceField.style.background = '';
+        }, 2000);
+    }
 
     // Close modal
     bootstrap.Modal.getInstance(document.getElementById('serviceTypesModal')).hide();
