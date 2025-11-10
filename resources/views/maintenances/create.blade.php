@@ -37,7 +37,7 @@
         border-color: #3498db;
         box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
     }
-    
+
     /* Field Style - Drivvo inspired */
     .field-group {
         margin-bottom: 20px;
@@ -49,7 +49,7 @@
     .field-icon {
         display: none; /* Hide individual field icons */
     }
-    
+
     /* ===== VEHICLE MODAL POPUP ===== */
     .vehicle-modal {
         display: none;
@@ -196,7 +196,7 @@
         from { transform: translateY(50px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
-    
+
     .page-title-section {
         display: flex;
         align-items: center;
@@ -224,7 +224,7 @@
         font-weight: 600;
         color: #212529;
     }
-    
+
     /* Drivvo Style Inputs */
     .form-control,
     .form-select {
@@ -280,7 +280,7 @@
         background: #f8f9fa;
         color: #495057;
     }
-    
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .content-area {
@@ -334,9 +334,9 @@
                 <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 14px;"></i>
             @endif
         </div>
-        
+
         <div style="border-bottom: 1px solid #e9ecef; margin-bottom: 24px;"></div>
-        
+
         <!-- Page Title -->
         <div style="display: flex; align-items: center; margin-bottom: 24px;">
             <div class="title-icon">
@@ -365,8 +365,8 @@
         <!-- Date -->
         <div class="field-group">
             <label class="form-label" for="service_date">1. Date</label>
-            <input type="date" class="form-control @error('service_date') is-invalid @enderror" 
-                   id="service_date" name="service_date" 
+            <input type="date" class="form-control @error('service_date') is-invalid @enderror"
+                   id="service_date" name="service_date"
                    value="{{ old('service_date', date('Y-m-d')) }}" required>
             @error('service_date')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -377,8 +377,8 @@
         <!-- Time -->
         <div class="field-group">
             <label class="form-label" for="service_time">2. Time</label>
-            <input type="time" class="form-control @error('service_time') is-invalid @enderror" 
-                   id="service_time" name="service_time" 
+            <input type="time" class="form-control @error('service_time') is-invalid @enderror"
+                   id="service_time" name="service_time"
                    value="{{ old('service_time', date('H:i')) }}" required>
             @error('service_time')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -389,9 +389,9 @@
         <!-- Odometer -->
         <div class="field-group">
             <label class="form-label" for="odometer">3. Odometer</label>
-            <input type="number" class="form-control @error('odometer') is-invalid @enderror" 
-                   id="odometer" name="odometer" 
-                   value="{{ old('odometer', isset($vehicle) ? $vehicle->odometer : '') }}" 
+            <input type="number" class="form-control @error('odometer') is-invalid @enderror"
+                   id="odometer" name="odometer"
+                   value="{{ old('odometer', isset($vehicle) ? $vehicle->odometer : '') }}"
                    step="0.1" min="0" placeholder="Enter odometer reading" required>
             @error('odometer')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -406,8 +406,13 @@
 
         <!-- Type of Service -->
         <div class="field-group">
-            <label class="form-label" for="service_type">4. Type of Service</label>
-            <select class="form-select @error('service_type') is-invalid @enderror" 
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label mb-0" for="service_type">4. Type of Service</label>
+                <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#partsReferenceModal" style="padding: 2px 8px; font-size: 11px;">
+                    <i class="fas fa-info-circle"></i> Price Reference
+                </button>
+            </div>
+            <select class="form-select @error('service_type') is-invalid @enderror"
                     id="service_type" name="service_type" required>
                 <option value="">-- Select Type of Service --</option>
                 <option value="Oil Change" {{ old('service_type') == 'Oil Change' ? 'selected' : '' }}>Oil Change</option>
@@ -429,7 +434,7 @@
         <!-- Place -->
         <div class="field-group">
             <label class="form-label" for="place">5. Place</label>
-            <select class="form-select @error('place') is-invalid @enderror" 
+            <select class="form-select @error('place') is-invalid @enderror"
                     id="place" name="place" required>
                 <option value="">-- Select Place --</option>
                 <option value="Workshop A" {{ old('place') == 'Workshop A' ? 'selected' : '' }}>Workshop A</option>
@@ -447,7 +452,7 @@
         <!-- User -->
         <div class="field-group">
             <label class="form-label" for="user_display">6. User</label>
-            <input type="text" class="form-control" id="user_display" 
+            <input type="text" class="form-control" id="user_display"
                    value="{{ auth()->check() ? auth()->user()->name : 'Guest' }}" readonly>
             <input type="hidden" name="user_id" value="{{ auth()->id() }}">
             <small class="text-muted d-block mt-1" style="font-size: 11px;">Based on account logged in</small>
@@ -456,7 +461,7 @@
         <!-- Payment Method -->
         <div class="field-group">
             <label class="form-label" for="payment_method">7. Payment Method</label>
-            <select class="form-select @error('payment_method') is-invalid @enderror" 
+            <select class="form-select @error('payment_method') is-invalid @enderror"
                     id="payment_method" name="payment_method" required>
                 <option value="">-- Select Payment Method --</option>
                 <option value="Cash" {{ old('payment_method') == 'Cash' ? 'selected' : '' }}>Cash</option>
@@ -475,8 +480,8 @@
         <!-- Notes -->
         <div class="field-group">
             <label class="form-label" for="notes">8. Notes</label>
-            <textarea class="form-control @error('notes') is-invalid @enderror" 
-                      id="notes" name="notes" rows="4" 
+            <textarea class="form-control @error('notes') is-invalid @enderror"
+                      id="notes" name="notes" rows="4"
                       placeholder="Enter service notes...">{{ old('notes') }}</textarea>
             @error('notes')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -491,9 +496,9 @@
                 <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('attachment').click()">
                     <i class="fas fa-paperclip me-2"></i>ATTACH FILE
                 </button>
-                <input type="file" class="d-none @error('attachment') is-invalid @enderror" 
-                       id="attachment" name="attachment" 
-                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" 
+                <input type="file" class="d-none @error('attachment') is-invalid @enderror"
+                       id="attachment" name="attachment"
+                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
                        onchange="updateFileName(this)">
                 <span id="fileName" class="ms-3 text-muted" style="font-size: 13px;"></span>
                 @error('attachment')
@@ -641,7 +646,244 @@ document.addEventListener('DOMContentLoaded', function() {
     const serviceDateValue = document.getElementById('service_date').value;
     document.getElementById('hidden_maintenance_date').value = serviceDateValue;
 });
+
+// Search functionality in Parts Reference Modal
+function searchParts() {
+    const input = document.getElementById('partsSearch');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('partsTable');
+    const tr = table.getElementsByTagName('tr');
+
+    for (let i = 0; i < tr.length; i++) {
+        const tdName = tr[i].getElementsByTagName('td')[0];
+        const tdCategory = tr[i].getElementsByTagName('td')[1];
+        if (tdName || tdCategory) {
+            const txtName = tdName ? tdName.textContent || tdName.innerText : '';
+            const txtCategory = tdCategory ? tdCategory.textContent || tdCategory.innerText : '';
+            if (txtName.toLowerCase().indexOf(filter) > -1 || txtCategory.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = '';
+            } else {
+                tr[i].style.display = 'none';
+            }
+        }
+    }
+}
 </script>
+
+<!-- Parts Reference Modal -->
+<div class="modal fade" id="partsReferenceModal" tabindex="-1" aria-labelledby="partsReferenceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h5 class="modal-title" id="partsReferenceModalLabel">
+                    <i class="fas fa-tools"></i> Parts Price Reference
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background-color: #f8f9fa;">
+                <!-- Search Box -->
+                <div class="mb-3">
+                    <input type="text"
+                           id="partsSearch"
+                           class="form-control"
+                           placeholder="🔍 Search parts name or category..."
+                           onkeyup="searchParts()"
+                           style="border-radius: 20px; padding: 10px 20px;">
+                </div>
+
+                <!-- Parts Table -->
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-hover table-striped" id="partsTable">
+                        <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <tr>
+                                <th style="width: 35%;">Part Name</th>
+                                <th style="width: 25%;">Category</th>
+                                <th style="width: 20%;" class="text-end">Price (Rp)</th>
+                                <th style="width: 20%;">Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Oil & Fluids -->
+                            <tr>
+                                <td><i class="fas fa-oil-can text-warning"></i> Engine Oil (5W-30)</td>
+                                <td><span class="badge bg-warning text-dark">Oil Change</span></td>
+                                <td class="text-end">150,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-oil-can text-warning"></i> Engine Oil (10W-40)</td>
+                                <td><span class="badge bg-warning text-dark">Oil Change</span></td>
+                                <td class="text-end">175,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-tint text-info"></i> Brake Fluid</td>
+                                <td><span class="badge bg-danger">Brake Service</span></td>
+                                <td class="text-end">85,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-tint text-primary"></i> Coolant</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">95,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-tint text-success"></i> Transmission Fluid</td>
+                                <td><span class="badge bg-secondary">Transmission</span></td>
+                                <td class="text-end">225,000</td>
+                                <td><span class="badge bg-warning text-dark">Limited</span></td>
+                            </tr>
+
+                            <!-- Filters -->
+                            <tr>
+                                <td><i class="fas fa-filter text-primary"></i> Oil Filter</td>
+                                <td><span class="badge bg-warning text-dark">Oil Change</span></td>
+                                <td class="text-end">45,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-filter text-secondary"></i> Air Filter</td>
+                                <td><span class="badge bg-info">General</span></td>
+                                <td class="text-end">65,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-filter text-dark"></i> Fuel Filter</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">120,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-filter text-info"></i> Cabin Air Filter</td>
+                                <td><span class="badge bg-primary">AC Service</span></td>
+                                <td class="text-end">85,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+
+                            <!-- Tires -->
+                            <tr>
+                                <td><i class="fas fa-circle text-dark"></i> Tire (Front) 185/65R15</td>
+                                <td><span class="badge bg-dark">Tire</span></td>
+                                <td class="text-end">550,000</td>
+                                <td><span class="badge bg-warning text-dark">Limited</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-circle text-dark"></i> Tire (Rear) 185/65R15</td>
+                                <td><span class="badge bg-dark">Tire</span></td>
+                                <td class="text-end">550,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+
+                            <!-- Brakes -->
+                            <tr>
+                                <td><i class="fas fa-stop-circle text-danger"></i> Brake Pad (Front)</td>
+                                <td><span class="badge bg-danger">Brake Service</span></td>
+                                <td class="text-end">350,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-stop-circle text-danger"></i> Brake Pad (Rear)</td>
+                                <td><span class="badge bg-danger">Brake Service</span></td>
+                                <td class="text-end">280,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-compact-disc text-danger"></i> Brake Disc (Front)</td>
+                                <td><span class="badge bg-danger">Brake Service</span></td>
+                                <td class="text-end">650,000</td>
+                                <td><span class="badge bg-warning text-dark">Limited</span></td>
+                            </tr>
+
+                            <!-- Battery -->
+                            <tr>
+                                <td><i class="fas fa-car-battery text-success"></i> Battery 12V 60Ah</td>
+                                <td><span class="badge bg-success">Battery</span></td>
+                                <td class="text-end">850,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-car-battery text-success"></i> Battery 12V 80Ah</td>
+                                <td><span class="badge bg-success">Battery</span></td>
+                                <td class="text-end">1,250,000</td>
+                                <td><span class="badge bg-warning text-dark">Limited</span></td>
+                            </tr>
+
+                            <!-- AC Parts -->
+                            <tr>
+                                <td><i class="fas fa-snowflake text-primary"></i> AC Refrigerant (R134a)</td>
+                                <td><span class="badge bg-primary">AC Service</span></td>
+                                <td class="text-end">125,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-fan text-primary"></i> AC Compressor</td>
+                                <td><span class="badge bg-primary">AC Service</span></td>
+                                <td class="text-end">2,500,000</td>
+                                <td><span class="badge bg-danger">Out of Stock</span></td>
+                            </tr>
+
+                            <!-- Spark Plugs -->
+                            <tr>
+                                <td><i class="fas fa-bolt text-warning"></i> Spark Plug (Standard)</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">35,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-bolt text-warning"></i> Spark Plug (Iridium)</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">85,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+
+                            <!-- Belts -->
+                            <tr>
+                                <td><i class="fas fa-grip-lines text-secondary"></i> Timing Belt</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">450,000</td>
+                                <td><span class="badge bg-warning text-dark">Limited</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-grip-lines text-secondary"></i> Fan Belt</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">125,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+
+                            <!-- Wipers -->
+                            <tr>
+                                <td><i class="fas fa-wind text-info"></i> Wiper Blade (Front)</td>
+                                <td><span class="badge bg-info">General</span></td>
+                                <td class="text-end">85,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-wind text-info"></i> Wiper Blade (Rear)</td>
+                                <td><span class="badge bg-info">General</span></td>
+                                <td class="text-end">65,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Summary Info -->
+                <div class="alert alert-info mt-3 mb-0" style="border-radius: 12px;">
+                    <i class="fas fa-info-circle"></i> <strong>Note:</strong>
+                    Prices are indicative and may vary based on brand, quality, and supplier.
+                    Please confirm current prices before ordering.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endpush
 @endsection
 
