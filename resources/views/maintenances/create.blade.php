@@ -413,17 +413,17 @@
                 </button>
             </div>
             <select class="form-select @error('service_type') is-invalid @enderror"
-                    id="service_type" name="service_type" required>
-                <option value="">-- Select Type of Service --</option>
-                <option value="Oil Change" {{ old('service_type') == 'Oil Change' ? 'selected' : '' }}>Oil Change</option>
-                <option value="Tire Rotation" {{ old('service_type') == 'Tire Rotation' ? 'selected' : '' }}>Tire Rotation</option>
-                <option value="Brake Service" {{ old('service_type') == 'Brake Service' ? 'selected' : '' }}>Brake Service</option>
-                <option value="Engine Repair" {{ old('service_type') == 'Engine Repair' ? 'selected' : '' }}>Engine Repair</option>
-                <option value="Transmission Service" {{ old('service_type') == 'Transmission Service' ? 'selected' : '' }}>Transmission Service</option>
-                <option value="Battery Replacement" {{ old('service_type') == 'Battery Replacement' ? 'selected' : '' }}>Battery Replacement</option>
-                <option value="AC Service" {{ old('service_type') == 'AC Service' ? 'selected' : '' }}>AC Service</option>
-                <option value="General Inspection" {{ old('service_type') == 'General Inspection' ? 'selected' : '' }}>General Inspection</option>
-                <option value="Other" {{ old('service_type') == 'Other' ? 'selected' : '' }}>Other</option>
+                    id="service_type" name="service_type" required onchange="updateServicePrice()">
+                <option value="" data-price="0">-- Select Type of Service --</option>
+                <option value="Oil Change" data-price="150000" {{ old('service_type') == 'Oil Change' ? 'selected' : '' }}>Oil Change</option>
+                <option value="Tire Rotation" data-price="100000" {{ old('service_type') == 'Tire Rotation' ? 'selected' : '' }}>Tire Rotation</option>
+                <option value="Brake Service" data-price="500000" {{ old('service_type') == 'Brake Service' ? 'selected' : '' }}>Brake Service</option>
+                <option value="Engine Repair" data-price="1500000" {{ old('service_type') == 'Engine Repair' ? 'selected' : '' }}>Engine Repair</option>
+                <option value="Transmission Service" data-price="800000" {{ old('service_type') == 'Transmission Service' ? 'selected' : '' }}>Transmission Service</option>
+                <option value="Battery Replacement" data-price="850000" {{ old('service_type') == 'Battery Replacement' ? 'selected' : '' }}>Battery Replacement</option>
+                <option value="AC Service" data-price="400000" {{ old('service_type') == 'AC Service' ? 'selected' : '' }}>AC Service</option>
+                <option value="General Inspection" data-price="200000" {{ old('service_type') == 'General Inspection' ? 'selected' : '' }}>General Inspection</option>
+                <option value="Other" data-price="0" {{ old('service_type') == 'Other' ? 'selected' : '' }}>Other</option>
             </select>
             @error('service_type')
                 <div class="invalid-feedback">{{ $message }}</div>
@@ -431,9 +431,32 @@
             <small class="text-muted d-block mt-1" style="font-size: 11px;">Drop down selection based on list that been set on setting menu</small>
         </div>
 
+        <!-- Estimated Price (Auto-filled based on service type) -->
+        <div class="field-group">
+            <label class="form-label" for="estimated_price">5. Estimated Service Price</label>
+            <div class="input-group">
+                <span class="input-group-text">Rp</span>
+                <input type="text"
+                       class="form-control @error('estimated_price') is-invalid @enderror"
+                       id="estimated_price"
+                       name="estimated_price"
+                       value="{{ old('estimated_price', '0') }}"
+                       placeholder="0"
+                       readonly
+                       style="background-color: #f8f9fa;">
+                <span class="input-group-text">.00</span>
+            </div>
+            @error('estimated_price')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+            <small class="text-muted d-block mt-1" style="font-size: 11px;">
+                <i class="fas fa-info-circle"></i> Price automatically filled based on service type selection. You can view detailed parts prices in the reference modal above.
+            </small>
+        </div>
+
         <!-- Place -->
         <div class="field-group">
-            <label class="form-label" for="place">5. Place</label>
+            <label class="form-label" for="place">6. Place</label>
             <select class="form-select @error('place') is-invalid @enderror"
                     id="place" name="place" required>
                 <option value="">-- Select Place --</option>
@@ -451,7 +474,7 @@
 
         <!-- User -->
         <div class="field-group">
-            <label class="form-label" for="user_display">6. User</label>
+            <label class="form-label" for="user_display">7. User</label>
             <input type="text" class="form-control" id="user_display"
                    value="{{ auth()->check() ? auth()->user()->name : 'Guest' }}" readonly>
             <input type="hidden" name="user_id" value="{{ auth()->id() }}">
@@ -646,6 +669,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const serviceDateValue = document.getElementById('service_date').value;
     document.getElementById('hidden_maintenance_date').value = serviceDateValue;
 });
+
+// Update Service Price based on selected service type
+function updateServicePrice() {
+    const serviceTypeSelect = document.getElementById('service_type');
+    const estimatedPriceInput = document.getElementById('estimated_price');
+
+    // Get selected option
+    const selectedOption = serviceTypeSelect.options[serviceTypeSelect.selectedIndex];
+    const price = selectedOption.getAttribute('data-price') || '0';
+
+    // Format price with thousand separator
+    const formattedPrice = parseInt(price).toLocaleString('id-ID');
+    estimatedPriceInput.value = formattedPrice;
+}
 
 // Search functionality in Parts Reference Modal
 function searchParts() {
