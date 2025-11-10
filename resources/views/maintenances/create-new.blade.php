@@ -16,13 +16,13 @@
         $lastFill = $vehicle->fuelFills()->latest('fill_date')->first();
         $lastMaintenance = $vehicle->maintenances()->latest('maintenance_date')->first();
         $lastTrip = $vehicle->trips()->latest('trip_date')->first();
-        
+
         $odometerValues = collect([
             $lastFill ? $lastFill->odometer : 0,
             $lastMaintenance ? $lastMaintenance->odometer : 0,
             $lastTrip ? $lastTrip->end_odometer ?? $lastTrip->start_odometer : 0
         ]);
-        
+
         $lastOdometer = $odometerValues->max();
     }
 @endphp
@@ -57,9 +57,9 @@
 <div class="field-group">
     <label class="form-label">Odometer (km)</label>
     <div class="input-group">
-        <input type="number" step="0.01" name="odometer" id="odometerInput" class="form-control" 
-               value="{{ old('odometer') }}" 
-               min="{{ $lastOdometer }}" 
+        <input type="number" step="0.01" name="odometer" id="odometerInput" class="form-control"
+               value="{{ old('odometer') }}"
+               min="{{ $lastOdometer }}"
                placeholder="Enter Current Odometer" required>
         <span class="input-group-text">km</span>
     </div>
@@ -72,11 +72,16 @@
 
 <!-- Service Type -->
 <div class="field-group">
-    <label class="form-label">Service Type</label>
-    <select name="service_type_id" class="form-control @error('service_type_id') is-invalid @enderror" required>
-        <option value="">Select Service Type</option>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label mb-0">Service Type</label>
+        <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#partsReferenceModal" style="padding: 2px 8px; font-size: 11px;">
+            <i class="fas fa-info-circle"></i> Price Reference
+        </button>
+    </div>
+    <select name="service_type_id" id="service_type" class="form-control @error('service_type_id') is-invalid @enderror" required onchange="updateServicePrice()">
+        <option value="" data-price="0">Select Service Type</option>
         @foreach($serviceTypes as $serviceType)
-            <option value="{{ $serviceType->id }}" {{ old('service_type_id') == $serviceType->id ? 'selected' : '' }}>
+            <option value="{{ $serviceType->id }}" data-price="{{ $serviceType->estimated_price ?? 0 }}" {{ old('service_type_id') == $serviceType->id ? 'selected' : '' }}>
                 {{ $serviceType->name }}
             </option>
         @endforeach
@@ -84,6 +89,29 @@
     @error('service_type_id')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
+</div>
+
+<!-- Estimated Service Price -->
+<div class="field-group">
+    <label class="form-label" for="estimated_price">Estimated Service Price</label>
+    <div class="input-group">
+        <span class="input-group-text">Rp</span>
+        <input type="number"
+               class="form-control @error('estimated_price') is-invalid @enderror"
+               id="estimated_price"
+               name="estimated_price"
+               value="{{ old('estimated_price', '0') }}"
+               placeholder="Enter service price"
+               min="0"
+               step="1000"
+               required>
+    </div>
+    @error('estimated_price')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+    <small class="text-muted d-block mt-1" style="font-size: 11px;">
+        <i class="fas fa-magic"></i> Auto-filled based on service type, but you can manually adjust the price as needed.
+    </small>
 </div>
 
 <!-- Place -->
@@ -155,7 +183,7 @@
                         <input type="text" id="serviceTypeSearch" class="form-control" placeholder="Search Service Type..." style="border-left: 0;">
                     </div>
                 </div>
-                
+
                 <!-- Service Types List with Checkboxes -->
                 <div id="serviceTypesList" style="max-height: 400px; overflow-y: auto;">
                     <!-- AC -->
@@ -166,7 +194,7 @@
                         </div>
                         <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
                     </div>
-                    
+
                     <!-- Ban Baru -->
                     <div class="service-type-item" data-value="Ban Baru" data-price="0" style="padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
@@ -175,7 +203,7 @@
                         </div>
                         <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
                     </div>
-                    
+
                     <!-- Batere -->
                     <div class="service-type-item" data-value="Batere" data-price="0" style="padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
@@ -184,7 +212,7 @@
                         </div>
                         <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
                     </div>
-                    
+
                     <!-- Cost Tenaga Kerja -->
                     <div class="service-type-item" data-value="Cost Tenaga Kerja" data-price="0" style="padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
@@ -193,7 +221,7 @@
                         </div>
                         <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
                     </div>
-                    
+
                     <!-- Brake Fluid -->
                     <div class="service-type-item" data-value="Brake Fluid" data-price="0" style="padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
@@ -203,7 +231,7 @@
                         <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
                     </div>
                 </div>
-                
+
                 <!-- Footer with Buttons -->
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0; display: flex; gap: 12px;">
                     <button type="button" class="btn" onclick="showAddServiceTypeForm()" style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 24px; background: white; color: #6c757d; font-weight: 500; text-transform: uppercase; font-size: 14px;">
@@ -387,7 +415,7 @@ function openServiceTypesModal() {
 document.getElementById('serviceTypeSearch').addEventListener('input', function() {
     const searchText = this.value.toLowerCase();
     const items = document.querySelectorAll('.service-type-item');
-    
+
     items.forEach(item => {
         const label = item.querySelector('label').textContent.toLowerCase();
         item.style.display = label.includes(searchText) ? 'flex' : 'none';
@@ -399,7 +427,7 @@ document.querySelectorAll('.service-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', function() {
         const item = this.closest('.service-type-item');
         const priceInput = item.querySelector('.service-price-input');
-        
+
         if (this.checked) {
             priceInput.style.display = 'block';
             priceInput.focus();
@@ -432,7 +460,7 @@ function addNewServiceType() {
         alert('Mohon Enter service type name');
         return;
     }
-    
+
     // Check for duplicates
     const existingServices = document.querySelectorAll('.service-type-item span:first-child');
     for (let service of existingServices) {
@@ -441,7 +469,7 @@ function addNewServiceType() {
             return;
         }
     }
-    
+
     // Add new service to list
     const serviceTypeList = document.getElementById('serviceTypeList');
     const newItem = document.createElement('div');
@@ -454,13 +482,13 @@ function addNewServiceType() {
         </div>
         <input type="number" class="service-price-input" placeholder="Price" style="display: none; width: 150px; padding: 8px; border: 1px solid #e0e0e0; border-radius: 8px; text-align: right;">
     `;
-    
+
     serviceTypeList.appendChild(newItem);
-    
+
     // Add event listeners to the new checkbox
     const checkbox = newItem.querySelector('.service-checkbox');
     const priceInput = newItem.querySelector('.service-price-input');
-    
+
     checkbox.addEventListener('change', function() {
         if (this.checked) {
             priceInput.style.display = 'block';
@@ -470,22 +498,22 @@ function addNewServiceType() {
             priceInput.value = '';
         }
     });
-    
+
     newItem.addEventListener('click', function(e) {
         if (e.target !== checkbox && e.target !== priceInput) {
             checkbox.checked = !checkbox.checked;
             checkbox.dispatchEvent(new Event('change'));
         }
     });
-    
+
     newItem.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     newItem.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
-    
+
     // Close add modal and return to service types modal
     bootstrap.Modal.getInstance(document.getElementById('addServiceTypeModal')).hide();
     document.getElementById('newServiceTypeName').value = '';
     new bootstrap.Modal(document.getElementById('serviceTypesModal')).show();
-    
+
     alert('Service Type "' + newName + '" successfully added!');
 }
 
@@ -493,7 +521,7 @@ function addNewServiceType() {
 function selectAllServices() {
     const checkboxes = document.querySelectorAll('.service-checkbox');
     const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-    
+
     checkboxes.forEach(checkbox => {
         if (!allChecked) {
             checkbox.checked = true;
@@ -513,50 +541,50 @@ function confirmServiceSelection() {
     selectedServices = [];
     let totalCost = 0;
     const checkboxes = document.querySelectorAll('.service-checkbox:checked');
-    
+
     if (checkboxes.length === 0) {
         alert('Select at least one Service Type');
         return;
     }
-    
+
     // Validate all checked services have price
     let hasError = false;
     checkboxes.forEach(checkbox => {
         const item = checkbox.closest('.service-type-item');
         const priceInput = item.querySelector('.service-price-input');
         const price = parseFloat(priceInput.value) || 0;
-        
+
         if (price === 0) {
             hasError = true;
         }
     });
-    
+
     if (hasError) {
         alert('Please enter values for all checked services');
         return;
     }
-    
+
     // Collect selected services
     checkboxes.forEach(checkbox => {
         const item = checkbox.closest('.service-type-item');
         const serviceName = item.getAttribute('data-value');
         const priceInput = item.querySelector('.service-price-input');
         const price = parseFloat(priceInput.value) || 0;
-        
+
         selectedServices.push({
             name: serviceName,
             price: price
         });
-        
+
         totalCost += price;
     });
-    
+
     // Update display
     updateServiceTypesDisplay();
-    
+
     // Store in hidden input as JSON
     document.getElementById('serviceTypesInput').value = JSON.stringify(selectedServices);
-    
+
     // Close modal
     bootstrap.Modal.getInstance(document.getElementById('serviceTypesModal')).hide();
 }
@@ -564,27 +592,27 @@ function confirmServiceSelection() {
 function updateServiceTypesDisplay() {
     const display = document.getElementById('serviceTypesDisplay');
     const placeholder = document.getElementById('serviceTypesPlaceholder');
-    
+
     if (selectedServices.length === 0) {
         placeholder.style.display = 'inline';
         display.querySelectorAll('.service-badge').forEach(badge => badge.remove());
         return;
     }
-    
+
     placeholder.style.display = 'none';
     display.querySelectorAll('.service-badge').forEach(badge => badge.remove());
-    
+
     // Calculate total
     let totalCost = 0;
     selectedServices.forEach(service => {
         totalCost += service.price;
     });
-    
+
     // Create summary display
     const summaryDiv = document.createElement('div');
     summaryDiv.className = 'service-badge';
     summaryDiv.style.cssText = 'width: 100%; display: flex; flex-direction: column; gap: 8px;';
-    
+
     // Add each service as a row
     selectedServices.forEach(service => {
         const row = document.createElement('div');
@@ -595,7 +623,7 @@ function updateServiceTypesDisplay() {
         `;
         summaryDiv.appendChild(row);
     });
-    
+
     // Add total row
     const totalRow = document.createElement('div');
     totalRow.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #e3f2fd; border-radius: 6px; border-top: 2px solid #1976d2;';
@@ -604,7 +632,7 @@ function updateServiceTypesDisplay() {
         <span style="color: #1976d2; font-size: 15px; font-weight: 600;">Rp ${Number(totalCost).toLocaleString('id-ID')}</span>
     `;
     summaryDiv.appendChild(totalRow);
-    
+
     // Add "+ SERVICE TYPE" button
     const addButton = document.createElement('button');
     addButton.type = 'button';
@@ -615,7 +643,7 @@ function updateServiceTypesDisplay() {
         openServiceTypesModal();
     };
     summaryDiv.appendChild(addButton);
-    
+
     display.appendChild(summaryDiv);
 }
 
@@ -661,21 +689,21 @@ function showAddDriverForm() {
 function addNewDriver() {
     const newName = document.getElementById('newDriverName').value.trim();
     if (!newName) { alert('Mohon Enter driver name'); return; }
-    
+
     const driverList = document.getElementById('driverList');
     const newItem = document.createElement('div');
     newItem.className = 'driver-item';
     newItem.setAttribute('data-value', newName);
     newItem.style.cssText = 'padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;';
     newItem.innerHTML = `<span style="color: #5B7C99; font-size: 15px;">${newName}</span>`;
-    
+
     newItem.addEventListener('click', function() {
         document.getElementById('driverInput').value = this.getAttribute('data-value');
         bootstrap.Modal.getInstance(document.getElementById('driverModal')).hide();
     });
     newItem.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     newItem.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
-    
+
     driverList.appendChild(newItem);
     bootstrap.Modal.getInstance(document.getElementById('addDriverModal')).hide();
     document.getElementById('driverInput').value = newName;
@@ -715,21 +743,21 @@ function showAddPaymentMethodForm() {
 function addNewPaymentMethod() {
     const newName = document.getElementById('newPaymentMethodName').value.trim();
     if (!newName) { alert('Mohon Enter payment method'); return; }
-    
+
     const paymentMethodList = document.getElementById('paymentMethodList');
     const newItem = document.createElement('div');
     newItem.className = 'payment-method-item';
     newItem.setAttribute('data-value', newName);
     newItem.style.cssText = 'padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;';
     newItem.innerHTML = `<span style="color: #5B7C99; font-size: 15px;">${newName}</span>`;
-    
+
     newItem.addEventListener('click', function() {
         document.getElementById('paymentMethodInput').value = this.getAttribute('data-value');
         bootstrap.Modal.getInstance(document.getElementById('paymentMethodModal')).hide();
     });
     newItem.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     newItem.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
-    
+
     paymentMethodList.appendChild(newItem);
     bootstrap.Modal.getInstance(document.getElementById('addPaymentMethodModal')).hide();
     document.getElementById('paymentMethodInput').value = newName;
@@ -755,7 +783,7 @@ function openTimePicker() {
     const timeInput = document.getElementById('timeInput');
     const currentTime = timeInput.value || '{{ date("H:i") }}';
     const [hours, minutes] = currentTime.split(':');
-    
+
     const modal = document.createElement('div');
     modal.className = 'time-picker-modal';
     modal.innerHTML = `
@@ -779,7 +807,7 @@ function openTimePicker() {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
     setTimeout(() => { drawClock(parseInt(hours), parseInt(minutes)); }, 100);
 }
@@ -803,33 +831,33 @@ let selectingHour = true;
 function drawClock(hour, minute) {
     selectedHour = hour;
     selectedMinute = minute;
-    
+
     const canvas = document.getElementById('clockCanvas');
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     const centerX = 140;
     const centerY = 140;
     const radius = 120;
-    
+
     ctx.clearRect(0, 0, 280, 280);
-    
+
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     ctx.fillStyle = '#f0f0f0';
     ctx.fill();
-    
+
     ctx.fillStyle = '#333';
     ctx.font = 'bold 16px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    
+
     if (selectingHour) {
         for (let i = 1; i <= 12; i++) {
             const angle = (i - 3) * Math.PI / 6;
             const x = centerX + radius * 0.7 * Math.cos(angle);
             const y = centerY + radius * 0.7 * Math.sin(angle);
-            
+
             if (i === selectedHour || (selectedHour > 12 && i === selectedHour - 12)) {
                 ctx.beginPath();
                 ctx.arc(x, y, 20, 0, 2 * Math.PI);
@@ -839,7 +867,7 @@ function drawClock(hour, minute) {
             } else {
                 ctx.fillStyle = '#666';
             }
-            
+
             ctx.fillText(i, x, y);
         }
     } else {
@@ -847,9 +875,9 @@ function drawClock(hour, minute) {
             const angle = (i / 5 - 3) * Math.PI / 6;
             const x = centerX + radius * 0.7 * Math.cos(angle);
             const y = centerY + radius * 0.7 * Math.sin(angle);
-            
+
             const displayMinute = i === 0 ? '00' : i.toString().padStart(2, '0');
-            
+
             if (i === selectedMinute) {
                 ctx.beginPath();
                 ctx.arc(x, y, 20, 0, 2 * Math.PI);
@@ -859,15 +887,15 @@ function drawClock(hour, minute) {
             } else {
                 ctx.fillStyle = '#666';
             }
-            
+
             ctx.fillText(displayMinute, x, y);
         }
     }
-    
-    const hyoungle = selectingHour 
+
+    const hyoungle = selectingHour
         ? (selectedHour - 3) * Math.PI / 6
         : (selectedMinute / 5 - 3) * Math.PI / 6;
-    
+
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(
@@ -877,18 +905,18 @@ function drawClock(hour, minute) {
     ctx.strokeStyle = '#1976d2';
     ctx.lineWidth = 2;
     ctx.stroke();
-    
+
     ctx.beginPath();
     ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
     ctx.fillStyle = '#1976d2';
     ctx.fill();
-    
+
     canvas.onclick = function(e) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left - centerX;
         const y = e.clientY - rect.top - centerY;
         const angle = Math.atan2(y, x);
-        
+
         if (selectingHour) {
             let hour = Math.round((angle + Math.PI / 2) / (Math.PI / 6));
             if (hour <= 0) hour += 12;
@@ -902,7 +930,7 @@ function drawClock(hour, minute) {
             selectedMinute = minute;
             drawClock(selectedHour, selectedMinute);
         }
-        
+
         updateTimeDisplay();
     };
 }
@@ -910,11 +938,217 @@ function drawClock(hour, minute) {
 function updateTimeDisplay() {
     const timeDisplay = document.getElementById('timeDisplay');
     if (timeDisplay) {
-        timeDisplay.textContent = selectedHour.toString().padStart(2, '0') + ':' + 
+        timeDisplay.textContent = selectedHour.toString().padStart(2, '0') + ':' +
                                   selectedMinute.toString().padStart(2, '0');
     }
 }
+
+// Update Service Price based on selected service type
+function updateServicePrice() {
+    const serviceTypeSelect = document.getElementById('service_type');
+    const estimatedPriceInput = document.getElementById('estimated_price');
+
+    // Get selected option
+    const selectedOption = serviceTypeSelect.options[serviceTypeSelect.selectedIndex];
+    const price = selectedOption.getAttribute('data-price') || '0';
+
+    // Set the numeric value (without thousand separator for number input)
+    estimatedPriceInput.value = price;
+
+    // Optional: Add visual feedback
+    estimatedPriceInput.style.backgroundColor = '#e8f4f8';
+    setTimeout(() => {
+        estimatedPriceInput.style.backgroundColor = '';
+    }, 500);
+}
+
+// Search functionality in Parts Reference Modal
+function searchParts() {
+    const input = document.getElementById('partsSearch');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('partsTable');
+    const tr = table.getElementsByTagName('tr');
+
+    for (let i = 0; i < tr.length; i++) {
+        const tdName = tr[i].getElementsByTagName('td')[0];
+        const tdCategory = tr[i].getElementsByTagName('td')[1];
+        if (tdName || tdCategory) {
+            const txtName = tdName ? tdName.textContent || tdName.innerText : '';
+            const txtCategory = tdCategory ? tdCategory.textContent || tdCategory.innerText : '';
+            if (txtName.toLowerCase().indexOf(filter) > -1 || txtCategory.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = '';
+            } else {
+                tr[i].style.display = 'none';
+            }
+        }
+    }
+}
+
 @endsection
+
+<!-- Parts Reference Modal -->
+<div class="modal fade" id="partsReferenceModal" tabindex="-1" aria-labelledby="partsReferenceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h5 class="modal-title" id="partsReferenceModalLabel">
+                    <i class="fas fa-tools"></i> Parts Price Reference
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background-color: #f8f9fa;">
+                <!-- Search Box -->
+                <div class="mb-3">
+                    <input type="text"
+                           id="partsSearch"
+                           class="form-control"
+                           placeholder="🔍 Search parts name or category..."
+                           onkeyup="searchParts()"
+                           style="border-radius: 20px; padding: 10px 20px;">
+                </div>
+
+                <!-- Parts Table -->
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-hover table-striped" id="partsTable">
+                        <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <tr>
+                                <th style="width: 35%;">Part Name</th>
+                                <th style="width: 25%;">Category</th>
+                                <th style="width: 20%;" class="text-end">Price (Rp)</th>
+                                <th style="width: 20%;">Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Oil & Fluids -->
+                            <tr>
+                                <td><i class="fas fa-oil-can text-warning"></i> Engine Oil (5W-30)</td>
+                                <td><span class="badge bg-warning text-dark">Oil Change</span></td>
+                                <td class="text-end">150,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-oil-can text-warning"></i> Engine Oil (10W-40)</td>
+                                <td><span class="badge bg-warning text-dark">Oil Change</span></td>
+                                <td class="text-end">175,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-tint text-info"></i> Brake Fluid</td>
+                                <td><span class="badge bg-danger">Brake Service</span></td>
+                                <td class="text-end">85,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-tint text-primary"></i> Coolant</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">95,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-tint text-success"></i> Transmission Fluid</td>
+                                <td><span class="badge bg-secondary">Transmission</span></td>
+                                <td class="text-end">225,000</td>
+                                <td><span class="badge bg-warning text-dark">Limited</span></td>
+                            </tr>
+
+                            <!-- Filters -->
+                            <tr>
+                                <td><i class="fas fa-filter text-primary"></i> Oil Filter</td>
+                                <td><span class="badge bg-warning text-dark">Oil Change</span></td>
+                                <td class="text-end">45,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-filter text-secondary"></i> Air Filter</td>
+                                <td><span class="badge bg-info">General</span></td>
+                                <td class="text-end">65,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-filter text-dark"></i> Fuel Filter</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">120,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+
+                            <!-- Tires & Brakes -->
+                            <tr>
+                                <td><i class="fas fa-circle text-dark"></i> Tire (185/65R15)</td>
+                                <td><span class="badge bg-dark">Tire</span></td>
+                                <td class="text-end">550,000</td>
+                                <td><span class="badge bg-warning text-dark">Limited</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-stop-circle text-danger"></i> Brake Pad (Front)</td>
+                                <td><span class="badge bg-danger">Brake Service</span></td>
+                                <td class="text-end">350,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-compact-disc text-danger"></i> Brake Disc</td>
+                                <td><span class="badge bg-danger">Brake Service</span></td>
+                                <td class="text-end">650,000</td>
+                                <td><span class="badge bg-warning text-dark">Limited</span></td>
+                            </tr>
+
+                            <!-- Battery & AC -->
+                            <tr>
+                                <td><i class="fas fa-car-battery text-success"></i> Battery 12V 60Ah</td>
+                                <td><span class="badge bg-success">Battery</span></td>
+                                <td class="text-end">850,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-snowflake text-primary"></i> AC Refrigerant</td>
+                                <td><span class="badge bg-primary">AC Service</span></td>
+                                <td class="text-end">125,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-fan text-primary"></i> AC Compressor</td>
+                                <td><span class="badge bg-primary">AC Service</span></td>
+                                <td class="text-end">2,500,000</td>
+                                <td><span class="badge bg-danger">Out of Stock</span></td>
+                            </tr>
+
+                            <!-- Engine Parts -->
+                            <tr>
+                                <td><i class="fas fa-bolt text-warning"></i> Spark Plug (Standard)</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">35,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-grip-lines text-secondary"></i> Timing Belt</td>
+                                <td><span class="badge bg-info">Engine</span></td>
+                                <td class="text-end">450,000</td>
+                                <td><span class="badge bg-warning text-dark">Limited</span></td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-wind text-info"></i> Wiper Blade</td>
+                                <td><span class="badge bg-info">General</span></td>
+                                <td class="text-end">85,000</td>
+                                <td><span class="badge bg-success">Available</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Summary Info -->
+                <div class="alert alert-info mt-3 mb-0" style="border-radius: 12px;">
+                    <i class="fas fa-info-circle"></i> <strong>Note:</strong>
+                    Prices are indicative and may vary based on brand, quality, and supplier.
+                    Please confirm current prices before ordering.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @push('styles')
 <style>
