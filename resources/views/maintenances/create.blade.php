@@ -431,26 +431,26 @@
             <small class="text-muted d-block mt-1" style="font-size: 11px;">Drop down selection based on list that been set on setting menu</small>
         </div>
 
-        <!-- Estimated Price (Auto-filled based on service type) -->
+        <!-- Estimated Price (Auto-filled but editable) -->
         <div class="field-group">
             <label class="form-label" for="estimated_price">5. Estimated Service Price</label>
             <div class="input-group">
                 <span class="input-group-text">Rp</span>
-                <input type="text"
+                <input type="number"
                        class="form-control @error('estimated_price') is-invalid @enderror"
                        id="estimated_price"
                        name="estimated_price"
                        value="{{ old('estimated_price', '0') }}"
-                       placeholder="0"
-                       readonly
-                       style="background-color: #f8f9fa;">
-                <span class="input-group-text">.00</span>
+                       placeholder="Enter service price"
+                       min="0"
+                       step="1000"
+                       required>
             </div>
             @error('estimated_price')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
             <small class="text-muted d-block mt-1" style="font-size: 11px;">
-                <i class="fas fa-info-circle"></i> Price automatically filled based on service type selection. You can view detailed parts prices in the reference modal above.
+                <i class="fas fa-magic"></i> Auto-filled based on service type, but you can manually adjust the price as needed.
             </small>
         </div>
 
@@ -679,9 +679,14 @@ function updateServicePrice() {
     const selectedOption = serviceTypeSelect.options[serviceTypeSelect.selectedIndex];
     const price = selectedOption.getAttribute('data-price') || '0';
 
-    // Format price with thousand separator
-    const formattedPrice = parseInt(price).toLocaleString('id-ID');
-    estimatedPriceInput.value = formattedPrice;
+    // Set the numeric value (without thousand separator for number input)
+    estimatedPriceInput.value = price;
+
+    // Optional: Add visual feedback
+    estimatedPriceInput.style.backgroundColor = '#e8f4f8';
+    setTimeout(() => {
+        estimatedPriceInput.style.backgroundColor = '';
+    }, 500);
 }
 
 // Search functionality in Parts Reference Modal
