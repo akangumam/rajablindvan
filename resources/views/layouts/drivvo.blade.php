@@ -14,13 +14,13 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Mobile Responsive CSS -->
     <link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
-    
+
     <!-- Custom CSS -->
     <style>
         * {
@@ -74,16 +74,6 @@
 
         .drivvo-sidebar.collapsed .drivvo-nav-link i {
             margin-right: 0;
-        }
-
-        .drivvo-sidebar.collapsed .drivvo-add-btn {
-            width: auto;
-            padding: 12px;
-            border-radius: 50%;
-        }
-
-        .drivvo-sidebar.collapsed .drivvo-add-btn .btn-text {
-            display: none;
         }
 
         .drivvo-sidebar.collapsed .language-switcher {
@@ -211,40 +201,6 @@
         }
 
         .drivvo-nav-link .nav-text {
-            transition: opacity 0.2s ease, width 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .drivvo-add-btn {
-            background-color: #3498db;
-            color: white;
-            border-radius: 50px;
-            padding: 12px 20px;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            white-space: nowrap;
-        }
-
-        .drivvo-add-btn:hover {
-            background-color: #2980b9;
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        .drivvo-add-btn i {
-            margin-right: 8px;
-            flex-shrink: 0;
-        }
-
-        .drivvo-add-btn .btn-text {
             transition: opacity 0.2s ease, width 0.2s ease;
             white-space: nowrap;
         }
@@ -392,54 +348,6 @@
             height: 1px;
             background-color: rgba(255,255,255,0.1);
             margin: 20px 20px;
-        }
-
-        /* Modal Styles */
-        .quick-add-modal .modal-content {
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .quick-add-item {
-            display: flex;
-            align-items: center;
-            padding: 16px 20px;
-            text-decoration: none;
-            color: #333;
-            transition: background-color 0.2s ease;
-            border-radius: 8px;
-            margin: 4px 0;
-        }
-
-        .quick-add-item:hover {
-            background-color: #f8f9fa;
-            color: #333;
-        }
-
-        .quick-add-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 16px;
-            color: white;
-            font-size: 16px;
-        }
-
-        .quick-add-icon.fuel { background-color: #ff9500; }
-        .quick-add-icon.service { background-color: #8b5a3c; }
-        .quick-add-icon.expense { background-color: #ff3b30; }
-        .quick-add-icon.income { background-color: #34c759; }
-        .quick-add-icon.route { background-color: #5e5ce6; }
-        .quick-add-icon.checklist { background-color: #007aff; }
-        .quick-add-icon.reminder { background-color: #af52de; }
-
-        .quick-add-text {
-            font-weight: 500;
-            font-size: 16px;
         }
 
         /* Vehicle Modal Styles */
@@ -831,14 +739,6 @@
                     </a>
                 </div>
 
-                <!-- ADD NEW Button -->
-                <div class="drivvo-nav-item">
-                    <button type="button" class="drivvo-add-btn" data-bs-toggle="modal" data-bs-target="#quickAddModal">
-                        <i class="fas fa-plus"></i>
-                        <span class="btn-text">{{ __('common.add_new') }}</span>
-                    </button>
-                </div>
-
                 <!-- Other Menu Items -->
                 <div class="drivvo-nav-item">
                     <a href="{{ route('reminders.index') }}" class="drivvo-nav-link {{ request()->routeIs('reminders.*') ? 'active' : '' }}">
@@ -907,7 +807,7 @@
                         <i class="fas fa-sign-out-alt"></i>
                         <span class="nav-text">{{ __('common.logout') }}</span>
                     </button>
-                    
+
                     <!-- Hidden logout form -->
                     <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
@@ -961,7 +861,7 @@
                     </div>
                     @endif
                     @endif
-                    
+
                     @php
                         $roleColors = [
                             'super_admin' => 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -982,44 +882,9 @@
                 </div>
             </div>
             @endauth
-            
+
+
             @yield('content')
-        </div>
-    </div>
-
-    <!-- Quick Add Modal -->
-    <div class="modal fade quick-add-modal" id="quickAddModal" tabindex="-1" aria-labelledby="quickAddModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
-            <div class="modal-content">
-                <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body pt-0">
-                    <!-- Income -->
-                    <a href="{{ route('incomes.create') }}" class="quick-add-item">
-                        <div class="quick-add-icon income">
-                            <i class="fas fa-wallet"></i>
-                        </div>
-                        <div class="quick-add-text">{{ __('common.income_label') }}</div>
-                    </a>
-
-                    <!-- Service (Maintenance) -->
-                    <a href="{{ route('maintenances.create') }}" class="quick-add-item">
-                        <div class="quick-add-icon service">
-                            <i class="fas fa-wrench"></i>
-                        </div>
-                        <div class="quick-add-text">{{ __('common.service') }}</div>
-                    </a>
-
-                    <!-- Expense -->
-                    <a href="{{ route('expenses.create') }}" class="quick-add-item">
-                        <div class="quick-add-icon expense">
-                            <i class="fas fa-credit-card"></i>
-                        </div>
-                        <div class="quick-add-text">{{ __('common.expense') }}</div>
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -1103,7 +968,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Location Filter Script -->
     <script>
         function changeLocation(locationId) {
@@ -1113,28 +978,28 @@
                 select.disabled = true;
                 select.style.opacity = '0.6';
             }
-            
+
             // Build URL with location parameter
             const currentUrl = new URL(window.location.href);
-            
+
             // Remove existing location parameter
             currentUrl.searchParams.delete('location_id');
-            
+
             // Add new location parameter only if not "Semua Lokasi"
             if (locationId && locationId !== '') {
                 currentUrl.searchParams.set('location_id', locationId);
             }
-            
+
             // Redirect to update page
             window.location.href = currentUrl.toString();
         }
-        
+
         // Preserve location filter on page load
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const locationId = urlParams.get('location_id');
             const select = document.getElementById('locationFilter');
-            
+
             if (select) {
                 // Set selected value based on URL parameter
                 if (locationId) {
@@ -1145,7 +1010,7 @@
             }
         });
     </script>
-    
+
     <!-- Logout Modal Script -->
     <script>
         function showLogoutModal() {
@@ -1180,7 +1045,7 @@
                     sidebar.classList.toggle('collapsed');
                     mainContent.classList.toggle('sidebar-collapsed');
                     sidebarToggleBtn.classList.toggle('collapsed');
-                    
+
                     // Save state to localStorage
                     const isCollapsed = sidebar.classList.contains('collapsed');
                     localStorage.setItem('sidebarCollapsed', isCollapsed);
@@ -1256,7 +1121,7 @@
             }
         });
     </script>
-    
+
     @stack('scripts')
 </body>
 </html>
