@@ -66,10 +66,10 @@ class MaintenanceController extends Controller
                 abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
             }
 
-            return view('maintenances.create-new', compact('vehicles', 'vehicle', 'users', 'serviceTypes', 'paymentMethods'));
+            return view('maintenances.create', compact('vehicles', 'vehicle', 'users', 'serviceTypes', 'paymentMethods'));
         }
 
-        return view('maintenances.create-new', compact('vehicles', 'users', 'serviceTypes', 'paymentMethods'));
+        return view('maintenances.create', compact('vehicles', 'users', 'serviceTypes', 'paymentMethods'));
     }
 
     /**
@@ -77,7 +77,7 @@ class MaintenanceController extends Controller
      */
     public function createForVehicle(Vehicle $vehicle)
     {
-        return view('maintenances.create-new', compact('vehicle'));
+        return view('maintenances.create', compact('vehicle'));
     }
 
     /**
