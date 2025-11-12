@@ -1,361 +1,718 @@
-@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')
+@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')
 
 
 
-@section('title', 'Maintenance Data')
+@section('title', 'Data Perawatan & Service')
 
 
 
-@section('content')@section('title', 'Service & Maintenance')
+@section('content')@section('title', 'Maintenance Data')
 
 <style>
 
     .page-header {
 
-        padding: 0 0 20px 0;
+        background: white;
 
-        margin-bottom: 0;@section('content')@section('title', 'Service & Maintenance')
-
-        border-bottom: 2px solid #f0f0f0;
-
-    }<style>
-
-    
-
-    .page-title {    .page-header {
-
-        font-size: 28px;
-
-        font-weight: 800;        display: flex;
-
-        color: #1a1a1a;
-
-        margin: 0;        justify-content: space-between;@section('content')@section('title', 'Data Perawatan')
-
-        letter-spacing: -0.5px;
-
-    }        align-items: center;
-
-    
-
-    .page-subtitle {        margin-bottom: 24px;<style>
-
-        font-size: 15px;
-
-        color: #6c757d;        background: white;
-
-        margin: 8px 0 0 0;
-
-        font-weight: 400;        padding: 30px;    .page-header {
-
-    }
-
-            border-radius: 8px;
-
-    .maintenance-card {
-
-        border: none;        box-shadow: 0 1px 3px rgba(0,0,0,0.1);        display: flex;
+        padding: 30px;@section('content')@section('title', 'Service & Maintenance')
 
         border-radius: 12px;
 
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);    }
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);<style>
 
-        margin-bottom: 12px;
+        margin-bottom: 24px;
 
-        transition: all 0.2s ease;    .page-title {        justify-content: space-between;@section('content')@section('title', 'Data Perawatan')
+        display: flex;    .page-header {
+
+        justify-content: space-between;
+
+        align-items: center;        padding: 0 0 20px 0;
 
     }
 
-            font-size: 32px;
+            margin-bottom: 0;@section('content')@section('title', 'Service & Maintenance')
 
-    .maintenance-card:hover {
+    .page-title {
 
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);        font-weight: 700;        align-items: center;
+        font-size: 28px;        border-bottom: 2px solid #f0f0f0;
 
-        transform: translateY(-2px);
+        font-weight: 700;
 
-    }        color: #2c3e50;
+        color: #1a1a1a;    }<style>
 
-    
+        margin: 0;
 
-    .maintenance-icon {        margin: 0 0 8px 0;        margin-bottom: 24px;<style>
-
-        width: 48px;
-
-        height: 48px;        display: flex;
-
-        border-radius: 12px;
-
-        display: flex;        align-items: center;        background: white;
+        display: flex;
 
         align-items: center;
 
-        justify-content: center;        gap: 12px;
+        gap: 12px;    .page-title {    .page-header {
+
+    }
+
+            font-size: 28px;
+
+    .page-title i {
+
+        color: #fd7e14;        font-weight: 800;        display: flex;
 
         font-size: 24px;
 
-    }    }        padding: 30px;    .page-header {
+    }        color: #1a1a1a;
 
-    
 
-    .type-badge {    .page-title i {
 
-        padding: 6px 12px;
+    .page-subtitle {        margin: 0;        justify-content: space-between;@section('content')@section('title', 'Data Perawatan')
 
-        border-radius: 6px;        font-size: 28px;        border-radius: 8px;
+        font-size: 14px;
 
-        font-weight: 500;
+        color: #6c757d;        letter-spacing: -0.5px;
 
-        font-size: 12px;        color: #fd7e14;
+        margin: 8px 0 0 0;
 
-    }
-
-        }        box-shadow: 0 1px 3px rgba(0,0,0,0.1);        padding: 0 0 20px 0;
-
-    .category-service {
-
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);    .page-subtitle {
-
-        color: white;
-
-    }        font-size: 15px;    }
-
-    
-
-    .category-repair {        color: #7f8c8d;
-
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-
-        color: white;        margin: 0;    .page-title {        margin-bottom: 0;@section('content')@section('title', 'Data Perawatan')
+        font-weight: 400;    }        align-items: center;
 
     }
 
-            font-weight: 400;
 
-    .category-inspection {
 
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);    }        font-size: 32px;
+    .btn-add-maintenance {
 
-        color: white;
+        background: white;    .page-subtitle {        margin-bottom: 24px;<style>
 
-    }    .btn-add-maintenance {
+        border: 2px solid #fd7e14;
 
-    
+        color: #fd7e14;        font-size: 15px;
 
-    .category-emergency {        background: white;        font-weight: 700;        border-bottom: 2px solid #f0f0f0;
+        padding: 12px 24px;
 
-        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        border-radius: 8px;        color: #6c757d;        background: white;
 
-        color: white;        border: 2px solid #fd7e14;
+        font-weight: 600;
 
-    }
-
-            color: #fd7e14;        color: #2c3e50;
-
-    .status-badge {
-
-        padding: 6px 12px;        padding: 10px 24px;
-
-        border-radius: 6px;
-
-        font-size: 12px;        border-radius: 8px;        margin: 0 0 8px 0;    }<style>
-
-        font-weight: 500;
-
-    }        font-weight: 600;
-
-    
-
-    .status-badge.completed {        text-transform: uppercase;        display: flex;
-
-        background: #d4edda;
-
-        color: #155724;        font-size: 14px;
-
-    }
-
-            letter-spacing: 0.5px;        align-items: center;    .page-title {
-
-    .status-badge.scheduled {
-
-        background: #cce5ff;        transition: all 0.3s ease;
-
-        color: #004085;
-
-    }        text-decoration: none;        gap: 12px;
-
-    
-
-    .maintenance-amount {        display: inline-block;
-
-        font-size: 18px;
-
-        font-weight: 700;    }    }        font-size: 28px;    .maintenance-card {
-
-        color: #1a1a1a;
-
-    }    .btn-add-maintenance:hover {
-
-    
-
-    .vehicle-badge {        background: #fd7e14;    .page-title i {
-
-        display: inline-flex;
-
-        align-items: center;        color: white;
-
-        gap: 6px;
-
-        padding: 4px 12px;        transform: translateY(-1px);        font-size: 28px;        font-weight: 800;
-
-        background: #f8f9fa;
-
-        border-radius: 6px;        box-shadow: 0 4px 12px rgba(253, 126, 20, 0.3);
+        text-transform: uppercase;        margin: 8px 0 0 0;
 
         font-size: 13px;
 
-        color: #495057;    }        color: #fd7e14;
+        letter-spacing: 0.5px;        font-weight: 400;        padding: 30px;    .page-header {
+
+        transition: all 0.3s ease;
+
+        text-decoration: none;    }
+
+        display: inline-block;
+
+    }            border-radius: 8px;
+
+
+
+    .btn-add-maintenance:hover {    .maintenance-card {
+
+        background: #fd7e14;
+
+        color: white;        border: none;        box-shadow: 0 1px 3px rgba(0,0,0,0.1);        display: flex;
+
+        transform: translateY(-2px);
+
+        box-shadow: 0 4px 12px rgba(253, 126, 20, 0.3);        border-radius: 12px;
+
+        text-decoration: none;
+
+    }        box-shadow: 0 2px 8px rgba(0,0,0,0.06);    }
+
+
+
+    .maintenance-table-container {        margin-bottom: 12px;
+
+        background: white;
+
+        border-radius: 12px;        transition: all 0.2s ease;    .page-title {        justify-content: space-between;@section('content')@section('title', 'Data Perawatan')
+
+        overflow: hidden;
+
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);    }
 
     }
 
-        .maintenance-table-container {
+                font-size: 32px;
 
-    .empty-state {
+    .maintenance-table {
 
-        text-align: center;        background: white;    }        color: #1a1a1a;        border: none;
+        width: 100%;    .maintenance-card:hover {
 
-        padding: 60px 20px;
+        margin: 0;
 
-        max-width: 500px;        border-radius: 12px;
+        border: none;        box-shadow: 0 4px 12px rgba(0,0,0,0.1);        font-weight: 700;        align-items: center;
 
-        margin: 0 auto;
+    }
 
-    }        overflow: hidden;    .page-subtitle {
+            transform: translateY(-2px);
 
-    
+    .maintenance-table thead {
 
-    .empty-state i {        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        background: #f8f9fa;    }        color: #2c3e50;
 
-        font-size: 64px;
+        border-bottom: 2px solid #e9ecef;
 
-        color: #dee2e6;    }        font-size: 15px;        margin: 0;
+    }
 
-        margin-bottom: 20px;
 
-    }    .maintenance-table {
 
-    
+    .maintenance-table thead th {    .maintenance-icon {        margin: 0 0 8px 0;        margin-bottom: 24px;<style>
 
-    .empty-state h4 {        width: 100%;        color: #7f8c8d;
+        padding: 16px 20px;
 
-        font-size: 24px;
+        font-size: 13px;        width: 48px;
 
-        font-weight: 700;        margin: 0;
+        font-weight: 600;
+
+        color: #6c757d;        height: 48px;        display: flex;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.5px;        border-radius: 12px;
+
+        border: none;
+
+    }        display: flex;        align-items: center;        background: white;
+
+
+
+    .maintenance-table tbody td {        align-items: center;
+
+        padding: 20px;
+
+        vertical-align: middle;        justify-content: center;        gap: 12px;
+
+        border-bottom: 1px solid #f0f0f0;
+
+        font-size: 14px;        font-size: 24px;
 
         color: #495057;
 
-        margin-bottom: 12px;    }        margin: 0;        letter-spacing: -0.5px;        border-radius: 12px;@section('content')@section('title', 'Data Perawatan')@section('title', 'Data Perawatan')
+    }    }    }        padding: 30px;    .page-header {
+
+
+
+    .maintenance-table tbody tr:hover {
+
+        background: #f8f9fa;
+
+    }    .type-badge {    .page-title i {
+
+
+
+    .vehicle-badge {        padding: 6px 12px;
+
+        display: inline-flex;
+
+        align-items: center;        border-radius: 6px;        font-size: 28px;        border-radius: 8px;
+
+        gap: 8px;
+
+        padding: 6px 12px;        font-weight: 500;
+
+        background: #e3f2fd;
+
+        border-radius: 6px;        font-size: 12px;        color: #fd7e14;
+
+        font-weight: 500;
+
+        color: #1976d2;    }
+
+        font-size: 13px;
+
+    }        }        box-shadow: 0 1px 3px rgba(0,0,0,0.1);        padding: 0 0 20px 0;
+
+
+
+    .type-badge {    .category-service {
+
+        padding: 6px 12px;
+
+        border-radius: 6px;        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);    .page-subtitle {
+
+        font-weight: 500;
+
+        font-size: 12px;        color: white;
+
+        text-transform: uppercase;
+
+    }    }        font-size: 15px;    }
+
+
+
+    .type-badge.service {
+
+        background: #fff3cd;
+
+        color: #856404;    .category-repair {        color: #7f8c8d;
 
     }
 
-        .maintenance-table thead {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 
-    .empty-state p {
+    .type-badge.repair {
 
-        font-size: 16px;        background: #f8f9fa;        font-weight: 400;
+        background: #f8d7da;        color: white;        margin: 0;    .page-title {        margin-bottom: 0;@section('content')@section('title', 'Data Perawatan')
 
-        color: #6c757d;
+        color: #721c24;
 
-        margin-bottom: 24px;        border-bottom: 2px solid #e9ecef;
+    }    }
+
+
+
+    .type-badge.routine {            font-weight: 400;
+
+        background: #d1ecf1;
+
+        color: #0c5460;    .category-inspection {
 
     }
 
-</style>    }    }    }
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);    }        font-size: 32px;
+
+    .status-badge {
+
+        padding: 6px 12px;        color: white;
+
+        border-radius: 6px;
+
+        font-weight: 500;    }    .btn-add-maintenance {
+
+        font-size: 12px;
+
+    }
 
 
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">    .maintenance-table thead th {
+    .status-badge.completed {    .category-emergency {        background: white;        font-weight: 700;        border-bottom: 2px solid #f0f0f0;
 
-    <h1 class="h2">Maintenance & Service Data</h1>
+        background: #d4edda;
 
-    <div class="btn-toolbar mb-2 mb-md-0">        padding: 16px 20px;    .btn-add-maintenance {
+        color: #155724;        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
 
-        <a href="{{ route('maintenances.create') }}" class="btn btn-sm btn-primary">
+    }
 
-            <i class="fas fa-plus"></i> Add New        font-size: 13px;
+            color: white;        border: 2px solid #fd7e14;
 
-        </a>
+    .status-badge.scheduled {
 
-    </div>        font-weight: 600;        background: white;    .page-subtitle {        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        background: #cce5ff;    }
 
-</div>
+        color: #004085;
 
-        color: #6c757d;
+    }            color: #fd7e14;        color: #2c3e50;
 
-@if(session('success'))
 
-    <div class="alert alert-success alert-dismissible fade show" role="alert">        text-transform: uppercase;        border: 2px solid #fd7e14;
 
-        <i class="fas fa-check-circle"></i> {{ session('success') }}
+    .action-btns {    .status-badge {
 
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>        letter-spacing: 0.5px;
+        display: flex;
+
+        gap: 8px;        padding: 6px 12px;        padding: 10px 24px;
+
+    }
+
+            border-radius: 6px;
+
+    .btn-action {
+
+        padding: 8px 12px;        font-size: 12px;        border-radius: 8px;        margin: 0 0 8px 0;    }<style>
+
+        border-radius: 6px;
+
+        border: none;        font-weight: 500;
+
+        font-size: 13px;
+
+        cursor: pointer;    }        font-weight: 600;
+
+        transition: all 0.2s ease;
+
+        text-decoration: none;
+
+        display: inline-block;
+
+    }    .status-badge.completed {        text-transform: uppercase;        display: flex;
+
+
+
+    .btn-view {        background: #d4edda;
+
+        background: #e3f2fd;
+
+        color: #1976d2;        color: #155724;        font-size: 14px;
+
+    }
+
+        }
+
+    .btn-view:hover {
+
+        background: #1976d2;            letter-spacing: 0.5px;        align-items: center;    .page-title {
+
+        color: white;
+
+    }    .status-badge.scheduled {
+
+
+
+    .btn-edit {        background: #cce5ff;        transition: all 0.3s ease;
+
+        background: #fff3cd;
+
+        color: #856404;        color: #004085;
+
+    }
+
+        }        text-decoration: none;        gap: 12px;
+
+    .btn-edit:hover {
+
+        background: #ffc107;
+
+        color: white;
+
+    }    .maintenance-amount {        display: inline-block;
+
+
+
+    .btn-delete {        font-size: 18px;
+
+        background: #f8d7da;
+
+        color: #721c24;        font-weight: 700;    }    }        font-size: 28px;    .maintenance-card {
+
+    }
+
+            color: #1a1a1a;
+
+    .btn-delete:hover {
+
+        background: #dc3545;    }    .btn-add-maintenance:hover {
+
+        color: white;
+
+    }
+
+
+
+    .empty-state {    .vehicle-badge {        background: #fd7e14;    .page-title i {
+
+        text-align: center;
+
+        padding: 60px 20px;        display: inline-flex;
+
+        max-width: 600px;
+
+        margin: 40px auto;        align-items: center;        color: white;
+
+    }
+
+            gap: 6px;
+
+    .empty-icon {
+
+        font-size: 64px;        padding: 4px 12px;        transform: translateY(-1px);        font-size: 28px;        font-weight: 800;
+
+        color: #dee2e6;
+
+        margin-bottom: 20px;        background: #f8f9fa;
+
+    }
+
+            border-radius: 6px;        box-shadow: 0 4px 12px rgba(253, 126, 20, 0.3);
+
+    .empty-title {
+
+        font-size: 28px;        font-size: 13px;
+
+        font-weight: 700;
+
+        color: #2c3e50;        color: #495057;    }        color: #fd7e14;
+
+        margin-bottom: 12px;
+
+    }    }
+
+
+
+    .empty-subtitle {        .maintenance-table-container {
+
+        font-size: 16px;
+
+        color: #6c757d;    .empty-state {
+
+        margin-bottom: 30px;
+
+    }        text-align: center;        background: white;    }        color: #1a1a1a;        border: none;
+
+</style>
+
+        padding: 60px 20px;
+
+<div class="container-fluid">
+
+    <!-- Success Message -->        max-width: 500px;        border-radius: 12px;
+
+    @if(session('success'))
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">        margin: 0 auto;
+
+        <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>    }        overflow: hidden;    .page-subtitle {
 
     </div>
 
-@endif        border: none;        color: #fd7e14;        font-size: 15px;
+    @endif
 
 
 
-@if($maintenances->count() > 0)    }
+    <!-- Page Header -->    .empty-state i {        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 
-<div class="table-responsive">
+    <div class="page-header">
 
-    <table class="table table-hover">    .maintenance-table tbody td {        padding: 10px 24px;
+        <div>        font-size: 64px;
 
-        <thead>
+            <h1 class="page-title">
 
-            <tr>        padding: 20px;
+                <i class="fas fa-wrench"></i>        color: #dee2e6;    }        font-size: 15px;        margin: 0;
 
-                <th>Date</th>
+                Data Perawatan & Service
 
-                <th>Vehicle</th>        vertical-align: middle;        border-radius: 8px;        color: #6c757d;        margin-bottom: 12px;<style>
+            </h1>        margin-bottom: 20px;
 
-                <th>Type</th>
+            <p class="page-subtitle">Kelola catatan perawatan dan service kendaraan</p>
 
-                <th>Service Type</th>        border-bottom: 1px solid #f0f0f0;
+        </div>    }    .maintenance-table {
 
-                <th>Place</th>
+        <a href="{{ route('maintenances.create') }}" class="btn-add-maintenance">
 
-                <th>Odometer</th>        font-size: 14px;        font-weight: 600;
+            <i class="fas fa-plus me-2"></i>Tambah Service Baru
 
-                <th>Cost</th>
+        </a>
 
-                <th>Actions</th>        color: #495057;
+    </div>    .empty-state h4 {        width: 100%;        color: #7f8c8d;
 
-            </tr>
 
-        </thead>    }        text-transform: uppercase;        margin: 8px 0 0 0;
 
-        <tbody>
+    @if($maintenances->count() > 0)        font-size: 24px;
 
-            @foreach($maintenances as $maintenance)    .maintenance-table tbody tr:hover {
+    <!-- Maintenance Table -->
 
-            <tr>
+    <div class="maintenance-table-container">        font-weight: 700;        margin: 0;
 
-                <td>        background: #f8f9fa;        font-size: 14px;
+        <table class="maintenance-table">
 
-                    <div class="fw-bold">{{ $maintenance->maintenance_date->format('d M Y') }}</div>
+            <thead>        color: #495057;
 
-                    <small class="text-muted">{{ $maintenance->maintenance_date->diffForHumans() }}</small>    }
+                <tr>
 
-                </td>
+                    <th>Tanggal</th>        margin-bottom: 12px;    }        margin: 0;        letter-spacing: -0.5px;        border-radius: 12px;@section('content')@section('title', 'Data Perawatan')@section('title', 'Data Perawatan')
 
-                <td>    .vehicle-badge {        letter-spacing: 0.5px;        font-weight: 400;        transition: all 0.2s ease;
+                    <th>Kendaraan</th>
 
-                    <div class="vehicle-badge">
+                    <th>Jenis</th>    }
 
-                        <i class="fas fa-car"></i>        display: inline-flex;
+                    <th>Service Type</th>
 
+                    <th>Odometer</th>        .maintenance-table thead {
+
+                    <th>Tempat</th>
+
+                    <th>Biaya</th>    .empty-state p {
+
+                    <th>Status</th>
+
+                    <th>Aksi</th>        font-size: 16px;        background: #f8f9fa;        font-weight: 400;
+
+                </tr>
+
+            </thead>        color: #6c757d;
+
+            <tbody>
+
+                @foreach($maintenances as $maintenance)        margin-bottom: 24px;        border-bottom: 2px solid #e9ecef;
+
+                <tr>
+
+                    <td>    }
+
+                        <div class="fw-bold">{{ $maintenance->maintenance_date->format('d M Y') }}</div>
+
+                        <small class="text-muted">{{ $maintenance->maintenance_date->diffForHumans() }}</small></style>    }    }    }
+
+                    </td>
+
+                    <td>
+
+                        <div class="vehicle-badge">
+
+                            <i class="fas fa-car"></i><div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">    .maintenance-table thead th {
+
+                            {{ $maintenance->vehicle->name ?? 'N/A' }}
+
+                        </div>    <h1 class="h2">Maintenance & Service Data</h1>
+
+                    </td>
+
+                    <td>    <div class="btn-toolbar mb-2 mb-md-0">        padding: 16px 20px;    .btn-add-maintenance {
+
+                        @php
+
+                            $category = strtolower($maintenance->category ?? 'service');        <a href="{{ route('maintenances.create') }}" class="btn btn-sm btn-primary">
+
+                        @endphp
+
+                        <span class="type-badge {{ $category }}">            <i class="fas fa-plus"></i> Add New        font-size: 13px;
+
+                            {{ $maintenance->type ?? 'Service' }}
+
+                        </span>        </a>
+
+                    </td>
+
+                    <td>    </div>        font-weight: 600;        background: white;    .page-subtitle {        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+                        <strong>{{ $maintenance->service_type ?? '-' }}</strong>
+
+                    </td></div>
+
+                    <td>
+
+                        <span class="text-nowrap">{{ number_format($maintenance->odometer, 0, ',', '.') }} km</span>        color: #6c757d;
+
+                    </td>
+
+                    <td>{{ $maintenance->place ?? $maintenance->workshop ?? '-' }}</td>@if(session('success'))
+
+                    <td>
+
+                        @php    <div class="alert alert-success alert-dismissible fade show" role="alert">        text-transform: uppercase;        border: 2px solid #fd7e14;
+
+                            $cost = $maintenance->total_cost ?? $maintenance->cost ?? 0;
+
+                        @endphp        <i class="fas fa-check-circle"></i> {{ session('success') }}
+
+                        <strong class="text-success">Rp {{ number_format($cost, 0, ',', '.') }}</strong>
+
+                    </td>        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>        letter-spacing: 0.5px;
+
+                    <td>
+
+                        @php    </div>
+
+                            $statusMap = [
+
+                                'Completed' => ['text' => 'Selesai', 'class' => 'completed'],@endif        border: none;        color: #fd7e14;        font-size: 15px;
+
+                                'Scheduled' => ['text' => 'Terjadwal', 'class' => 'scheduled'],
+
+                                'Overdue' => ['text' => 'Terlambat', 'class' => 'overdue']
+
+                            ];
+
+                            $status = $statusMap[$maintenance->status] ?? ['text' => $maintenance->status, 'class' => 'completed'];@if($maintenances->count() > 0)    }
+
+                        @endphp
+
+                        <span class="status-badge {{ $status['class'] }}">{{ $status['text'] }}</span><div class="table-responsive">
+
+                    </td>
+
+                    <td>    <table class="table table-hover">    .maintenance-table tbody td {        padding: 10px 24px;
+
+                        <div class="action-btns">
+
+                            <a href="{{ route('maintenances.show', $maintenance) }}" class="btn-action btn-view" title="Lihat Detail">        <thead>
+
+                                <i class="fas fa-eye"></i>
+
+                            </a>            <tr>        padding: 20px;
+
+                            <a href="{{ route('maintenances.edit', $maintenance) }}" class="btn-action btn-edit" title="Edit">
+
+                                <i class="fas fa-edit"></i>                <th>Date</th>
+
+                            </a>
+
+                            @if(auth()->user()->hasRole('Administrator'))                <th>Vehicle</th>        vertical-align: middle;        border-radius: 8px;        color: #6c757d;        margin-bottom: 12px;<style>
+
+                            <form action="{{ route('maintenances.destroy', $maintenance) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data perawatan ini?')">
+
+                                @csrf                <th>Type</th>
+
+                                @method('DELETE')
+
+                                <button type="submit" class="btn-action btn-delete" title="Hapus">                <th>Service Type</th>        border-bottom: 1px solid #f0f0f0;
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>                <th>Place</th>
+
+                            </form>
+
+                            @endif                <th>Odometer</th>        font-size: 14px;        font-weight: 600;
+
+                        </div>
+
+                    </td>                <th>Cost</th>
+
+                </tr>
+
+                @endforeach                <th>Actions</th>        color: #495057;
+
+            </tbody>
+
+        </table>            </tr>
+
+
+
+        <!-- Pagination -->        </thead>    }        text-transform: uppercase;        margin: 8px 0 0 0;
+
+        <div class="p-3">
+
+            {{ $maintenances->links() }}        <tbody>
+
+        </div>
+
+    </div>            @foreach($maintenances as $maintenance)    .maintenance-table tbody tr:hover {
+
+    @else
+
+    <!-- Empty State -->            <tr>
+
+    <div class="maintenance-table-container">
+
+        <div class="empty-state">                <td>        background: #f8f9fa;        font-size: 14px;
+
+            <div class="empty-icon">
+
+                <i class="fas fa-wrench"></i>                    <div class="fw-bold">{{ $maintenance->maintenance_date->format('d M Y') }}</div>
+
+            </div>
+
+            <h2 class="empty-title">Belum Ada Data Perawatan</h2>                    <small class="text-muted">{{ $maintenance->maintenance_date->diffForHumans() }}</small>    }
+
+            <p class="empty-subtitle">Mulai mencatat perawatan dan service kendaraan untuk menjaga kondisi yang optimal.</p>
+
+            <a href="{{ route('maintenances.create') }}" class="btn-add-maintenance">                </td>
+
+                <i class="fas fa-plus me-2"></i>Tambah Data Pertama
+
+            </a>                <td>    .vehicle-badge {        letter-spacing: 0.5px;        font-weight: 400;        transition: all 0.2s ease;
+
+        </div>
+
+    </div>                    <div class="vehicle-badge">
+
+    @endif
+
+</div>                        <i class="fas fa-car"></i>        display: inline-flex;
+
+@endsection
                         {{ $maintenance->vehicle->name ?? 'N/A' }}
 
                     </div>        align-items: center;        transition: all 0.3s ease;
