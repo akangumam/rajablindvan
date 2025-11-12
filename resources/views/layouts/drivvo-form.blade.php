@@ -16,13 +16,13 @@
         background-color: #f8f9fa;
         overflow-x: auto;
     }
-    
+
     .main-content {
         background-color: #f8f9fa;
         padding: 20px;
         overflow: visible;
     }
-    
+
     .content-area {
         background: white;
         padding: 24px 32px;
@@ -31,7 +31,7 @@
         max-width: 800px;
         position: relative;
     }
-    
+
     /* ===== FORM STYLES ===== */
     .form-label {
         font-weight: 500;
@@ -39,14 +39,14 @@
         margin-bottom: 8px;
         font-size: 14px;
     }
-    
+
     .form-control, .form-select {
         border: 1px solid #ddd;
         border-radius: 8px;
         padding: 10px 14px;
         font-size: 14px;
     }
-    
+
     /* Dropdown/Select styling with arrow indicator */
     select.form-control, .form-select {
         appearance: none;
@@ -56,20 +56,20 @@
         padding-right: 40px;
         cursor: pointer;
     }
-    
+
     select.form-control:hover, .form-select:hover {
         border-color: #aaa;
     }
-    
+
     .form-control:focus, .form-select:focus {
         border-color: #3498db;
         box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
     }
-    
+
     .field-group {
         margin-bottom: 20px;
     }
-    
+
     .form-label {
         font-size: 13px;
         color: #6c757d;
@@ -77,7 +77,7 @@
         font-weight: 400;
         display: block;
     }
-    
+
     /* ===== VEHICLE MODAL POPUP ===== */
     .vehicle-modal {
         display: none;
@@ -94,13 +94,13 @@
         padding: 20px;
         margin: 0 !important;
     }
-    
+
     .vehicle-modal.show {
         display: flex !important;
         align-items: center;
         justify-content: center;
     }
-    
+
     .vehicle-modal-content {
         background-color: white;
         border-radius: 12px;
@@ -114,7 +114,7 @@
         margin: 0 auto;
         box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
-    
+
     .vehicle-modal-header {
         padding: 20px 24px;
         border-bottom: 1px solid #e9ecef;
@@ -122,14 +122,14 @@
         justify-content: space-between;
         align-items: center;
     }
-    
+
     .vehicle-modal-title {
         font-size: 20px;
         font-weight: 600;
         color: #2c3e50;
         margin: 0;
     }
-    
+
     .vehicle-modal-close {
         background: transparent;
         border: none;
@@ -144,16 +144,16 @@
         justify-content: center;
         border-radius: 4px;
     }
-    
+
     .vehicle-modal-close:hover {
         background: #f8f9fa;
     }
-    
+
     .vehicle-modal-search {
         padding: 16px 24px;
         border-bottom: 1px solid #e9ecef;
     }
-    
+
     .vehicle-search-input {
         width: 100%;
         padding: 10px 16px 10px 40px;
@@ -161,20 +161,20 @@
         border-radius: 8px;
         font-size: 14px;
     }
-    
+
     .vehicle-search-icon {
         position: absolute;
         left: 40px;
         top: 28px;
         color: #6c757d;
     }
-    
+
     .vehicle-modal-body {
         padding: 0;
         overflow-y: auto;
         max-height: 400px;
     }
-    
+
     .vehicle-list-item {
         padding: 16px 24px;
         display: flex;
@@ -186,22 +186,22 @@
         text-decoration: none;
         color: inherit;
     }
-    
+
     .vehicle-list-item:hover {
         background-color: #f8f9fa;
     }
-    
+
     .vehicle-list-item.active {
         background-color: #e7f3ff;
     }
-    
+
     .vehicle-item-logo {
         width: 40px;
         height: 40px;
         object-fit: contain;
         flex-shrink: 0;
     }
-    
+
     .vehicle-item-placeholder {
         width: 40px;
         height: 40px;
@@ -214,38 +214,38 @@
         font-size: 18px;
         flex-shrink: 0;
     }
-    
+
     .vehicle-item-info {
         flex: 1;
     }
-    
+
     .vehicle-item-name {
         font-size: 15px;
         font-weight: 500;
         color: #2c3e50;
         margin-bottom: 2px;
     }
-    
+
     .vehicle-item-plate {
         font-size: 13px;
         color: #6c757d;
     }
-    
+
     .vehicle-item-icon {
         color: #6c757d;
         font-size: 18px;
     }
-    
+
     @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
     }
-    
+
     @keyframes slideUp {
         from { transform: translateY(50px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
-    
+
     /* ===== HEADER STYLES ===== */
     .page-title-section {
         display: flex;
@@ -256,7 +256,7 @@
         margin-top: 0 !important;
         padding-top: 0 !important;
     }
-    
+
     .page-title-section .title-icon {
         width: 24px;
         height: 24px;
@@ -265,19 +265,19 @@
         justify-content: center;
         margin-right: 8px;
     }
-    
+
     .page-title-section .title-icon i {
         font-size: 18px;
         color: #495057;
     }
-    
+
     .page-title-section h4 {
         margin-bottom: 0;
         font-size: 18px;
         font-weight: 600;
         color: #212529;
     }
-    
+
     /* ===== BUTTONS ===== */
     .btn-save {
         background: #007bff;
@@ -291,12 +291,12 @@
         font-size: 14px;
         letter-spacing: 0.5px;
     }
-    
+
     .btn-save:hover {
         background: #0056b3;
         color: white;
     }
-    
+
     .btn-cancel {
         background: transparent;
         color: #6c757d;
@@ -311,12 +311,12 @@
         text-decoration: none;
         display: inline-block;
     }
-    
+
     .btn-cancel:hover {
         background: #f8f9fa;
         color: #495057;
     }
-    
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
         .content-area {
@@ -329,7 +329,7 @@
             min-height: auto;
         }
     }
-    
+
     @yield('additional-styles')
 </style>
 @endpush
@@ -381,11 +381,11 @@
                 </div>
                 <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 14px;"></i>
             @else
-                <div class="title-icon">
-                    <i class="fas fa-car"></i>
+                <div class="title-icon" style="background-color: #fff3cd; border: 2px dashed #ffc107;">
+                    <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i>
                 </div>
-                <h4 style="flex: 1;">Select Vehicle</h4>
-                <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 14px;"></i>
+                <h4 style="flex: 1; color: #856404;">Select Vehicle <span style="color: #dc3545; font-size: 14px;">(Required)</span></h4>
+                <i class="fas fa-chevron-down" style="color: #ffc107; font-size: 14px;"></i>
             @endif
         </div>
         @else
@@ -521,6 +521,29 @@ function filterVehicles() {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeVehicleModal();
+    }
+});
+
+// Form submission validation - check if vehicle is selected
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('{{ $formId ?? "mainForm" }}');
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Check if vehicle is required for this form
+            @if(!isset($hideVehicleSelector) || !$hideVehicleSelector)
+            const vehicleIdInput = form.querySelector('input[name="vehicle_id"]');
+
+            if (!vehicleIdInput || !vehicleIdInput.value) {
+                e.preventDefault();
+                alert('⚠️ Please select a vehicle first!\n\nYou must select a vehicle before adding service data.');
+                openVehicleModal();
+                return false;
+            }
+            @endif
+
+            return true;
+        });
     }
 });
 

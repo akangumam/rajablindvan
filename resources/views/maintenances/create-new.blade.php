@@ -28,6 +28,7 @@
 @endphp
 
 <!-- Hidden fields for backend compatibility -->
+<input type="hidden" name="type" value="Service">
 <input type="hidden" name="category" value="service">
 <input type="hidden" name="cost" value="0">
 <input type="hidden" name="description" value="-">
@@ -37,14 +38,14 @@
     <div class="col-md-6">
         <div class="field-group">
             <label class="form-label">Date</label>
-            <input type="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d')) }}" required>
+            <input type="date" name="service_date" class="form-control" value="{{ old('service_date', date('Y-m-d')) }}" required>
         </div>
     </div>
     <div class="col-md-6">
         <div class="field-group">
             <label class="form-label">Time</label>
             <div class="input-group">
-                <input type="time" name="time" id="timeInput" class="form-control" value="{{ old('time', date('H:i')) }}" required style="border-right: 0;">
+                <input type="time" name="service_time" id="timeInput" class="form-control" value="{{ old('service_time', date('H:i')) }}" required style="border-right: 0;">
                 <button type="button" class="input-group-text" onclick="openTimePicker()" style="cursor: pointer; background: white; border-left: 0;">
                     <i class="far fa-clock" style="color: #6c757d;"></i>
                 </button>
@@ -84,66 +85,46 @@
         <span id="serviceTypesPlaceholder" style="color: #6c757d; font-size: 15px;">Select Service Types</span>
     </div>
 
-    <!-- Hidden input to store selected service types -->
+    <!-- Hidden inputs to store selected service types -->
     <input type="hidden" name="service_types" id="serviceTypesInput" value="">
+    <input type="hidden" name="service_type" id="serviceTypeInput" value="">
+    <input type="hidden" name="total_cost" id="totalCostInput" value="0">
 
-    @error('service_types')
+    @error('service_type')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
-</div>
-
-<!-- Estimated Service Price -->
-<div class="field-group">
-    <label class="form-label" for="estimated_price">Estimated Service Price</label>
-    <div class="input-group">
-        <span class="input-group-text">Rp</span>
-        <input type="number"
-               class="form-control @error('estimated_price') is-invalid @enderror"
-               id="estimated_price"
-               name="estimated_price"
-               value="{{ old('estimated_price', '0') }}"
-               placeholder="Enter service price"
-               min="0"
-               step="1000"
-               required>
-    </div>
-    @error('estimated_price')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-    <small class="text-muted d-block mt-1" style="font-size: 11px;">
-        <i class="fas fa-magic"></i> Auto-filled based on service type, but you can manually adjust the price as needed.
-    </small>
 </div>
 
 <!-- Place -->
 <div class="field-group">
     <label class="form-label">Place</label>
-    <input type="text" name="location" class="form-control" value="{{ old('location') }}" placeholder="Workshop name or location">
+    <input type="text" name="place" class="form-control" value="{{ old('place') }}" placeholder="Workshop name or location" required>
 </div>
 
 <!-- Driver -->
 <div class="field-group">
     <label class="form-label">Driver</label>
-    <input type="text" name="driver" id="driverInput" class="form-control"
+    <input type="text" id="driverInput" class="form-control"
            value="{{ old('driver') }}"
            placeholder="Select driver"
            readonly
            onclick="openDriverModal()"
            style="cursor: pointer; background: white;">
+    <input type="hidden" name="user_id" id="userIdInput" value="{{ old('user_id') }}">
 </div>
 
 <!-- Payment Method -->
 <div class="field-group">
     <label class="form-label">Payment Method</label>
-    <select name="payment_method_id" class="form-control @error('payment_method_id') is-invalid @enderror" required>
+    <select name="payment_method" class="form-control @error('payment_method') is-invalid @enderror" required>
         <option value="">Select Payment Method</option>
         @foreach($paymentMethods as $paymentMethod)
-            <option value="{{ $paymentMethod->id }}" {{ old('payment_method_id') == $paymentMethod->id ? 'selected' : '' }}>
+            <option value="{{ $paymentMethod->name }}" {{ old('payment_method') == $paymentMethod->name ? 'selected' : '' }}>
                 {{ $paymentMethod->name }}
             </option>
         @endforeach
     </select>
-    @error('payment_method_id')
+    @error('payment_method')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
@@ -193,7 +174,7 @@
                             <input type="checkbox" class="form-check-input service-checkbox" id="service_ac" style="width: 20px; height: 20px; cursor: pointer; margin: 0;">
                             <label for="service_ac" style="color: #5B7C99; font-size: 15px; cursor: pointer; margin: 0; flex: 1;">AC</label>
                         </div>
-                        <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
+                        <input type="text" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;">
                     </div>
 
                     <!-- Ban Baru -->
@@ -202,7 +183,7 @@
                             <input type="checkbox" class="form-check-input service-checkbox" id="service_new_tires" style="width: 20px; height: 20px; cursor: pointer; margin: 0;">
                             <label for="service_new_tires" style="color: #5B7C99; font-size: 15px; cursor: pointer; margin: 0; flex: 1;">New Tires</label>
                         </div>
-                        <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
+                        <input type="text" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;">
                     </div>
 
                     <!-- Batere -->
@@ -211,7 +192,7 @@
                             <input type="checkbox" class="form-check-input service-checkbox" id="service_batere" style="width: 20px; height: 20px; cursor: pointer; margin: 0;">
                             <label for="service_batere" style="color: #5B7C99; font-size: 15px; cursor: pointer; margin: 0; flex: 1;">Batere</label>
                         </div>
-                        <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
+                        <input type="text" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;">
                     </div>
 
                     <!-- Cost Tenaga Kerja -->
@@ -220,7 +201,7 @@
                             <input type="checkbox" class="form-check-input service-checkbox" id="service_tenaga_kerja" style="width: 20px; height: 20px; cursor: pointer; margin: 0;">
                             <label for="service_tenaga_kerja" style="color: #5B7C99; font-size: 15px; cursor: pointer; margin: 0; flex: 1;">Cost Tenaga Kerja</label>
                         </div>
-                        <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
+                        <input type="text" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;">
                     </div>
 
                     <!-- Brake Fluid -->
@@ -229,7 +210,7 @@
                             <input type="checkbox" class="form-check-input service-checkbox" id="service_brake_fluid" style="width: 20px; height: 20px; cursor: pointer; margin: 0;">
                             <label for="service_brake_fluid" style="color: #5B7C99; font-size: 15px; cursor: pointer; margin: 0; flex: 1;">Brake Fluid</label>
                         </div>
-                        <input type="number" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;" step="0.01" min="0">
+                        <input type="text" class="form-control service-price-input" placeholder="Nilai" style="width: 150px; display: none; text-align: right;">
                     </div>
                 </div>
 
@@ -292,7 +273,7 @@
                 </div>
                 <div id="driverList" style="max-height: 300px; overflow-y: auto;">
                     @forelse($users ?? [] as $user)
-                    <div class="driver-item" data-value="{{ $user->name }}" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+                    <div class="driver-item" data-value="{{ $user->name }}" data-id="{{ $user->id }}" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">{{ $user->name }}</span>
                         @if($user->Email)
                         <br><small style="color: #9e9e9e; font-size: 13px;">{{ $user->Email }}</small>
@@ -404,6 +385,23 @@
 @endsection
 
 @section('additional-scripts')
+// ===== FORMAT NUMBER WITH THOUSAND SEPARATOR =====
+function formatRupiah(value) {
+    // Remove non-numeric characters except dot
+    let number = value.replace(/[^\d]/g, '');
+
+    // Format with thousand separator (dot)
+    if (number) {
+        return number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+    return '';
+}
+
+function unformatRupiah(value) {
+    // Remove dots to get raw number
+    return parseInt(value.replace(/\./g, '')) || 0;
+}
+
 // ===== SERVICE TYPES MULTI-SELECT =====
 let selectedServices = [];
 
@@ -435,6 +433,28 @@ document.querySelectorAll('.service-checkbox').forEach(checkbox => {
         } else {
             priceInput.style.display = 'none';
             priceInput.value = '';
+        }
+    });
+});
+
+// Add format number event listener to all price inputs
+document.querySelectorAll('.service-price-input').forEach(input => {
+    input.addEventListener('input', function(e) {
+        let cursorPosition = this.selectionStart;
+        let oldLength = this.value.length;
+
+        // Format the value
+        this.value = formatRupiah(this.value);
+
+        // Adjust cursor position
+        let newLength = this.value.length;
+        cursorPosition += (newLength - oldLength);
+        this.setSelectionRange(cursorPosition, cursorPosition);
+    });
+
+    input.addEventListener('focus', function() {
+        if (this.value === '0') {
+            this.value = '';
         }
     });
 });
@@ -481,7 +501,7 @@ function addNewServiceType() {
             <input type="checkbox" class="service-checkbox" style="width: 20px; height: 20px; cursor: pointer;">
             <span style="color: #5B7C99; font-size: 15px;">${newName}</span>
         </div>
-        <input type="number" class="service-price-input" placeholder="Price" style="display: none; width: 150px; padding: 8px; border: 1px solid #e0e0e0; border-radius: 8px; text-align: right;">
+        <input type="text" class="service-price-input" placeholder="Price" style="display: none; width: 150px; padding: 8px; border: 1px solid #e0e0e0; border-radius: 8px; text-align: right;">
     `;
 
     serviceTypeList.appendChild(newItem);
@@ -489,6 +509,22 @@ function addNewServiceType() {
     // Add event listeners to the new checkbox
     const checkbox = newItem.querySelector('.service-checkbox');
     const priceInput = newItem.querySelector('.service-price-input');
+
+    // Add formatting event listeners to newly added service
+    priceInput.addEventListener('input', function(e) {
+        let cursorPosition = this.selectionStart;
+        let oldLength = this.value.length;
+        this.value = formatRupiah(this.value);
+        let newLength = this.value.length;
+        cursorPosition += (newLength - oldLength);
+        this.setSelectionRange(cursorPosition, cursorPosition);
+    });
+
+    priceInput.addEventListener('focus', function() {
+        if (this.value === '0') {
+            this.value = '';
+        }
+    });
 
     checkbox.addEventListener('change', function() {
         if (this.checked) {
@@ -553,7 +589,7 @@ function confirmServiceSelection() {
     checkboxes.forEach(checkbox => {
         const item = checkbox.closest('.service-type-item');
         const priceInput = item.querySelector('.service-price-input');
-        const price = parseFloat(priceInput.value) || 0;
+        const price = unformatRupiah(priceInput.value);
 
         if (price === 0) {
             hasError = true;
@@ -570,7 +606,7 @@ function confirmServiceSelection() {
         const item = checkbox.closest('.service-type-item');
         const serviceName = item.getAttribute('data-value');
         const priceInput = item.querySelector('.service-price-input');
-        const price = parseFloat(priceInput.value) || 0;
+        const price = unformatRupiah(priceInput.value);
 
         selectedServices.push({
             name: serviceName,
@@ -583,10 +619,17 @@ function confirmServiceSelection() {
     // Update display
     updateServiceTypesDisplay();
 
-    // Store in hidden input as JSON
+    // Store in hidden inputs
     document.getElementById('serviceTypesInput').value = JSON.stringify(selectedServices);
 
-    // Update estimated price field with total cost
+    // Store service names as comma-separated string for backend validation
+    const serviceNames = selectedServices.map(s => s.name).join(', ');
+    document.getElementById('serviceTypeInput').value = serviceNames;
+
+    // Store total cost
+    document.getElementById('totalCostInput').value = totalCost;
+
+    // Update estimated price field with total cost (if exists)
     const estimatedPriceField = document.getElementById('estimated_price');
     if (estimatedPriceField) {
         estimatedPriceField.value = totalCost;
@@ -687,6 +730,7 @@ document.getElementById('driverSearch').addEventListener('input', function() {
 document.querySelectorAll('.driver-item').forEach(item => {
     item.addEventListener('click', function() {
         document.getElementById('driverInput').value = this.getAttribute('data-value');
+        document.getElementById('userIdInput').value = this.getAttribute('data-id');
         bootstrap.Modal.getInstance(document.getElementById('driverModal')).hide();
     });
     item.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });

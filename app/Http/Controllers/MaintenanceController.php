@@ -14,7 +14,7 @@ class MaintenanceController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+
         // Filter maintenances based on user type
         if ($user && $user->isPengelola()) {
             $maintenances = Maintenance::with('vehicle')
@@ -41,7 +41,7 @@ class MaintenanceController extends Controller
     public function create(Request $request)
     {
         $user = auth()->user();
-        
+
         // Filter vehicles based on user type
         if ($user && $user->isPengelola()) {
             $vehicles = Vehicle::active()->orderBy('name')->get();
@@ -50,25 +50,25 @@ class MaintenanceController extends Controller
         } else {
             $vehicles = Vehicle::active()->orderBy('name')->get();
         }
-        
+
         $users = \App\Models\User::orderBy('name')->get();
-        
+
         // Get reference data for dropdowns
         $serviceTypes = \App\Models\ServiceType::active()->orderBy('name')->get();
         $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
-        
+
         // If vehicle_id is provided in query string
         if ($request->has('vehicle_id')) {
             $vehicle = Vehicle::findOrFail($request->vehicle_id);
-            
+
             // Check access for Sopir
             if ($user && $user->isSopir() && !$user->hasAccessToVehicle($vehicle->id)) {
                 abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
             }
-            
+
             return view('maintenances.create-new', compact('vehicles', 'vehicle', 'users', 'serviceTypes', 'paymentMethods'));
         }
-        
+
         return view('maintenances.create-new', compact('vehicles', 'users', 'serviceTypes', 'paymentMethods'));
     }
 
@@ -85,14 +85,22 @@ class MaintenanceController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate vehicle_id first before anything else
+        $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id',
+        ], [
+            'vehicle_id.required' => 'Please select a vehicle first before adding service.',
+            'vehicle_id.exists' => 'Selected vehicle not found.',
+        ]);
+
         $user = auth()->user();
         $vehicle = Vehicle::findOrFail($request->vehicle_id);
-        
+
         // Check access for Sopir
         if ($user && $user->isSopir() && !$user->hasAccessToVehicle($vehicle->id)) {
             abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
         }
-        
+
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'maintenance_date' => 'nullable|date',
@@ -178,9 +186,9 @@ class MaintenanceController extends Controller
     {
         $vehicle = Vehicle::findOrFail($request->vehicle_id);
         // For updates, we need to consider if we're updating the same record
-        $minOdometer = $maintenance->odometer == $vehicle->getLatestOdometer() ? 
+        $minOdometer = $maintenance->odometer == $vehicle->getLatestOdometer() ?
                       $maintenance->odometer : $vehicle->getMinimumOdometer();
-        
+
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'maintenance_date' => 'required|date',
@@ -216,7 +224,7 @@ class MaintenanceController extends Controller
         if (!auth()->user()->canDeleteRecords()) {
             abort(403, 'Unauthorized action. Only Administrator and Sales can delete maintenance records.');
         }
-        
+
         $maintenance->delete();
 
         return redirect()->route('maintenances.index')
