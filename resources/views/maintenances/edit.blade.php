@@ -1,4 +1,4 @@
-@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')
+@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')
 
 
 
@@ -6,288 +6,579 @@
 
 
 
-@section('content')@section('title', 'Edit Service')@section('title', 'Edit Maintenance')
+@section('content')@section('title', 'Edit Service')
 
-<style>
+<div class="container-fluid py-4">
 
-    .page-header {
+    <div class="row">
 
-        background: white;
+        <div class="col-12">
 
-        padding: 30px;@section('content')@section('content')
+            <!-- Page Header -->@section('content')@section('title', 'Edit Service')@section('title', 'Edit Maintenance')
+
+            <div class="card mb-4">
+
+                <div class="card-body"><style>
+
+                    <h2 class="h4 mb-1 fw-bold">
+
+                        <i class="fas fa-edit text-warning me-2"></i>    .page-header {
+
+                        Edit Service
+
+                    </h2>        background: white;
+
+                    <p class="text-muted mb-0">Perbarui informasi service kendaraan</p>
+
+                </div>        padding: 30px;@section('content')@section('content')
+
+            </div>
 
         border-radius: 12px;
 
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);<style><div class="container-fluid py-4">
+            <!-- Form Card -->
 
-        margin-bottom: 24px;
+            <div class="card">        box-shadow: 0 1px 3px rgba(0,0,0,0.1);<style><div class="container-fluid py-4">
 
-    }    .page-header {    <div class="row justify-content-center">
+                <div class="card-body">
+
+                    @if($errors->any())        margin-bottom: 24px;
+
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+
+                        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Terdapat kesalahan:</h6>    }    .page-header {    <div class="row justify-content-center">
+
+                        <ul class="mb-0">
+
+                            @foreach($errors->all() as $error)
+
+                                <li>{{ $error }}</li>
+
+                            @endforeach    .page-title {        background: white;        <div class="col-lg-10">
+
+                        </ul>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>        font-size: 28px;
+
+                    </div>
+
+                    @endif        font-weight: 700;        padding: 30px;            <div class="card">
 
 
 
-    .page-title {        background: white;        <div class="col-lg-10">
+                    <form action="{{ route('maintenances.update', $maintenance->id) }}" method="POST" id="maintenanceForm">        color: #1a1a1a;
 
-        font-size: 28px;
+                        @csrf
 
-        font-weight: 700;        padding: 30px;            <div class="card">
-
-        color: #1a1a1a;
-
-        margin: 0 0 8px 0;        border-radius: 12px;                <div class="card-header d-flex justify-content-between align-items-center">
-
-        display: flex;
-
-        align-items: center;        box-shadow: 0 1px 3px rgba(0,0,0,0.1);                    <h5 class="mb-0">
-
-        gap: 12px;
-
-    }        margin-bottom: 24px;                        <i class="fas fa-edit text-warning me-2"></i>
+                        @method('PUT')        margin: 0 0 8px 0;        border-radius: 12px;                <div class="card-header d-flex justify-content-between align-items-center">
 
 
 
-    .page-title i {    }                        Edit Maintenance
+                        <!-- Vehicle Selection -->        display: flex;
 
-        color: #ffc107;
+                        <div class="mb-3">
 
-        font-size: 24px;                        </h5>
+                            <label class="form-label fw-semibold">        align-items: center;        box-shadow: 0 1px 3px rgba(0,0,0,0.1);                    <h5 class="mb-0">
 
-    }
+                                <i class="fas fa-car me-2 text-primary"></i>Kendaraan
+
+                                <span class="text-danger">*</span>        gap: 12px;
+
+                            </label>
+
+                            <select name="vehicle_id" class="form-select @error('vehicle_id') is-invalid @enderror" required>    }        margin-bottom: 24px;                        <i class="fas fa-edit text-warning me-2"></i>
+
+                                <option value="">Pilih Kendaraan</option>
+
+                                @foreach($vehicles as $vehicle)
+
+                                    <option value="{{ $vehicle->id }}" {{ old('vehicle_id', $maintenance->vehicle_id) == $vehicle->id ? 'selected' : '' }}>
+
+                                        {{ $vehicle->name }} - {{ $vehicle->license_plate }}    .page-title i {    }                        Edit Maintenance
+
+                                    </option>
+
+                                @endforeach        color: #ffc107;
+
+                            </select>
+
+                            @error('vehicle_id')        font-size: 24px;                        </h5>
+
+                                <div class="invalid-feedback">{{ $message }}</div>
+
+                            @enderror    }
+
+                        </div>
 
         .page-title {                    <a href="{{ route('maintenances.show', $maintenance) }}" class="btn btn-secondary btn-sm">
 
-    .page-subtitle {
+                        <div class="row">
 
-        font-size: 14px;        font-size: 28px;                        <i class="fas fa-arrow-left me-1"></i>Back
+                            <!-- Service Date -->    .page-subtitle {
 
-        color: #6c757d;
+                            <div class="col-md-6 mb-3">
 
-        margin: 0;        font-weight: 700;                    </a>
+                                <label class="form-label fw-semibold">        font-size: 14px;        font-size: 28px;                        <i class="fas fa-arrow-left me-1"></i>Back
+
+                                    <i class="fas fa-calendar me-2 text-primary"></i>Tanggal Service
+
+                                    <span class="text-danger">*</span>        color: #6c757d;
+
+                                </label>
+
+                                <input type="date" name="maintenance_date"         margin: 0;        font-weight: 700;                    </a>
+
+                                       class="form-control @error('maintenance_date') is-invalid @enderror"
+
+                                       value="{{ old('maintenance_date', $maintenance->maintenance_date ? $maintenance->maintenance_date->format('Y-m-d') : '') }}" required>    }
+
+                                @error('maintenance_date')
+
+                                    <div class="invalid-feedback">{{ $message }}</div>            color: #1a1a1a;                </div>
+
+                                @enderror
+
+                            </div>    .form-container {
+
+
+
+                            <!-- Odometer -->        background: white;        margin: 0 0 8px 0;                <div class="card-body">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label fw-semibold">        padding: 32px;
+
+                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>Odometer
+
+                                    <span class="text-danger">*</span>        border-radius: 12px;        display: flex;                    <form action="{{ route('maintenances.update', $maintenance) }}" method="POST">
+
+                                </label>
+
+                                <div class="input-group">        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+                                    <input type="number" name="odometer"
+
+                                           class="form-control @error('odometer') is-invalid @enderror"        max-width: 800px;        align-items: center;                        @csrf
+
+                                           placeholder="0" value="{{ old('odometer', $maintenance->odometer) }}" required min="0">
+
+                                    <span class="input-group-text">KM</span>        margin: 0 auto;
+
+                                </div>
+
+                                @error('odometer')    }        gap: 12px;                        @method('PUT')
+
+                                    <div class="invalid-feedback">{{ $message }}</div>
+
+                                @enderror
+
+                            </div>
+
+                        </div>    .form-group {    }
+
+
+
+                        <div class="row">        margin-bottom: 24px;
+
+                            <!-- Service Type -->
+
+                            <div class="col-md-6 mb-3">    }                            <div class="row">
+
+                                <label class="form-label fw-semibold">
+
+                                    <i class="fas fa-wrench me-2 text-primary"></i>Jenis Service
+
+                                    <span class="text-danger">*</span>
+
+                                </label>    .form-label {    .page-title i {                            <!-- Vehicle dan Date -->
+
+                                <select name="type" class="form-select @error('type') is-invalid @enderror" required>
+
+                                    <option value="">Pilih Jenis Service</option>        font-weight: 600;
+
+                                    <option value="Service Rutin" {{ old('type', $maintenance->type) == 'Service Rutin' ? 'selected' : '' }}>Service Rutin</option>
+
+                                    <option value="Ganti Oli" {{ old('type', $maintenance->type) == 'Ganti Oli' ? 'selected' : '' }}>Ganti Oli</option>        color: #2c3e50;        color: #ffc107;                            <div class="col-md-6">
+
+                                    <option value="Tune Up" {{ old('type', $maintenance->type) == 'Tune Up' ? 'selected' : '' }}>Tune Up</option>
+
+                                    <option value="Perbaikan" {{ old('type', $maintenance->type) == 'Perbaikan' ? 'selected' : '' }}>Perbaikan</option>        margin-bottom: 8px;
+
+                                    <option value="Lainnya" {{ old('type', $maintenance->type) == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+
+                                </select>        font-size: 14px;        font-size: 24px;                                <div class="mb-3">
+
+                                @error('type')
+
+                                    <div class="invalid-feedback">{{ $message }}</div>        display: block;
+
+                                @enderror
+
+                            </div>    }    }                                    <label for="vehicle_id" class="form-label">
+
+
+
+                            <!-- Category -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label fw-semibold">    .form-control, .form-select {                                            <i class="fas fa-car me-1"></i>Vehicle <span class="text-danger">*</span>
+
+                                    <i class="fas fa-tags me-2 text-primary"></i>Kategori
+
+                                </label>        border: 2px solid #e9ecef;
+
+                                <select name="category" class="form-select @error('category') is-invalid @enderror">
+
+                                    <option value="Service" {{ old('category', $maintenance->category) == 'Service' ? 'selected' : '' }}>Service</option>        border-radius: 8px;    .page-subtitle {                                    </label>
+
+                                    <option value="Repair" {{ old('category', $maintenance->category) == 'Repair' ? 'selected' : '' }}>Repair</option>
+
+                                    <option value="Routine" {{ old('category', $maintenance->category) == 'Routine' ? 'selected' : '' }}>Routine</option>        padding: 12px 16px;
+
+                                    <option value="Emergency" {{ old('category', $maintenance->category) == 'Emergency' ? 'selected' : '' }}>Emergency</option>
+
+                                </select>        font-size: 14px;        font-size: 14px;                                    <select class="form-select @error('vehicle_id') is-invalid @enderror" id="vehicle_id" name="vehicle_id" required>
+
+                                @error('category')
+
+                                    <div class="invalid-feedback">{{ $message }}</div>        transition: all 0.3s ease;
+
+                                @enderror
+
+                            </div>        width: 100%;        color: #6c757d;                                        <option value="">Select Vehicle</option>
+
+                        </div>
 
     }
 
-            color: #1a1a1a;                </div>
+                        <!-- Workshop -->
 
-    .form-container {
+                        <div class="mb-3">            margin: 0;                                        @foreach($vehicles as $vehicle)
 
-        background: white;        margin: 0 0 8px 0;                <div class="card-body">
+                            <label class="form-label fw-semibold">
 
-        padding: 32px;
+                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>Tempat Service    .form-control:focus, .form-select:focus {
 
-        border-radius: 12px;        display: flex;                    <form action="{{ route('maintenances.update', $maintenance) }}" method="POST">
+                            </label>
 
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                            <input type="text" name="workshop"         border-color: #ffc107;    }                                            <option value="{{ $vehicle->id }}" {{ $maintenance->vehicle_id == $vehicle->id ? 'selected' : '' }}>
 
-        max-width: 800px;        align-items: center;                        @csrf
+                                   class="form-control @error('workshop') is-invalid @enderror"
 
-        margin: 0 auto;
+                                   placeholder="Contoh: Bengkel Jaya Motor" value="{{ old('workshop', $maintenance->workshop) }}">        box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
 
-    }        gap: 12px;                        @method('PUT')
+                            @error('workshop')
 
+                                <div class="invalid-feedback">{{ $message }}</div>        outline: none;                                                    {{ $vehicle->name }} ({{ $vehicle->license_plate }})
 
+                            @enderror
 
-    .form-group {    }
-
-        margin-bottom: 24px;
-
-    }                            <div class="row">
+                        </div>    }
 
 
 
-    .form-label {    .page-title i {                            <!-- Vehicle dan Date -->
+                        <!-- Payment Method -->        .form-container {                                            </option>
 
-        font-weight: 600;
+                        <div class="mb-3">
 
-        color: #2c3e50;        color: #ffc107;                            <div class="col-md-6">
+                            <label class="form-label fw-semibold">    .btn-warning {
 
-        margin-bottom: 8px;
+                                <i class="fas fa-credit-card me-2 text-primary"></i>Metode Pembayaran
 
-        font-size: 14px;        font-size: 24px;                                <div class="mb-3">
+                                <span class="text-danger">*</span>        background: #ffc107;        background: white;                                        @endforeach
 
-        display: block;
+                            </label>
 
-    }    }                                    <label for="vehicle_id" class="form-label">
+                            <select name="payment_method" class="form-select @error('payment_method') is-invalid @enderror" required>        border: none;
 
+                                <option value="">Pilih Metode Pembayaran</option>
 
+                                @if(isset($paymentMethods))        padding: 12px 24px;        padding: 32px;                                    </select>
 
-    .form-control, .form-select {                                            <i class="fas fa-car me-1"></i>Vehicle <span class="text-danger">*</span>
+                                    @foreach($paymentMethods as $method)
 
-        border: 2px solid #e9ecef;
+                                        <option value="{{ $method->name }}" {{ old('payment_method', $maintenance->payment_method) == $method->name ? 'selected' : '' }}>        border-radius: 8px;
 
-        border-radius: 8px;    .page-subtitle {                                    </label>
+                                            {{ $method->name }}
 
-        padding: 12px 16px;
+                                        </option>        font-weight: 600;        border-radius: 12px;                                    @error('vehicle_id')
 
-        font-size: 14px;        font-size: 14px;                                    <select class="form-select @error('vehicle_id') is-invalid @enderror" id="vehicle_id" name="vehicle_id" required>
+                                    @endforeach
 
-        transition: all 0.3s ease;
+                                @else        font-size: 14px;
 
-        width: 100%;        color: #6c757d;                                        <option value="">Select Vehicle</option>
+                                    <option value="Cash" {{ old('payment_method', $maintenance->payment_method) == 'Cash' ? 'selected' : '' }}>Cash</option>
 
-    }
+                                    <option value="Transfer Bank" {{ old('payment_method', $maintenance->payment_method) == 'Transfer Bank' ? 'selected' : '' }}>Transfer Bank</option>        transition: all 0.3s ease;        box-shadow: 0 1px 3px rgba(0,0,0,0.1);                                        <div class="invalid-feedback">{{ $message }}</div>
 
-            margin: 0;                                        @foreach($vehicles as $vehicle)
+                                    <option value="Kartu Kredit" {{ old('payment_method', $maintenance->payment_method) == 'Kartu Kredit' ? 'selected' : '' }}>Kartu Kredit</option>
 
-    .form-control:focus, .form-select:focus {
+                                @endif        color: #212529;
 
-        border-color: #ffc107;    }                                            <option value="{{ $vehicle->id }}" {{ $maintenance->vehicle_id == $vehicle->id ? 'selected' : '' }}>
+                            </select>
 
-        box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+                            @error('payment_method')    }        max-width: 800px;                                    @enderror
 
-        outline: none;                                                    {{ $vehicle->name }} ({{ $vehicle->license_plate }})
+                                <div class="invalid-feedback">{{ $message }}</div>
 
-    }
+                            @enderror
 
-        .form-container {                                            </option>
-
-    .btn-warning {
-
-        background: #ffc107;        background: white;                                        @endforeach
-
-        border: none;
-
-        padding: 12px 24px;        padding: 32px;                                    </select>
-
-        border-radius: 8px;
-
-        font-weight: 600;        border-radius: 12px;                                    @error('vehicle_id')
-
-        font-size: 14px;
-
-        transition: all 0.3s ease;        box-shadow: 0 1px 3px rgba(0,0,0,0.1);                                        <div class="invalid-feedback">{{ $message }}</div>
-
-        color: #212529;
-
-    }        max-width: 800px;                                    @enderror
-
-
+                        </div>
 
     .btn-warning:hover {        margin: 0 auto;                                </div>
 
-        background: #ffb30f;
+                        <!-- Cost -->
 
-        transform: translateY(-2px);    }
+                        <div class="mb-3">        background: #ffb30f;
 
-        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+                            <label class="form-label fw-semibold">
 
-        color: #212529;                                    <div class="mb-3">
+                                <i class="fas fa-money-bill me-2 text-primary"></i>Biaya Service        transform: translateY(-2px);    }
 
-    }
+                            </label>
 
-        .form-group {                                    <label for="maintenance_date" class="form-label">
+                            <div class="input-group">        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
 
-    .btn-secondary {
+                                <span class="input-group-text">Rp</span>
+
+                                <input type="number" name="cost"         color: #212529;                                    <div class="mb-3">
+
+                                       class="form-control @error('cost') is-invalid @enderror"
+
+                                       placeholder="0" value="{{ old('cost', $maintenance->cost) }}" min="0">    }
+
+                            </div>
+
+                            @error('cost')        .form-group {                                    <label for="maintenance_date" class="form-label">
+
+                                <div class="invalid-feedback">{{ $message }}</div>
+
+                            @enderror    .btn-secondary {
+
+                        </div>
 
         background: #6c757d;        margin-bottom: 24px;                                        <i class="fas fa-calendar me-1"></i>Date Maintenance <span class="text-danger">*</span>
 
-        border: none;
+                        <!-- Notes -->
 
-        padding: 12px 24px;    }                                    </label>
+                        <div class="mb-3">        border: none;
 
-        border-radius: 8px;
+                            <label class="form-label fw-semibold">
 
-        font-weight: 600;                                        <input type="date"
+                                <i class="fas fa-sticky-note me-2 text-primary"></i>Keterangan        padding: 12px 24px;    }                                    </label>
 
-        font-size: 14px;
+                            </label>
+
+                            <textarea name="notes" class="form-control @error('notes') is-invalid @enderror"        border-radius: 8px;
+
+                                      rows="4" placeholder="Catatan tambahan tentang service ini...">{{ old('notes', $maintenance->notes) }}</textarea>
+
+                            @error('notes')        font-weight: 600;                                        <input type="date"
+
+                                <div class="invalid-feedback">{{ $message }}</div>
+
+                            @enderror        font-size: 14px;
+
+                        </div>
 
         transition: all 0.3s ease;    .form-label {                                           class="form-control @error('maintenance_date') is-invalid @enderror"
 
+                        <!-- Next Maintenance -->
+
+                        <div class="row">        color: white;
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label fw-semibold">        text-decoration: none;        font-weight: 600;                                           id="maintenance_date"
+
+                                    <i class="fas fa-calendar-plus me-2 text-primary"></i>Jadwal Service Berikutnya
+
+                                </label>    }
+
+                                <input type="date" name="next_maintenance_date"
+
+                                       class="form-control @error('next_maintenance_date') is-invalid @enderror"            color: #2c3e50;                                           name="maintenance_date"
+
+                                       value="{{ old('next_maintenance_date', $maintenance->next_maintenance_date ? $maintenance->next_maintenance_date->format('Y-m-d') : '') }}">
+
+                                @error('next_maintenance_date')    .btn-secondary:hover {
+
+                                    <div class="invalid-feedback">{{ $message }}</div>
+
+                                @enderror        background: #5a6268;        margin-bottom: 8px;                                           value="{{ old('maintenance_date', $maintenance->maintenance_date) }}"
+
+                            </div>
+
         color: white;
 
-        text-decoration: none;        font-weight: 600;                                           id="maintenance_date"
+                            <div class="col-md-6 mb-3">
 
-    }
+                                <label class="form-label fw-semibold">        text-decoration: none;        font-size: 14px;                                           required>
 
-            color: #2c3e50;                                           name="maintenance_date"
+                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>Odometer Service Berikutnya
 
-    .btn-secondary:hover {
+                                </label>    }
 
-        background: #5a6268;        margin-bottom: 8px;                                           value="{{ old('maintenance_date', $maintenance->maintenance_date) }}"
+                                <div class="input-group">
 
-        color: white;
+                                    <input type="number" name="next_maintenance_odometer"             display: block;                                    @error('maintenance_date')
 
-        text-decoration: none;        font-size: 14px;                                           required>
+                                           class="form-control @error('next_maintenance_odometer') is-invalid @enderror"
 
-    }
+                                           placeholder="0" value="{{ old('next_maintenance_odometer', $maintenance->next_maintenance_odometer) }}" min="0">    .form-actions {
 
-            display: block;                                    @error('maintenance_date')
+                                    <span class="input-group-text">KM</span>
 
-    .form-actions {
+                                </div>        display: flex;    }                                        <div class="invalid-feedback">{{ $message }}</div>
 
-        display: flex;    }                                        <div class="invalid-feedback">{{ $message }}</div>
+                                @error('next_maintenance_odometer')
 
-        gap: 12px;
+                                    <div class="invalid-feedback">{{ $message }}</div>        gap: 12px;
 
-        justify-content: flex-end;                                        @enderror
+                                @enderror
+
+                            </div>        justify-content: flex-end;                                        @enderror
+
+                        </div>
 
         margin-top: 32px;
 
-        padding-top: 24px;    .form-control, .form-select {                                </div>
+                        <!-- Action Buttons -->
 
-        border-top: 1px solid #e9ecef;
+                        <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">        padding-top: 24px;    .form-control, .form-select {                                </div>
 
-    }        border: 2px solid #e9ecef;
+                            <a href="{{ route('maintenances.show', $maintenance->id) }}" class="btn btn-secondary">
+
+                                <i class="fas fa-times me-2"></i>Batal        border-top: 1px solid #e9ecef;
+
+                            </a>
+
+                            <button type="submit" class="btn btn-warning">    }        border: 2px solid #e9ecef;
+
+                                <i class="fas fa-save me-2"></i>Update Service
+
+                            </button>
+
+                        </div>
+
+                    </form>    .required {        border-radius: 8px;                                <div class="mb-3">
+
+                </div>
+
+            </div>        color: #dc3545;
+
+        </div>
+
+    </div>    }        padding: 12px 16px;                                    <label for="odometer" class="form-label">
+
+</div>
 
 
 
-    .required {        border-radius: 8px;                                <div class="mb-3">
+@push('scripts')
 
-        color: #dc3545;
+<script>    .input-group-text {        font-size: 14px;                                        <i class="fas fa-tachometer-alt me-1"></i>Odometer (km) <span class="text-danger">*</span>
 
-    }        padding: 12px 16px;                                    <label for="odometer" class="form-label">
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Focus on vehicle select        background: white;
+
+    const vehicleSelect = document.querySelector('select[name="vehicle_id"]');
+
+    if (vehicleSelect) {        border: 2px solid #e9ecef;        transition: all 0.3s ease;                                    </label>
+
+        vehicleSelect.focus();
+
+    }        border-left: none;
 
 
 
-    .input-group-text {        font-size: 14px;                                        <i class="fas fa-tachometer-alt me-1"></i>Odometer (km) <span class="text-danger">*</span>
+    // Form validation        color: #6c757d;        width: 100%;                                    <input type="number"
 
-        background: white;
+    const form = document.getElementById('maintenanceForm');
 
-        border: 2px solid #e9ecef;        transition: all 0.3s ease;                                    </label>
+    form.addEventListener('submit', function(e) {    }
 
-        border-left: none;
+        const vehicleId = document.querySelector('select[name="vehicle_id"]').value;
 
-        color: #6c757d;        width: 100%;                                    <input type="number"
+        const maintenanceDate = document.querySelector('input[name="maintenance_date"]').value;        }                                           class="form-control @error('odometer') is-invalid @enderror"
 
-    }
+        const odometer = document.querySelector('input[name="odometer"]').value;
 
-        }                                           class="form-control @error('odometer') is-invalid @enderror"
+        const type = document.querySelector('select[name="type"]').value;    .input-group .form-control {
 
-    .input-group .form-control {
+        const paymentMethod = document.querySelector('select[name="payment_method"]').value;
 
         border-right: none;                                               id="odometer"
 
-    }
+        if (!vehicleId) {
 
-        .form-control:focus, .form-select:focus {                                           name="odometer"
+            e.preventDefault();    }
+
+            alert('Silakan pilih kendaraan terlebih dahulu!');
+
+            return false;        .form-control:focus, .form-select:focus {                                           name="odometer"
+
+        }
 
     .input-group .form-control:focus + .input-group-text {
 
-        border-color: #ffc107;        border-color: #ffc107;                                           value="{{ old('odometer', $maintenance->odometer) }}"
+        if (!maintenanceDate) {
 
-    }
+            e.preventDefault();        border-color: #ffc107;        border-color: #ffc107;                                           value="{{ old('odometer', $maintenance->odometer) }}"
+
+            alert('Silakan isi tanggal service!');
+
+            return false;    }
+
+        }
 
 </style>        box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);                                           min="0"
 
+        if (!odometer) {
 
+            e.preventDefault();
 
-<div class="container-fluid">        outline: none;                                           step="0.01"
+            alert('Silakan isi odometer!');
+
+            return false;<div class="container-fluid">        outline: none;                                           step="0.01"
+
+        }
 
     <!-- Page Header -->
 
-    <div class="page-header">    }                                           required>
+        if (!type) {
 
-        <h1 class="page-title">
+            e.preventDefault();    <div class="page-header">    }                                           required>
+
+            alert('Silakan pilih jenis service!');
+
+            return false;        <h1 class="page-title">
+
+        }
 
             <i class="fas fa-edit"></i>                                        @error('odometer')
 
-            Edit Service
+        if (!paymentMethod) {
 
-        </h1>    .btn-warning {                                        <div class="invalid-feedback">{{ $message }}</div>
+            e.preventDefault();            Edit Service
 
-        <p class="page-subtitle">Update data perawatan dan service kendaraan</p>
+            alert('Silakan pilih metode pembayaran!');
 
-    </div>        background: #ffc107;                                    @enderror
+            return false;        </h1>    .btn-warning {                                        <div class="invalid-feedback">{{ $message }}</div>
 
+        }
+
+    });        <p class="page-subtitle">Update data perawatan dan service kendaraan</p>
+
+});
+
+</script>    </div>        background: #ffc107;                                    @enderror
+
+@endpush
+
+@endsection
 
 
     <!-- Form Container -->        border: none;                                </div>
