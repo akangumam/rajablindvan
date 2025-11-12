@@ -70,9 +70,6 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-    }
-
-    .status-completed {
         background: rgba(255,255,255,0.2);
         color: white;
     }
@@ -274,7 +271,7 @@
                     ];
                     $statusText = $statusMap[$maintenance->status] ?? $maintenance->status ?? 'Selesai';
                 @endphp
-                <div class="status-badge status-completed">{{ $statusText }}</div>
+                <div class="status-badge">{{ $statusText }}</div>
             </div>
         </div>
 
@@ -453,24 +450,4 @@
         </div>
     </div>
 </div>
-
-@if(session('success'))
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Show success message if exists
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true
-        });
-
-        Toast.fire({
-            icon: 'success',
-            title: '{{ session("success") }}'
-        });
-    });
-</script>
-@endif
 @endsection
