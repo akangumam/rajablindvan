@@ -1078,7 +1078,7 @@
             }
 
             // Close sidebar when clicking a link on mobile
-            const sidebarLinks = sidebar.querySelectorAll('.drivvo-nav-link, .quick-add-item');
+            const sidebarLinks = sidebar.querySelectorAll('.drivvo-nav-link');
             sidebarLinks.forEach(link => {
                 link.addEventListener('click', function() {
                     if (window.innerWidth <= 768) {
