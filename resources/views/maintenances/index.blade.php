@@ -1,104 +1,308 @@
-@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')
+@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')
 
 
 
-@section('title', 'Data Perawatan & Service')
+@section('title', 'Data Service & Perawatan')
 
 
 
-@section('content')@section('title', 'Maintenance Data')
+@section('content')@section('title', 'Data Service & Perawatan')
 
-<style>
+<div class="container-fluid py-4">
 
-    .page-header {
+    <div class="row">
 
-        background: white;
+        <div class="col-12">
 
-        padding: 30px;@section('content')@section('title', 'Service & Maintenance')
+            <div class="card mb-4">@section('content')@section('title', 'Data Perawatan & Service')
 
-        border-radius: 12px;
+                <div class="card-body d-flex justify-content-between align-items-center">
 
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);<style>
+                    <div><div class="container-fluid py-4">
 
-        margin-bottom: 24px;
+                        <h2 class="h4 mb-1 fw-bold">
 
-        display: flex;    .page-header {
+                            <i class="fas fa-wrench text-primary me-2"></i>    <div class="row">
 
-        justify-content: space-between;
+                            Data Service & Perawatan
 
-        align-items: center;        padding: 0 0 20px 0;
+                        </h2>        <div class="col-12">
 
-    }
+                        <p class="text-muted mb-0">Kelola riwayat service dan perawatan kendaraan</p>
 
-            margin-bottom: 0;@section('content')@section('title', 'Service & Maintenance')
+                    </div>            <div class="card mb-4">@section('content')@section('title', 'Maintenance Data')
 
-    .page-title {
+                    <a href="{{ route('maintenances.create') }}" class="btn btn-primary">
 
-        font-size: 28px;        border-bottom: 2px solid #f0f0f0;
+                        <i class="fas fa-plus me-2"></i>Tambah Service                <div class="card-body d-flex justify-content-between align-items-center">
 
-        font-weight: 700;
+                    </a>
 
-        color: #1a1a1a;    }<style>
+                </div>                    <div><style>
 
-        margin: 0;
+            </div>
 
-        display: flex;
+                        <h2 class="h4 mb-1 fw-bold">
 
-        align-items: center;
+            <div class="card">
 
-        gap: 12px;    .page-title {    .page-header {
+                <div class="card-body">                            <i class="fas fa-wrench text-primary me-2"></i>    .page-header {
 
-    }
+                    @if(session('success'))
 
-            font-size: 28px;
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">                            Data Service & Perawatan
 
-    .page-title i {
+                        <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
 
-        color: #fd7e14;        font-weight: 800;        display: flex;
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>                        </h2>        background: white;
 
-        font-size: 24px;
+                    </div>
 
-    }        color: #1a1a1a;
-
-
-
-    .page-subtitle {        margin: 0;        justify-content: space-between;@section('content')@section('title', 'Data Perawatan')
-
-        font-size: 14px;
-
-        color: #6c757d;        letter-spacing: -0.5px;
-
-        margin: 8px 0 0 0;
-
-        font-weight: 400;    }        align-items: center;
-
-    }
+                    @endif                        <p class="text-muted mb-0">Kelola riwayat service dan perawatan kendaraan</p>
 
 
 
-    .btn-add-maintenance {
+                    <div class="table-responsive">                    </div>        padding: 30px;@section('content')@section('title', 'Service & Maintenance')
 
-        background: white;    .page-subtitle {        margin-bottom: 24px;<style>
+                        <table class="table table-hover">
 
-        border: 2px solid #fd7e14;
+                            <thead class="table-light">                    <a href="{{ route('maintenances.create') }}" class="btn btn-primary">
 
-        color: #fd7e14;        font-size: 15px;
+                                <tr>
 
-        padding: 12px 24px;
+                                    <th>No</th>                        <i class="fas fa-plus me-2"></i>Tambah Service        border-radius: 12px;
 
-        border-radius: 8px;        color: #6c757d;        background: white;
+                                    <th>Tanggal</th>
+
+                                    <th>Kendaraan</th>                    </a>
+
+                                    <th>Jenis Service</th>
+
+                                    <th>Odometer</th>                </div>        box-shadow: 0 1px 3px rgba(0,0,0,0.1);<style>
+
+                                    <th>Biaya</th>
+
+                                    <th>Aksi</th>            </div>
+
+                                </tr>
+
+                            </thead>        margin-bottom: 24px;
+
+                            <tbody>
+
+                                @forelse($maintenances as $key => $maintenance)            <div class="card">
+
+                                <tr>
+
+                                    <td>{{ $maintenances->firstItem() + $key }}</td>                <div class="card-body">        display: flex;    .page-header {
+
+                                    <td>{{ $maintenance->maintenance_date ? $maintenance->maintenance_date->format('d/m/Y') : '-' }}</td>
+
+                                    <td>                    @if(session('success'))
+
+                                        <strong>{{ $maintenance->vehicle->name ?? '-' }}</strong><br>
+
+                                        <small class="text-muted">{{ $maintenance->vehicle->license_plate ?? '-' }}</small>                    <div class="alert alert-success alert-dismissible fade show" role="alert">        justify-content: space-between;
+
+                                    </td>
+
+                                    <td>                        <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+
+                                        <span class="badge bg-info">{{ $maintenance->type ?? '-' }}</span>
+
+                                    </td>                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>        align-items: center;        padding: 0 0 20px 0;
+
+                                    <td>{{ number_format($maintenance->odometer ?? 0) }} KM</td>
+
+                                    <td>Rp {{ number_format($maintenance->cost ?? 0, 0, ',', '.') }}</td>                    </div>
+
+                                    <td>
+
+                                        <div class="btn-group btn-group-sm">                    @endif    }
+
+                                            <a href="{{ route('maintenances.show', $maintenance->id) }}" class="btn btn-info" title="Detail">
+
+                                                <i class="fas fa-eye"></i>
+
+                                            </a>
+
+                                            <a href="{{ route('maintenances.edit', $maintenance->id) }}" class="btn btn-warning" title="Edit">                    <div class="table-responsive">            margin-bottom: 0;@section('content')@section('title', 'Service & Maintenance')
+
+                                                <i class="fas fa-edit"></i>
+
+                                            </a>                        <table class="table table-hover">
+
+                                            @if(Auth::user()->canManageUsers())
+
+                                            <form action="{{ route('maintenances.destroy', $maintenance->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?')">                            <thead class="table-light">    .page-title {
+
+                                                @csrf
+
+                                                @method('DELETE')                                <tr>
+
+                                                <button type="submit" class="btn btn-danger" title="Hapus">
+
+                                                    <i class="fas fa-trash"></i>                                    <th>No</th>        font-size: 28px;        border-bottom: 2px solid #f0f0f0;
+
+                                                </button>
+
+                                            </form>                                    <th>Tanggal</th>
+
+                                            @endif
+
+                                        </div>                                    <th>Kendaraan</th>        font-weight: 700;
+
+                                    </td>
+
+                                </tr>                                    <th>Jenis Service</th>
+
+                                @empty
+
+                                <tr>                                    <th>Odometer</th>        color: #1a1a1a;    }<style>
+
+                                    <td colspan="7" class="text-center py-5 text-muted">
+
+                                        <i class="fas fa-inbox fa-3x mb-3 d-block"></i>                                    <th>Biaya</th>
+
+                                        <p class="mb-0">Belum ada data service</p>
+
+                                    </td>                                    <th>Aksi</th>        margin: 0;
+
+                                </tr>
+
+                                @endforelse                                </tr>
+
+                            </tbody>
+
+                        </table>                            </thead>        display: flex;
+
+                    </div>
+
+                            <tbody>
+
+                    @if($maintenances->hasPages())
+
+                    <div class="d-flex justify-content-center mt-4">                                @forelse($maintenances as $key => $maintenance)        align-items: center;
+
+                        {{ $maintenances->links() }}
+
+                    </div>                                <tr>
+
+                    @endif
+
+                </div>                                    <td>{{ $maintenances->firstItem() + $key }}</td>        gap: 12px;    .page-title {    .page-header {
+
+            </div>
+
+        </div>                                    <td>{{ $maintenance->maintenance_date ? $maintenance->maintenance_date->format('d/m/Y') : '-' }}</td>
+
+    </div>
+
+</div>                                    <td>    }
+
+@endsection
+
+                                        <strong>{{ $maintenance->vehicle->name ?? '-' }}</strong><br>
+
+                                        <small class="text-muted">{{ $maintenance->vehicle->license_plate ?? '-' }}</small>            font-size: 28px;
+
+                                    </td>
+
+                                    <td>    .page-title i {
+
+                                        <span class="badge bg-info">{{ $maintenance->type ?? '-' }}</span>
+
+                                    </td>        color: #fd7e14;        font-weight: 800;        display: flex;
+
+                                    <td>{{ number_format($maintenance->odometer ?? 0) }} KM</td>
+
+                                    <td>Rp {{ number_format($maintenance->cost ?? 0, 0, ',', '.') }}</td>        font-size: 24px;
+
+                                    <td>
+
+                                        <div class="btn-group btn-group-sm">    }        color: #1a1a1a;
+
+                                            <a href="{{ route('maintenances.show', $maintenance->id) }}" class="btn btn-info" title="Detail">
+
+                                                <i class="fas fa-eye"></i>
+
+                                            </a>
+
+                                            <a href="{{ route('maintenances.edit', $maintenance->id) }}" class="btn btn-warning" title="Edit">    .page-subtitle {        margin: 0;        justify-content: space-between;@section('content')@section('title', 'Data Perawatan')
+
+                                                <i class="fas fa-edit"></i>
+
+                                            </a>        font-size: 14px;
+
+                                            @if(Auth::user()->canManageUsers())
+
+                                            <form action="{{ route('maintenances.destroy', $maintenance->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?')">        color: #6c757d;        letter-spacing: -0.5px;
+
+                                                @csrf
+
+                                                @method('DELETE')        margin: 8px 0 0 0;
+
+                                                <button type="submit" class="btn btn-danger" title="Hapus">
+
+                                                    <i class="fas fa-trash"></i>        font-weight: 400;    }        align-items: center;
+
+                                                </button>
+
+                                            </form>    }
+
+                                            @endif
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>    .btn-add-maintenance {
+
+                                @empty
+
+                                <tr>        background: white;    .page-subtitle {        margin-bottom: 24px;<style>
+
+                                    <td colspan="7" class="text-center py-5 text-muted">
+
+                                        <i class="fas fa-inbox fa-3x mb-3 d-block"></i>        border: 2px solid #fd7e14;
+
+                                        <p class="mb-0">Belum ada data service</p>
+
+                                    </td>        color: #fd7e14;        font-size: 15px;
+
+                                </tr>
+
+                                @endforelse        padding: 12px 24px;
+
+                            </tbody>
+
+                        </table>        border-radius: 8px;        color: #6c757d;        background: white;
+
+                    </div>
 
         font-weight: 600;
 
-        text-transform: uppercase;        margin: 8px 0 0 0;
+                    @if($maintenances->hasPages())
 
-        font-size: 13px;
+                    <div class="d-flex justify-content-center mt-4">        text-transform: uppercase;        margin: 8px 0 0 0;
 
-        letter-spacing: 0.5px;        font-weight: 400;        padding: 30px;    .page-header {
+                        {{ $maintenances->links() }}
 
-        transition: all 0.3s ease;
+                    </div>        font-size: 13px;
 
-        text-decoration: none;    }
+                    @endif
+
+                </div>        letter-spacing: 0.5px;        font-weight: 400;        padding: 30px;    .page-header {
+
+            </div>
+
+        </div>        transition: all 0.3s ease;
+
+    </div>
+
+</div>        text-decoration: none;    }
+
+@endsection
 
         display: inline-block;
 

@@ -1,4 +1,4 @@
-@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')
+@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')@extends('layouts.drivvo')
 
 
 
@@ -14,240 +14,712 @@
 
         <div class="col-12">
 
-            <!-- Page Header -->@section('content')@section('title', 'Tambah Service Baru')@section('title', 'Tambah Service Baru')
-
-            <div class="card mb-4">
-
-                <div class="card-body"><style>
-
-                    <h2 class="h4 mb-1 fw-bold">
-
-                        <i class="fas fa-plus-circle text-primary me-2"></i>    .page-header {
-
-                        Tambah Service Baru
-
-                    </h2>        background: white;
-
-                    <p class="text-muted mb-0">Catat perawatan dan service kendaraan Anda</p>
-
-                </div>        padding: 30px;@section('content')@section('content')
-
-            </div>
-
-        border-radius: 12px;
-
-            <!-- Form Card -->
-
-            <div class="card">        box-shadow: 0 1px 3px rgba(0,0,0,0.1);<style><style>
+            <div class="card mb-4">@section('content')@section('title', 'Tambah Service Baru')
 
                 <div class="card-body">
 
-                    @if($errors->any())        margin-bottom: 24px;
+                    <h2 class="h4 mb-1 fw-bold"><div class="container-fluid py-4">
+
+                        <i class="fas fa-plus-circle text-primary me-2"></i>
+
+                        Tambah Service Baru    <div class="row">
+
+                    </h2>
+
+                    <p class="text-muted mb-0">Catat perawatan dan service kendaraan Anda</p>        <div class="col-12">
+
+                </div>
+
+            </div>            <div class="card mb-4">@section('content')@section('title', 'Tambah Service Baru')
+
+
+
+            <div class="card">                <div class="card-body">
+
+                <div class="card-body">
+
+                    @if($errors->any())                    <h2 class="h4 mb-1 fw-bold"><div class="container-fluid py-4">
 
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
 
-                        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Terdapat kesalahan:</h6>    }    .page-header {    .page-header {
+                        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Terdapat kesalahan:</h6>                        <i class="fas fa-plus-circle text-primary me-2"></i>
 
                         <ul class="mb-0">
 
-                            @foreach($errors->all() as $error)
+                            @foreach($errors->all() as $error)                        Tambah Service Baru    <div class="row">
 
                                 <li>{{ $error }}</li>
 
-                            @endforeach    .page-title {        background: white;        background: white;
+                            @endforeach                    </h2>
 
                         </ul>
 
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>        font-size: 28px;
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>                    <p class="text-muted mb-0">Catat perawatan dan service kendaraan Anda</p>        <div class="col-12">
 
                     </div>
 
-                    @endif        font-weight: 700;        padding: 30px;        padding: 30px;
+                    @endif                </div>
 
 
 
-                    <form action="{{ route('maintenances.store') }}" method="POST" id="maintenanceForm">        color: #1a1a1a;
+                    <form action="{{ route('maintenances.store') }}" method="POST" id="maintenanceForm">            </div>            <!-- Page Header -->@section('content')@section('title', 'Tambah Service Baru')@section('title', 'Tambah Service Baru')
 
                         @csrf
 
-        margin: 0 0 8px 0;        border-radius: 12px;        border-radius: 12px;
 
-                        <!-- Vehicle Selection -->
 
-                        <div class="mb-3">        display: flex;
+                        <div class="mb-3">
 
-                            <label class="form-label fw-semibold">
+                            <label class="form-label fw-semibold">            <div class="card">            <div class="card mb-4">
 
-                                <i class="fas fa-car me-2 text-primary"></i>Kendaraan        align-items: center;        box-shadow: 0 1px 3px rgba(0,0,0,0.1);        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                                <i class="fas fa-car me-2 text-primary"></i>Kendaraan
 
-                                <span class="text-danger">*</span>
+                                <span class="text-danger">*</span>                <div class="card-body">
 
-                            </label>        gap: 12px;
+                            </label>
 
-                            <select name="vehicle_id" class="form-select @error('vehicle_id') is-invalid @enderror" required>
+                            <select name="vehicle_id" class="form-select @error('vehicle_id') is-invalid @enderror" required>                    @if($errors->any())                <div class="card-body"><style>
 
-                                <option value="">Pilih Kendaraan</option>    }        margin-bottom: 24px;        margin-bottom: 24px;
+                                <option value="">Pilih Kendaraan</option>
 
-                                @foreach($vehicles as $vehicle)
+                                @foreach($vehicles as $vehicle)                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
 
                                     <option value="{{ $vehicle->id }}" {{ old('vehicle_id', request('vehicle_id')) == $vehicle->id ? 'selected' : '' }}>
 
-                                        {{ $vehicle->name }} - {{ $vehicle->license_plate }}
+                                        {{ $vehicle->name }} - {{ $vehicle->license_plate }}                        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Terdapat kesalahan:</h6>                    <h2 class="h4 mb-1 fw-bold">
 
-                                    </option>    .page-title i {    }    }
+                                    </option>
 
-                                @endforeach
+                                @endforeach                        <ul class="mb-0">
 
-                            </select>        color: #fd7e14;
+                            </select>
 
-                            @error('vehicle_id')
+                            @error('vehicle_id')                            @foreach($errors->all() as $error)                        <i class="fas fa-plus-circle text-primary me-2"></i>    .page-header {
 
-                                <div class="invalid-feedback">{{ $message }}</div>        font-size: 24px;
+                                <div class="invalid-feedback">{{ $message }}</div>
 
-                            @enderror
+                            @enderror                                <li>{{ $error }}</li>
 
-                        </div>    }
+                        </div>
 
+                            @endforeach                        Tambah Service Baru
 
+                        <div class="row">
 
-                        <div class="row">        .page-title {    .page-title {
-
-                            <!-- Service Date -->
-
-                            <div class="col-md-6 mb-3">    .page-subtitle {
+                            <div class="col-md-6 mb-3">                        </ul>
 
                                 <label class="form-label fw-semibold">
 
-                                    <i class="fas fa-calendar me-2 text-primary"></i>Tanggal Service        font-size: 14px;        font-size: 28px;        font-size: 28px;
+                                    <i class="fas fa-calendar me-2 text-primary"></i>Tanggal Service                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>                    </h2>        background: white;
 
                                     <span class="text-danger">*</span>
 
-                                </label>        color: #6c757d;
+                                </label>                    </div>
 
-                                <input type="date" name="service_date"
+                                <input type="date" name="service_date" class="form-control @error('service_date') is-invalid @enderror" value="{{ old('service_date', date('Y-m-d')) }}" required>
 
-                                       class="form-control @error('service_date') is-invalid @enderror"        margin: 0;        font-weight: 700;        font-weight: 700;
-
-                                       value="{{ old('service_date', date('Y-m-d')) }}" required>
-
-                                @error('service_date')    }
+                                @error('service_date')                    @endif                    <p class="text-muted mb-0">Catat perawatan dan service kendaraan Anda</p>
 
                                     <div class="invalid-feedback">{{ $message }}</div>
-
-                                @enderror            color: #1a1a1a;        color: #1a1a1a;
-
-                            </div>
-
-    .form-container {
-
-                            <!-- Odometer -->
-
-                            <div class="col-md-6 mb-3">        background: white;        margin: 0 0 8px 0;        margin: 0 0 8px 0;
-
-                                <label class="form-label fw-semibold">
-
-                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>Odometer        padding: 32px;
-
-                                    <span class="text-danger">*</span>
-
-                                </label>        border-radius: 12px;        display: flex;        display: flex;
-
-                                <div class="input-group">
-
-                                    <input type="number" name="odometer"         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-
-                                           class="form-control @error('odometer') is-invalid @enderror"
-
-                                           placeholder="0" value="{{ old('odometer') }}" required min="0">        max-width: 800px;        align-items: center;        align-items: center;
-
-                                    <span class="input-group-text">KM</span>
-
-                                </div>        margin: 0 auto;
-
-                                @error('odometer')
-
-                                    <div class="invalid-feedback">{{ $message }}</div>    }        gap: 12px;        gap: 12px;
 
                                 @enderror
 
                             </div>
 
-                        </div>
-
-    .form-group {    }    }
-
-                        <div class="row">
-
-                            <!-- Service Type -->        margin-bottom: 24px;
+                    <form action="{{ route('maintenances.store') }}" method="POST" id="maintenanceForm">                </div>        padding: 30px;@section('content')@section('content')
 
                             <div class="col-md-6 mb-3">
 
-                                <label class="form-label fw-semibold">    }
+                                <label class="form-label fw-semibold">                        @csrf
+
+                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>Odometer
+
+                                    <span class="text-danger">*</span>            </div>
+
+                                </label>
+
+                                <div class="input-group">                        <div class="mb-3">
+
+                                    <input type="number" name="odometer" class="form-control @error('odometer') is-invalid @enderror" placeholder="0" value="{{ old('odometer') }}" required min="0">
+
+                                    <span class="input-group-text">KM</span>                            <label class="form-label fw-semibold">        border-radius: 12px;
+
+                                </div>
+
+                                @error('odometer')                                <i class="fas fa-car me-2 text-primary"></i>Kendaraan
+
+                                    <div class="invalid-feedback">{{ $message }}</div>
+
+                                @enderror                                <span class="text-danger">*</span>            <!-- Form Card -->
+
+                            </div>
+
+                        </div>                            </label>
+
+
+
+                        <div class="row">                            <select name="vehicle_id" class="form-select @error('vehicle_id') is-invalid @enderror" required>            <div class="card">        box-shadow: 0 1px 3px rgba(0,0,0,0.1);<style><style>
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label fw-semibold">                                <option value="">Pilih Kendaraan</option>
 
                                     <i class="fas fa-wrench me-2 text-primary"></i>Jenis Service
 
-                                    <span class="text-danger">*</span>
+                                    <span class="text-danger">*</span>                                @foreach($vehicles as $vehicle)                <div class="card-body">
 
                                 </label>
 
-                                <select name="type" class="form-select @error('type') is-invalid @enderror" required>    .form-label {    .page-title i {    .page-title i {
+                                <select name="type" class="form-select @error('type') is-invalid @enderror" required>                                    <option value="{{ $vehicle->id }}" {{ old('vehicle_id', request('vehicle_id')) == $vehicle->id ? 'selected' : '' }}>
 
                                     <option value="">Pilih Jenis Service</option>
 
-                                    <option value="Service Rutin" {{ old('type') == 'Service Rutin' ? 'selected' : '' }}>Service Rutin</option>        font-weight: 600;
+                                    <option value="Service Rutin" {{ old('type') == 'Service Rutin' ? 'selected' : '' }}>Service Rutin</option>                                        {{ $vehicle->name }} - {{ $vehicle->license_plate }}                    @if($errors->any())        margin-bottom: 24px;
 
                                     <option value="Ganti Oli" {{ old('type') == 'Ganti Oli' ? 'selected' : '' }}>Ganti Oli</option>
 
-                                    <option value="Tune Up" {{ old('type') == 'Tune Up' ? 'selected' : '' }}>Tune Up</option>        color: #2c3e50;        color: #fd7e14;        color: #fd7e14;
+                                    <option value="Tune Up" {{ old('type') == 'Tune Up' ? 'selected' : '' }}>Tune Up</option>                                    </option>
 
                                     <option value="Perbaikan" {{ old('type') == 'Perbaikan' ? 'selected' : '' }}>Perbaikan</option>
 
-                                    <option value="Lainnya" {{ old('type') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>        margin-bottom: 8px;
+                                    <option value="Lainnya" {{ old('type') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>                                @endforeach                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
 
                                 </select>
 
-                                @error('type')        font-size: 14px;        font-size: 24px;        font-size: 24px;
+                                @error('type')                            </select>
 
                                     <div class="invalid-feedback">{{ $message }}</div>
 
-                                @enderror        display: block;
+                                @enderror                            @error('vehicle_id')                        <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Terdapat kesalahan:</h6>    }    .page-header {    .page-header {
 
                             </div>
 
-    }    }    }
-
-                            <!-- Category -->
+                                <div class="invalid-feedback">{{ $message }}</div>
 
                             <div class="col-md-6 mb-3">
 
-                                <label class="form-label fw-semibold">
+                                <label class="form-label fw-semibold">                            @enderror                        <ul class="mb-0">
 
-                                    <i class="fas fa-tags me-2 text-primary"></i>Kategori    .form-control, .form-select {
+                                    <i class="fas fa-tags me-2 text-primary"></i>Kategori
 
-                                </label>
+                                </label>                        </div>
 
-                                <select name="category" class="form-select @error('category') is-invalid @enderror">        border: 2px solid #e9ecef;
+                                <select name="category" class="form-select @error('category') is-invalid @enderror">
 
-                                    <option value="Service" {{ old('category', 'Service') == 'Service' ? 'selected' : '' }}>Service</option>
+                                    <option value="Service" {{ old('category', 'Service') == 'Service' ? 'selected' : '' }}>Service</option>                            @foreach($errors->all() as $error)
 
-                                    <option value="Repair" {{ old('category') == 'Repair' ? 'selected' : '' }}>Repair</option>        border-radius: 8px;    .page-subtitle {    .page-subtitle {
+                                    <option value="Repair" {{ old('category') == 'Repair' ? 'selected' : '' }}>Repair</option>
 
-                                    <option value="Routine" {{ old('category') == 'Routine' ? 'selected' : '' }}>Routine</option>
+                                    <option value="Routine" {{ old('category') == 'Routine' ? 'selected' : '' }}>Routine</option>                        <div class="row">
 
-                                    <option value="Emergency" {{ old('category') == 'Emergency' ? 'selected' : '' }}>Emergency</option>        padding: 12px 16px;
+                                    <option value="Emergency" {{ old('category') == 'Emergency' ? 'selected' : '' }}>Emergency</option>
 
-                                </select>
+                                </select>                            <div class="col-md-6 mb-3">                                <li>{{ $error }}</li>
 
-                                @error('category')        font-size: 14px;        font-size: 14px;        font-size: 14px;
+                                @error('category')
+
+                                    <div class="invalid-feedback">{{ $message }}</div>                                <label class="form-label fw-semibold">
+
+                                @enderror
+
+                            </div>                                    <i class="fas fa-calendar me-2 text-primary"></i>Tanggal Service                            @endforeach    .page-title {        background: white;        background: white;
+
+                        </div>
+
+                                    <span class="text-danger">*</span>
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">                                </label>                        </ul>
+
+                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>Tempat Service
+
+                            </label>                                <input type="date" name="service_date"
+
+                            <input type="text" name="workshop" class="form-control @error('workshop') is-invalid @enderror" placeholder="Contoh: Bengkel Jaya Motor" value="{{ old('workshop') }}">
+
+                            @error('workshop')                                       class="form-control @error('service_date') is-invalid @enderror"                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>        font-size: 28px;
+
+                                <div class="invalid-feedback">{{ $message }}</div>
+
+                            @enderror                                       value="{{ old('service_date', date('Y-m-d')) }}" required>
+
+                        </div>
+
+                                @error('service_date')                    </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">                                    <div class="invalid-feedback">{{ $message }}</div>
+
+                                <i class="fas fa-credit-card me-2 text-primary"></i>Metode Pembayaran
+
+                                <span class="text-danger">*</span>                                @enderror                    @endif        font-weight: 700;        padding: 30px;        padding: 30px;
+
+                            </label>
+
+                            <select name="payment_method" class="form-select @error('payment_method') is-invalid @enderror" required>                            </div>
+
+                                <option value="">Pilih Metode Pembayaran</option>
+
+                                @if(isset($paymentMethods))
+
+                                    @foreach($paymentMethods as $method)
+
+                                        <option value="{{ $method->name }}" {{ old('payment_method') == $method->name ? 'selected' : '' }}>{{ $method->name }}</option>                            <div class="col-md-6 mb-3">
+
+                                    @endforeach
+
+                                @else                                <label class="form-label fw-semibold">                    <form action="{{ route('maintenances.store') }}" method="POST" id="maintenanceForm">        color: #1a1a1a;
+
+                                    <option value="Cash" {{ old('payment_method') == 'Cash' ? 'selected' : '' }}>Cash</option>
+
+                                    <option value="Transfer Bank" {{ old('payment_method') == 'Transfer Bank' ? 'selected' : '' }}>Transfer Bank</option>                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>Odometer
+
+                                    <option value="Kartu Kredit" {{ old('payment_method') == 'Kartu Kredit' ? 'selected' : '' }}>Kartu Kredit</option>
+
+                                @endif                                    <span class="text-danger">*</span>                        @csrf
+
+                            </select>
+
+                            @error('payment_method')                                </label>
+
+                                <div class="invalid-feedback">{{ $message }}</div>
+
+                            @enderror                                <div class="input-group">        margin: 0 0 8px 0;        border-radius: 12px;        border-radius: 12px;
+
+                        </div>
+
+                                    <input type="number" name="odometer"
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">                                           class="form-control @error('odometer') is-invalid @enderror"                        <!-- Vehicle Selection -->
+
+                                <i class="fas fa-money-bill me-2 text-primary"></i>Biaya Service
+
+                            </label>                                           placeholder="0" value="{{ old('odometer') }}" required min="0">
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">Rp</span>                                    <span class="input-group-text">KM</span>                        <div class="mb-3">        display: flex;
+
+                                <input type="number" name="cost" class="form-control @error('cost') is-invalid @enderror" placeholder="0" value="{{ old('cost') }}" min="0">
+
+                            </div>                                </div>
+
+                            @error('cost')
+
+                                <div class="invalid-feedback">{{ $message }}</div>                                @error('odometer')                            <label class="form-label fw-semibold">
+
+                            @enderror
+
+                        </div>                                    <div class="invalid-feedback">{{ $message }}</div>
+
+
+
+                        <div class="mb-3">                                @enderror                                <i class="fas fa-car me-2 text-primary"></i>Kendaraan        align-items: center;        box-shadow: 0 1px 3px rgba(0,0,0,0.1);        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+                            <label class="form-label fw-semibold">
+
+                                <i class="fas fa-sticky-note me-2 text-primary"></i>Keterangan                            </div>
+
+                            </label>
+
+                            <textarea name="notes" class="form-control @error('notes') is-invalid @enderror" rows="4" placeholder="Catatan tambahan tentang service ini...">{{ old('notes') }}</textarea>                        </div>                                <span class="text-danger">*</span>
+
+                            @error('notes')
+
+                                <div class="invalid-feedback">{{ $message }}</div>
+
+                            @enderror
+
+                        </div>                        <div class="row">                            </label>        gap: 12px;
+
+
+
+                        <div class="row">                            <div class="col-md-6 mb-3">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label fw-semibold">                                <label class="form-label fw-semibold">                            <select name="vehicle_id" class="form-select @error('vehicle_id') is-invalid @enderror" required>
+
+                                    <i class="fas fa-calendar-plus me-2 text-primary"></i>Jadwal Service Berikutnya
+
+                                </label>                                    <i class="fas fa-wrench me-2 text-primary"></i>Jenis Service
+
+                                <input type="date" name="next_maintenance_date" class="form-control @error('next_maintenance_date') is-invalid @enderror" value="{{ old('next_maintenance_date') }}">
+
+                                @error('next_maintenance_date')                                    <span class="text-danger">*</span>                                <option value="">Pilih Kendaraan</option>    }        margin-bottom: 24px;        margin-bottom: 24px;
 
                                     <div class="invalid-feedback">{{ $message }}</div>
 
-                                @enderror        transition: all 0.3s ease;
+                                @enderror                                </label>
 
                             </div>
 
-                        </div>        width: 100%;        color: #6c757d;        color: #6c757d;
+                                <select name="type" class="form-select @error('type') is-invalid @enderror" required>                                @foreach($vehicles as $vehicle)
 
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label fw-semibold">                                    <option value="">Pilih Jenis Service</option>
+
+                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>Odometer Service Berikutnya
+
+                                </label>                                    <option value="Service Rutin" {{ old('type') == 'Service Rutin' ? 'selected' : '' }}>Service Rutin</option>                                    <option value="{{ $vehicle->id }}" {{ old('vehicle_id', request('vehicle_id')) == $vehicle->id ? 'selected' : '' }}>
+
+                                <div class="input-group">
+
+                                    <input type="number" name="next_maintenance_odometer" class="form-control @error('next_maintenance_odometer') is-invalid @enderror" placeholder="0" value="{{ old('next_maintenance_odometer') }}" min="0">                                    <option value="Ganti Oli" {{ old('type') == 'Ganti Oli' ? 'selected' : '' }}>Ganti Oli</option>
+
+                                    <span class="input-group-text">KM</span>
+
+                                </div>                                    <option value="Tune Up" {{ old('type') == 'Tune Up' ? 'selected' : '' }}>Tune Up</option>                                        {{ $vehicle->name }} - {{ $vehicle->license_plate }}
+
+                                @error('next_maintenance_odometer')
+
+                                    <div class="invalid-feedback">{{ $message }}</div>                                    <option value="Perbaikan" {{ old('type') == 'Perbaikan' ? 'selected' : '' }}>Perbaikan</option>
+
+                                @enderror
+
+                            </div>                                    <option value="Lainnya" {{ old('type') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>                                    </option>    .page-title i {    }    }
+
+                        </div>
+
+                                </select>
+
+                        <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">
+
+                            <a href="{{ route('maintenances.index') }}" class="btn btn-secondary">                                @error('type')                                @endforeach
+
+                                <i class="fas fa-times me-2"></i>Batal
+
+                            </a>                                    <div class="invalid-feedback">{{ $message }}</div>
+
+                            <button type="submit" class="btn btn-primary">
+
+                                <i class="fas fa-save me-2"></i>Simpan Service                                @enderror                            </select>        color: #fd7e14;
+
+                            </button>
+
+                        </div>                            </div>
+
+                    </form>
+
+                </div>                            @error('vehicle_id')
+
+            </div>
+
+        </div>                            <div class="col-md-6 mb-3">
+
+    </div>
+
+</div>                                <label class="form-label fw-semibold">                                <div class="invalid-feedback">{{ $message }}</div>        font-size: 24px;
+
+
+
+@push('scripts')                                    <i class="fas fa-tags me-2 text-primary"></i>Kategori
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {                                </label>                            @enderror
+
+    const vehicleSelect = document.querySelector('select[name="vehicle_id"]');
+
+    if (vehicleSelect) {                                <select name="category" class="form-select @error('category') is-invalid @enderror">
+
+        vehicleSelect.focus();
+
+    }                                    <option value="Service" {{ old('category', 'Service') == 'Service' ? 'selected' : '' }}>Service</option>                        </div>    }
+
+});
+
+</script>                                    <option value="Repair" {{ old('category') == 'Repair' ? 'selected' : '' }}>Repair</option>
+
+@endpush
+
+@endsection                                    <option value="Routine" {{ old('category') == 'Routine' ? 'selected' : '' }}>Routine</option>
+
+
+                                    <option value="Emergency" {{ old('category') == 'Emergency' ? 'selected' : '' }}>Emergency</option>
+
+                                </select>                        <div class="row">        .page-title {    .page-title {
+
+                                @error('category')
+
+                                    <div class="invalid-feedback">{{ $message }}</div>                            <!-- Service Date -->
+
+                                @enderror
+
+                            </div>                            <div class="col-md-6 mb-3">    .page-subtitle {
+
+                        </div>
+
+                                <label class="form-label fw-semibold">
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">                                    <i class="fas fa-calendar me-2 text-primary"></i>Tanggal Service        font-size: 14px;        font-size: 28px;        font-size: 28px;
+
+                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>Tempat Service
+
+                            </label>                                    <span class="text-danger">*</span>
+
+                            <input type="text" name="workshop"
+
+                                   class="form-control @error('workshop') is-invalid @enderror"                                </label>        color: #6c757d;
+
+                                   placeholder="Contoh: Bengkel Jaya Motor" value="{{ old('workshop') }}">
+
+                            @error('workshop')                                <input type="date" name="service_date"
+
+                                <div class="invalid-feedback">{{ $message }}</div>
+
+                            @enderror                                       class="form-control @error('service_date') is-invalid @enderror"        margin: 0;        font-weight: 700;        font-weight: 700;
+
+                        </div>
+
+                                       value="{{ old('service_date', date('Y-m-d')) }}" required>
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">                                @error('service_date')    }
+
+                                <i class="fas fa-credit-card me-2 text-primary"></i>Metode Pembayaran
+
+                                <span class="text-danger">*</span>                                    <div class="invalid-feedback">{{ $message }}</div>
+
+                            </label>
+
+                            <select name="payment_method" class="form-select @error('payment_method') is-invalid @enderror" required>                                @enderror            color: #1a1a1a;        color: #1a1a1a;
+
+                                <option value="">Pilih Metode Pembayaran</option>
+
+                                @if(isset($paymentMethods))                            </div>
+
+                                    @foreach($paymentMethods as $method)
+
+                                        <option value="{{ $method->name }}" {{ old('payment_method') == $method->name ? 'selected' : '' }}>    .form-container {
+
+                                            {{ $method->name }}
+
+                                        </option>                            <!-- Odometer -->
+
+                                    @endforeach
+
+                                @else                            <div class="col-md-6 mb-3">        background: white;        margin: 0 0 8px 0;        margin: 0 0 8px 0;
+
+                                    <option value="Cash" {{ old('payment_method') == 'Cash' ? 'selected' : '' }}>Cash</option>
+
+                                    <option value="Transfer Bank" {{ old('payment_method') == 'Transfer Bank' ? 'selected' : '' }}>Transfer Bank</option>                                <label class="form-label fw-semibold">
+
+                                    <option value="Kartu Kredit" {{ old('payment_method') == 'Kartu Kredit' ? 'selected' : '' }}>Kartu Kredit</option>
+
+                                @endif                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>Odometer        padding: 32px;
+
+                            </select>
+
+                            @error('payment_method')                                    <span class="text-danger">*</span>
+
+                                <div class="invalid-feedback">{{ $message }}</div>
+
+                            @enderror                                </label>        border-radius: 12px;        display: flex;        display: flex;
+
+                        </div>
+
+                                <div class="input-group">
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">                                    <input type="number" name="odometer"         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+                                <i class="fas fa-money-bill me-2 text-primary"></i>Biaya Service
+
+                            </label>                                           class="form-control @error('odometer') is-invalid @enderror"
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">Rp</span>                                           placeholder="0" value="{{ old('odometer') }}" required min="0">        max-width: 800px;        align-items: center;        align-items: center;
+
+                                <input type="number" name="cost"
+
+                                       class="form-control @error('cost') is-invalid @enderror"                                    <span class="input-group-text">KM</span>
+
+                                       placeholder="0" value="{{ old('cost') }}" min="0">
+
+                            </div>                                </div>        margin: 0 auto;
+
+                            @error('cost')
+
+                                <div class="invalid-feedback">{{ $message }}</div>                                @error('odometer')
+
+                            @enderror
+
+                        </div>                                    <div class="invalid-feedback">{{ $message }}</div>    }        gap: 12px;        gap: 12px;
+
+
+
+                        <div class="mb-3">                                @enderror
+
+                            <label class="form-label fw-semibold">
+
+                                <i class="fas fa-sticky-note me-2 text-primary"></i>Keterangan                            </div>
+
+                            </label>
+
+                            <textarea name="notes" class="form-control @error('notes') is-invalid @enderror"                        </div>
+
+                                      rows="4" placeholder="Catatan tambahan tentang service ini...">{{ old('notes') }}</textarea>
+
+                            @error('notes')    .form-group {    }    }
+
+                                <div class="invalid-feedback">{{ $message }}</div>
+
+                            @enderror                        <div class="row">
+
+                        </div>
+
+                            <!-- Service Type -->        margin-bottom: 24px;
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label fw-semibold">
+
+                                    <i class="fas fa-calendar-plus me-2 text-primary"></i>Jadwal Service Berikutnya                                <label class="form-label fw-semibold">    }
+
+                                </label>
+
+                                <input type="date" name="next_maintenance_date"                                     <i class="fas fa-wrench me-2 text-primary"></i>Jenis Service
+
+                                       class="form-control @error('next_maintenance_date') is-invalid @enderror"
+
+                                       value="{{ old('next_maintenance_date') }}">                                    <span class="text-danger">*</span>
+
+                                @error('next_maintenance_date')
+
+                                    <div class="invalid-feedback">{{ $message }}</div>                                </label>
+
+                                @enderror
+
+                            </div>                                <select name="type" class="form-select @error('type') is-invalid @enderror" required>    .form-label {    .page-title i {    .page-title i {
+
+
+
+                            <div class="col-md-6 mb-3">                                    <option value="">Pilih Jenis Service</option>
+
+                                <label class="form-label fw-semibold">
+
+                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>Odometer Service Berikutnya                                    <option value="Service Rutin" {{ old('type') == 'Service Rutin' ? 'selected' : '' }}>Service Rutin</option>        font-weight: 600;
+
+                                </label>
+
+                                <div class="input-group">                                    <option value="Ganti Oli" {{ old('type') == 'Ganti Oli' ? 'selected' : '' }}>Ganti Oli</option>
+
+                                    <input type="number" name="next_maintenance_odometer"
+
+                                           class="form-control @error('next_maintenance_odometer') is-invalid @enderror"                                    <option value="Tune Up" {{ old('type') == 'Tune Up' ? 'selected' : '' }}>Tune Up</option>        color: #2c3e50;        color: #fd7e14;        color: #fd7e14;
+
+                                           placeholder="0" value="{{ old('next_maintenance_odometer') }}" min="0">
+
+                                    <span class="input-group-text">KM</span>                                    <option value="Perbaikan" {{ old('type') == 'Perbaikan' ? 'selected' : '' }}>Perbaikan</option>
+
+                                </div>
+
+                                @error('next_maintenance_odometer')                                    <option value="Lainnya" {{ old('type') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>        margin-bottom: 8px;
+
+                                    <div class="invalid-feedback">{{ $message }}</div>
+
+                                @enderror                                </select>
+
+                            </div>
+
+                        </div>                                @error('type')        font-size: 14px;        font-size: 24px;        font-size: 24px;
+
+
+
+                        <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">                                    <div class="invalid-feedback">{{ $message }}</div>
+
+                            <a href="{{ route('maintenances.index') }}" class="btn btn-secondary">
+
+                                <i class="fas fa-times me-2"></i>Batal                                @enderror        display: block;
+
+                            </a>
+
+                            <button type="submit" class="btn btn-primary">                            </div>
+
+                                <i class="fas fa-save me-2"></i>Simpan Service
+
+                            </button>    }    }    }
+
+                        </div>
+
+                    </form>                            <!-- Category -->
+
+                </div>
+
+            </div>                            <div class="col-md-6 mb-3">
+
+        </div>
+
+    </div>                                <label class="form-label fw-semibold">
+
+</div>
+
+                                    <i class="fas fa-tags me-2 text-primary"></i>Kategori    .form-control, .form-select {
+
+@push('scripts')
+
+<script>                                </label>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const vehicleSelect = document.querySelector('select[name="vehicle_id"]');                                <select name="category" class="form-select @error('category') is-invalid @enderror">        border: 2px solid #e9ecef;
+
+    if (vehicleSelect) {
+
+        vehicleSelect.focus();                                    <option value="Service" {{ old('category', 'Service') == 'Service' ? 'selected' : '' }}>Service</option>
+
+    }
+
+                                    <option value="Repair" {{ old('category') == 'Repair' ? 'selected' : '' }}>Repair</option>        border-radius: 8px;    .page-subtitle {    .page-subtitle {
+
+    const form = document.getElementById('maintenanceForm');
+
+    form.addEventListener('submit', function(e) {                                    <option value="Routine" {{ old('category') == 'Routine' ? 'selected' : '' }}>Routine</option>
+
+        const vehicleId = document.querySelector('select[name="vehicle_id"]').value;
+
+        const serviceDate = document.querySelector('input[name="service_date"]').value;                                    <option value="Emergency" {{ old('category') == 'Emergency' ? 'selected' : '' }}>Emergency</option>        padding: 12px 16px;
+
+        const odometer = document.querySelector('input[name="odometer"]').value;
+
+        const type = document.querySelector('select[name="type"]').value;                                </select>
+
+        const paymentMethod = document.querySelector('select[name="payment_method"]').value;
+
+                                @error('category')        font-size: 14px;        font-size: 14px;        font-size: 14px;
+
+        if (!vehicleId || !serviceDate || !odometer || !type || !paymentMethod) {
+
+            e.preventDefault();                                    <div class="invalid-feedback">{{ $message }}</div>
+
+            alert('Silakan lengkapi semua field yang wajib diisi!');
+
+            return false;                                @enderror        transition: all 0.3s ease;
+
+        }
+
+    });                            </div>
+
+});
+
+</script>                        </div>        width: 100%;        color: #6c757d;        color: #6c757d;
+
+@endpush
+
+@endsection
 
 
                         <!-- Workshop -->    }
