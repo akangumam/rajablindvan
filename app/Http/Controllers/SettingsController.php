@@ -95,6 +95,7 @@ class SettingsController extends Controller
             'expense' => UploadedFile::where('category', 'expense')->sum('file_size'),
             'income' => UploadedFile::where('category', 'income')->sum('file_size'),
             'service' => UploadedFile::where('category', 'service')->sum('file_size'),
+            'vehicle' => UploadedFile::where('category', 'vehicle')->sum('file_size'),
         ];
         
         // Convert to MB and calculate percentages
@@ -135,7 +136,7 @@ class SettingsController extends Controller
     {
         $request->validate([
             'file' => 'required|file|max:10240', // Max 10MB
-            'category' => 'required|string|in:fuel,expense,income,service'
+            'category' => 'required|string|in:fuel,expense,income,service,vehicle'
         ]);
 
         try {

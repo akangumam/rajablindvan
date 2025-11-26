@@ -279,23 +279,35 @@
                 </div>
             </div>
 
-            <!-- Row 3.5: Ownership Type & Investor -->
+            <!-- Row 3.5: Ownership / Kepemilikan -->
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Tipe Kepemilikan <span class="text-danger">*</span></label>
-                    <select class="form-select" name="ownership_type" id="ownershipType" required>
-                        <option value="company" {{ old('ownership_type') == 'company' ? 'selected' : '' }}>Company Owned</option>
-                        <option value="investor" {{ old('ownership_type') == 'investor' ? 'selected' : '' }}>Investor Owned</option>
+                    <label class="form-label">Kepemilikan <span class="text-danger">*</span></label>
+                    <select class="form-select" name="ownership_select" id="ownershipSelect" required>
+                        <option value="">-- Pilih Kepemilikan --</option>
+                        <option value="company" {{ old('ownership_select') == 'company' ? 'selected' : '' }}>Company Owned</option>
+                        <optgroup label="Investors">
+                            @foreach(\App\Models\Investor::where('status', 'active')->orderBy('name')->get() as $inv)
+                                <option value="investor_{{ $inv->id }}" {{ old('ownership_select') == 'investor_'.$inv->id ? 'selected' : '' }}>
+                                    {{ $inv->name }} ({{ $inv->investment_percentage }}%)
+                                </option>
+                            @endforeach
+                        </optgroup>
                     </select>
+                    <small class="text-muted">Pilih Company Owned atau Investor pemilik kendaraan</small>
+                    
+                    <!-- Hidden fields for backend -->
+                    <input type="hidden" name="ownership_type" id="ownershipType" value="{{ old('ownership_type', 'company') }}">
+                    <input type="hidden" name="investor_id" id="investorId" value="{{ old('investor_id') }}">
                 </div>
-                
-                <div class="col-md-6 mb-4" id="investorField" style="display: {{ old('ownership_type') == 'investor' ? 'block' : 'none' }};">
-                    <label class="form-label">Pilih Investor <span class="text-danger">*</span></label>
-                    <select class="form-select" name="investor_id" id="investorSelect">
-                        <option value="">-- Pilih Investor --</option>
-                        @foreach(\App\Models\Investor::where('status', 'active')->orderBy('name')->get() as $inv)
-                            <option value="{{ $inv->id }}" {{ old('investor_id') == $inv->id ? 'selected' : '' }}>
-                                {{ $inv->name }} ({{ $inv->investment_percentage }}%)
+
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">Lokasi <span class="text-danger">*</span></label>
+                    <select class="form-select" name="location_id" required>
+                        <option value="">-- Pilih Lokasi --</option>
+                        @foreach(\App\Models\Location::all() as $location)
+                            <option value="{{ $location->id }}" {{ old('location_id') == $location->id ? 'selected' : '' }}>
+                                {{ $location->name }}
                             </option>
                         @endforeach
                     </select>
@@ -304,17 +316,25 @@
 
             @push('scripts')
             <script>
-                document.getElementById('ownershipType').addEventListener('change', function() {
-                    const investorField = document.getElementById('investorField');
-                    const investorSelect = document.getElementById('investorSelect');
+                document.getElementById('ownershipSelect').addEventListener('change', function() {
+                    const value = this.value;
+                    const ownershipType = document.getElementById('ownershipType');
+                    const investorId = document.getElementById('investorId');
                     
-                    if (this.value === 'investor') {
-                        investorField.style.display = 'block';
-                        investorSelect.required = true;
-                    } else {
-                        investorField.style.display = 'none';
-                        investorSelect.required = false;
-                        investorSelect.value = '';
+                    if (value === 'company') {
+                        ownershipType.value = 'company';
+                        investorId.value = '';
+                    } else if (value.startsWith('investor_')) {
+                        ownershipType.value = 'investor';
+                        investorId.value = value.replace('investor_', '');
+                    }
+                });
+                
+                // Trigger on page load untuk set initial values
+                document.addEventListener('DOMContentLoaded', function() {
+                    const select = document.getElementById('ownershipSelect');
+                    if (select.value) {
+                        select.dispatchEvent(new Event('change'));
                     }
                 });
             </script>
@@ -356,6 +376,15 @@
                 <div class="col-md-6 mb-4">
                     <label class="form-label">VIN Expiry Date/Masa Berlaku KIR</label>
                     <input type="date" class="form-control" name="kir_expiry_date" value="{{ old('kir_expiry_date') }}">
+                </div>
+            </div>
+
+            <!-- Row 6.5: GPS Expiry Date -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">GPS Expiry Date/Masa Berlaku GPS</label>
+                    <input type="date" class="form-control" name="gps_expiry_date" value="{{ old('gps_expiry_date') }}">
+                    <small class="text-muted">Warning akan muncul 7 hari sebelum expired</small>
                 </div>
             </div>
 

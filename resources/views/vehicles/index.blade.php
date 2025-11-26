@@ -774,9 +774,21 @@
                 </td>
                 <td>
                     <div class="action-buttons">
-                        <a href="{{ route('vehicles.export-pdf', $vehicle) }}" class="action-icon-btn btn-download" title="{{ __('common.export_pdf') }}" target="_blank">
+                        @if($vehicle->barcode_path)
+                        <a href="{{ asset('storage/' . $vehicle->barcode_path) }}" 
+                           download="barcode-{{ $vehicle->license_plate }}.{{ pathinfo($vehicle->barcode_path, PATHINFO_EXTENSION) }}"
+                           class="action-icon-btn btn-download" 
+                           title="Download Barcode">
                             <i class="fas fa-download"></i>
                         </a>
+                        @else
+                        <button class="action-icon-btn btn-download" 
+                                style="opacity: 0.5; cursor: not-allowed;" 
+                                title="Barcode tidak tersedia"
+                                disabled>
+                            <i class="fas fa-download"></i>
+                        </button>
+                        @endif
                         <a href="{{ route('vehicles.show', $vehicle) }}" class="action-icon-btn btn-view" title="{{ __('common.view_details') }}">
                             <i class="fas fa-eye"></i>
                         </a>

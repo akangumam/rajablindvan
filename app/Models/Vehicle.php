@@ -20,6 +20,7 @@ class Vehicle extends Model
         'stnk_expiry_date',
         'kir_number',
         'kir_expiry_date',
+        'gps_expiry_date',
         'barcode_path',
         'document_name',
         'document_path',
@@ -45,7 +46,8 @@ class Vehicle extends Model
         'weekly_rental_rate' => 'decimal:2',
         'monthly_rental_rate' => 'decimal:2',
         'stnk_expiry_date' => 'date',
-        'kir_expiry_date' => 'date'
+        'kir_expiry_date' => 'date',
+        'gps_expiry_date' => 'date'
     ];
 
     // Relationships
@@ -98,6 +100,11 @@ class Vehicle extends Model
     public function trips(): HasMany
     {
         return $this->hasMany(Trip::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(VehicleDocument::class);
     }
 
     // Accessor & Mutator

@@ -279,23 +279,41 @@
                 </div>
             </div>
 
-            <!-- Row 3.5: Ownership Type & Investor -->
+            <!-- Row 3.5: Ownership / Kepemilikan -->
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <label class="form-label">Ownership Type <span class="text-danger">*</span></label>
-                    <select class="form-select" name="ownership_type" id="ownershipType" required>
-                        <option value="company" {{ old('ownership_type', $vehicle->ownership_type) == 'company' ? 'selected' : '' }}>Company Owned</option>
-                        <option value="investor" {{ old('ownership_type', $vehicle->ownership_type) == 'investor' ? 'selected' : '' }}>Investor Owned</option>
+                    <label class="form-label">Kepemilikan <span class="text-danger">*</span></label>
+                    @php
+                        $currentOwnership = old('ownership_select');
+                        if (!$currentOwnership) {
+                            $currentOwnership = $vehicle->ownership_type == 'company' ? 'company' : 'investor_'.$vehicle->investor_id;
+                        }
+                    @endphp
+                    <select class="form-select" name="ownership_select" id="ownershipSelect" required>
+                        <option value="">-- Pilih Kepemilikan --</option>
+                        <option value="company" {{ $currentOwnership == 'company' ? 'selected' : '' }}>Company Owned</option>
+                        <optgroup label="Investors">
+                            @foreach(\App\Models\Investor::where('status', 'active')->orderBy('name')->get() as $inv)
+                                <option value="investor_{{ $inv->id }}" {{ $currentOwnership == 'investor_'.$inv->id ? 'selected' : '' }}>
+                                    {{ $inv->name }} ({{ $inv->investment_percentage }}%)
+                                </option>
+                            @endforeach
+                        </optgroup>
                     </select>
+                    <small class="text-muted">Pilih Company Owned atau Investor pemilik kendaraan</small>
+                    
+                    <!-- Hidden fields for backend -->
+                    <input type="hidden" name="ownership_type" id="ownershipType" value="{{ old('ownership_type', $vehicle->ownership_type) }}">
+                    <input type="hidden" name="investor_id" id="investorId" value="{{ old('investor_id', $vehicle->investor_id) }}">
                 </div>
-                
-                <div class="col-md-6 mb-4" id="investorField" style="display: {{ old('ownership_type', $vehicle->ownership_type) == 'investor' ? 'block' : 'none' }};">
-                    <label class="form-label">Choose Investor <span class="text-danger">*</span></label>
-                    <select class="form-select" name="investor_id" id="investorSelect">
-                        <option value="">-- Choose Investor --</option>
-                        @foreach(\App\Models\Investor::where('status', 'active')->orderBy('name')->get() as $inv)
-                            <option value="{{ $inv->id }}" {{ old('investor_id', $vehicle->investor_id) == $inv->id ? 'selected' : '' }}>
-                                {{ $inv->name }} ({{ $inv->investment_percentage }}%)
+
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">Lokasi <span class="text-danger">*</span></label>
+                    <select class="form-select" name="location_id" required>
+                        <option value="">-- Pilih Lokasi --</option>
+                        @foreach(\App\Models\Location::all() as $location)
+                            <option value="{{ $location->id }}" {{ old('location_id', $vehicle->location_id) == $location->id ? 'selected' : '' }}>
+                                {{ $location->name }}
                             </option>
                         @endforeach
                     </select>
@@ -304,21 +322,31 @@
 
             @push('scripts')
             <script>
-                document.getElementById('ownershipType').addEventListener('change', function() {
-                    const investorField = document.getElementById('investorField');
-                    const investorSelect = document.getElementById('investorSelect');
+                document.getElementById('ownershipSelect').addEventListener('change', function() {
+                    const value = this.value;
+                    const ownershipType = document.getElementById('ownershipType');
+                    const investorId = document.getElementById('investorId');
                     
-                    if (this.value === 'investor') {
-                        investorField.style.display = 'block';
-                        investorSelect.required = true;
-                    } else {
-                        investorField.style.display = 'none';
-                        investorSelect.required = false;
-                        investorSelect.value = '';
+                    if (value === 'company') {
+                        ownershipType.value = 'company';
+                        investorId.value = '';
+                    } else if (value.startsWith('investor_')) {
+                        ownershipType.value = 'investor';
+                        investorId.value = value.replace('investor_', '');
+                    }
+                });
+                
+                // Trigger on page load untuk set initial values
+                document.addEventListener('DOMContentLoaded', function() {
+                    const select = document.getElementById('ownershipSelect');
+                    if (select.value) {
+                        select.dispatchEvent(new Event('change'));
                     }
                 });
             </script>
             @endpush
+
+
 
             <!-- Row 4: Chassis Number & Engine Number -->
             <div class="row">
@@ -359,6 +387,15 @@
                 </div>
             </div>
 
+            <!-- Row 6.5: GPS Expiry Date -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">GPS Expiry Date/Masa Berlaku GPS</label>
+                    <input type="date" class="form-control" name="gps_expiry_date" value="{{ old('gps_expiry_date', $vehicle->gps_expiry_date ? $vehicle->gps_expiry_date->format('Y-m-d') : '') }}">
+                    <small class="text-muted">Warning akan muncul 7 hari sebelum expired</small>
+                </div>
+            </div>
+
             <!-- Row 7: Barcode Upload & Document Upload -->
             <div class="row">
                 <div class="col-md-6 mb-4">
@@ -367,7 +404,12 @@
                     <small class="text-muted">Automatically view Barcode after Upload</small>
                     @if($vehicle->barcode_path)
                         <div class="mt-2">
-                            <small class="text-muted">Current barcode:</small><br>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small class="text-muted">Current barcode:</small>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDeleteBarcode()">
+                                    <i class="fas fa-trash me-1"></i>Hapus Barcode
+                                </button>
+                            </div>
                             <img src="{{ Storage::url($vehicle->barcode_path) }}" alt="Current Barcode" style="max-width: 200px; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
                         </div>
                     @endif
@@ -423,6 +465,15 @@
             </button>
         </div>
     </form>
+    
+    <!-- Hidden Form for Deleting Barcode -->
+    @if($vehicle->barcode_path)
+    <form id="deleteBarcodeForm" action="{{ route('vehicles.delete-barcode', $vehicle) }}" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
+    @endif
+
 </div>
 
 <!-- Brand Popup Modal -->
@@ -576,6 +627,14 @@ if (barcodeUpload) {
         }
     });
 }
+
+// Delete Barcode Confirmation
+function confirmDeleteBarcode() {
+    if (confirm('Apakah Anda yakin ingin menghapus barcode ini? Tindakan ini tidak dapat dibatalkan.')) {
+        document.getElementById('deleteBarcodeForm').submit();
+    }
+}
+
 </script>
 @endpush
 @endsection

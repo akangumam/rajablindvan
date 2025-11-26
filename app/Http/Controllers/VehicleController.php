@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use App\Models\Location;
+use App\Models\UploadedFile;
 use App\Http\Middleware\LocationFilter;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class VehicleController extends Controller
 {
@@ -89,6 +91,7 @@ class VehicleController extends Controller
                 'stnk_expiry_date' => 'nullable|date',
                 'kir_number' => 'nullable|string|max:255',
                 'kir_expiry_date' => 'nullable|date',
+                'gps_expiry_date' => 'nullable|date',
                 'ownership_type' => 'required|in:company,investor',
                 'investor_id' => 'nullable|exists:investors,id',
                 'location_id' => 'required|exists:locations,id',
@@ -104,6 +107,7 @@ class VehicleController extends Controller
                 'is_active' => 'nullable|boolean'
             ]);
 
+
             // Auto-generate name if not provided
             if (empty($validated['name'])) {
                 $validated['name'] = $validated['brand'] . ' ' . $validated['model'];
@@ -116,14 +120,25 @@ class VehicleController extends Controller
 
             // Handle barcode image upload
             if ($request->hasFile('barcode_image')) {
-                $barcodePath = $request->file('barcode_image')->store('vehicle_barcodes', 'public');
+                $barcodeFile = $request->file('barcode_image');
+                $originalName = $barcodeFile->getClientOriginalName();
+                $extension = $barcodeFile->getClientOriginalExtension();
+                $storedName = Str::uuid() . '.' . $extension;
+                
+                // Store file in vehicle_barcodes directory
+                $barcodePath = $barcodeFile->storeAs('vehicle_barcodes', $storedName, 'public');
                 $validated['barcode_path'] = $barcodePath;
-            }
-
-            // Handle vehicle document upload
-            if ($request->hasFile('vehicle_document')) {
-                $documentPath = $request->file('vehicle_document')->store('vehicle_documents', 'public');
-                $validated['document_path'] = $documentPath;
+                
+                // Also save to uploaded_files table for centralized tracking
+                UploadedFile::create([
+                    'original_name' => $originalName,
+                    'stored_name' => $storedName,
+                    'file_path' => $barcodePath,
+                    'mime_type' => $barcodeFile->getMimeType(),
+                    'file_size' => $barcodeFile->getSize(),
+                    'file_type' => 'image', // Barcode is always image
+                    'category' => 'vehicle',
+                ]);
             }
 
             // Set defaults for first vehicle form
@@ -135,7 +150,43 @@ class VehicleController extends Controller
             $validated['tank_capacity'] = $validated['tank_capacity'] ?? 45;
             $validated['is_active'] = $validated['is_active'] ?? true;
 
-            Vehicle::create($validated);
+            // Remove document_path from validated as we'll handle it separately
+            unset($validated['vehicle_document']);
+
+            $vehicle = Vehicle::create($validated);
+
+            // Handle vehicle document upload (multiple documents)
+            if ($request->hasFile('vehicle_document')) {
+                $documentFile = $request->file('vehicle_document');
+                $originalName = $documentFile->getClientOriginalName();
+                $extension = $documentFile->getClientOriginalExtension();
+                $storedName = Str::uuid() . '.' . $extension;
+                
+                // Store file
+                $documentPath = $documentFile->storeAs('vehicle_documents', $storedName, 'public');
+                
+                // Save to vehicle_documents table
+                \App\Models\VehicleDocument::create([
+                    'vehicle_id' => $vehicle->id,
+                    'document_name' => $request->input('document_name') ?: $originalName,
+                    'document_path' => $documentPath,
+                    'document_type' => $request->input('document_type', 'Other'),
+                    'file_type' => $this->determineFileType($documentFile->getMimeType(), $extension),
+                    'file_size' => $documentFile->getSize(),
+                ]);
+                
+                // Also save to uploaded_files table for centralized tracking
+                UploadedFile::create([
+                    'original_name' => $originalName,
+                    'stored_name' => $storedName,
+                    'file_path' => $documentPath,
+                    'mime_type' => $documentFile->getMimeType(),
+                    'file_size' => $documentFile->getSize(),
+                    'file_type' => $this->determineFileType($documentFile->getMimeType(), $extension),
+                    'category' => 'vehicle',
+                ]);
+            }
+
 
             // Check if this was from first vehicle form (no existing vehicles)
             $totalVehicles = Vehicle::where('is_active', true)->count();
@@ -160,7 +211,7 @@ class VehicleController extends Controller
      */
     public function show(Vehicle $vehicle)
     {
-        $vehicle->load(['fuelFills', 'maintenances', 'expenses']);
+        $vehicle->load(['fuelFills', 'maintenances', 'expenses', 'documents']);
         
         $stats = [
             'total_fuel_fills' => $vehicle->fuelFills->count(),
@@ -200,8 +251,10 @@ class VehicleController extends Controller
             'stnk_expiry_date' => 'nullable|date',
             'kir_number' => 'nullable|string|max:255',
             'kir_expiry_date' => 'nullable|date',
+            'gps_expiry_date' => 'nullable|date',
             'ownership_type' => 'required|in:company,investor',
             'investor_id' => 'nullable|exists:investors,id',
+            'location_id' => 'required|exists:locations,id',
             'document_name' => 'nullable|string|max:255',
             'barcode_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'vehicle_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
@@ -213,6 +266,7 @@ class VehicleController extends Controller
             'notes' => 'nullable|string',
             'is_active' => 'boolean'
         ]);
+
         
         // Set investor_id to null if ownership_type is company
         if ($validated['ownership_type'] === 'company') {
@@ -221,23 +275,69 @@ class VehicleController extends Controller
 
         // Handle barcode image upload
         if ($request->hasFile('barcode_image')) {
-            // Delete old barcode if exists
+            // Delete old barcode file if exists
             if ($vehicle->barcode_path) {
                 Storage::disk('public')->delete($vehicle->barcode_path);
+                
+                // Also delete from uploaded_files table
+                UploadedFile::where('file_path', $vehicle->barcode_path)
+                    ->where('category', 'vehicle')
+                    ->delete();
             }
-            $barcodePath = $request->file('barcode_image')->store('vehicle_barcodes', 'public');
+            
+            $barcodeFile = $request->file('barcode_image');
+            $originalName = $barcodeFile->getClientOriginalName();
+            $extension = $barcodeFile->getClientOriginalExtension();
+            $storedName = Str::uuid() . '.' . $extension;
+            
+            // Store new file
+            $barcodePath = $barcodeFile->storeAs('vehicle_barcodes', $storedName, 'public');
             $validated['barcode_path'] = $barcodePath;
+            
+            // Save to uploaded_files table
+            UploadedFile::create([
+                'original_name' => $originalName,
+                'stored_name' => $storedName,
+                'file_path' => $barcodePath,
+                'mime_type' => $barcodeFile->getMimeType(),
+                'file_size' => $barcodeFile->getSize(),
+                'file_type' => 'image',
+                'category' => 'vehicle',
+            ]);
         }
 
-        // Handle vehicle document upload
+        // Handle vehicle document upload (ADD new document, don't replace)
         if ($request->hasFile('vehicle_document')) {
-            // Delete old document if exists
-            if ($vehicle->document_path) {
-                Storage::disk('public')->delete($vehicle->document_path);
-            }
-            $documentPath = $request->file('vehicle_document')->store('vehicle_documents', 'public');
-            $validated['document_path'] = $documentPath;
+            $documentFile = $request->file('vehicle_document');
+            $originalName = $documentFile->getClientOriginalName();
+            $extension = $documentFile->getClientOriginalExtension();
+            $storedName = Str::uuid() . '.' . $extension;
+            
+            // Store new file
+            $documentPath = $documentFile->storeAs('vehicle_documents', $storedName, 'public');
+            
+            // Save to vehicle_documents table (ADD, not replace)
+            \App\Models\VehicleDocument::create([
+                'vehicle_id' => $vehicle->id,
+                'document_name' => $request->input('document_name') ?: $originalName,
+                'document_path' => $documentPath,
+                'document_type' => $request->input('document_type', 'Other'),
+                'file_type' => $this->determineFileType($documentFile->getMimeType(), $extension),
+                'file_size' => $documentFile->getSize(),
+            ]);
+            
+            // Save to uploaded_files table
+            UploadedFile::create([
+                'original_name' => $originalName,
+                'stored_name' => $storedName,
+                'file_path' => $documentPath,
+                'mime_type' => $documentFile->getMimeType(),
+                'file_size' => $documentFile->getSize(),
+                'file_type' => $this->determineFileType($documentFile->getMimeType(), $extension),
+                'category' => 'vehicle',
+            ]);
         }
+
 
         $vehicle->update($validated);
 
@@ -372,4 +472,123 @@ class VehicleController extends Controller
         return redirect()->back()
             ->with('success', "Sopir {$user->name} berhasil dihapus dari {$vehicle->name}!");
     }
+    
+    /**
+     * Delete barcode image from vehicle
+     */
+    public function deleteBarcode(Vehicle $vehicle)
+    {
+        try {
+            // Check if vehicle has barcode
+            if (!$vehicle->barcode_path) {
+                return redirect()->back()
+                    ->with('error', 'Barcode tidak ditemukan!');
+            }
+            
+            // Delete physical file
+            Storage::disk('public')->delete($vehicle->barcode_path);
+            
+            // Delete from uploaded_files table
+            UploadedFile::where('file_path', $vehicle->barcode_path)
+                ->where('category', 'vehicle')
+                ->delete();
+            
+            // Update vehicle record
+            $vehicle->update(['barcode_path' => null]);
+            
+            return redirect()->back()
+                ->with('success', 'Barcode berhasil dihapus!');
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus barcode: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Delete vehicle document
+     */
+    public function deleteDocument(Vehicle $vehicle)
+    {
+        try {
+            // Check if vehicle has document
+            if (!$vehicle->document_path) {
+                return redirect()->back()
+                    ->with('error', 'Dokumen tidak ditemukan!');
+            }
+            
+            // Delete physical file
+            Storage::disk('public')->delete($vehicle->document_path);
+            
+            // Delete from uploaded_files table
+            UploadedFile::where('file_path', $vehicle->document_path)
+                ->where('category', 'vehicle')
+                ->delete();
+            
+            // Update vehicle record
+            $vehicle->update(['document_path' => null]);
+            
+            return redirect()->back()
+                ->with('success', 'Dokumen berhasil dihapus!');
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus dokumen: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Determine file type based on mime type and extension
+     */
+    private function determineFileType($mimeType, $extension)
+    {
+        if (str_contains($mimeType, 'pdf')) {
+            return 'pdf';
+        } elseif (str_contains($mimeType, 'spreadsheet') || in_array($extension, ['xlsx', 'xls', 'csv'])) {
+            return 'excel';
+        } elseif (str_contains($mimeType, 'word') || in_array($extension, ['docx', 'doc'])) {
+            return 'word';
+        } elseif (str_contains($mimeType, 'image')) {
+            return 'image';
+        } elseif (str_contains($mimeType, 'video')) {
+            return 'video';
+        } elseif (str_contains($mimeType, 'audio')) {
+            return 'audio';
+        } elseif (in_array($extension, ['zip', 'rar', '7z', 'tar', 'gz'])) {
+            return 'archive';
+        } elseif (in_array($extension, ['js', 'php', 'html', 'css', 'json', 'xml'])) {
+            return 'code';
+        }
+        
+        return 'file';
+    }
+    
+    /**
+     * Delete individual vehicle document
+     */
+    public function deleteVehicleDocument($documentId)
+    {
+        try {
+            $document = \App\Models\VehicleDocument::findOrFail($documentId);
+            
+            // Delete physical file
+            Storage::disk('public')->delete($document->document_path);
+            
+            // Delete from uploaded_files table
+            UploadedFile::where('file_path', $document->document_path)
+                ->where('category', 'vehicle')
+                ->delete();
+            
+            // Delete document record
+            $document->delete();
+            
+            return redirect()->back()
+                ->with('success', 'Dokumen berhasil dihapus!');
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal menghapus dokumen: ' . $e->getMessage());
+        }
+    }
 }
+

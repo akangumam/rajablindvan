@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Expense;
 use App\Models\Vehicle;
 use App\Models\Location;
+use App\Models\UploadedFile;
+use Illuminate\Support\Str;
 use App\Http\Middleware\LocationFilter;
 
 class ExpenseController extends Controller
@@ -143,8 +145,23 @@ class ExpenseController extends Controller
         // Handle file upload
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $validated['attachment'] = $file->storeAs('expenses', $filename, 'public');
+            $originalName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $storedName = Str::uuid() . '.' . $extension;
+            
+            $path = $file->storeAs('expenses', $storedName, 'public');
+            $validated['attachment'] = $path;
+            
+            // Track file in storage management
+            UploadedFile::create([
+                'original_name' => $originalName,
+                'stored_name' => $storedName,
+                'file_path' => $path,
+                'mime_type' => $file->getMimeType(),
+                'file_size' => $file->getSize(),
+                'file_type' => $this->determineFileType($file->getMimeType(), $extension),
+                'category' => 'expense',
+            ]);
         }
 
         // Set user_id if not provided
@@ -191,5 +208,22 @@ class ExpenseController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    
+    /**
+     * Determine file type based on mime type and extension
+     */
+    private function determineFileType($mimeType, $extension)
+    {
+        if (str_contains($mimeType, 'pdf')) {
+            return 'pdf';
+        } elseif (str_contains($mimeType, 'image')) {
+            return 'image';
+        } elseif (str_contains($mimeType, 'spreadsheet') || in_array($extension, ['xlsx', 'xls', 'csv'])) {
+            return 'excel';
+        } elseif (str_contains($mimeType, 'word') || in_array($extension, ['docx', 'doc'])) {
+            return 'word';
+        }
+        return 'file';
     }
 }

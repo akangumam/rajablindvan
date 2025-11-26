@@ -421,7 +421,7 @@
             </div>
         @endif
 
-            {{-- Upload Form Section - HIDDEN: Files are uploaded from their respective pages (Fuel, Expense, Income, Service)
+        <div class="storage-section">
             <!-- Upload Form Section -->
             <div class="storage-field">
                 <label class="storage-field-label">1. Upload New File</label>
@@ -449,12 +449,11 @@
                     </div>
                 </form>
             </div>
-            --}}
 
             <div class="storage-field">
-                <label class="storage-field-label">Total Storage Usage</label>
+                <label class="storage-field-label">2. Total Storage Usage</label>
                 <div class="storage-usage">
-                    <div class="storage-usage-title">Using {{ number_format($usedStorageMB, 2) }} MB ({{ number_format($usagePercentage, 2) }}%) of {{ number_format($storageLimitMB, 0) }} MB</div>
+                    <div class="storage-usage-title">Using {{ number_format($usedStorageMB, 0) }} MB ({{ number_format($usagePercentage, 0) }}%) of {{ number_format($storageLimitMB, 0) }} MB</div>
                     <div class="storage-usage-bar">
                         <div class="storage-usage-fill" style="width: {{ min($usagePercentage, 100) }}%; background: linear-gradient(90deg, 
                             #ff9500 0%, 
@@ -463,9 +462,7 @@
                             #ff5722 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] }}%, 
                             #4caf50 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] }}%, 
                             #4caf50 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] }}%, 
-                            #795548 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] }}%,
-                            #795548 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] + $categoryStats['service']['percentage'] }}%,
-                            #2196f3 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] + $categoryStats['service']['percentage'] }}%, 
+                            #795548 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] }}%, 
                             #795548 100%);"></div>
                     </div>
                     
@@ -473,34 +470,30 @@
                     <div class="storage-legend" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 15px;">
                         <div class="legend-item" style="display: flex; align-items: center; gap: 8px;">
                             <span style="width: 16px; height: 16px; background: #ff9500; border-radius: 3px; display: inline-block;"></span>
-                            <span style="font-size: 13px; color: #666;">Fuel ({{ number_format($categoryStats['fuel']['size'], 2) }} MB)</span>
+                            <span style="font-size: 13px; color: #666;">Fuel ({{ number_format($categoryStats['fuel']['size'], 0) }} MB)</span>
                         </div>
                         <div class="legend-item" style="display: flex; align-items: center; gap: 8px;">
                             <span style="width: 16px; height: 16px; background: #ff5722; border-radius: 3px; display: inline-block;"></span>
-                            <span style="font-size: 13px; color: #666;">Expense ({{ number_format($categoryStats['expense']['size'], 2) }} MB)</span>
+                            <span style="font-size: 13px; color: #666;">Expense ({{ number_format($categoryStats['expense']['size'], 0) }} MB)</span>
                         </div>
                         <div class="legend-item" style="display: flex; align-items: center; gap: 8px;">
                             <span style="width: 16px; height: 16px; background: #4caf50; border-radius: 3px; display: inline-block;"></span>
-                            <span style="font-size: 13px; color: #666;">Income ({{ number_format($categoryStats['income']['size'], 2) }} MB)</span>
+                            <span style="font-size: 13px; color: #666;">Income ({{ number_format($categoryStats['income']['size'], 0) }} MB)</span>
                         </div>
                         <div class="legend-item" style="display: flex; align-items: center; gap: 8px;">
                             <span style="width: 16px; height: 16px; background: #795548; border-radius: 3px; display: inline-block;"></span>
-                            <span style="font-size: 13px; color: #666;">Service ({{ number_format($categoryStats['service']['size'], 2) }} MB)</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 16px; height: 16px; background: #2196f3; border-radius: 3px;"></div>
-                            <span style="font-size: 13px; color: #666;">Vehicle ({{ number_format($categoryStats['vehicle']['size'], 2) }} MB)</span>
+                            <span style="font-size: 13px; color: #666;">Service ({{ number_format($categoryStats['service']['size'], 0) }} MB)</span>
                         </div>
                         <div class="legend-item" style="display: flex; align-items: center; gap: 8px;">
                             <span style="width: 16px; height: 16px; background: #e9ecef; border-radius: 3px; display: inline-block; border: 1px solid #dee2e6;"></span>
-                            <span style="font-size: 13px; color: #666;">Unused ({{ number_format($unusedMB, 2) }} MB)</span>
+                            <span style="font-size: 13px; color: #666;">Unused ({{ number_format($unusedMB, 0) }} MB)</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="storage-field">
-                <label class="storage-field-label">List Uploaded File</label>
+                <label class="storage-field-label">3. List Uploaded File</label>
                 <div class="file-list">
                     <div class="file-list-header">Uploaded Files ({{ $files->count() }})</div>
                     
@@ -513,7 +506,7 @@
                             <div class="file-details">
                                 <div class="file-name">{{ $file->original_name }}</div>
                                 <div class="file-meta">
-                                    {{ ucfirst($file->file_type) }} ï¿½ {{ $file->file_size_formatted }} ï¿½ Uploaded on {{ $file->created_at->format('M d, Y') }}
+                                    {{ ucfirst($file->file_type) }} • {{ $file->file_size_formatted }} • Uploaded on {{ $file->created_at->format('M d, Y') }}
                                 </div>
                             </div>
                         </div>

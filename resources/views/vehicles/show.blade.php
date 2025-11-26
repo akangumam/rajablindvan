@@ -33,6 +33,9 @@
                                 </a>
                             </li>
                         </ul>
+                        <a href="{{ route('vehicles.export-pdf', $vehicle) }}" class="btn btn-success btn-sm ms-2" target="_blank">
+                            <i class="fas fa-file-pdf me-1"></i>Download PDF
+                        </a>
                         <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-warning btn-sm ms-2">
                             <i class="fas fa-edit me-1"></i>Edit
                         </a>
@@ -186,9 +189,11 @@
                                     </table>
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="col-md-6">
                             <!-- Barcode Section -->
-                            <div class="card border-success mt-3">
+                            <div class="card border-success">
                                 <div class="card-header bg-success text-white">
                                     <h6 class="mb-0"><i class="fas fa-qrcode me-2"></i>Barcode untuk Isi BBM</h6>
                                 </div>
@@ -221,7 +226,11 @@
                                                    class="btn btn-success">
                                                     <i class="fas fa-download me-1"></i>Download
                                                 </a>
+                                                <button type="button" class="btn btn-danger" onclick="confirmDeleteBarcode()">
+                                                    <i class="fas fa-trash me-1"></i>Hapus
+                                                </button>
                                             </div>
+
                                         </div>
                                     @else
                                         <div class="py-4">
@@ -234,10 +243,61 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="card border-info">
+                            <!-- Vehicle Documents Section (Multiple Documents) -->
+                            <div class="card border-primary mt-3">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0"><i class="fas fa-file-alt me-2"></i>Dokumen Kendaraan</h6>
+                                </div>
+                                <div class="card-body">
+                                    @if($vehicle->documents && $vehicle->documents->count() > 0)
+                                        <div class="list-group">
+                                            @foreach($vehicle->documents as $doc)
+                                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center flex-grow-1">
+                                                        <i class="{{ $doc->file_icon }} fa-2x me-3"></i>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="mb-1">{{ $doc->document_name }}</h6>
+                                                            <small class="text-muted">
+                                                                <span class="badge bg-secondary me-2">{{ $doc->document_type }}</span>
+                                                                {{ $doc->file_size_formatted }} • 
+                                                                {{ $doc->created_at->format('d M Y') }}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="btn-group">
+                                                        <a href="{{ asset('storage/' . $doc->document_path) }}" 
+                                                           target="_blank"
+                                                           class="btn btn-sm btn-outline-primary" 
+                                                           title="View">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="{{ asset('storage/' . $doc->document_path) }}" 
+                                                           download="{{ $doc->document_name }}"
+                                                           class="btn btn-sm btn-outline-success" 
+                                                           title="Download">
+                                                            <i class="fas fa-download"></i>
+                                                        </a>
+                                                        <button type="button" 
+                                                                class="btn btn-sm btn-outline-danger" 
+                                                                onclick="confirmDeleteVehicleDocument({{ $doc->id }})"
+                                                                title="Delete">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <div class="text-center py-4">
+                                            <i class="fas fa-file-alt display-4 text-muted mb-3"></i>
+                                            <p class="text-muted mb-0">Belum ada dokumen yang diupload</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="card border-info mt-3">
                                 <div class="card-header bg-info text-white">
                                     <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Vehicle Statistics</h6>
                                 </div>
@@ -285,7 +345,7 @@
                                     <h6 class="mb-0"><i class="fas fa-calendar-times me-2"></i>Document Expiry Dates</h6>
                                 </div>
                                 <div class="card-body">
-                                    @if($vehicle->stnk_expiry_date || $vehicle->kir_expiry_date)
+                                    @if($vehicle->stnk_expiry_date || $vehicle->kir_expiry_date || $vehicle->gps_expiry_date)
                                         <table class="table table-borderless mb-0">
                                             <tr>
                                                 <td class="fw-bold" style="width: 40%;">STNK Expiry:</td>
@@ -306,11 +366,11 @@
                                                         </span>
                                                         @if($daysUntilExpiry < 0)
                                                             <small class="text-danger d-block mt-1">
-                                                                <i class="fas fa-exclamation-triangle"></i> Expired {{ abs($daysUntilExpiry) }} days ago
+                                                                <i class="fas fa-exclamation-triangle"></i> Expired {{ round(abs($daysUntilExpiry)) }} days ago
                                                             </small>
                                                         @elseif($daysUntilExpiry <= 30)
                                                             <small class="text-warning d-block mt-1">
-                                                                <i class="fas fa-clock"></i> Expires in {{ $daysUntilExpiry }} days
+                                                                <i class="fas fa-clock"></i> Expires in {{ round($daysUntilExpiry) }} days
                                                             </small>
                                                         @endif
                                                     @else
@@ -337,11 +397,42 @@
                                                         </span>
                                                         @if($daysUntilExpiry < 0)
                                                             <small class="text-danger d-block mt-1">
-                                                                <i class="fas fa-exclamation-triangle"></i> Expired {{ abs($daysUntilExpiry) }} days ago
+                                                                <i class="fas fa-exclamation-triangle"></i> Expired {{ round(abs($daysUntilExpiry)) }} days ago
                                                             </small>
                                                         @elseif($daysUntilExpiry <= 30)
                                                             <small class="text-warning d-block mt-1">
-                                                                <i class="fas fa-clock"></i> Expires in {{ $daysUntilExpiry }} days
+                                                                <i class="fas fa-clock"></i> Expires in {{ round($daysUntilExpiry) }} days
+                                                            </small>
+                                                        @endif
+                                                    @else
+                                                        <span class="text-muted">Not Set</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold">GPS Expiry:</td>
+                                                <td>
+                                                    @if($vehicle->gps_expiry_date)
+                                                        @php
+                                                            $gpsExpiry = \Carbon\Carbon::parse($vehicle->gps_expiry_date);
+                                                            $daysUntilExpiry = now()->diffInDays($gpsExpiry, false);
+                                                            $badgeClass = 'bg-success';
+                                                            if ($daysUntilExpiry < 0) {
+                                                                $badgeClass = 'bg-danger';
+                                                            } elseif ($daysUntilExpiry <= 7) {
+                                                                $badgeClass = 'bg-warning text-dark';
+                                                            }
+                                                        @endphp
+                                                        <span class="badge {{ $badgeClass }}">
+                                                            {{ $gpsExpiry->format('d M Y') }}
+                                                        </span>
+                                                        @if($daysUntilExpiry < 0)
+                                                            <small class="text-danger d-block mt-1">
+                                                                <i class="fas fa-exclamation-triangle"></i> Expired {{ round(abs($daysUntilExpiry)) }} days ago
+                                                            </small>
+                                                        @elseif($daysUntilExpiry <= 7)
+                                                            <small class="text-warning d-block mt-1">
+                                                                <i class="fas fa-clock"></i> Expires in {{ round($daysUntilExpiry) }} days
                                                             </small>
                                                         @endif
                                                     @else
@@ -594,6 +685,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -602,6 +694,23 @@
         </div>
     </div>
 </div>
+
+<!-- Hidden Form for Deleting Barcode -->
+@if($vehicle->barcode_path)
+<form id="deleteBarcodeForm" action="{{ route('vehicles.delete-barcode', $vehicle) }}" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
+@endif
+
+<!-- Hidden Form for Deleting Vehicle Document -->
+@if($vehicle->document_path)
+<form id="deleteDocumentForm" action="{{ route('vehicles.delete-document', $vehicle) }}" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
+@endif
+
 
 @push('scripts')
 <script>
@@ -726,6 +835,77 @@ document.addEventListener('DOMContentLoaded', function() {
         barcodeImg.title = 'Click to view fullscreen';
     }
 });
+
+// Delete Barcode Confirmation
+function confirmDeleteBarcode() {
+    if (confirm('Apakah Anda yakin ingin menghapus barcode ini? Tindakan ini tidak dapat dibatalkan.')) {
+        document.getElementById('deleteBarcodeForm').submit();
+    }
+}
+
+// Fullscreen Document View
+function viewDocumentFullscreen() {
+    const docImg = document.getElementById('vehicleDocument');
+    if (!docImg) return;
+    
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; display: flex; align-items: center; justify-content: center; cursor: zoom-out;';
+    
+    const img = document.createElement('img');
+    img.src = docImg.src;
+    img.style.cssText = 'max-width: 90%; max-height: 90%; object-fit: contain;';
+    
+    overlay.appendChild(img);
+    document.body.appendChild(overlay);
+    
+    overlay.onclick = function() {
+        document.body.removeChild(overlay);
+    };
+    
+    const escHandler = function(e) {
+        if (e.key === 'Escape') {
+            document.body.removeChild(overlay);
+            document.removeEventListener('keydown', escHandler);
+        }
+    };
+    document.addEventListener('keydown', escHandler);
+}
+
+// Click document image to view fullscreen
+document.addEventListener('DOMContentLoaded', function() {
+    const docImg = document.getElementById('vehicleDocument');
+    if (docImg) {
+        docImg.style.cursor = 'pointer';
+        docImg.onclick = viewDocumentFullscreen;
+        docImg.title = 'Click to view fullscreen';
+    }
+});
+
+// Delete Individual Vehicle Document Confirmation
+function confirmDeleteVehicleDocument(documentId) {
+    if (confirm('Apakah Anda yakin ingin menghapus dokumen ini? Tindakan ini tidak dapat dibatalkan.')) {
+        // Create and submit form dynamically
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/vehicles/documents/${documentId}`;
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+        
+        const methodField = document.createElement('input');
+        methodField.type = 'hidden';
+        methodField.name = '_method';
+        methodField.value = 'DELETE';
+        
+        form.appendChild(csrfToken);
+        form.appendChild(methodField);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
 </script>
 @endpush
 @endsection

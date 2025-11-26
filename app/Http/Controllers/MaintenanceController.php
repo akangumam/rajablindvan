@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Maintenance;
 use App\Models\Vehicle;
+use App\Models\UploadedFile;
+use Illuminate\Support\Str;
 
 class MaintenanceController extends Controller
 {
@@ -131,9 +133,23 @@ class MaintenanceController extends Controller
         // Handle file upload
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('maintenances', $filename, 'public');
-            $validated['attachment'] = $filename;
+            $originalName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $storedName = Str::uuid() . '.' . $extension;
+            
+            $path = $file->storeAs('maintenances', $storedName, 'public');
+            $validated['attachment'] = $path;
+            
+            // Track file in storage management
+            UploadedFile::create([
+                'original_name' => $originalName,
+                'stored_name' => $storedName,
+                'file_path' => $path,
+                'mime_type' => $file->getMimeType(),
+                'file_size' => $file->getSize(),
+                'file_type' => $this->determineFileType($file->getMimeType(), $extension),
+                'category' => 'service',
+            ]);
         }
 
         // Set maintenance_date from service_date if not provided
@@ -229,5 +245,22 @@ class MaintenanceController extends Controller
 
         return redirect()->route('maintenances.index')
             ->with('success', 'Data perawatan berhasil dihapus!');
+    }
+    
+    /**
+     * Determine file type based on mime type and extension
+     */
+    private function determineFileType($mimeType, $extension)
+    {
+        if (str_contains($mimeType, 'pdf')) {
+            return 'pdf';
+        } elseif (str_contains($mimeType, 'image')) {
+            return 'image';
+        } elseif (str_contains($mimeType, 'spreadsheet') || in_array($extension, ['xlsx', 'xls', 'csv'])) {
+            return 'excel';
+        } elseif (str_contains($mimeType, 'word') || in_array($extension, ['docx', 'doc'])) {
+            return 'word';
+        }
+        return 'file';
     }
 }

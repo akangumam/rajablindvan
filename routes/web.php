@@ -88,7 +88,13 @@ Route::middleware(['role:super_admin,manager'])->group(function () {
     Route::get('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'assignDrivers'])->name('vehicles.assign-drivers');
     Route::post('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'storeDriverAssignment'])->name('vehicles.store-driver-assignment');
     Route::delete('vehicles/{vehicle}/drivers/{user}', [VehicleController::class, 'removeDriverAssignment'])->name('vehicles.remove-driver-assignment');
+    Route::delete('vehicles/{vehicle}/barcode', [VehicleController::class, 'deleteBarcode'])->name('vehicles.delete-barcode');
+    Route::delete('vehicles/{vehicle}/document', [VehicleController::class, 'deleteDocument'])->name('vehicles.delete-document');
+    Route::delete('vehicles/documents/{documentId}', [VehicleController::class, 'deleteVehicleDocument'])->name('vehicles.delete-vehicle-document');
     Route::resource('vehicles', VehicleController::class);
+
+
+
     
     // Customers - Administrator & Sales can manage
     Route::resource('customers', \App\Http\Controllers\CustomerController::class);

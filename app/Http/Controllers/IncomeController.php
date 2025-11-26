@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Income;
 use App\Models\Vehicle;
+use App\Models\UploadedFile;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class IncomeController extends Controller
@@ -108,9 +110,23 @@ class IncomeController extends Controller
         // Handle file upload
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('incomes', $filename, 'public');
+            $originalName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $storedName = Str::uuid() . '.' . $extension;
+            
+            $path = $file->storeAs('incomes', $storedName, 'public');
             $validated['attachment'] = $path;
+            
+            // Track file in storage management
+            UploadedFile::create([
+                'original_name' => $originalName,
+                'stored_name' => $storedName,
+                'file_path' => $path,
+                'mime_type' => $file->getMimeType(),
+                'file_size' => $file->getSize(),
+                'file_type' => $this->determineFileType($file->getMimeType(), $extension),
+                'category' => 'income',
+            ]);
         }
 
         Income::create($validated);
@@ -149,5 +165,22 @@ class IncomeController extends Controller
     public function destroy(Income $income)
     {
         //
+    }
+    
+    /**
+     * Determine file type based on mime type and extension
+     */
+    private function determineFileType($mimeType, $extension)
+    {
+        if (str_contains($mimeType, 'pdf')) {
+            return 'pdf';
+        } elseif (str_contains($mimeType, 'image')) {
+            return 'image';
+        } elseif (str_contains($mimeType, 'spreadsheet') || in_array($extension, ['xlsx', 'xls', 'csv'])) {
+            return 'excel';
+        } elseif (str_contains($mimeType, 'word') || in_array($extension, ['docx', 'doc'])) {
+            return 'word';
+        }
+        return 'file';
     }
 }
