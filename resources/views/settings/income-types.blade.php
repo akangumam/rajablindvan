@@ -487,7 +487,7 @@
                                 <div class="income-name">{{ $incomeType->name }}</div>
                             </div>
                             <div class="income-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $incomeType->id }}, '{{ $incomeType->name }}', '{{ $incomeType->description }}')"
+                                <button class="btn-edit" onclick="openEditModal({{ $incomeType->id }}, '{{ $incomeType->name }}', '{{ $incomeType->description }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn-delete" onclick="confirmDelete({{ $incomeType->id }}, '{{ $incomeType->name }}')">
@@ -512,9 +512,14 @@
         </div>
         <div class="modal-body">
             <form id="incomeForm">
+                <input type="hidden" id="incomeId" value="">
                 <div class="form-group">
-                    <label class="form-label">Income Type Name</label>
-                    <input type="text" class="form-control" id="incomeName" Tempatholder="Enter income type name" required>
+                    <label class="form-label">Income Type Name *</label>
+                    <input type="text" class="form-control" id="incomeName" placeholder="Enter income type name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="incomeDescription" placeholder="Enter description (optional)" rows="3"></textarea>
                 </div>
             </form>
         </div>

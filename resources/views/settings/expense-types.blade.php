@@ -487,7 +487,7 @@
                                 <div class="expense-name">{{ $expenseType->name }}</div>
                             </div>
                             <div class="expense-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $expenseType->id }}, '{{ $expenseType->name }}', '{{ $expenseType->description }}')"
+                                <button class="btn-edit" onclick="openEditModal({{ $expenseType->id }}, '{{ $expenseType->name }}', '{{ $expenseType->description }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn-delete" onclick="confirmDelete({{ $expenseType->id }}, '{{ $expenseType->name }}')">
