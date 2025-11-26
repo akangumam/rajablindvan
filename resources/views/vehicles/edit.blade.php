@@ -195,7 +195,7 @@
             <h4 class="mb-1">Edit Vehicle</h4>
             <p class="text-muted mb-0">Update Vehicle Information {{ $vehicle->brand }} {{ $vehicle->model }}</p>
         </div>
-        <a href="{{ route('vehicles.index') }}" class="btn btn-cancel">
+        <a href="{{ route('vehicles.show', $vehicle->id) }}" class="btn btn-cancel">
             <i class="fas fa-arrow-left me-2"></i>Back
         </a>
     </div>
@@ -457,7 +457,7 @@
 
         <!-- Action Buttons -->
         <div class="d-flex gap-3 justify-content-end">
-            <a href="{{ route('vehicles.index') }}" class="btn btn-cancel">
+            <a href="{{ route('vehicles.show', $vehicle->id) }}" class="btn btn-cancel">
                 <i class="fas fa-times me-2"></i>CANCEL
             </a>
             <button type="submit" class="btn btn-save">
