@@ -167,27 +167,48 @@
 }
 </style>
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+@endpush
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const vehicleSelect = document.getElementById('vehicle_id');
-    const licensePlateInput = document.getElementById('license_plate_display');
-    const yearInput = document.getElementById('year_display');
+$(document).ready(function() {
+    // Initialize Select2
+    $('#vehicle_id').select2({
+        theme: 'bootstrap-5',
+        placeholder: "Select Vehicle",
+        allowClear: true,
+        width: '100%'
+    });
+
+    $('#customer_id').select2({
+        theme: 'bootstrap-5',
+        placeholder: "Select Customer",
+        allowClear: true,
+        width: '100%' // Fix for input group
+    });
 
     // Vehicle data from backend
     const vehicles = @json($vehicles);
 
-    vehicleSelect.addEventListener('change', function() {
-        const selectedId = this.value;
+    // Handle change event using jQuery for Select2 compatibility
+    $('#vehicle_id').on('change', function() {
+        const selectedId = $(this).val();
         const vehicle = vehicles.find(v => v.id == selectedId);
 
         if (vehicle) {
-            licensePlateInput.value = vehicle.license_plate || '-';
-            yearInput.value = vehicle.year || '-';
+            $('#license_plate_display').val(vehicle.license_plate || '-');
+            $('#year_display').val(vehicle.year || '-');
         } else {
-            licensePlateInput.value = '';
-            yearInput.value = '';
+            $('#license_plate_display').val('');
+            $('#year_display').val('');
         }
     });
 });
 </script>
+@endpush
 @endsection

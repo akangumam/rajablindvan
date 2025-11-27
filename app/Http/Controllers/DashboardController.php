@@ -72,23 +72,20 @@ class DashboardController extends Controller
         foreach($vehicles as $vehicle) {
             if($vehicle->stnk_expiry_date) {
                 $daysUntilExpiry = Carbon::now()->diffInDays(Carbon::parse($vehicle->stnk_expiry_date), false);
-                $status = 'red'; // Expired
                 
-                if($daysUntilExpiry > 30) {
-                    $status = 'yellow'; // Kuning (akan jatuh tempo)
-                } elseif($daysUntilExpiry > 0) {
-                    $status = 'red'; // Merah (telah jatuh tempo)
+                if ($daysUntilExpiry <= 30) {
+                    $status = $daysUntilExpiry < 0 ? 'red' : 'yellow';
+                    
+                    $stnkMonitoring[] = [
+                        'id' => $vehicle->id,
+                        'vehicle_name' => $vehicle->name,
+                        'license_plate' => $vehicle->license_plate,
+                        'location' => $vehicle->location ? $vehicle->location->name : '-',
+                        'days_until_expiry' => abs(round($daysUntilExpiry)),
+                        'status' => $status,
+                        'expiry_date' => Carbon::parse($vehicle->stnk_expiry_date)->format('d M Y')
+                    ];
                 }
-                
-                $stnkMonitoring[] = [
-                    'id' => $vehicle->id,
-                    'vehicle_name' => $vehicle->name,
-                    'license_plate' => $vehicle->license_plate,
-                    'location' => $vehicle->location ? $vehicle->location->name : '-',
-                    'days_until_expiry' => abs($daysUntilExpiry),
-                    'status' => $status,
-                    'expiry_date' => Carbon::parse($vehicle->stnk_expiry_date)->format('d M Y')
-                ];
             }
         }
         
@@ -97,27 +94,47 @@ class DashboardController extends Controller
         foreach($vehicles as $vehicle) {
             if($vehicle->kir_expiry_date) {
                 $daysUntilExpiry = Carbon::now()->diffInDays(Carbon::parse($vehicle->kir_expiry_date), false);
-                $status = 'red';
                 
-                if($daysUntilExpiry > 30) {
-                    $status = 'yellow';
-                } elseif($daysUntilExpiry > 0) {
-                    $status = 'red';
+                if ($daysUntilExpiry <= 30) {
+                    $status = $daysUntilExpiry < 0 ? 'red' : 'yellow';
+                    
+                    $kirMonitoring[] = [
+                        'id' => $vehicle->id,
+                        'vehicle_name' => $vehicle->name,
+                        'license_plate' => $vehicle->license_plate,
+                        'location' => $vehicle->location ? $vehicle->location->name : '-',
+                        'days_until_expiry' => abs(round($daysUntilExpiry)),
+                        'status' => $status,
+                        'expiry_date' => Carbon::parse($vehicle->kir_expiry_date)->format('d M Y')
+                    ];
                 }
+            }
+        }
+
+        // Section 3: Monitoring GPS Journey Time
+        $gpsMonitoring = [];
+        foreach($vehicles as $vehicle) {
+            if($vehicle->gps_expiry_date) {
+                $daysUntilExpiry = Carbon::now()->diffInDays(Carbon::parse($vehicle->gps_expiry_date), false);
                 
-                $kirMonitoring[] = [
-                    'id' => $vehicle->id,
-                    'vehicle_name' => $vehicle->name,
-                    'license_plate' => $vehicle->license_plate,
-                    'location' => $vehicle->location ? $vehicle->location->name : '-',
-                    'days_until_expiry' => abs($daysUntilExpiry),
-                    'status' => $status,
-                    'expiry_date' => Carbon::parse($vehicle->kir_expiry_date)->format('d M Y')
-                ];
+                // GPS warning 7 days before
+                if ($daysUntilExpiry <= 7) {
+                    $status = $daysUntilExpiry < 0 ? 'red' : 'yellow';
+                    
+                    $gpsMonitoring[] = [
+                        'id' => $vehicle->id,
+                        'vehicle_name' => $vehicle->name,
+                        'license_plate' => $vehicle->license_plate,
+                        'location' => $vehicle->location ? $vehicle->location->name : '-',
+                        'days_until_expiry' => abs(round($daysUntilExpiry)),
+                        'status' => $status,
+                        'expiry_date' => Carbon::parse($vehicle->gps_expiry_date)->format('d M Y')
+                    ];
+                }
             }
         }
         
-        // Section 3: Monitoring Vehicle BOOKED and AVAILABLE
+        // Section 4: Monitoring Vehicle BOOKED and AVAILABLE
         $bookedQuery = Vehicle::where(function($query) {
             $query->whereHas('rentals', function($q) {
                 $q->where('status', 'active')
@@ -153,6 +170,7 @@ class DashboardController extends Controller
         return view('dashboard.main', compact(
             'stnkMonitoring',
             'kirMonitoring',
+            'gpsMonitoring',
             'bookedVehicles',
             'availableVehicles',
             'totalFleet',

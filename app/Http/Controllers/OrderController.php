@@ -37,7 +37,32 @@ class OrderController extends Controller
             });
         }
 
-        $orders = $query->orderBy('created_at', 'desc')->get();
+        // Sorting
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+
+        // Handle relationship sorting
+        if ($sortBy === 'vehicle_name') {
+            $query->join('vehicles', 'orders.vehicle_id', '=', 'vehicles.id')
+                  ->orderBy('vehicles.name', $sortOrder)
+                  ->select('orders.*');
+        } elseif ($sortBy === 'license_plate') {
+            $query->join('vehicles', 'orders.vehicle_id', '=', 'vehicles.id')
+                  ->orderBy('vehicles.license_plate', $sortOrder)
+                  ->select('orders.*');
+        } elseif ($sortBy === 'year') {
+            $query->join('vehicles', 'orders.vehicle_id', '=', 'vehicles.id')
+                  ->orderBy('vehicles.year', $sortOrder)
+                  ->select('orders.*');
+        } elseif ($sortBy === 'customer_name') {
+            $query->join('customers', 'orders.customer_id', '=', 'customers.id')
+                  ->orderBy('customers.name', $sortOrder)
+                  ->select('orders.*');
+        } else {
+            $query->orderBy($sortBy, $sortOrder);
+        }
+
+        $orders = $query->get();
 
         return view('orders.index', compact('orders', 'status'));
     }

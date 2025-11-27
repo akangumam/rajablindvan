@@ -87,6 +87,11 @@
         color: white;
     }
     
+    .icon-purple {
+        background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        color: white;
+    }
+    
     .vehicle-list {
         display: flex;
         flex-direction: column;
@@ -463,6 +468,51 @@
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <p>All KIR documents are up to date</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section 3: GPS Monitoring -->
+    <div class="col-lg-6 col-md-12">
+        <div class="monitoring-card">
+            <div class="card-header-custom">
+                <div class="card-title-custom">
+                    <div class="card-icon icon-purple">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <span>Monitoring GPS Journey Time</span>
+                </div>
+            </div>
+            
+            <div class="vehicle-list">
+                @forelse($gpsMonitoring as $item)
+                <div class="vehicle-item">
+                    <div class="vehicle-info">
+                        <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
+                        <div class="countdown-info">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ $item['days_until_expiry'] }} days {{ $item['status'] == 'red' ? 'overdue' : 'remaining' }}</span>
+                            <span class="text-muted">•</span>
+                            <span>Expired: {{ $item['expiry_date'] }}</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="status-badge status-{{ $item['status'] }}">
+                            {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
+                        </span>
+                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
+                            Vehicle Details <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                @empty
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <p>All GPS documents are up to date</p>
                 </div>
                 @endforelse
             </div>

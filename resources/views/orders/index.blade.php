@@ -73,6 +73,21 @@
     .search-btn:hover {
         background: #2980b9;
     }
+    .sortable-header {
+        cursor: pointer;
+        text-decoration: none;
+        color: #495057;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: color 0.2s;
+    }
+    .sortable-header:hover {
+        color: #3498db;
+    }
+    .sort-icon {
+        font-size: 0.8em;
+    }
 </style>
 
 <div class="page-header">
@@ -139,14 +154,54 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Vehicle Name</th>
-                            <th>License Plate</th>
-                            <th>Year of Manufacture</th>
-                            <th>Customer</th>
-                            <th>Rental Type</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Status</th>
+                            <th>
+                                <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'vehicle_name', 'sort_order' => request('sort_by') == 'vehicle_name' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Vehicle Name
+                                    <i class="fas fa-sort{{ request('sort_by') == 'vehicle_name' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'vehicle_name' ? 'text-muted opacity-25' : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'license_plate', 'sort_order' => request('sort_by') == 'license_plate' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    License Plate
+                                    <i class="fas fa-sort{{ request('sort_by') == 'license_plate' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'license_plate' ? 'text-muted opacity-25' : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'year', 'sort_order' => request('sort_by') == 'year' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Year
+                                    <i class="fas fa-sort{{ request('sort_by') == 'year' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'year' ? 'text-muted opacity-25' : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'customer_name', 'sort_order' => request('sort_by') == 'customer_name' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Customer
+                                    <i class="fas fa-sort{{ request('sort_by') == 'customer_name' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'customer_name' ? 'text-muted opacity-25' : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'rental_type', 'sort_order' => request('sort_by') == 'rental_type' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Rental Type
+                                    <i class="fas fa-sort{{ request('sort_by') == 'rental_type' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'rental_type' ? 'text-muted opacity-25' : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'start_date', 'sort_order' => request('sort_by') == 'start_date' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Start Date
+                                    <i class="fas fa-sort{{ request('sort_by') == 'start_date' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'start_date' ? 'text-muted opacity-25' : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'end_date', 'sort_order' => request('sort_by') == 'end_date' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    End Date
+                                    <i class="fas fa-sort{{ request('sort_by') == 'end_date' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'end_date' ? 'text-muted opacity-25' : '' }}"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'status', 'sort_order' => request('sort_by') == 'status' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
+                                    Status
+                                    <i class="fas fa-sort{{ request('sort_by') == 'status' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'status' ? 'text-muted opacity-25' : '' }}"></i>
+                                </a>
+                            </th>
                             <th>Actions</th>
                         </tr>
                     </thead>
