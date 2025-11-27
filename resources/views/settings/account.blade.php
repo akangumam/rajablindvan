@@ -235,6 +235,24 @@
             <h1 class="settings-page-content-title">Akun Saya</h1>
         </div>
 
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+
+        @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+
         <div class="account-section">
             <h3 class="account-section-title">My Details</h3>
         <div class="account-section">
@@ -317,7 +335,7 @@
                 <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('settings.account.password') }}">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">

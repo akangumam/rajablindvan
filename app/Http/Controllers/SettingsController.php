@@ -77,6 +77,24 @@ class SettingsController extends Controller
     }
 
     /**
+     * Update Password
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|current_password',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = auth()->user();
+        $user->password = \Illuminate\Support\Facades\Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->route('settings.account')
+            ->with('success', 'Password updated successfully!');
+    }
+
+    /**
      * File and Storage Settings
      */
     public function fileStorage()

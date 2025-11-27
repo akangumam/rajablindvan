@@ -206,6 +206,7 @@ Route::prefix('settings')->name('settings.')->group(function () {
     
     // Account
     Route::get('/account', [\App\Http\Controllers\SettingsController::class, 'account'])->name('account');
+    Route::post('/account/password', [\App\Http\Controllers\SettingsController::class, 'updatePassword'])->name('account.password');
     
     // File and Storage
     Route::get('/file-storage', [\App\Http\Controllers\SettingsController::class, 'fileStorage'])->name('file-storage');

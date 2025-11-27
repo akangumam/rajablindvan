@@ -79,7 +79,7 @@
     @if(auth()->user()->isSuperAdmin())
     <div class="alert alert-info">
         <i class="fas fa-info-circle me-2"></i>
-        Untuk mengubah password pengguna, gunakan fitur <a href="{{ route('users.reset-password-form', $user) }}" class="alert-link">Reset Password</a>.
+        Untuk mengubah password pengguna, gunakan fitur <a href="{{ route('users.reset-password.form', $user) }}" class="alert-link">Reset Password</a>.
     </div>
     @endif
 
