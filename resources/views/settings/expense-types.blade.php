@@ -464,18 +464,18 @@
 
         <div class="expense-section">
             <div class="expense-field">
-                <label class="expense-field-label">List of Expense Types</label>
+                <label class="expense-field-label">Daftar Jenis Pengeluaran</label>
                 <div class="expense-list">
                     <div class="expense-list-header">
-                        <span>Expense Types</span>
+                        <span>Jenis Pengeluaran</span>
                         <button class="btn-add" onclick="openAddModal()">
-                            <i class="fas fa-plus me-1"></i> TAMBAH BARU EXPENSE
+                            <i class="fas fa-plus me-1"></i> TAMBAH BARU PENGELUARAN
                         </button>
                     </div>
                     
                     @if($expenseTypes->isEmpty())
                         <div class="expense-list-item" style="justify-content: center; color: #999;">
-                            No expense types found. Click "TAMBAH BARU EXPENSE" to create one.
+                            Belum ada jenis pengeluaran. Klik "TAMBAH BARU PENGELUARAN" untuk menambahkan.
                         </div>
                     @else
                         @foreach($expenseTypes as $expenseType)
@@ -507,19 +507,19 @@
 <div id="expenseModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title" id="modalTitle">TAMBAH BARU Expense Type</h2>
+            <h2 class="modal-title" id="modalTitle">TAMBAH BARU PENGELUARAN</h2>
             <button class="close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
             <form id="expenseForm">
                 <input type="hidden" id="expenseId" value="">
                 <div class="form-group">
-                    <label class="form-label">Expense Type Name *</label>
-                    <input type="text" class="form-control" id="expenseName" Tempatholder="Enter expense type name" required>
+                    <label class="form-label">Nama Jenis Pengeluaran *</label>
+                    <input type="text" class="form-control" id="expenseName" placeholder="Masukkan nama jenis pengeluaran" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" id="expenseDescription" Tempatholder="Enter description (optional)" rows="3"></textarea>
+                    <label class="form-label">Deskripsi</label>
+                    <textarea class="form-control" id="expenseDescription" placeholder="Masukkan deskripsi (opsional)" rows="3"></textarea>
                 </div>
             </form>
         </div>
@@ -536,7 +536,7 @@ let isEditMode = false;
 
 function openAddModal() {
     isEditMode = false;
-    document.getElementById('modalTitle').textContent = 'TAMBAH BARU Expense Type';
+    document.getElementById('modalTitle').textContent = 'TAMBAH BARU PENGELUARAN';
     document.getElementById('expenseId').value = '';
     document.getElementById('expenseName').value = '';
     document.getElementById('expenseDescription').value = '';
@@ -562,7 +562,7 @@ function SIMPANExpense() {
     const description = document.getElementById('expenseDescription').value.trim();
     
     if (!name) {
-        alert('Please enter expense type name');
+        alert('Mohon masukkan nama jenis pengeluaran');
         return;
     }
 
@@ -591,17 +591,17 @@ function SIMPANExpense() {
             closeModal();
             location.reload();
         } else {
-            alert('Error: ' + (data.message || 'Something went wrong'));
+            alert('Error: ' + (data.message || 'Terjadi kesalahan'));
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Failed to SIMPAN expense type. Please try again.');
+        alert('Gagal menyimpan jenis pengeluaran. Silakan coba lagi.');
     });
 }
 
 function confirmDelete(id, name) {
-    if (confirm('Are you sure you want to delete "' + name + '"?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus "' + name + '"?')) {
         fetch('{{ route("settings.expense-types.destroy", ":id") }}'.replace(':id', id), {
             method: 'DELETE',
             headers: {
@@ -615,12 +615,12 @@ function confirmDelete(id, name) {
                 alert(data.message);
                 location.reload();
             } else {
-                alert('Error: ' + (data.message || 'Something went wrong'));
+                alert('Error: ' + (data.message || 'Terjadi kesalahan'));
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to delete expense type. Please try again.');
+            alert('Gagal menghapus jenis pengeluaran. Silakan coba lagi.');
         });
     }
 }

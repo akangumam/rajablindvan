@@ -476,10 +476,10 @@
 
         <div class="service-section">
             <div class="service-field">
-                <label class="service-field-label">List of Service Types</label>
+                <label class="service-field-label">Daftar Jenis Service</label>
                 <div class="service-list">
                     <div class="service-list-header">
-                        <span>Service Types</span>
+                        <span>Jenis Service</span>
                         <button class="btn-add" onclick="openAddModal()">
                             <i class="fas fa-plus me-1"></i> TAMBAH BARU SERVICE
                         </button>
@@ -487,7 +487,7 @@
                     
                     @if($serviceTypes->isEmpty())
                         <div class="service-list-item" style="justify-content: center; color: #999;">
-                            No service types found. Click "TAMBAH BARU SERVICE" to create one.
+                            Belum ada jenis service. Klik "TAMBAH BARU SERVICE" untuk menambahkan.
                         </div>
                     @else
                         @foreach($serviceTypes as $serviceType)
@@ -519,19 +519,19 @@
 <div id="serviceModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title" id="modalTitle">TAMBAH BARU Service Type</h2>
+            <h2 class="modal-title" id="modalTitle">TAMBAH BARU SERVICE</h2>
             <button class="close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
             <form id="serviceForm">
                 <input type="hidden" id="serviceId" value="">
                 <div class="form-group">
-                    <label class="form-label">Service Type Name *</label>
-                    <input type="text" class="form-control" id="serviceName" Tempatholder="Enter service type name" required>
+                    <label class="form-label">Nama Jenis Service *</label>
+                    <input type="text" class="form-control" id="serviceName" placeholder="Masukkan nama jenis service" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" id="serviceDescription" Tempatholder="Enter description (optional)" rows="3"></textarea>
+                    <label class="form-label">Deskripsi</label>
+                    <textarea class="form-control" id="serviceDescription" placeholder="Masukkan deskripsi (opsional)" rows="3"></textarea>
                 </div>
             </form>
         </div>
@@ -548,7 +548,7 @@ let isEditMode = false;
 
 function openAddModal() {
     isEditMode = false;
-    document.getElementById('modalTitle').textContent = 'TAMBAH BARU Service Type';
+    document.getElementById('modalTitle').textContent = 'TAMBAH BARU SERVICE';
     document.getElementById('serviceId').value = '';
     document.getElementById('serviceName').value = '';
     document.getElementById('serviceDescription').value = '';
@@ -574,7 +574,7 @@ function SIMPANService() {
     const description = document.getElementById('serviceDescription').value.trim();
     
     if (!name) {
-        alert('Please enter service type name');
+        alert('Mohon masukkan nama jenis service');
         return;
     }
 
@@ -603,17 +603,17 @@ function SIMPANService() {
             closeModal();
             location.reload();
         } else {
-            alert('Error: ' + (data.message || 'Something went wrong'));
+            alert('Error: ' + (data.message || 'Terjadi kesalahan'));
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Failed to SIMPAN service type. Please try again.');
+        alert('Gagal menyimpan jenis service. Silakan coba lagi.');
     });
 }
 
 function confirmDelete(id, name) {
-    if (confirm('Are you sure you want to delete "' + name + '"?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus "' + name + '"?')) {
         fetch('{{ route("settings.service-types.destroy", ":id") }}'.replace(':id', id), {
             method: 'DELETE',
             headers: {
@@ -627,12 +627,12 @@ function confirmDelete(id, name) {
                 alert(data.message);
                 location.reload();
             } else {
-                alert('Error: ' + (data.message || 'Something went wrong'));
+                alert('Error: ' + (data.message || 'Terjadi kesalahan'));
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to delete service type. Please try again.');
+            alert('Gagal menghapus jenis service. Silakan coba lagi.');
         });
     }
 }

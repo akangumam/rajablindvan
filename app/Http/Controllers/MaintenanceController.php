@@ -114,7 +114,7 @@ class MaintenanceController extends Controller
                 'min:0',
             ],
             'type' => 'nullable|string|max:255',
-            'service_type' => 'required|string|max:255',
+            'selected_services' => 'required|json', // Validate JSON input
             'category' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'workshop' => 'nullable|string|max:255',
@@ -129,6 +129,44 @@ class MaintenanceController extends Controller
             'parts_replaced' => 'nullable|string',
             'notes' => 'nullable|string'
         ]);
+
+        // Process selected_services
+        $selectedServices = json_decode($request->selected_services, true);
+        $serviceNames = [];
+        $serviceDetails = [];
+        $calculatedTotalCost = 0;
+
+        if (is_array($selectedServices)) {
+            foreach ($selectedServices as $service) {
+                $name = $service['name'] ?? 'Unknown Service';
+                $price = isset($service['price']) ? (float)$service['price'] : 0;
+                
+                $serviceNames[] = $name;
+                $serviceDetails[] = "$name (Rp " . number_format($price, 0, ',', '.') . ")";
+                $calculatedTotalCost += $price;
+            }
+        }
+
+        // Populate service_type with comma-separated names (truncate if too long)
+        $validated['service_type'] = Str::limit(implode(', ', $serviceNames), 250);
+        
+        // Add detailed breakdown to description or parts_replaced
+        $breakdown = implode("\n", $serviceDetails);
+        if (!empty($validated['description'])) {
+            $validated['description'] .= "\n\nService Breakdown:\n" . $breakdown;
+        } else {
+            $validated['description'] = "Service Breakdown:\n" . $breakdown;
+        }
+
+        // Use calculated total cost if not provided or override it
+        // The form sends total_cost, but recalculating is safer
+        $validated['total_cost'] = $calculatedTotalCost;
+        $validated['cost'] = $calculatedTotalCost; // Map to cost as well for backward compatibility
+
+        // Set default type if not provided (required field in database)
+        if (!isset($validated['type']) || empty($validated['type'])) {
+            $validated['type'] = 'Service';
+        }
 
         // Handle file upload
         if ($request->hasFile('attachment')) {
@@ -164,13 +202,7 @@ class MaintenanceController extends Controller
 
         // Set default values
         $validated['status'] = 'Completed';
-        if (!isset($validated['cost'])) {
-            $validated['cost'] = 0;
-        }
-        if (!isset($validated['total_cost'])) {
-            $validated['total_cost'] = 0;
-        }
-
+        
         Maintenance::create($validated);
 
         return redirect()->route('maintenances.index')

@@ -1,6 +1,6 @@
 @extends('layouts.drivvo-form', [
-    'pageTitle' => 'Edit User',
-    'pageSubtitle' => 'Update user account information',
+    'pageTitle' => 'Edit Pengguna',
+    'pageSubtitle' => 'Perbarui informasi akun pengguna',
     'formAction' => route('users.update', $user),
     'formMethod' => 'PUT',
     'hideVehicleSelector' => true,
@@ -10,8 +10,8 @@
 @section('form-fields')
 <!-- First Name -->
 <div class="mb-4">
-    <label class="form-label">First Name <span class="text-danger">*</span></label>
-    <input type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $user->first_name) }}" placeholder="Enter first name" required>
+    <label class="form-label">Nama Depan <span class="text-danger">*</span></label>
+    <input type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ old('first_name', $user->first_name) }}" placeholder="Masukkan nama depan" required>
     @error('first_name')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
@@ -19,8 +19,8 @@
 
     <!-- Last Name -->
     <div class="mb-4">
-        <label class="form-label">Last Name <span class="text-danger">*</span></label>
-        <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $user->last_name) }}" placeholder="Enter last name" required>
+        <label class="form-label">Nama Belakang <span class="text-danger">*</span></label>
+        <input type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ old('last_name', $user->last_name) }}" placeholder="Masukkan nama belakang" required>
         @error('last_name')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -28,7 +28,7 @@
 
     <!-- Email -->
     <div class="mb-4">
-        <label class="form-label">Email Address <span class="text-danger">*</span></label>
+        <label class="form-label">Alamat Email <span class="text-danger">*</span></label>
         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', $user->email) }}" placeholder="user@example.com" required>
         @error('email')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -37,43 +37,51 @@
 
     <!-- Title/Position -->
     <div class="mb-4">
-        <label class="form-label">Title/Position</label>
-        <input type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title', $user->title) }}" placeholder="e.g., Sales Manager, Operations Director">
+        <label class="form-label">Jabatan/Posisi</label>
+        <input type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title', $user->title) }}" placeholder="Contoh: Manajer Penjualan, Direktur Operasional">
         @error('title')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
 
-    <!-- User Type/Authorization -->
+    <!-- Role/Authorization -->
     <div class="mb-4">
-        <label class="form-label">User Type/Authorization <span class="text-danger">*</span></label>
-        <select class="form-control @error('user_type') is-invalid @enderror" name="user_type" required>
-            <option value="">Select User Type</option>
-            <option value="admin" {{ old('user_type', $user->user_type) == 'admin' ? 'selected' : '' }}>Administrator</option>
-            <option value="manager" {{ old('user_type', $user->user_type) == 'manager' ? 'selected' : '' }}>Sales</option>
-            <option value="driver" {{ old('user_type', $user->user_type) == 'driver' ? 'selected' : '' }}>Operation</option>
+        <label class="form-label">Tipe Pengguna/Otorisasi <span class="text-danger">*</span></label>
+        <select class="form-control @error('role') is-invalid @enderror" name="role" required>
+            <option value="">Pilih Tipe Pengguna</option>
+            <option value="super_admin" {{ old('role', $user->role) == 'super_admin' ? 'selected' : '' }}>Administrator</option>
+            <option value="manager" {{ old('role', $user->role) == 'manager' ? 'selected' : '' }}>Sales</option>
+            <option value="operator" {{ old('role', $user->role) == 'operator' ? 'selected' : '' }}>Operation</option>
         </select>
-        @error('user_type')
+        @error('role')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
         <small class="text-muted">
-            <strong>Administrator:</strong> Full access to all features<br>
-            <strong>Sales:</strong> Can manage vehicles, rentals, and sales reports<br>
-            <strong>Operation:</strong> Limited access to assigned vehicles and operations
+            <strong>Administrator:</strong> Akses penuh ke semua fitur<br>
+            <strong>Sales:</strong> Dapat mengelola kendaraan, sewa, dan laporan penjualan<br>
+            <strong>Operation:</strong> Akses terbatas ke kendaraan yang ditugaskan dan operasional
         </small>
     </div>
 
     <!-- User Status -->
     <div class="mb-4">
-        <label class="form-label">User Status <span class="text-danger">*</span></label>
+        <label class="form-label">Status Pengguna <span class="text-danger">*</span></label>
         <select class="form-control @error('status') is-invalid @enderror" name="status" required>
-            <option value="active" {{ old('status', $user->status ?? 'active') == 'active' ? 'selected' : '' }}>Active</option>
-            <option value="inactive" {{ old('status', $user->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+            <option value="active" {{ old('status', $user->status ?? ($user->is_active ? 'active' : 'inactive')) == 'active' ? 'selected' : '' }}>Aktif</option>
+            <option value="inactive" {{ old('status', $user->status ?? ($user->is_active ? 'active' : 'inactive')) == 'inactive' ? 'selected' : '' }}>Tidak Aktif</option>
         </select>
         @error('status')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
+
+    <!-- Password Reset Note -->
+    @if(auth()->user()->isSuperAdmin())
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>
+        Untuk mengubah password pengguna, gunakan fitur <a href="{{ route('users.reset-password-form', $user) }}" class="alert-link">Reset Password</a>.
+    </div>
+    @endif
 
 @endsection
 
@@ -86,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show loading state
         const submitBtn = form.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Updating...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Memperbarui...';
     });
 });
 </script>

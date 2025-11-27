@@ -51,7 +51,7 @@ class InvestorController extends Controller
 
         $investor = Investor::create($validated);
 
-        return redirect()->route('settings.investors.show', $investor)
+        return redirect()->route('settings.investors.index')
             ->with('success', __('common.investor_created'));
     }
 
@@ -152,7 +152,7 @@ class InvestorController extends Controller
 
         $investor->update($validated);
 
-        return redirect()->route('settings.investors.show', $investor)
+        return redirect()->route('settings.investors.index')
             ->with('success', __('common.investor_updated'));
     }
 

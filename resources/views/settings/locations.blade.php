@@ -656,7 +656,7 @@
 
         <div class="lokasi-section">
             <div class="Lokasi-field">
-                <label class="Lokasi-field-label">List of Tempat</label>
+                <label class="Lokasi-field-label">Daftar Tempat</label>
                 <div class="Lokasi-list">
                     <div class="Lokasi-list-header">
                         <span>Tempat</span>

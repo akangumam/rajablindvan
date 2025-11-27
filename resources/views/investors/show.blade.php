@@ -180,7 +180,7 @@
                         @foreach($investor->vehicles as $vehicle)
                             <tr>
                                 <td>
-                                    <a href="{{ route('vehicles.show', $vehicle) }}" class="text-decoration-none">
+                                    <a href="{{ route('vehicles.show', $vehicle->id) }}" class="text-decoration-none">
                                         {{ $vehicle->name }}
                                     </a>
                                 </td>

@@ -37,15 +37,16 @@ class UserController extends Controller
                 'last_name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'title' => ['nullable', 'string', 'max:255'],
-                'user_type' => ['required', 'in:admin,manager,driver'],
+                'role' => ['required', 'in:super_admin,manager,operator'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
                 'status' => ['required', 'in:active,inactive'],
             ]);
 
             // Combine first and last name for the name field
             $validated['name'] = trim($validated['first_name'] . ' ' . $validated['last_name']);
             
-            // Generate default password: 'password' (can be changed later by admin)
-            $validated['password'] = Hash::make('password');
+            // Hash the password
+            $validated['password'] = Hash::make($validated['password']);
             
             // Set default is_active based on status
             $validated['is_active'] = ($validated['status'] ?? 'active') == 'active';
@@ -53,11 +54,11 @@ class UserController extends Controller
             $user = User::create($validated);
 
             return redirect()->route('users.index')
-                ->with('success', 'User "' . $user->name . '" has been created successfully with default password: "password".');
+                ->with('success', 'Pengguna "' . $user->name . '" berhasil dibuat.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Failed to create user. Please try again.');
+                ->with('error', 'Gagal membuat pengguna. Silakan coba lagi.');
         }
     }
 
@@ -95,7 +96,7 @@ class UserController extends Controller
                 'last_name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
                 'title' => ['nullable', 'string', 'max:255'],
-                'user_type' => ['required', 'in:admin,manager,driver'],
+                'role' => ['required', 'in:super_admin,manager,operator'],
                 'status' => ['required', 'in:active,inactive'],
             ]);
 
@@ -106,13 +107,18 @@ class UserController extends Controller
             $validated['is_active'] = ($validated['status'] ?? 'active') == 'active';
 
             $user->update($validated);
+            
+            // If this is the current user, refresh user data in session
+            if ($user->id === auth()->id()) {
+                auth()->setUser($user->fresh());
+            }
 
             return redirect()->route('users.index')
-                ->with('success', 'User "' . $user->name . '" has been updated successfully.');
+                ->with('success', 'Pengguna "' . $user->name . '" berhasil diperbarui.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Failed to update user. Please try again.');
+                ->with('error', 'Gagal memperbarui pengguna. Silakan coba lagi.');
         }
     }
 

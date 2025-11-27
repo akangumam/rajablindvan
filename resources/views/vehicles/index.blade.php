@@ -738,7 +738,7 @@
                     <span style="font-weight: 500; color: #333;">{{ $vehicle->vehicle_type ?: '-' }}</span>
                 </td>
                 <td>
-                    <a href="{{ route('vehicles.show', $vehicle) }}" class="vehicle-name">
+                    <a href="{{ route('vehicles.show', $vehicle->id) }}" class="vehicle-name">
                         {{ $vehicle->name }}
                     </a>
                 </td>
@@ -789,16 +789,16 @@
                             <i class="fas fa-download"></i>
                         </button>
                         @endif
-                        <a href="{{ route('vehicles.show', $vehicle) }}" class="action-icon-btn btn-view" title="{{ __('common.view_details') }}">
+                        <a href="{{ route('vehicles.show', $vehicle->id) }}" class="action-icon-btn btn-view" title="{{ __('common.view_details') }}">
                             <i class="fas fa-eye"></i>
                         </a>
                         @if(auth()->user()->canManageVehicles())
-                        <a href="{{ route('vehicles.edit', $vehicle) }}" class="action-icon-btn btn-edit" title="{{ __('common.edit_vehicle') }}">
+                        <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="action-icon-btn btn-edit" title="{{ __('common.edit_vehicle') }}">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
                         @endif
                         @if(auth()->user()->canDeleteRecords())
-                        <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event, '{{ $vehicle->name }}')">
+                        <form action="{{ route('vehicles.destroy', $vehicle->id) }}" method="POST" class="d-inline" onsubmit="return confirmDelete(event, '{{ $vehicle->name }}')">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="action-icon-btn btn-delete" title="{{ __('common.delete_vehicle') }}">
@@ -820,7 +820,7 @@
             <div class="vehicle-card-header">
                 <div>
                     <div class="vehicle-card-title">
-                        <a href="{{ route('vehicles.show', $vehicle) }}" style="color: inherit; text-decoration: none;">
+                        <a href="{{ route('vehicles.show', $vehicle->id) }}" style="color: inherit; text-decoration: none;">
                             {{ $vehicle->name }}
                         </a>
                     </div>
@@ -851,16 +851,16 @@
             </div>
 
             <div class="vehicle-card-actions">
-                <a href="{{ route('vehicles.show', $vehicle) }}" class="btn btn-sm btn-primary">
+                <a href="{{ route('vehicles.show', $vehicle->id) }}" class="btn btn-sm btn-primary">
                     <i class="fas fa-eye me-1"></i> {{ __('common.view_details') }}
                 </a>
                 @if(auth()->user()->canManageVehicles())
-                <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-warning">
+                <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="btn btn-sm btn-warning">
                     <i class="fas fa-pencil-alt me-1"></i> {{ __('common.edit') }}
                 </a>
                 @endif
                 @if(auth()->user()->canDeleteRecords())
-                <form action="{{ route('vehicles.destroy', $vehicle) }}" method="POST" class="d-inline" style="flex: 1;" onsubmit="return confirmDelete(event, '{{ $vehicle->name }}')">
+                <form action="{{ route('vehicles.destroy', $vehicle->id) }}" method="POST" class="d-inline" style="flex: 1;" onsubmit="return confirmDelete(event, '{{ $vehicle->name }}')">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-sm btn-danger" style="width: 100%;">

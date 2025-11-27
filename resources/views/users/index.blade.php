@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Users Management')
+@section('title', 'Manajemen Pengguna')
 
 @section('content')
 <style>
@@ -411,12 +411,12 @@
     <div>
         <h1 class="page-title">
             <i class="fas fa-users-cog"></i>
-            Users Management
+            Manajemen Pengguna
         </h1>
-        <p class="page-subtitle">Manage system users and their permissions</p>
+        <p class="page-subtitle">Kelola pengguna sistem dan perizinan mereka</p>
     </div>
     <a href="{{ route('users.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus-circle"></i> Add New User
+        <i class="fas fa-plus-circle"></i> Tambah Pengguna Baru
     </a>
 </div>
 
@@ -442,12 +442,12 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Name</th>
+                <th>Nama</th>
                 <th>Email</th>
-                <th>Title/Position</th>
-                <th>User Type/Authorization</th>
+                <th>Jabatan/Posisi</th>
+                <th>Tipe Pengguna/Otorisasi</th>
                 <th>Status</th>
-                <th style="text-align: right;">Actions</th>
+                <th style="text-align: right;">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -464,21 +464,21 @@
                     <div class="user-title">{{ $user->title ?? '-' }}</div>
                 </td>
                 <td data-label="Role">
-                    @if($user->user_type == 'admin')
+                    @if($user->role == 'super_admin')
                         <span class="badge-role badge-admin">Administrator</span>
-                    @elseif($user->user_type == 'manager')
+                    @elseif($user->role == 'manager')
                         <span class="badge-role badge-manager">Sales</span>
-                    @elseif($user->user_type == 'driver')
+                    @elseif($user->role == 'operator')
                         <span class="badge-role badge-driver">Operation</span>
                     @else
                         <span class="badge-role" style="background: #f5f5f5; color: #666;">User</span>
                     @endif
                 </td>
                 <td data-label="Status">
-                    @if(($user->status ?? 'active') == 'active')
-                        <span class="badge-status badge-active">Active</span>
+                    @if(($user->status ?? 'active') == 'active' || $user->is_active)
+                        <span class="badge-status badge-active">Aktif</span>
                     @else
-                        <span class="badge-status badge-inactive">Inactive</span>
+                        <span class="badge-status badge-inactive">Tidak Aktif</span>
                     @endif
                 </td>
                 <td data-label="Actions">
@@ -508,17 +508,17 @@
     @if($users->hasPages())
     <div class="pagination-container">
         <div class="pagination-info">
-            Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} results
+            Menampilkan {{ $users->firstItem() }} sampai {{ $users->lastItem() }} dari {{ $users->total() }} hasil
         </div>
         <div class="pagination-links">
             {{-- Previous Page Link --}}
             @if ($users->onFirstPage())
                 <span class="page-link disabled">
-                    <i class="fas fa-chevron-left"></i> Previous
+                    <i class="fas fa-chevron-left"></i> Sebelumnya
                 </span>
             @else
                 <a href="{{ $users->previousPageUrl() }}" class="page-link">
-                    <i class="fas fa-chevron-left"></i> Previous
+                    <i class="fas fa-chevron-left"></i> Sebelumnya
                 </a>
             @endif
 
@@ -534,11 +534,11 @@
             {{-- Next Page Link --}}
             @if ($users->hasMorePages())
                 <a href="{{ $users->nextPageUrl() }}" class="page-link">
-                    Next <i class="fas fa-chevron-right"></i>
+                    Selanjutnya <i class="fas fa-chevron-right"></i>
                 </a>
             @else
                 <span class="page-link disabled">
-                    Next <i class="fas fa-chevron-right"></i>
+                    Selanjutnya <i class="fas fa-chevron-right"></i>
                 </span>
             @endif
         </div>
@@ -551,12 +551,12 @@
     <div class="empty-icon">
         <i class="fas fa-users-cog" style="color: white;"></i>
     </div>
-    <h3 class="empty-title">No Users Yet</h3>
+    <h3 class="empty-title">Belum Ada Pengguna</h3>
     <p class="empty-description">
-        Start by adding your first user to manage the system.
+        Mulai dengan menambahkan pengguna pertama untuk mengelola sistem.
     </p>
     <a href="{{ route('users.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus-circle"></i> Add First User
+        <i class="fas fa-plus-circle"></i> Tambah Pengguna Pertama
     </a>
 </div>
 @endif
@@ -566,7 +566,7 @@
 function confirmDelete(event, userName) {
     event.preventDefault();
     
-    if (confirm('Are you sure you want to delete user "' + userName + '"?\n\nThis action cannot be undone.')) {
+    if (confirm('Apakah Anda yakin ingin menghapus pengguna "' + userName + '"?\n\nTindakan ini tidak dapat dibatalkan.')) {
         event.target.submit();
     }
     

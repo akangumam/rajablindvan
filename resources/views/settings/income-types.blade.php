@@ -464,18 +464,18 @@
 
         <div class="income-section">
             <div class="income-field">
-                <label class="income-field-label">List of Income Types</label>
+                <label class="income-field-label">Daftar Jenis Pendapatan</label>
                 <div class="income-list">
                     <div class="income-list-header">
-                        <span>Income Types</span>
+                        <span>Jenis Pendapatan</span>
                         <button class="btn-add" onclick="openAddModal()">
-                            <i class="fas fa-plus me-1"></i> TAMBAH BARU INCOME
+                            <i class="fas fa-plus me-1"></i> TAMBAH BARU PENDAPATAN
                         </button>
                     </div>
                     
                     @if($incomeTypes->isEmpty())
                         <div class="income-list-item" style="justify-content: center; color: #999;">
-                            No income types found. Click "TAMBAH BARU INCOME" to create one.
+                            Belum ada jenis pendapatan. Klik "TAMBAH BARU PENDAPATAN" untuk menambahkan.
                         </div>
                     @else
                         @foreach($incomeTypes as $incomeType)
@@ -507,19 +507,19 @@
 <div id="incomeModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title" id="modalTitle">TAMBAH BARU Income Type</h2>
+            <h2 class="modal-title" id="modalTitle">TAMBAH BARU PENDAPATAN</h2>
             <button class="close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
             <form id="incomeForm">
                 <input type="hidden" id="incomeId" value="">
                 <div class="form-group">
-                    <label class="form-label">Income Type Name *</label>
-                    <input type="text" class="form-control" id="incomeName" placeholder="Enter income type name" required>
+                    <label class="form-label">Nama Jenis Pendapatan *</label>
+                    <input type="text" class="form-control" id="incomeName" placeholder="Masukkan nama jenis pendapatan" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" id="incomeDescription" placeholder="Enter description (optional)" rows="3"></textarea>
+                    <label class="form-label">Deskripsi</label>
+                    <textarea class="form-control" id="incomeDescription" placeholder="Masukkan deskripsi (opsional)" rows="3"></textarea>
                 </div>
             </form>
         </div>
@@ -536,7 +536,7 @@ let isEditMode = false;
 
 function openAddModal() {
     isEditMode = false;
-    document.getElementById('modalTitle').textContent = 'TAMBAH BARU Income Type';
+    document.getElementById('modalTitle').textContent = 'TAMBAH BARU PENDAPATAN';
     document.getElementById('incomeId').value = '';
     document.getElementById('incomeName').value = '';
     document.getElementById('incomeDescription').value = '';
@@ -562,7 +562,7 @@ function SIMPANIncome() {
     const description = document.getElementById('incomeDescription').value.trim();
     
     if (!name) {
-        alert('Please enter income type name');
+        alert('Mohon masukkan nama jenis pendapatan');
         return;
     }
 
@@ -591,17 +591,17 @@ function SIMPANIncome() {
             closeModal();
             location.reload();
         } else {
-            alert('Error: ' + (data.message || 'Something went wrong'));
+            alert('Error: ' + (data.message || 'Terjadi kesalahan'));
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Failed to SIMPAN income type. Please try again.');
+        alert('Gagal menyimpan jenis pendapatan. Silakan coba lagi.');
     });
 }
 
 function confirmDelete(id, name) {
-    if (confirm('Are you sure you want to delete "' + name + '"?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus "' + name + '"?')) {
         fetch('{{ route("settings.income-types.destroy", ":id") }}'.replace(':id', id), {
             method: 'DELETE',
             headers: {
@@ -615,12 +615,12 @@ function confirmDelete(id, name) {
                 alert(data.message);
                 location.reload();
             } else {
-                alert('Error: ' + (data.message || 'Something went wrong'));
+                alert('Error: ' + (data.message || 'Terjadi kesalahan'));
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to delete income type. Please try again.');
+            alert('Gagal menghapus jenis pendapatan. Silakan coba lagi.');
         });
     }
 }

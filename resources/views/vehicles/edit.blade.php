@@ -212,7 +212,7 @@
         </div>
     @endif
 
-    <form action="{{ route('vehicles.update', $vehicle) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('vehicles.update', $vehicle->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         
@@ -468,7 +468,7 @@
     
     <!-- Hidden Form for Deleting Barcode -->
     @if($vehicle->barcode_path)
-    <form id="deleteBarcodeForm" action="{{ route('vehicles.delete-barcode', $vehicle) }}" method="POST" style="display: none;">
+    <form id="deleteBarcodeForm" action="{{ route('vehicles.delete-barcode', $vehicle->id) }}" method="POST" style="display: none;">
         @csrf
         @method('DELETE')
     </form>

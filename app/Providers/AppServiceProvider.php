@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Share vehicle data with all views using drivvo layout
+        view()->composer('layouts.drivvo', \App\View\Composers\VehicleComposer::class);
     }
 }

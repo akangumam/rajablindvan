@@ -453,7 +453,7 @@
                     <i class="fas fa-plus"></i>
                     Add New Vehicle
                 </button>
-                <button class="btn-action btn-manage" onclick="window.location.href='{{ route('vehicles.edit', $selectedVehicle->license_plate) }}'">
+                <button class="btn-action btn-manage" onclick="window.location.href='{{ route('vehicles.show', $selectedVehicle->id) }}'">
                     <i class="fas fa-cog"></i>
                     Manage Vehicle
                 </button>

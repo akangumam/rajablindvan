@@ -33,10 +33,10 @@
                                 </a>
                             </li>
                         </ul>
-                        <a href="{{ route('vehicles.export-pdf', $vehicle) }}" class="btn btn-success btn-sm ms-2" target="_blank">
+                        <a href="{{ route('vehicles.export-pdf', $vehicle->id) }}" class="btn btn-success btn-sm ms-2" target="_blank">
                             <i class="fas fa-file-pdf me-1"></i>Download PDF
                         </a>
-                        <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-warning btn-sm ms-2">
+                        <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="btn btn-warning btn-sm ms-2">
                             <i class="fas fa-edit me-1"></i>Edit
                         </a>
                         <a href="{{ route('vehicles.index') }}" class="btn btn-secondary btn-sm ms-1">
@@ -236,7 +236,7 @@
                                         <div class="py-4">
                                             <i class="fas fa-qrcode display-4 text-muted mb-3"></i>
                                             <p class="text-muted mb-3">Barcode belum di-upload</p>
-                                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-success">
+                                            <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="btn btn-sm btn-success">
                                                 <i class="fas fa-upload me-1"></i>Upload Barcode
                                             </a>
                                         </div>
@@ -445,7 +445,7 @@
                                         <div class="text-center py-3">
                                             <i class="fas fa-calendar-times display-6 text-muted mb-2"></i>
                                             <p class="text-muted mb-2">Tanggal expiry dokumen belum diisi</p>
-                                            <a href="{{ route('vehicles.edit', $vehicle) }}" class="btn btn-sm btn-warning">
+                                            <a href="{{ route('vehicles.edit', $vehicle->id) }}" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit me-1"></i>Update Document Dates
                                             </a>
                                         </div>
@@ -697,7 +697,7 @@
 
 <!-- Hidden Form for Deleting Barcode -->
 @if($vehicle->barcode_path)
-<form id="deleteBarcodeForm" action="{{ route('vehicles.delete-barcode', $vehicle) }}" method="POST" style="display: none;">
+<form id="deleteBarcodeForm" action="{{ route('vehicles.delete-barcode', $vehicle->id) }}" method="POST" style="display: none;">
     @csrf
     @method('DELETE')
 </form>
@@ -705,7 +705,7 @@
 
 <!-- Hidden Form for Deleting Vehicle Document -->
 @if($vehicle->document_path)
-<form id="deleteDocumentForm" action="{{ route('vehicles.delete-document', $vehicle) }}" method="POST" style="display: none;">
+<form id="deleteDocumentForm" action="{{ route('vehicles.delete-document', $vehicle->id) }}" method="POST" style="display: none;">
     @csrf
     @method('DELETE')
 </form>

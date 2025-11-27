@@ -18,6 +18,11 @@ class DashboardController extends Controller
         $user = auth()->user();
         $locationId = LocationFilter::getLocationId();
         
+        // Persist selected vehicle to session
+        if ($request->has('vehicle_id')) {
+            session(['selected_vehicle_id' => $request->vehicle_id]);
+        }
+        
         // Get vehicles based on location filter
         $vehiclesQuery = Vehicle::with(['maintenances' => function($query) {
             $query->where('service_date', '>=', Carbon::now())

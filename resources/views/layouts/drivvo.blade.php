@@ -684,7 +684,18 @@
                 padding: 5px 12px !important;
             }
         }
+
+        /* Add New Modal Card Hover Effects */
+        .add-new-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+        }
+
+        .add-new-card:active {
+            transform: translateY(-1px);
+        }
     </style>
+
 
     @stack('styles')
 </head>
@@ -737,6 +748,14 @@
                         <i class="fas fa-history"></i>
                         <span class="nav-text">{{ __('common.history') }}</span>
                     </a>
+                </div>
+
+                <!-- Tambah Baru -->
+                <div class="drivvo-nav-item">
+                    <button type="button" class="drivvo-nav-link" onclick="showAddNewModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 12px 20px;">
+                        <i class="fas fa-plus-circle"></i>
+                        <span class="nav-text">Tambah Baru</span>
+                    </button>
                 </div>
 
                 <!-- Other Menu Items -->
@@ -925,9 +944,21 @@
                         <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('vehicles.create') }}'">
                             {{ __('vehicle.add_vehicle_new') }}
                         </button>
-                        <button type="button" class="btn btn-outline-primary" onclick="window.location.href='{{ route('vehicles.index') }}'">
-                            {{ __('vehicle.manage_vehicles') }}
-                        </button>
+                        @php
+                            $currentVehicleId = request()->get('vehicle_id') ?? session('selected_vehicle_id');
+                            if (!$currentVehicleId && isset($allVehicles) && $allVehicles->count() > 0) {
+                                $currentVehicleId = $allVehicles->first()->id;
+                            }
+                        @endphp
+                        @if($currentVehicleId)
+                            <button type="button" class="btn btn-outline-primary" onclick="window.location.href='{{ route('vehicles.show', $currentVehicleId) }}'">
+                                {{ __('vehicle.manage_vehicles') }}
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-outline-primary" onclick="window.location.href='{{ route('vehicles.index') }}'">
+                                {{ __('vehicle.manage_vehicles') }}
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -961,6 +992,74 @@
                         <i class="fas fa-sign-out-alt"></i>
                         Ya, Logout
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Modal -->
+    <div class="modal fade" id="addNewModal" tabindex="-1" aria-labelledby="addNewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border: none; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
+                <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 16px 16px 0 0; padding: 20px 24px;">
+                    <h5 class="modal-title" id="addNewModalLabel">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        Tambah Baru
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="padding: 30px 24px;">
+                    <p class="text-muted mb-4" style="font-size: 14px;">Pilih jenis data yang ingin Anda tambahkan:</p>
+                    
+                    <div class="row g-3">
+                        <!-- Income Card -->
+                        <div class="col-12">
+                            <a href="{{ route('incomes.create') }}" class="add-new-card" style="display: flex; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border: 2px solid #667eea30; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                                <div class="add-new-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
+                                    <i class="fas fa-money-bill-wave" style="font-size: 22px; color: white;"></i>
+                                </div>
+                                <div class="add-new-content" style="flex: 1;">
+                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">Pemasukan</h6>
+                                    <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Tambahkan pendapatan baru</p>
+                                </div>
+                                <div class="add-new-arrow" style="color: #667eea; font-size: 18px;">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Service Card -->
+                        <div class="col-12">
+                            <a href="{{ route('maintenances.create') }}" class="add-new-card" style="display: flex; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #4facfe15 0%, #00f2fe15 100%); border: 2px solid #4facfe30; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                                <div class="add-new-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
+                                    <i class="fas fa-wrench" style="font-size: 22px; color: white;"></i>
+                                </div>
+                                <div class="add-new-content" style="flex: 1;">
+                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">Servis</h6>
+                                    <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Tambahkan layanan maintenance</p>
+                                </div>
+                                <div class="add-new-arrow" style="color: #4facfe; font-size: 18px;">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Expense Card -->
+                        <div class="col-12">
+                            <a href="{{ route('expenses.create') }}" class="add-new-card" style="display: flex; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #fa709a15 0%, #fee14015 100%); border: 2px solid #fa709a30; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                                <div class="add-new-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
+                                    <i class="fas fa-receipt" style="font-size: 22px; color: white;"></i>
+                                </div>
+                                <div class="add-new-content" style="flex: 1;">
+                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">Pengeluaran</h6>
+                                    <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Tambahkan pengeluaran baru</p>
+                                </div>
+                                <div class="add-new-arrow" style="color: #fa709a; font-size: 18px;">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1020,6 +1119,11 @@
 
         function confirmLogout() {
             document.getElementById('logoutForm').submit();
+        }
+
+        function showAddNewModal() {
+            const addNewModal = new bootstrap.Modal(document.getElementById('addNewModal'));
+            addNewModal.show();
         }
 
         // Sidebar Toggle and Mobile Menu

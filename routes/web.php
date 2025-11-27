@@ -20,118 +20,106 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // =====================================================
 // Protected Routes (Require Authentication)
 // =====================================================
+// =====================================================
+// Protected Routes (Require Authentication)
+// =====================================================
 Route::middleware(['auth', LocationFilter::class])->group(function () {
     
-// Language Switcher
-Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
+    // ========================================
+    // DASHBOARD
+    // ========================================
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-// Test route
-Route::get('/test', function () {
-    return 'Laravel is working!';
-});
-
-// Debug locale route
-Route::get('/debug-locale', function () {
-    return [
-        'current_locale' => app()->getLocale(),
-        'session_locale' => session('locale'),
-        'config_locale' => config('app.locale'),
-        'available_locales' => ['id', 'en'],
-        'test_translation_id' => __('common.dashboard'),
-        'test_translation_direct' => trans('common.dashboard'),
-        'test_vehicles' => __('common.vehicles'),
-        'test_customers' => __('common.customers'),
-        'test_add_new' => __('common.add_new'),
-    ];
-});
-
-// Test locale manually
-Route::get('/test-locale/{locale}', function ($locale) {
-    if (!in_array($locale, ['id', 'en'])) {
-        return 'Invalid locale';
-    }
+    // ========================================
+    // VEHICLE ROUTES (Must be ordered correctly!)
+    // ========================================
     
-    session(['locale' => $locale]);
-    app()->setLocale($locale);
+    // 1. Specific Actions (Create, Store) - Admin/Manager Only
+    Route::get('vehicles/create', [VehicleController::class, 'create'])
+        ->name('vehicles.create')
+        ->middleware('role:super_admin,manager');
+        
+    Route::post('vehicles', [VehicleController::class, 'store'])
+        ->name('vehicles.store')
+        ->middleware('role:super_admin,manager');
+        
+    // 2. Index - All Roles
+    Route::get('vehicles', [VehicleController::class, 'index'])
+        ->name('vehicles.index');
+        
+    // 3. Specific Vehicle Actions (Edit, Update, Delete) - Admin/Manager Only
+    // MUST be before 'show' if using same URI pattern, but here we use /edit suffix so it's safe
+    Route::get('vehicles/{vehicle}/edit', [VehicleController::class, 'edit'])
+        ->name('vehicles.edit')
+        ->middleware('role:super_admin,manager');
+        
+    Route::put('vehicles/{vehicle}', [VehicleController::class, 'update'])
+        ->name('vehicles.update')
+        ->middleware('role:super_admin,manager');
+        
+    Route::patch('vehicles/{vehicle}', [VehicleController::class, 'update']);
     
-    return [
-        'locale_set' => $locale,
-        'app_locale' => app()->getLocale(),
-        'session_locale' => session('locale'),
-        'test_dashboard' => __('common.dashboard'),
-        'test_vehicles' => __('common.vehicles'),
-        'test_customers' => __('common.customers'),
-        'test_add_new' => __('common.add_new'),
-        'test_reminders' => __('common.reminders'),
-        'test_reports' => __('common.reports'),
-        'test_settings' => __('common.settings'),
-        'lang_path' => lang_path(),
-        'file_exists_id' => file_exists(lang_path('id/common.php')),
-        'file_exists_en' => file_exists(lang_path('en/common.php')),
-    ];
-});
+    Route::delete('vehicles/{vehicle}', [VehicleController::class, 'destroy'])
+        ->name('vehicles.destroy')
+        ->middleware('role:super_admin,manager');
+        
+    // 4. Special Vehicle Actions - Admin/Manager Only
+    Route::group(['middleware' => ['role:super_admin,manager']], function () {
+        Route::get('vehicles/{vehicle}/export-pdf', [VehicleController::class, 'exportPdf'])->name('vehicles.export-pdf');
+        Route::get('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'assignDrivers'])->name('vehicles.assign-drivers');
+        Route::post('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'storeDriverAssignment'])->name('vehicles.store-driver-assignment');
+        Route::delete('vehicles/{vehicle}/drivers/{user}', [VehicleController::class, 'removeDriverAssignment'])->name('vehicles.remove-driver-assignment');
+        Route::delete('vehicles/{vehicle}/barcode', [VehicleController::class, 'deleteBarcode'])->name('vehicles.delete-barcode');
+        Route::delete('vehicles/{vehicle}/document', [VehicleController::class, 'deleteDocument'])->name('vehicles.delete-document');
+        Route::delete('vehicles/documents/{documentId}', [VehicleController::class, 'deleteVehicleDocument'])->name('vehicles.delete-vehicle-document');
+        
+    });
 
-// Dashboard
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    // 5. Show Detail - All Roles (Wildcard route MUST be last)
+    Route::get('vehicles/{vehicle}', [VehicleController::class, 'show'])
+        ->name('vehicles.show')
+        ->where('vehicle', '[0-9]+');
 
-// History
-Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
-Route::get('/history/download', [HistoryController::class, 'downloadDetail'])->name('history.download');
+    // ========================================
+    // OTHER ROUTES
+    // ========================================
 
-// ========================================
-// ADMINISTRATOR & SALES ONLY
-// ========================================
-Route::middleware(['role:super_admin,manager'])->group(function () {
-    
-    // Vehicles - Administrator & Sales can manage
-    Route::get('vehicles/{vehicle}/export-pdf', [VehicleController::class, 'exportPdf'])->name('vehicles.export-pdf');
-    Route::get('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'assignDrivers'])->name('vehicles.assign-drivers');
-    Route::post('vehicles/{vehicle}/assign-drivers', [VehicleController::class, 'storeDriverAssignment'])->name('vehicles.store-driver-assignment');
-    Route::delete('vehicles/{vehicle}/drivers/{user}', [VehicleController::class, 'removeDriverAssignment'])->name('vehicles.remove-driver-assignment');
-    Route::delete('vehicles/{vehicle}/barcode', [VehicleController::class, 'deleteBarcode'])->name('vehicles.delete-barcode');
-    Route::delete('vehicles/{vehicle}/document', [VehicleController::class, 'deleteDocument'])->name('vehicles.delete-document');
-    Route::delete('vehicles/documents/{documentId}', [VehicleController::class, 'deleteVehicleDocument'])->name('vehicles.delete-vehicle-document');
-    Route::resource('vehicles', VehicleController::class);
+    // Language Switcher
+    Route::get('/locale/{locale}', [\App\Http\Controllers\LocaleController::class, 'switch'])->name('locale.switch');
 
+    // ... (rest of the routes)
 
+    // History - All can view
+    Route::resource('history', HistoryController::class);
+    Route::get('history/download', [HistoryController::class, 'downloadDetail'])->name('history.download');
 
-    
-    // Customers - Administrator & Sales can manage
-    Route::resource('customers', \App\Http\Controllers\CustomerController::class);
-    
-    // Expenses & Incomes - Administrator & Sales can manage
+    // Fuel Fills - All can view, Operation can create
+    Route::resource('fuel-fills', FuelFillController::class);
+    Route::get('vehicles/{vehicle}/fuel-fills/create', [FuelFillController::class, 'createForVehicle'])
+        ->name('fuel-fills.create-for-vehicle');
+
+    // Maintenances - All can view, Operation can create
+    Route::resource('maintenances', MaintenanceController::class);
+    Route::get('vehicles/{vehicle}/maintenances/create', [MaintenanceController::class, 'createForVehicle'])
+        ->name('maintenances.create-for-vehicle');
+
+    // Expenses - All can view, Operation can create
     Route::resource('expenses', ExpenseController::class);
     Route::get('vehicles/{vehicle}/expenses/create', [ExpenseController::class, 'createForVehicle'])
         ->name('expenses.create-for-vehicle');
-    
+
+    // Incomes - All can view, Operation can create
     Route::resource('incomes', \App\Http\Controllers\IncomeController::class);
     Route::get('vehicles/{vehicle}/incomes/create', [\App\Http\Controllers\IncomeController::class, 'createForVehicle'])
         ->name('incomes.create-for-vehicle');
-    
-    // Locations - Administrator & Sales can manage
-    Route::resource('locations', \App\Http\Controllers\LocationController::class);
-    Route::get('locations/{location}/compare', [\App\Http\Controllers\LocationController::class, 'compare'])->name('locations.compare');
-    Route::get('multi-location/dashboard', [\App\Http\Controllers\LocationController::class, 'compare'])->name('multi-location.dashboard');
-});
 
-// ========================================
-// ALL ROLES CAN ACCESS (with controller-level checks)
-// ========================================
+    // Trips (Rute)
+    Route::resource('trips', \App\Http\Controllers\TripController::class);
+    Route::get('vehicles/{vehicle}/trips/create', [\App\Http\Controllers\TripController::class, 'createForVehicle'])
+        ->name('trips.create-for-vehicle');
 
-// Fuel Fills - All can view, Operation can create
-Route::resource('fuel-fills', FuelFillController::class);
-Route::get('vehicles/{vehicle}/fuel-fills/create', [FuelFillController::class, 'createForVehicle'])
-    ->name('fuel-fills.create-for-vehicle');
-
-// Maintenances - All can view, Operation can create
-Route::resource('maintenances', MaintenanceController::class);
-Route::get('vehicles/{vehicle}/maintenances/create', [MaintenanceController::class, 'createForVehicle'])
-    ->name('maintenances.create-for-vehicle');
-
-// Trips (Rute)
-Route::resource('trips', \App\Http\Controllers\TripController::class);
-Route::get('vehicles/{vehicle}/trips/create', [\App\Http\Controllers\TripController::class, 'createForVehicle'])
-    ->name('trips.create-for-vehicle');
+    // Customers - All roles
+    Route::resource('customers', \App\Http\Controllers\CustomerController::class);
 
 // Checklists - All roles
 Route::resource('checklists', \App\Http\Controllers\ChecklistController::class);

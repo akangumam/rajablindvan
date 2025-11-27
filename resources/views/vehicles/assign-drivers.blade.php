@@ -90,7 +90,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <form action="{{ route('vehicles.remove-driver-assignment', [$vehicle, $driver]) }}" 
+                                        <form action="{{ route('vehicles.remove-driver-assignment', [$vehicle->id, $driver->id]) }}"  
                                               method="POST" 
                                               onsubmit="return confirm('Yakin want to delete penugasan driver ini?');"
                                               class="ms-3">
@@ -147,7 +147,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <form action="{{ route('vehicles.store-driver-assignment', $vehicle) }}" 
+                                        <form action="{{ route('vehicles.store-driver-assignment', $vehicle->id) }}" 
                                               method="POST"
                                               class="ms-3">
                                             @csrf

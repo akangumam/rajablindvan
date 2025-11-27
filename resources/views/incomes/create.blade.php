@@ -1,145 +1,492 @@
-@extends('layouts.drivvo-form', [
-    'pageTitle' => 'Income',
-    'pageSubtitle' => 'Add new income entry',
-    'pageIcon' => 'fas fa-wallet',
-    'formAction' => route('incomes.store'),
-    'formId' => 'incomeForm',
-    'cancelRoute' => route('incomes.index'),
-    'modalRoute' => route('incomes.create'),
-    'vehicle' => $vehicle ?? null
-])
+@extends('layouts.drivvo')
 
-@section('form-fields')
-<!-- 1. Date (Calendar selection, default today) -->
-<div class="mb-4">
-    <label class="form-label">Date <span class="text-danger">*</span></label>
-    <input type="date" name="income_date" class="form-control @error('income_date') is-invalid @enderror" value="{{ old('income_date', date('Y-m-d')) }}" required>
-    @error('income_date')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-</div>
+@section('title', 'Tambah Income Baru')
 
-<!-- 2. Time (automatic time, default now) -->
-<div class="mb-4">
-    <label class="form-label">Time <span class="text-danger">*</span></label>
-    <input type="time" name="income_time" class="form-control @error('income_time') is-invalid @enderror" value="{{ old('income_time', date('H:i')) }}" required>
-    @error('income_time')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-</div>
-
-<!-- 3. Odometer (Free Text) -->
-<div class="mb-4">
-    <label class="form-label">Odometer</label>
-    <div class="input-group">
-        <input type="number" step="0.01" name="odometer" class="form-control @error('odometer') is-invalid @enderror" value="{{ old('odometer') }}" placeholder="Enter odometer reading">
-        <span class="input-group-text">km</span>
+@section('content')
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="page-header mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="page-title">
+                    <i class="fas fa-coins"></i>
+                    Tambah Pemasukan Baru
+                </h1>
+                <p class="page-subtitle mb-0">Catat pemasukan kendaraan Anda</p>
+            </div>
+            <a href="{{ route('incomes.index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>
+                Kembali
+            </a>
+        </div>
     </div>
-    @error('odometer')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-</div>
 
-<!-- 4. Type of Income (Dropdown - from income_types table) -->
-<div class="mb-4">
-    <label class="form-label">Type of Income <span class="text-danger">*</span></label>
-    <select name="income_type_id" class="form-control @error('income_type_id') is-invalid @enderror" required>
-        <option value="">Select Income Type</option>
-        @foreach($incomeTypes as $incomeType)
-            <option value="{{ $incomeType->id }}" {{ old('income_type_id') == $incomeType->id ? 'selected' : '' }}>
-                {{ $incomeType->name }}
-            </option>
-        @endforeach
-    </select>
-    @error('income_type_id')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-    <small class="text-muted">Income type will be configurable from Settings menu</small>
-</div>
+    <!-- Form Card -->
+    <div class="card">
+        <div class="card-body p-4">
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Terdapat kesalahan:</h6>
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
 
-<!-- 5. Value (Free Text - Number) -->
-<div class="mb-4">
-    <label class="form-label">Value <span class="text-danger">*</span></label>
-    <div class="input-group">
-        <span class="input-group-text">Rp</span>
-        <input type="number" step="0.01" name="amount" class="form-control @error('amount') is-invalid @enderror" value="{{ old('amount') }}" placeholder="0" required>
+            <form action="{{ route('incomes.store') }}" method="POST" enctype="multipart/form-data" id="incomeForm">
+                @csrf
+
+                <!-- Vehicle Information -->
+                <div class="form-section mb-4">
+                    <h5 class="section-title">
+                        <i class="fas fa-car text-primary me-2"></i>
+                        Informasi Kendaraan
+                    </h5>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Vehicle Selection -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    Kendaraan
+                                    <span class="text-danger">*</span>
+                                </label>
+                                
+                                <div class="dropdown" id="vehicleDropdown">
+                                    <button class="form-select text-start d-flex justify-content-between align-items-center" 
+                                            type="button" 
+                                            id="vehicleDropdownBtn" 
+                                            data-bs-toggle="dropdown" 
+                                            aria-expanded="false">
+                                        <span id="vehicleDropdownText">Pilih Kendaraan</span>
+                                    </button>
+                                    <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ old('vehicle_id') }}" required>
+                                    
+                                    <div class="dropdown-menu w-100 p-2" aria-labelledby="vehicleDropdownBtn">
+                                        <div class="mb-2">
+                                            <input type="text" 
+                                                   class="form-control form-control-sm" 
+                                                   id="vehicleSearchInput" 
+                                                   placeholder="Cari kendaraan..."
+                                                   onclick="event.stopPropagation()">
+                                        </div>
+                                        <div class="vehicle-list-container" style="max-height: 250px; overflow-y: auto;">
+                                            @php
+                                                $user = auth()->user();
+                                                if ($user && $user->isPengelola()) {
+                                                    $vehicles = \App\Models\Vehicle::active()->orderBy('brand')->get();
+                                                } elseif ($user && $user->isSopir()) {
+                                                    $vehicles = $user->vehicles()->where('is_active', true)->orderBy('brand')->get();
+                                                } else {
+                                                    $vehicles = \App\Models\Vehicle::active()->orderBy('brand')->get();
+                                                }
+                                            @endphp
+                                            @foreach($vehicles as $veh)
+                                                <a class="dropdown-item vehicle-option" 
+                                                   href="#" 
+                                                   data-value="{{ $veh->id }}"
+                                                   data-text="{{ $veh->brand }} {{ $veh->model }} - {{ $veh->license_plate }}"
+                                                   onclick="selectVehicle(this, event)">
+                                                    {{ $veh->brand }} {{ $veh->model }} - {{ $veh->license_plate }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <small class="text-muted d-block mt-1">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Pilih kendaraan dari daftar
+                                </small>
+                                @error('vehicle_id')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Income Information -->
+                <div class="form-section mb-4">
+                    <h5 class="section-title">
+                        <i class="fas fa-clipboard-list text-primary me-2"></i>
+                        Detail Pemasukan
+                    </h5>
+                    
+                    <div class="row">
+                        <!-- Date -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-calendar me-2 text-primary"></i>
+                                Tanggal
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="date" 
+                                   name="income_date" 
+                                   id="income_date"
+                                   class="form-control @error('income_date') is-invalid @enderror" 
+                                   value="{{ old('income_date', date('Y-m-d')) }}" 
+                                   required>
+                            @error('income_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Time -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-clock me-2 text-primary"></i>
+                                Waktu
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="time" 
+                                   name="income_time" 
+                                   id="income_time"
+                                   class="form-control @error('income_time') is-invalid @enderror" 
+                                   value="{{ old('income_time', date('H:i')) }}" 
+                                   required>
+                            @error('income_time')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Odometer -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-tachometer-alt me-2 text-primary"></i>
+                                Odometer
+                            </label>
+                            <div class="input-group">
+                                <input type="number" 
+                                       name="odometer" 
+                                       id="odometer"
+                                       class="form-control @error('odometer') is-invalid @enderror" 
+                                       placeholder="Masukkan odometer" 
+                                       value="{{ old('odometer') }}" 
+                                       min="0"
+                                       step="1">
+                                <span class="input-group-text">KM</span>
+                            </div>
+                            @error('odometer')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Type of Income -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-tags me-2 text-primary"></i>
+                                Jenis Pemasukan
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select name="income_type_id" id="incomeTypeSelect" class="form-select @error('income_type_id') is-invalid @enderror" required>
+                                <option value="">Pilih Jenis Pemasukan</option>
+                                @php
+                                    $incomeTypes = \App\Models\IncomeType::active()->orderBy('name')->get();
+                                @endphp
+                                @foreach($incomeTypes as $incomeType)
+                                    <option value="{{ $incomeType->id }}" {{ old('income_type_id') == $incomeType->id ? 'selected' : '' }}>
+                                        {{ $incomeType->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('income_type_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Value/Amount -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-money-bill-wave me-2 text-primary"></i>
+                                Nilai Pemasukan
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" 
+                                       name="amount" 
+                                       id="amount"
+                                       class="form-control @error('amount') is-invalid @enderror" 
+                                       placeholder="Masukkan jumlah pemasukan" 
+                                       value="{{ old('amount') }}" 
+                                       required
+                                       min="0"
+                                       step="1">
+                            </div>
+                            @error('amount')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- User -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-user me-2 text-primary"></i>
+                                Pengguna
+                            </label>
+                            @if(auth()->check())
+                                <input type="text" class="form-control" value="{{ auth()->user()->name }}" readonly>
+                                <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                            @else
+                                <input type="text" name="user_name" class="form-control" value="{{ old('user_name') }}" placeholder="Nama pengguna">
+                            @endif
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-sticky-note me-2 text-primary"></i>
+                                Catatan
+                            </label>
+                            <textarea name="notes" class="form-control @error('notes') is-invalid @enderror" rows="3" placeholder="Catatan tambahan (opsional)">{{ old('notes') }}</textarea>
+                            @error('notes')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Attachment -->
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-paperclip me-2 text-primary"></i>
+                                Lampiran
+                            </label>
+                            <div class="file-upload-wrapper">
+                                <input type="file" 
+                                       name="attachment" 
+                                       id="attachment" 
+                                       class="form-control" 
+                                       accept="image/*,.pdf,.doc,.docx">
+                                <div id="filePreview" class="mt-2"></div>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Format yang diterima: JPG, PNG, PDF, DOC, DOCX (Maks. 5MB)
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">
+                    <a href="{{ route('incomes.index') }}" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i>Batal
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i>Simpan Pemasukan
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    @error('amount')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
 </div>
-
-<!-- 6. Payment Method (Dropdown - from payment_methods table) -->
-<div class="mb-4">
-    <label class="form-label">Payment Method <span class="text-danger">*</span></label>
-    <select name="payment_method_id" class="form-control @error('payment_method_id') is-invalid @enderror" required>
-        <option value="">Select Payment Method</option>
-        @foreach($paymentMethods as $paymentMethod)
-            <option value="{{ $paymentMethod->id }}" {{ old('payment_method_id') == $paymentMethod->id ? 'selected' : '' }}>
-                {{ $paymentMethod->name }}
-            </option>
-        @endforeach
-    </select>
-    @error('payment_method_id')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-    <small class="text-muted">Payment method will be configurable from Settings menu</small>
-</div>
-
-<!-- 7. User (based on account logged in - readonly display) -->
-<div class="mb-4">
-    <label class="form-label">User</label>
-    <input type="text" class="form-control" value="{{ auth()->check() ? auth()->user()->name : 'Guest' }}" readonly style="background-color: #f8f9fa;">
-    <small class="text-muted">Automatically set to logged in user</small>
-</div>
-
-<!-- 8. Notes (free Text) -->
-<div class="mb-4">
-    <label class="form-label">Notes</label>
-    <textarea name="notes" class="form-control @error('notes') is-invalid @enderror" rows="3" placeholder="Add notes (optional)">{{ old('notes') }}</textarea>
-    @error('notes')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-</div>
-
-<!-- 8. Attach File Button -->
-<div class="mb-4">
-    <label class="form-label">Attach File</label>
-    <input type="file" name="attachment" class="form-control @error('attachment') is-invalid @enderror" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
-    @error('attachment')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-    <small class="text-muted">Accepted: JPG, PNG, PDF, DOC, DOCX (Max: 5MB)</small>
-</div>
-
-<!-- Hidden field for file category -->
-<input type="hidden" name="category" value="income">
 @endsection
 
+@push('styles')
+<style>
+    .form-section {
+        padding: 24px;
+        background: #f8f9fa;
+        border-radius: 12px;
+    }
 
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e9ecef;
+    }
 
+    .file-upload-wrapper {
+        position: relative;
+    }
 
+    #filePreview {
+        display: none;
+    }
 
+    #filePreview.show {
+        display: block;
+    }
 
+    .file-info {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        gap: 12px;
+    }
 
+    .file-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #28a745;
+        color: white;
+        border-radius: 8px;
+        font-size: 20px;
+    }
 
+    .page-header {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
 
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0 0 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
 
+    .page-title i {
+        font-size: 24px;
+        color: #28a745;
+    }
 
+    .page-subtitle {
+        font-size: 14px;
+        color: #6c757d;
+        margin: 0;
+    }
+</style>
+@endpush
 
+@push('scripts')
+<script>
+// Vehicle Custom Dropdown Logic
+document.getElementById('vehicleSearchInput')?.addEventListener('input', function(e) {
+    const searchText = e.target.value.toLowerCase();
+    const items = document.querySelectorAll('.vehicle-option');
+    
+    items.forEach(item => {
+        const text = item.getAttribute('data-text').toLowerCase();
+        if (text.includes(searchText)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
 
+function selectVehicle(element, event) {
+    event.preventDefault();
+    const value = element.getAttribute('data-value');
+    const text = element.getAttribute('data-text');
+    
+    document.getElementById('vehicle_id').value = value;
+    document.getElementById('vehicleDropdownText').textContent = text;
+    
+    document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+}
 
+// Pre-select vehicle if exists
+document.addEventListener('DOMContentLoaded', function() {
+    const vehicleId = "{{ old('vehicle_id') }}";
+    if (vehicleId) {
+        const option = document.querySelector(`.vehicle-option[data-value="${vehicleId}"]`);
+        if (option) {
+            selectVehicle(option, { preventDefault: () => {} });
+        }
+    }
 
+    // File upload preview
+    const attachmentInput = document.getElementById('attachment');
+    const filePreview = document.getElementById('filePreview');
 
+    if (attachmentInput) {
+        attachmentInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                const fileName = file.name;
+                const fileExtension = fileName.split('.').pop().toLowerCase();
+                
+                let iconClass = 'fa-file';
+                if (['jpg', 'jpeg', 'png'].includes(fileExtension)) {
+                    iconClass = 'fa-file-image';
+                } else if (fileExtension === 'pdf') {
+                    iconClass = 'fa-file-pdf';
+                } else if (['doc', 'docx'].includes(fileExtension)) {
+                    iconClass = 'fa-file-word';
+                }
 
+                filePreview.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <i class="fas ${iconClass}"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold">${fileName}</div>
+                            <small class="text-muted">${fileSize} MB</small>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearFile()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                filePreview.classList.add('show');
+            }
+        });
+    }
+});
 
+function clearFile() {
+    const attachmentInput = document.getElementById('attachment');
+    const filePreview = document.getElementById('filePreview');
+    
+    if (attachmentInput) {
+        attachmentInput.value = '';
+    }
+    if (filePreview) {
+        filePreview.innerHTML = '';
+        filePreview.classList.remove('show');
+    }
+}
 
+// Form validation
+document.getElementById('incomeForm')?.addEventListener('submit', function(e) {
+    const requiredFields = [
+        { id: 'vehicle_id', name: 'Kendaraan' },
+        { id: 'income_date', name: 'Tanggal' },
+        { id: 'income_time', name: 'Waktu' },
+        { id: 'incomeTypeSelect', name: 'Jenis Pemasukan' },
+        { id: 'amount', name: 'Nilai Pemasukan' }
+    ];
 
+    let isValid = true;
+    let missingFields = [];
 
+    requiredFields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (element && !element.value) {
+            isValid = false;
+            missingFields.push(field.name);
+            element.classList.add('is-invalid');
+        } else if (element) {
+            element.classList.remove('is-invalid');
+        }
+    });
 
-
-
-
-
-
-
+    if (!isValid) {
+        e.preventDefault();
+        alert('Mohon lengkapi field berikut:\n- ' + missingFields.join('\n- '));
+        return false;
+    }
+});
+</script>
+@endpush
