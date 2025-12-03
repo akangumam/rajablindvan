@@ -2,10 +2,10 @@
  * Auto Logout on Tab Close
  *
  * This script ensures users must login again when they close all browser tabs.
- * It allows users to refresh pages and have multiple tabs, but requires re-login
+ * It allows users to refresh pages and navigate between pages, but requires re-login
  * when opening a new tab after all previous tabs were closed.
  *
- * @version 2.0.0
+ * @version 2.1.0 - Fixed navigation issue
  * @author Raja Blind Van Development Team
  */
 
@@ -21,13 +21,15 @@
     // =================================================================
     const CONFIG = {
         SESSION_CHECK_INTERVAL: 5000,        // 5 seconds
-        INACTIVITY_THRESHOLD: 2000,          // 2 seconds
+        INACTIVITY_THRESHOLD: 3000,          // 3 seconds (increased from 2s)
         OLD_DATA_CLEANUP_TIME: 86400000,     // 24 hours
+        NAVIGATION_GRACE_PERIOD: 500,        // 500ms grace period for navigation
         STORAGE_KEYS: {
             AUTHENTICATED: 'sessionAuth',
             TAB_COUNT: 'activeTabCount',
             LAST_ACTIVE: 'lastActiveTime',
-            MANUAL_LOGOUT: 'manualLogout'
+            MANUAL_LOGOUT: 'manualLogout',
+            NAVIGATING: 'isNavigating'
         }
     };
 
@@ -77,6 +79,34 @@
         sessionStorage.setItem(CONFIG.STORAGE_KEYS.AUTHENTICATED, 'true');
     }
 
+    /**
+     * Check if currently navigating
+     */
+    function isNavigating() {
+        const navFlag = sessionStorage.getItem(CONFIG.STORAGE_KEYS.NAVIGATING);
+        if (!navFlag) return false;
+
+        const navTime = parseInt(navFlag);
+        const timeSinceNav = Date.now() - navTime;
+
+        // If navigation flag is older than grace period, it's not navigating anymore
+        return timeSinceNav < CONFIG.NAVIGATION_GRACE_PERIOD;
+    }
+
+    /**
+     * Mark as navigating
+     */
+    function markNavigating() {
+        sessionStorage.setItem(CONFIG.STORAGE_KEYS.NAVIGATING, Date.now().toString());
+    }
+
+    /**
+     * Clear navigation flag
+     */
+    function clearNavigating() {
+        sessionStorage.removeItem(CONFIG.STORAGE_KEYS.NAVIGATING);
+    }
+
     // =================================================================
     // MAIN LOGIC
     // =================================================================
@@ -85,6 +115,9 @@
      * Initialize auto-logout
      */
     function init() {
+        // Clear navigation flag on load
+        clearNavigating();
+
         // Check if this is a new session (new tab or browser restart)
         if (isNewSession()) {
             const lastActive = getLastActive();
@@ -111,6 +144,7 @@
 
         // Setup handlers
         setupHeartbeat();
+        setupNavigationDetection();
         setupUnloadHandler();
         setupStorageListener();
         setupLogoutButton();
@@ -126,25 +160,81 @@
     }
 
     /**
+     * Setup navigation detection
+     * Mark when user is navigating within the app
+     */
+    function setupNavigationDetection() {
+        // Detect clicks on links within the app
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a');
+            if (link && link.href && !link.target) {
+                // Check if it's an internal link
+                const currentHost = window.location.hostname;
+                try {
+                    const linkUrl = new URL(link.href);
+                    if (linkUrl.hostname === currentHost) {
+                        // Internal navigation detected
+                        markNavigating();
+                    }
+                } catch (err) {
+                    // Invalid URL, ignore
+                }
+            }
+        });
+
+        // Also detect form submissions
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            if (form && form.tagName === 'FORM') {
+                // Check if it's not the logout form
+                if (!form.id || form.id !== 'logoutForm') {
+                    markNavigating();
+                }
+            }
+        });
+    }
+
+    /**
      * Setup unload handler for tab close detection
      */
     function setupUnloadHandler() {
-        window.addEventListener('beforeunload', function() {
+        window.addEventListener('beforeunload', function(e) {
+            // Check if this is a navigation or a tab close
+            const navigating = isNavigating();
+
             // Stop heartbeat
             if (window._autoLogoutHeartbeat) {
                 clearInterval(window._autoLogoutHeartbeat);
             }
 
+            // Update last active time
+            updateLastActive();
+
+            // If navigating, don't decrement tab count or send logout
+            if (navigating) {
+                // This is internal navigation, don't do anything
+                return;
+            }
+
+            // This is a tab close or external navigation
             // Decrement tab count
             const newCount = getTabCount() - 1;
             setTabCount(newCount);
 
-            // Update last active time
-            updateLastActive();
-
             // If this was the last tab, send logout request
             if (newCount === 0) {
                 sendLogoutBeacon();
+            }
+        });
+
+        // Use pagehide as backup (more reliable on mobile)
+        window.addEventListener('pagehide', function(e) {
+            // Only send beacon if page is not being cached
+            if (!e.persisted && !isNavigating()) {
+                const count = getTabCount();
+                if (count <= 1) {
+                    sendLogoutBeacon();
+                }
             }
         });
     }
@@ -180,18 +270,18 @@
      * Setup logout button handler
      */
     function setupLogoutButton() {
-        // Find logout button and add handler
-        const logoutBtn = document.querySelector('[onclick*="confirmLogout"]');
-        if (logoutBtn) {
-            // Override existing onclick to add cleanup
-            const originalClick = window.confirmLogout;
-            window.confirmLogout = function() {
-                handleManualLogout();
-                if (originalClick) {
-                    originalClick();
-                }
-            };
-        }
+        // Store original confirmLogout function if it exists
+        const originalConfirmLogout = window.confirmLogout;
+
+        // Override confirmLogout function
+        window.confirmLogout = function() {
+            handleManualLogout();
+
+            // Call original function if it exists
+            if (originalConfirmLogout && typeof originalConfirmLogout === 'function') {
+                originalConfirmLogout();
+            }
+        };
     }
 
     /**
