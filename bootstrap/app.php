@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Global middleware
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
+            \App\Http\Middleware\LocationFilter::class,
         ]);
         
         // Middleware aliases

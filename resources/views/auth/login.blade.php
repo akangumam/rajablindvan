@@ -12,7 +12,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -22,7 +22,7 @@
             justify-content: center;
             padding: 20px;
         }
-        
+
         .login-container {
             background: white;
             border-radius: 20px;
@@ -32,7 +32,7 @@
             width: 100%;
             animation: slideUp 0.5s ease-out;
         }
-        
+
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -43,14 +43,14 @@
                 transform: translateY(0);
             }
         }
-        
+
         .login-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 40px 30px;
             text-align: center;
             color: white;
         }
-        
+
         .login-header .logo {
             width: 80px;
             height: 80px;
@@ -64,27 +64,27 @@
             color: #667eea;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        
+
         .login-header h1 {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 8px;
         }
-        
+
         .login-header p {
             font-size: 14px;
             opacity: 0.9;
             margin: 0;
         }
-        
+
         .login-body {
             padding: 40px 30px;
         }
-        
+
         .form-group {
             margin-bottom: 24px;
         }
-        
+
         .form-label {
             font-weight: 600;
             color: #333;
@@ -94,12 +94,12 @@
             align-items: center;
             gap: 8px;
         }
-        
+
         .form-label i {
             color: #667eea;
             font-size: 16px;
         }
-        
+
         .form-control {
             padding: 12px 16px;
             border: 2px solid #e9ecef;
@@ -107,47 +107,47 @@
             font-size: 15px;
             transition: all 0.3s ease;
         }
-        
+
         .form-control:focus {
             border-color: #667eea;
             box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
-        
+
         .form-control.is-invalid {
             border-color: #dc3545;
         }
-        
+
         .form-control.is-invalid:focus {
             box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
         }
-        
+
         .invalid-feedback {
             display: block;
             margin-top: 8px;
             font-size: 13px;
             color: #dc3545;
         }
-        
+
         .form-check {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 20px;
         }
-        
+
         .form-check-input {
             width: 18px;
             height: 18px;
             cursor: pointer;
         }
-        
+
         .form-check-label {
             font-size: 14px;
             color: #666;
             cursor: pointer;
             user-select: none;
         }
-        
+
         .btn-login {
             width: 100%;
             padding: 14px;
@@ -164,16 +164,16 @@
             justify-content: center;
             gap: 10px;
         }
-        
+
         .btn-login:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
         }
-        
+
         .btn-login:active {
             transform: translateY(0);
         }
-        
+
         .alert {
             border-radius: 10px;
             padding: 12px 16px;
@@ -183,17 +183,17 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         .alert-success {
             background: #d4edda;
             color: #155724;
         }
-        
+
         .alert-danger {
             background: #f8d7da;
             color: #721c24;
         }
-        
+
         .login-footer {
             padding: 20px 30px;
             background: #f8f9fa;
@@ -201,11 +201,11 @@
             font-size: 13px;
             color: #666;
         }
-        
+
         .password-toggle {
             position: relative;
         }
-        
+
         .password-toggle-btn {
             position: absolute;
             right: 16px;
@@ -218,7 +218,7 @@
             padding: 0;
             font-size: 16px;
         }
-        
+
         .password-toggle-btn:hover {
             color: #667eea;
         }
@@ -338,7 +338,7 @@
             <h1>Raja Blind Van</h1>
             <p>Vehicle Dashboard Management System</p>
         </div>
-        
+
         <div class="login-body">
             @if(session('success'))
             <div class="alert alert-success">
@@ -346,7 +346,7 @@
                 {{ session('success') }}
             </div>
             @endif
-            
+
             @if($errors->any())
             <div class="alert alert-danger">
                 <i class="fas fa-exclamation-circle"></i>
@@ -357,20 +357,20 @@
                 @endif
             </div>
             @endif
-            
+
             <form action="{{ route('login.post') }}" method="POST" id="loginForm">
                 @csrf
-                
+
                 <div class="form-group">
                     <label for="email" class="form-label">
                         <i class="fas fa-envelope"></i>
                         Email Address
                     </label>
-                    <input type="email" 
-                           class="form-control @error('email') is-invalid @enderror" 
-                           id="email" 
-                           name="email" 
-                           value="{{ old('email') }}" 
+                    <input type="email"
+                           class="form-control @error('email') is-invalid @enderror"
+                           id="email"
+                           name="email"
+                           value="{{ old('email') }}"
                            placeholder="Enter your email"
                            required
                            autofocus>
@@ -378,17 +378,17 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password" class="form-label">
                         <i class="fas fa-lock"></i>
                         Password
                     </label>
                     <div class="password-toggle">
-                        <input type="password" 
-                               class="form-control @error('password') is-invalid @enderror" 
-                               id="password" 
-                               name="password" 
+                        <input type="password"
+                               class="form-control @error('password') is-invalid @enderror"
+                               id="password"
+                               name="password"
                                placeholder="Enter your password"
                                required>
                         <button type="button" class="password-toggle-btn" onclick="togglePassword()">
@@ -399,31 +399,31 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                
+
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="remember" name="remember">
                     <label class="form-check-label" for="remember">
                         Remember me
                     </label>
                 </div>
-                
+
                 <button type="submit" class="btn-login">
                     <i class="fas fa-sign-in-alt"></i>
                     Login
                 </button>
             </form>
         </div>
-        
+
         <div class="login-footer">
             © {{ date('Y') }} Raja Blind Van. All rights reserved.
         </div>
     </div>
-    
+
     <script>
         function togglePassword() {
             const passwordField = document.getElementById('password');
             const toggleIcon = document.getElementById('toggleIcon');
-            
+
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
                 toggleIcon.classList.remove('fa-eye');
@@ -439,8 +439,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.querySelector('form');
             const loadingScreen = document.getElementById('loadingScreen');
-            
+
+            // Clear any previous session data
+            localStorage.removeItem('shouldBeLoggedIn');
+            localStorage.removeItem('closingTabs');
+            sessionStorage.clear();
+
             loginForm.addEventListener('submit', function(e) {
+                // Mark that user should be logged in
+                localStorage.setItem('shouldBeLoggedIn', 'true');
+
                 // Show loading screen
                 loadingScreen.classList.add('active');
             });

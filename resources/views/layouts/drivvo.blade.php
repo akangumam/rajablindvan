@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="logout-url" content="{{ route('logout') }}">
+    <meta name="login-url" content="{{ route('login') }}">
 
     <title>Radja Blind Van - @yield('title', 'Dashboard')</title>
 
@@ -700,7 +702,7 @@
     @stack('styles')
 </head>
 
-<body>
+<body @auth data-user-authenticated="true" @endauth>
     <!-- Desktop Sidebar Toggle Button -->
     <button class="sidebar-toggle-btn" id="sidebarToggleBtn">
         <i class="fas fa-chevron-left"></i>
@@ -1010,7 +1012,7 @@
                 </div>
                 <div class="modal-body" style="padding: 30px 24px;">
                     <p class="text-muted mb-4" style="font-size: 14px;">Pilih jenis data yang ingin Anda tambahkan:</p>
-                    
+
                     <div class="row g-3">
                         <!-- Income Card -->
                         <div class="col-12">
@@ -1081,13 +1083,8 @@
             // Build URL with location parameter
             const currentUrl = new URL(window.location.href);
 
-            // Remove existing location parameter
-            currentUrl.searchParams.delete('location_id');
-
-            // Add new location parameter only if not "Semua Lokasi"
-            if (locationId && locationId !== '') {
-                currentUrl.searchParams.set('location_id', locationId);
-            }
+            // Update location parameter
+            currentUrl.searchParams.set('location_id', locationId);
 
             // Redirect to update page
             window.location.href = currentUrl.toString();
@@ -1118,6 +1115,11 @@
         }
 
         function confirmLogout() {
+            // Clear localStorage flags to prevent re-login
+            localStorage.setItem('shouldBeLoggedIn', 'false');
+            sessionStorage.clear();
+
+            // Submit logout form
             document.getElementById('logoutForm').submit();
         }
 
@@ -1227,6 +1229,11 @@
     </script>
 
     @stack('scripts')
+
+    <!-- Auto Logout Configuration -->
+    @auth
+    <script src="{{ asset('js/auto-logout.js') }}"></script>
+    @endauth
 </body>
 </html>
 
