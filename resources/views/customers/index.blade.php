@@ -504,11 +504,18 @@
 <!-- Search Form -->
 <form action="{{ route('customers.index') }}" method="GET" class="search-form">
     <div class="search-input-wrapper">
-        <input type="text" 
-               name="search" 
-               class="search-input" 
-               placeholder="Search by company name, PIC name, or contact number..." 
-               value="{{ request('search') }}">
+        <input type="text"
+               id="customerSearch"
+               name="search"
+               class="search-input"
+               placeholder="Search by company name, PIC name, or contact number..."
+               value="{{ request('search') }}"
+               autofocus>
+        @if(request('search'))
+        <button type="button" class="clear-search-btn" onclick="clearSearchInput('customerSearch')">
+            <i class="fas fa-times"></i>
+        </button>
+        @endif
         <button type="submit" class="search-btn">
             <i class="fas fa-search"></i>
         </button>
@@ -583,7 +590,7 @@
     <div class="pagination-info">
         Showing {{ $customers->firstItem() }} to {{ $customers->lastItem() }} of {{ $customers->total() }} results
     </div>
-    
+
     <div class="pagination-controls">
         <!-- Previous Button -->
         @if($customers->onFirstPage())
@@ -595,7 +602,7 @@
                 <i class="fas fa-chevron-left"></i> Previous
             </a>
         @endif
-        
+
         <!-- Page Numbers -->
         <div class="pagination-numbers">
             @foreach(range(1, $customers->lastPage()) as $page)
@@ -606,7 +613,7 @@
                 @endif
             @endforeach
         </div>
-        
+
         <!-- Next Button -->
         @if($customers->hasMorePages())
             <a href="{{ $customers->nextPageUrl() }}" class="pagination-btn">
@@ -638,18 +645,28 @@
 <script>
 function confirmDelete(event, userName) {
     event.preventDefault();
-    
+
     if (confirm('{{ __("customer.delete_confirm") }} "' + userName + '"?\n\n{{ __("customer.delete_note") }}')) {
         event.target.submit();
     }
-    
+
     return false;
 }
 </script>
 @endpush
 @endsection
 
-
+@push('scripts')
+<script>
+function clearSearchInput(inputId) {
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.value = '';
+        input.form.submit();
+    }
+}
+</script>
+@endpush
 
 
 

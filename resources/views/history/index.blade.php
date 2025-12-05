@@ -595,10 +595,10 @@
             </div>
             <div class="modal-body">
                 <!-- Search Box -->
-                <div class="vehicle-search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control" autofocus>
-                    <button type="button" class="clear-vehicle-search" onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #95a5a6; cursor: pointer; font-size: 14px; display: none;">
+                <div class="vehicle-search-box" style="position: relative;">
+                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
+                    <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control" style="padding-left: 40px; padding-right: 40px;">
+                    <button type="button" class="clear-vehicle-search" onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #95a5a6; cursor: pointer; font-size: 16px; display: none; z-index: 1; padding: 4px;">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>

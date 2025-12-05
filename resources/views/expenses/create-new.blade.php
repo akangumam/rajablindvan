@@ -45,7 +45,7 @@
                         <i class="fas fa-car text-primary me-2"></i>
                         Informasi Kendaraan
                     </h5>
-                    
+
                     <div class="row">
                         <div class="col-md-12">
                             <!-- Vehicle Selection -->
@@ -54,24 +54,33 @@
                                     Kendaraan
                                     <span class="text-danger">*</span>
                                 </label>
-                                
+
                                 <div class="dropdown" id="vehicleDropdown">
-                                    <button class="form-select text-start d-flex justify-content-between align-items-center" 
-                                            type="button" 
-                                            id="vehicleDropdownBtn" 
-                                            data-bs-toggle="dropdown" 
+                                    <button class="form-select text-start d-flex justify-content-between align-items-center"
+                                            type="button"
+                                            id="vehicleDropdownBtn"
+                                            data-bs-toggle="dropdown"
                                             aria-expanded="false">
                                         <span id="vehicleDropdownText">Pilih Kendaraan</span>
                                     </button>
                                     <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ old('vehicle_id', $vehicle->id ?? '') }}" required>
-                                    
+
                                     <div class="dropdown-menu w-100 p-2" aria-labelledby="vehicleDropdownBtn">
-                                        <div class="mb-2">
-                                            <input type="text" 
-                                                   class="form-control form-control-sm" 
-                                                   id="vehicleSearchInput" 
+                                        <div class="mb-2" style="position: relative;">
+                                            <input type="text"
+                                                   class="form-control form-control-sm"
+                                                   id="vehicleSearchInput"
                                                    placeholder="Cari kendaraan..."
+                                                   autofocus
+                                                   style="padding-right: 35px;"
                                                    onclick="event.stopPropagation()">
+                                            <button type="button"
+                                                    class="btn position-absolute"
+                                                    style="right: 5px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none; z-index: 10;"
+                                                    id="clearVehicleSearch"
+                                                    onclick="document.getElementById('vehicleSearchInput').value=''; document.getElementById('clearVehicleSearch').style.display='none'; event.stopPropagation();">
+                                                <i class="fas fa-times text-muted"></i>
+                                            </button>
                                         </div>
                                         <div class="vehicle-list-container" style="max-height: 250px; overflow-y: auto;">
                                             @php
@@ -85,8 +94,8 @@
                                                 }
                                             @endphp
                                             @foreach($vehicles as $veh)
-                                                <a class="dropdown-item vehicle-option" 
-                                                   href="#" 
+                                                <a class="dropdown-item vehicle-option"
+                                                   href="#"
                                                    data-value="{{ $veh->id }}"
                                                    data-text="{{ $veh->brand }} {{ $veh->model }} - {{ $veh->license_plate }}"
                                                    onclick="selectVehicle(this, event)">
@@ -114,7 +123,7 @@
                         <i class="fas fa-clipboard-list text-primary me-2"></i>
                         Detail Pengeluaran
                     </h5>
-                    
+
                     <div class="row">
                         <!-- Date -->
                         <div class="col-md-6 mb-3">
@@ -123,11 +132,11 @@
                                 Tanggal
                                 <span class="text-danger">*</span>
                             </label>
-                            <input type="date" 
-                                   name="expense_date" 
+                            <input type="date"
+                                   name="expense_date"
                                    id="expense_date"
-                                   class="form-control @error('expense_date') is-invalid @enderror" 
-                                   value="{{ old('expense_date', date('Y-m-d')) }}" 
+                                   class="form-control @error('expense_date') is-invalid @enderror"
+                                   value="{{ old('expense_date', date('Y-m-d')) }}"
                                    required>
                             @error('expense_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -141,11 +150,11 @@
                                 Waktu
                                 <span class="text-danger">*</span>
                             </label>
-                            <input type="time" 
-                                   name="expense_time" 
+                            <input type="time"
+                                   name="expense_time"
                                    id="expense_time"
-                                   class="form-control @error('expense_time') is-invalid @enderror" 
-                                   value="{{ old('expense_time', date('H:i')) }}" 
+                                   class="form-control @error('expense_time') is-invalid @enderror"
+                                   value="{{ old('expense_time', date('H:i')) }}"
                                    required>
                             @error('expense_time')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -159,12 +168,12 @@
                                 Odometer
                             </label>
                             <div class="input-group">
-                                <input type="number" 
-                                       name="odometer" 
+                                <input type="number"
+                                       name="odometer"
                                        id="odometer"
-                                       class="form-control @error('odometer') is-invalid @enderror" 
-                                       placeholder="Masukkan odometer" 
-                                       value="{{ old('odometer') }}" 
+                                       class="form-control @error('odometer') is-invalid @enderror"
+                                       placeholder="Masukkan odometer"
+                                       value="{{ old('odometer') }}"
                                        min="0"
                                        step="1">
                                 <span class="input-group-text">KM</span>
@@ -204,10 +213,10 @@
                                 Kadaluarsa STNK Selanjutnya
                                 <span class="text-danger">*</span>
                             </label>
-                            <input type="date" 
-                                   name="stnk_expiry_date" 
-                                   id="stnkExpiryDate" 
-                                   class="form-control" 
+                            <input type="date"
+                                   name="stnk_expiry_date"
+                                   id="stnkExpiryDate"
+                                   class="form-control"
                                    value="{{ old('stnk_expiry_date') }}">
                             <small class="text-muted d-block mt-1">
                                 <i class="fas fa-info-circle me-1"></i>
@@ -222,10 +231,10 @@
                                 Kadaluarsa KIR Selanjutnya
                                 <span class="text-danger">*</span>
                             </label>
-                            <input type="date" 
-                                   name="kir_expiry_date" 
-                                   id="kirExpiryDate" 
-                                   class="form-control" 
+                            <input type="date"
+                                   name="kir_expiry_date"
+                                   id="kirExpiryDate"
+                                   class="form-control"
                                    value="{{ old('kir_expiry_date') }}">
                             <small class="text-muted d-block mt-1">
                                 <i class="fas fa-info-circle me-1"></i>
@@ -240,9 +249,9 @@
                                 Tempat
                                 <span class="text-danger">*</span>
                             </label>
-                            <select name="place" 
+                            <select name="place"
                                     id="place"
-                                    class="form-select @error('place') is-invalid @enderror" 
+                                    class="form-select @error('place') is-invalid @enderror"
                                     required>
                                 <option value="">Pilih Tempat</option>
                                 @php
@@ -310,12 +319,12 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text">Rp</span>
-                                <input type="number" 
-                                       name="amount" 
+                                <input type="number"
+                                       name="amount"
                                        id="amount"
-                                       class="form-control @error('amount') is-invalid @enderror" 
-                                       placeholder="Masukkan jumlah biaya" 
-                                       value="{{ old('amount') }}" 
+                                       class="form-control @error('amount') is-invalid @enderror"
+                                       placeholder="Masukkan jumlah biaya"
+                                       value="{{ old('amount') }}"
                                        required
                                        min="0"
                                        step="1">
@@ -344,10 +353,10 @@
                                 Lampiran
                             </label>
                             <div class="file-upload-wrapper">
-                                <input type="file" 
-                                       name="attachment" 
-                                       id="attachment" 
-                                       class="form-control" 
+                                <input type="file"
+                                       name="attachment"
+                                       id="attachment"
+                                       class="form-control"
                                        accept="image/*,.pdf,.doc,.docx">
                                 <div id="filePreview" class="mt-2"></div>
                             </div>
@@ -461,7 +470,13 @@
 document.getElementById('vehicleSearchInput')?.addEventListener('input', function(e) {
     const searchText = e.target.value.toLowerCase();
     const items = document.querySelectorAll('.vehicle-option');
-    
+
+    // Show/hide clear button
+    const clearBtn = document.getElementById('clearVehicleSearch');
+    if (clearBtn) {
+        clearBtn.style.display = searchText ? 'block' : 'none';
+    }
+
     items.forEach(item => {
         const text = item.getAttribute('data-text').toLowerCase();
         if (text.includes(searchText)) {
@@ -476,10 +491,10 @@ function selectVehicle(element, event) {
     event.preventDefault();
     const value = element.getAttribute('data-value');
     const text = element.getAttribute('data-text');
-    
+
     document.getElementById('vehicle_id').value = value;
     document.getElementById('vehicleDropdownText').textContent = text;
-    
+
     document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
 }
@@ -505,7 +520,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const fileSize = (file.size / 1024 / 1024).toFixed(2);
                 const fileName = file.name;
                 const fileExtension = fileName.split('.').pop().toLowerCase();
-                
+
                 let iconClass = 'fa-file';
                 if (['jpg', 'jpeg', 'png'].includes(fileExtension)) {
                     iconClass = 'fa-file-image';
@@ -538,7 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function clearFile() {
     const attachmentInput = document.getElementById('attachment');
     const filePreview = document.getElementById('filePreview');
-    
+
     if (attachmentInput) {
         attachmentInput.value = '';
     }
@@ -552,25 +567,25 @@ function clearFile() {
 function handleExpenseTypeChange(selectElement) {
     const selectedOption = selectElement.options[selectElement.selectedIndex];
     const expenseTypeName = selectedOption.getAttribute('data-name') || '';
-    
+
     const stnkGroup = document.getElementById('stnkExpiryGroup');
     const kirGroup = document.getElementById('kirExpiryGroup');
     const stnkInput = document.getElementById('stnkExpiryDate');
     const kirInput = document.getElementById('kirExpiryDate');
-    
+
     // Hide both by default
     stnkGroup.style.display = 'none';
     kirGroup.style.display = 'none';
     stnkInput.removeAttribute('required');
     kirInput.removeAttribute('required');
-    
+
     // Show relevant field based on expense type
-    if (expenseTypeName.toLowerCase().includes('perpanjangan stnk') || 
+    if (expenseTypeName.toLowerCase().includes('perpanjangan stnk') ||
         expenseTypeName.toLowerCase().includes('stnk extension') ||
         expenseTypeName.toLowerCase().includes('stnk')) {
         stnkGroup.style.display = 'block';
         stnkInput.setAttribute('required', 'required');
-    } else if (expenseTypeName.toLowerCase().includes('perpanjangan kir') || 
+    } else if (expenseTypeName.toLowerCase().includes('perpanjangan kir') ||
                expenseTypeName.toLowerCase().includes('kir extension') ||
                expenseTypeName.toLowerCase().includes('kir')) {
         kirGroup.style.display = 'block';

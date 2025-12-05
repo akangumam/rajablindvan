@@ -57,29 +57,37 @@
                                     Kendaraan
                                     <span class="text-danger">*</span>
                                 </label>
-                                
+
                                 <div class="dropdown" id="vehicleDropdown">
-                                    <button class="form-select text-start d-flex justify-content-between align-items-center" 
-                                            type="button" 
-                                            id="vehicleDropdownBtn" 
-                                            data-bs-toggle="dropdown" 
+                                    <button class="form-select text-start d-flex justify-content-between align-items-center"
+                                            type="button"
+                                            id="vehicleDropdownBtn"
+                                            data-bs-toggle="dropdown"
                                             aria-expanded="false">
                                         <span id="vehicleDropdownText">Pilih Kendaraan</span>
                                     </button>
                                     <input type="hidden" name="vehicle_id" id="vehicle_id" required>
-                                    
+
                                     <div class="dropdown-menu w-100 p-2" aria-labelledby="vehicleDropdownBtn">
-                                        <div class="mb-2">
-                                            <input type="text" 
-                                                   class="form-control form-control-sm" 
-                                                   id="vehicleSearchInput" 
+                                        <div class="mb-2" style="position: relative;">
+                                            <input type="text"
+                                                   class="form-control form-control-sm pe-4"
+                                                   id="vehicleSearchInput"
                                                    placeholder="Cari kendaraan..."
-                                                   onclick="event.stopPropagation()">
+                                                   onclick="event.stopPropagation()"
+                                                   autofocus>
+                                            <button type="button"
+                                                    class="btn btn-sm position-absolute"
+                                                    style="right: 5px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"
+                                                    id="clearVehicleSearch"
+                                                    onclick="document.getElementById('vehicleSearchInput').value=''; document.querySelectorAll('.vehicle-option').forEach(opt => opt.style.display = 'block'); event.stopPropagation();">
+                                                <i class="fas fa-times text-muted"></i>
+                                            </button>
                                         </div>
                                         <div class="vehicle-list-container" style="max-height: 250px; overflow-y: auto;">
                                             @foreach($vehicles as $vehicle)
-                                                <a class="dropdown-item vehicle-option" 
-                                                   href="#" 
+                                                <a class="dropdown-item vehicle-option"
+                                                   href="#"
                                                    data-value="{{ $vehicle->id }}"
                                                    data-text="{{ $vehicle->brand }} {{ $vehicle->model }} - {{ $vehicle->license_plate }}"
                                                    onclick="selectVehicle(this, event)">
@@ -107,7 +115,7 @@
                         <i class="fas fa-clipboard-list text-primary me-2"></i>
                         Detail Servis
                     </h5>
-                    
+
                     <div class="row">
                         <!-- Date -->
                         <div class="col-md-6 mb-3">
@@ -116,11 +124,11 @@
                                 Tanggal Servis
                                 <span class="text-danger">*</span>
                             </label>
-                            <input type="date" 
-                                   name="service_date" 
+                            <input type="date"
+                                   name="service_date"
                                    id="service_date"
-                                   class="form-control @error('service_date') is-invalid @enderror" 
-                                   value="{{ old('service_date', date('Y-m-d')) }}" 
+                                   class="form-control @error('service_date') is-invalid @enderror"
+                                   value="{{ old('service_date', date('Y-m-d')) }}"
                                    required>
                             @error('service_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -134,11 +142,11 @@
                                 Waktu Servis
                                 <span class="text-danger">*</span>
                             </label>
-                            <input type="time" 
-                                   name="service_time" 
+                            <input type="time"
+                                   name="service_time"
                                    id="service_time"
-                                   class="form-control @error('service_time') is-invalid @enderror" 
-                                   value="{{ old('service_time', date('H:i')) }}" 
+                                   class="form-control @error('service_time') is-invalid @enderror"
+                                   value="{{ old('service_time', date('H:i')) }}"
                                    required>
                             @error('service_time')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -153,13 +161,13 @@
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
-                                <input type="number" 
-                                       name="odometer" 
+                                <input type="number"
+                                       name="odometer"
                                        id="odometer"
-                                       class="form-control @error('odometer') is-invalid @enderror" 
-                                       placeholder="Masukkan odometer" 
-                                       value="{{ old('odometer') }}" 
-                                       required 
+                                       class="form-control @error('odometer') is-invalid @enderror"
+                                       placeholder="Masukkan odometer"
+                                       value="{{ old('odometer') }}"
+                                       required
                                        min="0"
                                        step="1">
                                 <span class="input-group-text">KM</span>
@@ -177,16 +185,16 @@
                                     Jenis Servis
                                     <span class="text-danger">*</span>
                                 </span>
-                                <button type="button" 
-                                        class="btn btn-sm btn-info text-white" 
+                                <button type="button"
+                                        class="btn btn-sm btn-info text-white"
                                         onclick="showPartsReference()"
                                         title="Lihat Referensi Harga Parts">
                                     <i class="fas fa-info-circle"></i>
                                 </button>
                             </label>
-                            
+
                             <!-- Button to open service selection modal -->
-                            <button type="button" 
+                            <button type="button"
                                     class="btn btn-outline-primary w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                                     onclick="openServiceModal()"
                                     id="selectServiceBtn">
@@ -197,7 +205,7 @@
                             <!-- Hidden input to store selected services JSON -->
                             <input type="hidden" name="selected_services" id="selected_services" required>
                             <input type="hidden" name="total_cost" id="total_cost_input">
-                            
+
                             @error('selected_services')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -231,9 +239,9 @@
                                 Tempat Servis
                                 <span class="text-danger">*</span>
                             </label>
-                            <select name="place" 
+                            <select name="place"
                                     id="place"
-                                    class="form-select @error('place') is-invalid @enderror" 
+                                    class="form-select @error('place') is-invalid @enderror"
                                     required>
                                 <option value="">Pilih Tempat Servis</option>
                                 @php
@@ -261,9 +269,9 @@
                                 <i class="fas fa-user me-2 text-primary"></i>
                                 Penanggung Jawab
                             </label>
-                            <input type="text" 
-                                   class="form-control bg-light" 
-                                   value="{{ Auth::user()->name }}" 
+                            <input type="text"
+                                   class="form-control bg-light"
+                                   value="{{ Auth::user()->name }}"
                                    readonly>
                             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                             <small class="text-muted">Otomatis terisi berdasarkan akun yang login</small>
@@ -276,9 +284,9 @@
                                 Metode Pembayaran
                                 <span class="text-danger">*</span>
                             </label>
-                            <select name="payment_method" 
+                            <select name="payment_method"
                                     id="payment_method"
-                                    class="form-select @error('payment_method') is-invalid @enderror" 
+                                    class="form-select @error('payment_method') is-invalid @enderror"
                                     required>
                                 <option value="">Pilih Metode Pembayaran</option>
                                 @if(isset($paymentMethods) && $paymentMethods->count() > 0)
@@ -304,10 +312,10 @@
                                 <i class="fas fa-sticky-note me-2 text-primary"></i>
                                 Catatan
                             </label>
-                            <textarea name="notes" 
+                            <textarea name="notes"
                                       id="notes"
-                                      class="form-control @error('notes') is-invalid @enderror" 
-                                      rows="4" 
+                                      class="form-control @error('notes') is-invalid @enderror"
+                                      rows="4"
                                       placeholder="Tambahkan catatan atau keterangan tambahan tentang service ini...">{{ old('notes') }}</textarea>
                             @error('notes')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -321,8 +329,8 @@
                                 Lampiran File
                             </label>
                             <div class="custom-file-upload">
-                                <input type="file" 
-                                       name="attachment" 
+                                <input type="file"
+                                       name="attachment"
                                        id="attachment"
                                        class="form-control @error('attachment') is-invalid @enderror"
                                        accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
@@ -371,7 +379,7 @@
                     <i class="fas fa-lightbulb me-2"></i>
                     Berikut adalah daftar harga parts sebagai referensi untuk servis kendaraan Anda.
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
@@ -472,15 +480,24 @@
                         <i class="fas fa-wrench me-2"></i>
                         Jenis Servis
                     </h5>
-                    <div class="input-group" style="max-width: 300px;">
+                    <div class="input-group" style="max-width: 300px; position: relative;">
                         <span class="input-group-text bg-white border-0">
                             <i class="fas fa-search text-muted"></i>
                         </span>
-                        <input type="text" 
-                               class="form-control border-0" 
+                        <input type="text"
+                               class="form-control border-0"
                                id="serviceSearchInput"
                                placeholder="Cari servis..."
-                               style="background: white;">
+                               autofocus
+                               style="padding-right: 35px; background: white;"
+                               autocomplete="off">
+                        <button type="button"
+                                class="btn position-absolute"
+                                style="right: 5px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none; z-index: 10;"
+                                id="clearServiceSearch"
+                                onclick="document.getElementById('serviceSearchInput').value=''; document.getElementById('clearServiceSearch').style.display='none'; renderServiceList('');">
+                            <i class="fas fa-times text-muted"></i>
+                        </button>
                     </div>
                 </div>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -788,7 +805,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
                 const fileName = file.name;
                 const fileExtension = fileName.split('.').pop().toLowerCase();
-                
+
                 let iconClass = 'fa-file';
                 if (['jpg', 'jpeg', 'png'].includes(fileExtension)) {
                     iconClass = 'fa-file-image';
@@ -828,7 +845,7 @@ function showPartsReference() {
 function clearFile() {
     const attachmentInput = document.getElementById('attachment');
     const filePreview = document.getElementById('filePreview');
-    
+
     if (attachmentInput) {
         attachmentInput.value = '';
     }
@@ -906,7 +923,7 @@ function renderServiceList(filter = '') {
     const container = document.getElementById('serviceListContainer');
     container.innerHTML = '';
 
-    const filteredServices = availableServices.filter(service => 
+    const filteredServices = availableServices.filter(service =>
         service.name.toLowerCase().includes(filter.toLowerCase())
     );
 
@@ -922,10 +939,10 @@ function renderServiceList(filter = '') {
         const item = document.createElement('div');
         item.className = 'service-item';
         item.innerHTML = `
-            <input type="checkbox" class="service-checkbox" id="check_${service.id}" 
+            <input type="checkbox" class="service-checkbox" id="check_${service.id}"
                    ${isSelected ? 'checked' : ''} onchange="toggleServicePrice('${service.id}', this)">
             <label class="service-name" for="check_${service.id}">${service.name}</label>
-            <input type="text" class="service-price-input ${isSelected ? '' : 'hidden'}" 
+            <input type="text" class="service-price-input ${isSelected ? '' : 'hidden'}"
                    id="price_${service.id}" placeholder="Harga (Rp)" value="${price}"
                    oninput="formatPriceInput(this); updateServicePrice('${service.id}', this.value)">
         `;
@@ -940,12 +957,12 @@ function formatNumber(num) {
 function formatPriceInput(input) {
     // Remove non-numeric characters
     let value = input.value.replace(/\D/g, '');
-    
+
     // Format with dots
     if (value) {
         value = parseInt(value, 10).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
-    
+
     input.value = value;
 }
 
@@ -954,7 +971,7 @@ function toggleServicePrice(serviceId, checkbox) {
     if (checkbox.checked) {
         priceInput.classList.remove('hidden');
         priceInput.focus();
-        
+
         // Add to selected services if not exists
         const service = availableServices.find(s => s.id === serviceId);
         if (!selectedServices.some(s => s.id === serviceId)) {
@@ -963,7 +980,7 @@ function toggleServicePrice(serviceId, checkbox) {
     } else {
         priceInput.classList.add('hidden');
         priceInput.value = '';
-        
+
         // Remove from selected services
         selectedServices = selectedServices.filter(s => s.id !== serviceId);
     }
@@ -981,7 +998,7 @@ function updateServicePrice(serviceId, formattedPrice) {
 function addNewServiceType() {
     const searchInput = document.getElementById('serviceSearchInput');
     const newServiceName = searchInput.value.trim();
-    
+
     if (newServiceName) {
         // Check if already exists
         if (availableServices.some(s => s.name.toLowerCase() === newServiceName.toLowerCase())) {
@@ -991,13 +1008,13 @@ function addNewServiceType() {
 
         const newId = newServiceName.toLowerCase().replace(/[^a-z0-9]/g, '_');
         const newService = { id: newId, name: newServiceName };
-        
+
         availableServices.push(newService);
         // Sort alphabetically
         availableServices.sort((a, b) => a.name.localeCompare(b.name));
-        
+
         renderServiceList(searchInput.value);
-        
+
         // Auto select the new service
         const checkbox = document.getElementById(`check_${newId}`);
         if (checkbox) {
@@ -1029,7 +1046,7 @@ function updateSelectedServicesDisplay() {
     if (selectedServices.length > 0) {
         displayContainer.style.display = 'block';
         selectBtnText.textContent = `${selectedServices.length} Servis Dipilih`;
-        
+
         selectedServices.forEach(service => {
             const price = parseFloat(service.price) || 0;
             totalCost += price;
@@ -1063,13 +1080,18 @@ function removeService(serviceId) {
 // Search functionality
 document.getElementById('serviceSearchInput')?.addEventListener('input', function(e) {
     renderServiceList(e.target.value);
+    // Show/hide clear button
+    const clearBtn = document.getElementById('clearServiceSearch');
+    if (clearBtn) {
+        clearBtn.style.display = e.target.value ? 'block' : 'none';
+    }
 });
 
 // Vehicle Custom Dropdown Logic
 document.getElementById('vehicleSearchInput')?.addEventListener('input', function(e) {
     const searchText = e.target.value.toLowerCase();
     const items = document.querySelectorAll('.vehicle-option');
-    
+
     items.forEach(item => {
         const text = item.getAttribute('data-text').toLowerCase();
         if (text.includes(searchText)) {
@@ -1084,10 +1106,10 @@ function selectVehicle(element, event) {
     event.preventDefault();
     const value = element.getAttribute('data-value');
     const text = element.getAttribute('data-text');
-    
+
     document.getElementById('vehicle_id').value = value;
     document.getElementById('vehicleDropdownText').textContent = text;
-    
+
     // Highlight selected
     document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('active'));
     element.classList.add('active');

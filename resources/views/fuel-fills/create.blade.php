@@ -655,7 +655,7 @@
         </div>
         <div class="vehicle-modal-search" style="position: relative;">
             <i class="fas fa-search vehicle-search-icon"></i>
-            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." onkeyup="filterVehicles()" oninput="toggleClearButton('vehicleSearch', 'clearVehicleSearch')">
+            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." autofocus onkeyup="filterVehicles()" oninput="toggleClearButton('vehicleSearch', 'clearVehicleSearch')">
             <button type="button"
                     class="btn btn-sm position-absolute"
                     style="right: 10px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none; z-index: 10;"
