@@ -68,7 +68,7 @@ return [
     'total_distance' => 'Total Jarak',
     'avg_fuel_consumption' => 'Rata-rata Konsumsi BBM',
     'total_expenses' => 'Total Biaya',
-    'total_income' => 'Total Pemasukan',
+    'total_income' => 'Total Pendapatan',
 
     // Messages
     'no_results' => 'Tidak Ada Hasil',
@@ -76,7 +76,7 @@ return [
     'no_vehicles_message' => 'Mulai dengan menambahkan kendaraan pertama Anda untuk melacak pengeluaran dan perawatan kendaraan.',
     'back_to_all' => 'Kembali ke Semua Kendaraan',
     'confirm_delete' => 'Apakah Anda yakin ingin menghapus kendaraan ":name"?\n\nPengingat: Kendaraan yang memiliki riwayat transaksi tidak dapat dihapus dan hanya bisa dinonaktifkan.',
-    
+
     // Form Labels
     'add_vehicle_new' => 'Tambah Kendaraan Baru',
     'edit_vehicle_title' => 'Edit Kendaraan',
@@ -86,7 +86,7 @@ return [
     'additional_info' => 'Informasi Tambahan',
     'costs_value' => 'Biaya & Nilai',
     'rental_info' => 'Informasi Rental',
-    
+
     // Form Fields
     'vehicle_name' => 'Nama Kendaraan',
     'click_to_select_brand' => 'Klik untuk pilih brand',
@@ -120,7 +120,7 @@ return [
     'distance_unit' => 'Unit Jarak',
     'kilometer' => 'Kilometer (km)',
     'mile' => 'Mil (mil)',
-    
+
     // Vehicle Identity
     'vehicle_identity' => 'Identitas Kendaraan',
     'engine_number' => 'Nomor Mesin',
@@ -129,7 +129,7 @@ return [
     'chassis_number_placeholder' => 'Nomor rangka kendaraan',
     'registration_date' => 'Tanggal Registrasi',
     'registration_date_placeholder' => 'Tanggal registrasi kendaraan',
-    
+
     // Purchase Information
     'purchase_information' => 'Informasi Pembelian',
     'purchase_date' => 'Tanggal Pembelian',
@@ -137,7 +137,7 @@ return [
     'purchase_price_placeholder' => 'Harga pembelian kendaraan',
     'dealer' => 'Dealer/Penjual',
     'dealer_placeholder' => 'Nama dealer atau penjual',
-    
+
     // Insurance Information
     'insurance_information' => 'Informasi Asuransi',
     'insurance_company' => 'Perusahaan Asuransi',
@@ -145,7 +145,7 @@ return [
     'policy_number' => 'Nomor Polis',
     'policy_number_placeholder' => 'Nomor polis asuransi',
     'insurance_expiry' => 'Tanggal Berakhir Asuransi',
-    
+
     // Additional Information
     'additional_information' => 'Informasi Tambahan',
     'notes_placeholder' => 'Catatan tambahan tentang kendaraan',
@@ -155,7 +155,7 @@ return [
     'type_brand_manual' => 'Ketik nama brand secara manual',
     'active_vehicle_hint' => 'Kendaraan aktif dapat digunakan dalam transaksi',
     'manage_vehicles' => 'Kelola Kendaraan',
-    
+
     // Example texts
     'license_plate_example' => 'Contoh: B 1234 ABC',
 ];

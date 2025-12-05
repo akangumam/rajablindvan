@@ -1021,7 +1021,7 @@
                                     <i class="fas fa-money-bill-wave" style="font-size: 22px; color: white;"></i>
                                 </div>
                                 <div class="add-new-content" style="flex: 1;">
-                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">Pemasukan</h6>
+                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">Pendapatan</h6>
                                     <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Tambahkan pendapatan baru</p>
                                 </div>
                                 <div class="add-new-arrow" style="color: #667eea; font-size: 18px;">
@@ -1232,7 +1232,7 @@
 
     <!-- Auto Logout Configuration -->
     @auth
-    <script src="{{ asset('js/auto-logout.js') }}"></script>
+    <script src="{{ asset('js/auto-logout.js') }}?v=2.1.0"></script>
     @endauth
 </body>
 </html>

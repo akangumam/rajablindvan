@@ -10,9 +10,9 @@
             <div>
                 <h1 class="page-title">
                     <i class="fas fa-coins"></i>
-                    Tambah Pemasukan Baru
+                    Tambah Pendapatan Baru
                 </h1>
-                <p class="page-subtitle mb-0">Catat pemasukan kendaraan Anda</p>
+                <p class="page-subtitle mb-0">Catat pendapatan kendaraan Anda</p>
             </div>
             <a href="{{ route('incomes.index') }}" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-2"></i>
@@ -45,7 +45,7 @@
                         <i class="fas fa-car text-primary me-2"></i>
                         Informasi Kendaraan
                     </h5>
-                    
+
                     <div class="row">
                         <div class="col-md-12">
                             <!-- Vehicle Selection -->
@@ -54,22 +54,22 @@
                                     Kendaraan
                                     <span class="text-danger">*</span>
                                 </label>
-                                
+
                                 <div class="dropdown" id="vehicleDropdown">
-                                    <button class="form-select text-start d-flex justify-content-between align-items-center" 
-                                            type="button" 
-                                            id="vehicleDropdownBtn" 
-                                            data-bs-toggle="dropdown" 
+                                    <button class="form-select text-start d-flex justify-content-between align-items-center"
+                                            type="button"
+                                            id="vehicleDropdownBtn"
+                                            data-bs-toggle="dropdown"
                                             aria-expanded="false">
                                         <span id="vehicleDropdownText">Pilih Kendaraan</span>
                                     </button>
                                     <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ old('vehicle_id') }}" required>
-                                    
+
                                     <div class="dropdown-menu w-100 p-2" aria-labelledby="vehicleDropdownBtn">
                                         <div class="mb-2">
-                                            <input type="text" 
-                                                   class="form-control form-control-sm" 
-                                                   id="vehicleSearchInput" 
+                                            <input type="text"
+                                                   class="form-control form-control-sm"
+                                                   id="vehicleSearchInput"
                                                    placeholder="Cari kendaraan..."
                                                    onclick="event.stopPropagation()">
                                         </div>
@@ -85,12 +85,21 @@
                                                 }
                                             @endphp
                                             @foreach($vehicles as $veh)
-                                                <a class="dropdown-item vehicle-option" 
-                                                   href="#" 
+                                                <a class="dropdown-item vehicle-option"
+                                                   href="#"
                                                    data-value="{{ $veh->id }}"
-                                                   data-text="{{ $veh->brand }} {{ $veh->model }} - {{ $veh->license_plate }}"
+                                                   data-brand="{{ $veh->brand }}"
+                                                   data-model="{{ $veh->model }}"
+                                                   data-plate="{{ $veh->license_plate }}"
+                                                   data-text="{{ $veh->brand }} {{ $veh->model }} ({{ $veh->license_plate }})"
                                                    onclick="selectVehicle(this, event)">
-                                                    {{ $veh->brand }} {{ $veh->model }} - {{ $veh->license_plate }}
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <strong>{{ $veh->brand }} {{ $veh->model }}</strong>
+                                                            <br>
+                                                            <small class="text-muted">{{ $veh->license_plate }}</small>
+                                                        </div>
+                                                    </div>
                                                 </a>
                                             @endforeach
                                         </div>
@@ -112,9 +121,9 @@
                 <div class="form-section mb-4">
                     <h5 class="section-title">
                         <i class="fas fa-clipboard-list text-primary me-2"></i>
-                        Detail Pemasukan
+                        Detail Pendapatan
                     </h5>
-                    
+
                     <div class="row">
                         <!-- Date -->
                         <div class="col-md-6 mb-3">
@@ -123,11 +132,11 @@
                                 Tanggal
                                 <span class="text-danger">*</span>
                             </label>
-                            <input type="date" 
-                                   name="income_date" 
+                            <input type="date"
+                                   name="income_date"
                                    id="income_date"
-                                   class="form-control @error('income_date') is-invalid @enderror" 
-                                   value="{{ old('income_date', date('Y-m-d')) }}" 
+                                   class="form-control @error('income_date') is-invalid @enderror"
+                                   value="{{ old('income_date', date('Y-m-d')) }}"
                                    required>
                             @error('income_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -141,11 +150,11 @@
                                 Waktu
                                 <span class="text-danger">*</span>
                             </label>
-                            <input type="time" 
-                                   name="income_time" 
+                            <input type="time"
+                                   name="income_time"
                                    id="income_time"
-                                   class="form-control @error('income_time') is-invalid @enderror" 
-                                   value="{{ old('income_time', date('H:i')) }}" 
+                                   class="form-control @error('income_time') is-invalid @enderror"
+                                   value="{{ old('income_time') }}"
                                    required>
                             @error('income_time')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -159,12 +168,12 @@
                                 Odometer
                             </label>
                             <div class="input-group">
-                                <input type="number" 
-                                       name="odometer" 
+                                <input type="number"
+                                       name="odometer"
                                        id="odometer"
-                                       class="form-control @error('odometer') is-invalid @enderror" 
-                                       placeholder="Masukkan odometer" 
-                                       value="{{ old('odometer') }}" 
+                                       class="form-control @error('odometer') is-invalid @enderror"
+                                       placeholder="Masukkan odometer"
+                                       value="{{ old('odometer') }}"
                                        min="0"
                                        step="1">
                                 <span class="input-group-text">KM</span>
@@ -178,11 +187,11 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold">
                                 <i class="fas fa-tags me-2 text-primary"></i>
-                                Jenis Pemasukan
+                                Jenis Pendapatan
                                 <span class="text-danger">*</span>
                             </label>
                             <select name="income_type_id" id="incomeTypeSelect" class="form-select @error('income_type_id') is-invalid @enderror" required>
-                                <option value="">Pilih Jenis Pemasukan</option>
+                                <option value="">Pilih Jenis Pendapatan</option>
                                 @php
                                     $incomeTypes = \App\Models\IncomeType::active()->orderBy('name')->get();
                                 @endphp
@@ -201,17 +210,17 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold">
                                 <i class="fas fa-money-bill-wave me-2 text-primary"></i>
-                                Nilai Pemasukan
+                                Nilai Pendapatan
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text">Rp</span>
-                                <input type="number" 
-                                       name="amount" 
+                                <input type="number"
+                                       name="amount"
                                        id="amount"
-                                       class="form-control @error('amount') is-invalid @enderror" 
-                                       placeholder="Masukkan jumlah pemasukan" 
-                                       value="{{ old('amount') }}" 
+                                       class="form-control @error('amount') is-invalid @enderror"
+                                       placeholder="Masukkan jumlah pendapatan"
+                                       value="{{ old('amount') }}"
                                        required
                                        min="0"
                                        step="1">
@@ -254,10 +263,10 @@
                                 Lampiran
                             </label>
                             <div class="file-upload-wrapper">
-                                <input type="file" 
-                                       name="attachment" 
-                                       id="attachment" 
-                                       class="form-control" 
+                                <input type="file"
+                                       name="attachment"
+                                       id="attachment"
+                                       class="form-control"
                                        accept="image/*,.pdf,.doc,.docx">
                                 <div id="filePreview" class="mt-2"></div>
                             </div>
@@ -274,7 +283,7 @@
                         <i class="fas fa-times me-2"></i>Batal
                     </a>
                     <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save me-2"></i>Simpan Pemasukan
+                        <i class="fas fa-save me-2"></i>Simpan Pendapatan
                     </button>
                 </div>
             </form>
@@ -371,7 +380,7 @@
 document.getElementById('vehicleSearchInput')?.addEventListener('input', function(e) {
     const searchText = e.target.value.toLowerCase();
     const items = document.querySelectorAll('.vehicle-option');
-    
+
     items.forEach(item => {
         const text = item.getAttribute('data-text').toLowerCase();
         if (text.includes(searchText)) {
@@ -386,16 +395,25 @@ function selectVehicle(element, event) {
     event.preventDefault();
     const value = element.getAttribute('data-value');
     const text = element.getAttribute('data-text');
-    
+
     document.getElementById('vehicle_id').value = value;
     document.getElementById('vehicleDropdownText').textContent = text;
-    
+
     document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
 }
 
 // Pre-select vehicle if exists
 document.addEventListener('DOMContentLoaded', function() {
+    // Set waktu default sesuai sistem
+    const timeInput = document.getElementById('income_time');
+    if (timeInput && !timeInput.value) {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        timeInput.value = `${hours}:${minutes}`;
+    }
+
     const vehicleId = "{{ old('vehicle_id') }}";
     if (vehicleId) {
         const option = document.querySelector(`.vehicle-option[data-value="${vehicleId}"]`);
@@ -415,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const fileSize = (file.size / 1024 / 1024).toFixed(2);
                 const fileName = file.name;
                 const fileExtension = fileName.split('.').pop().toLowerCase();
-                
+
                 let iconClass = 'fa-file';
                 if (['jpg', 'jpeg', 'png'].includes(fileExtension)) {
                     iconClass = 'fa-file-image';
@@ -448,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function clearFile() {
     const attachmentInput = document.getElementById('attachment');
     const filePreview = document.getElementById('filePreview');
-    
+
     if (attachmentInput) {
         attachmentInput.value = '';
     }
@@ -464,8 +482,8 @@ document.getElementById('incomeForm')?.addEventListener('submit', function(e) {
         { id: 'vehicle_id', name: 'Kendaraan' },
         { id: 'income_date', name: 'Tanggal' },
         { id: 'income_time', name: 'Waktu' },
-        { id: 'incomeTypeSelect', name: 'Jenis Pemasukan' },
-        { id: 'amount', name: 'Nilai Pemasukan' }
+        { id: 'incomeTypeSelect', name: 'Jenis Pendapatan' },
+        { id: 'amount', name: 'Nilai Pendapatan' }
     ];
 
     let isValid = true;
