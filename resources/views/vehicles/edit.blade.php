@@ -63,7 +63,7 @@
         border-color: #999;
         color: #333;
     }
-    
+
     /* Brand Popup Modal */
     .brand-popup {
         display: none;
@@ -215,13 +215,13 @@
     <form action="{{ route('vehicles.update', $vehicle->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        
+
         <!-- Vehicle Information -->
         <div class="form-section mb-4">
             <h5 class="section-title">
                 <i class="fas fa-car me-2 text-primary"></i>Vehicle Information
             </h5>
-            
+
             <!-- Row 1: Brand & Type -->
             <div class="row">
                 <div class="col-md-6 mb-4">
@@ -229,7 +229,7 @@
                     <input type="text" class="form-control" id="brandInput" name="brand" value="{{ old('brand', $vehicle->brand) }}" required readonly style="cursor: pointer;" placeholder="Click to select brand">
                     <small class="text-muted">Click to select from list</small>
                 </div>
-                
+
                 <div class="col-md-6 mb-4">
                     <label class="form-label">Type</label>
                     <select class="form-select" name="vehicle_type">
@@ -254,7 +254,7 @@
                     <label class="form-label">Vehicle Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="nameInput" name="name" value="{{ old('name', $vehicle->name) }}" required placeholder="Enter vehicle name or nickname">
                 </div>
-                
+
                 <div class="col-md-6 mb-4">
                     <label class="form-label">Model <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="modelInput" name="model" value="{{ old('model', $vehicle->model) }}" required placeholder="Enter vehicle model">
@@ -272,7 +272,7 @@
                         @endfor
                     </select>
                 </div>
-                
+
                 <div class="col-md-6 mb-4">
                     <label class="form-label">License Plate/Plat Nomor</label>
                     <input type="text" class="form-control" name="license_plate" value="{{ old('license_plate', $vehicle->license_plate) }}" placeholder="B 1234 ABC" style="text-transform: uppercase;">
@@ -301,7 +301,7 @@
                         </optgroup>
                     </select>
                     <small class="text-muted">Pilih Company Owned atau Investor pemilik kendaraan</small>
-                    
+
                     <!-- Hidden fields for backend -->
                     <input type="hidden" name="ownership_type" id="ownershipType" value="{{ old('ownership_type', $vehicle->ownership_type) }}">
                     <input type="hidden" name="investor_id" id="investorId" value="{{ old('investor_id', $vehicle->investor_id) }}">
@@ -326,7 +326,7 @@
                     const value = this.value;
                     const ownershipType = document.getElementById('ownershipType');
                     const investorId = document.getElementById('investorId');
-                    
+
                     if (value === 'company') {
                         ownershipType.value = 'company';
                         investorId.value = '';
@@ -335,7 +335,7 @@
                         investorId.value = value.replace('investor_', '');
                     }
                 });
-                
+
                 // Trigger on page load untuk set initial values
                 document.addEventListener('DOMContentLoaded', function() {
                     const select = document.getElementById('ownershipSelect');
@@ -354,7 +354,7 @@
                     <label class="form-label">Chassis Number/Nomor Rangka</label>
                     <input type="text" class="form-control" name="chassis_number" value="{{ old('chassis_number', $vehicle->chassis_number) }}" placeholder="Enter chassis number" style="text-transform: uppercase;">
                 </div>
-                
+
                 <div class="col-md-6 mb-4">
                     <label class="form-label">Engine Number/Nomor Mesin</label>
                     <input type="text" class="form-control" name="engine_number" value="{{ old('engine_number', $vehicle->engine_number) }}" placeholder="Enter engine number" style="text-transform: uppercase;">
@@ -367,7 +367,7 @@
                     <label class="form-label">Vehicle Registration Certificate Number/Nomor STNK</label>
                     <input type="text" class="form-control" name="stnk_number" value="{{ old('stnk_number', $vehicle->stnk_number) }}" placeholder="Enter STNK number" style="text-transform: uppercase;">
                 </div>
-                
+
                 <div class="col-md-6 mb-4">
                     <label class="form-label">VRCN Expiry Date/Masa Berlaku STNK</label>
                     <input type="date" class="form-control" name="stnk_expiry_date" value="{{ old('stnk_expiry_date', $vehicle->stnk_expiry_date ? $vehicle->stnk_expiry_date->format('Y-m-d') : '') }}">
@@ -380,7 +380,7 @@
                     <label class="form-label">Vehicle Inspection Number/Nomor KIR</label>
                     <input type="text" class="form-control" name="kir_number" value="{{ old('kir_number', $vehicle->kir_number) }}" placeholder="Enter KIR number" style="text-transform: uppercase;">
                 </div>
-                
+
                 <div class="col-md-6 mb-4">
                     <label class="form-label">VIN Expiry Date/Masa Berlaku KIR</label>
                     <input type="date" class="form-control" name="kir_expiry_date" value="{{ old('kir_expiry_date', $vehicle->kir_expiry_date ? $vehicle->kir_expiry_date->format('Y-m-d') : '') }}">
@@ -418,7 +418,7 @@
                         <img id="barcodeImg" src="" alt="Barcode Preview" style="max-width: 200px; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
                     </div>
                 </div>
-                
+
                 <div class="col-md-6 mb-4">
                     <label class="form-label">Upload Dokumen Kendaraan</label>
                     <input type="text" class="form-control mb-2" name="document_name" value="{{ old('document_name', $vehicle->document_name) }}" placeholder="Enter document name">
@@ -438,7 +438,7 @@
             <h5 class="section-title">
                 <i class="fas fa-info-circle me-2 text-primary"></i>Status dan Notes
             </h5>
-            
+
             <div class="mb-4">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $vehicle->is_active) ? 'checked' : '' }}>
@@ -465,7 +465,7 @@
             </button>
         </div>
     </form>
-    
+
     <!-- Hidden Form for Deleting Barcode -->
     @if($vehicle->barcode_path)
     <form id="deleteBarcodeForm" action="{{ route('vehicles.delete-barcode', $vehicle->id) }}" method="POST" style="display: none;">
@@ -483,14 +483,17 @@
             <h5>Select Brand</h5>
             <button class="close-popup" id="closeBrandPopup">&times;</button>
         </div>
-        
+
         <div class="brand-search-container">
             <div class="brand-search-wrapper">
-                <input type="text" class="brand-search-input" id="brandSearchInput" placeholder="Search brand...">
+                <input type="text" class="brand-search-input" id="brandSearchInput" placeholder="Search brand..." autofocus>
                 <i class="fas fa-search brand-search-icon"></i>
+                <button type="button" class="clear-brand-search" onclick="clearBrandSearch()" style="position: absolute; right: 35px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #95a5a6; cursor: pointer; font-size: 14px; display: none;">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         </div>
-        
+
         <div class="brand-popup-body">
             <div class="brand-grid" id="brandGrid">
                 <div class="brand-item" data-brand="Toyota" data-search="toyota">
@@ -539,7 +542,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="brand-popup-footer">
             <a href="#" class="add-new-brand-btn" id="addNewBrand">ADD NEW</a>
         </div>
@@ -578,8 +581,25 @@ window.addEventListener('click', function(event) {
 });
 
 // Search functionality
+const clearBrandBtn = document.querySelector('.clear-brand-search');
+
+function clearBrandSearch() {
+    brandSearchInput.value = '';
+    clearBrandBtn.style.display = 'none';
+    document.querySelectorAll('.brand-item').forEach(item => {
+        item.style.display = 'block';
+    });
+    brandSearchInput.focus();
+}
+
 brandSearchInput.addEventListener('input', function() {
     const searchTerm = this.value.toLowerCase();
+
+    // Show/hide clear button
+    if (clearBrandBtn) {
+        clearBrandBtn.style.display = searchTerm ? 'block' : 'none';
+    }
+
     document.querySelectorAll('.brand-item').forEach(item => {
         const searchText = item.getAttribute('data-search').toLowerCase();
         if (searchText.includes(searchTerm)) {

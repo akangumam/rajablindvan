@@ -71,7 +71,8 @@
                                                    class="form-control form-control-sm pe-4"
                                                    id="vehicleSearchInput"
                                                    placeholder="Cari kendaraan..."
-                                                   onclick="event.stopPropagation()">
+                                                   onclick="event.stopPropagation()"
+                                                   autofocus>
                                             <button type="button"
                                                     class="btn btn-sm position-absolute"
                                                     style="right: 5px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"

@@ -424,6 +424,26 @@
     .search-btn:hover {
         background: #2980b9;
     }
+    .clear-search-btn {
+        position: absolute;
+        right: 48px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: #95a5a6;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 14px;
+    }
+    .clear-search-btn:hover {
+        color: #e74c3c;
+    }
     .pagination-wrapper {
         margin-top: 24px;
         padding: 20px;
@@ -691,11 +711,18 @@
 <!-- Search Form -->
 <form action="{{ route('vehicles.index') }}" method="GET" class="search-form">
     <div class="search-input-wrapper">
-        <input type="text" 
-               name="search" 
-               class="search-input" 
-               placeholder="{{ __('common.search_vehicles') }}" 
-               value="{{ request('search') }}">
+        <input type="text"
+               id="vehicleSearch"
+               name="search"
+               class="search-input"
+               placeholder="{{ __('common.search_vehicles') }}"
+               value="{{ request('search') }}"
+               autofocus>
+        @if(request('search'))
+        <button type="button" class="clear-search-btn" onclick="clearSearchInput('vehicleSearch')">
+            <i class="fas fa-times"></i>
+        </button>
+        @endif
         <button type="submit" class="search-btn">
             <i class="fas fa-search"></i>
         </button>
@@ -756,7 +783,7 @@
                                 $logoPath = "assets/logos/brands/{$brandLower}.svg";
                                 $logoExists = file_exists(public_path($logoPath));
                             @endphp
-                            
+
                             @if($logoExists)
                                 <img src="{{ asset($logoPath) }}" alt="{{ $vehicle->brand }}" style="width: 28px; height: 28px; object-fit: contain;">
                             @else
@@ -775,15 +802,15 @@
                 <td>
                     <div class="action-buttons">
                         @if($vehicle->barcode_path)
-                        <a href="{{ asset('storage/' . $vehicle->barcode_path) }}" 
+                        <a href="{{ asset('storage/' . $vehicle->barcode_path) }}"
                            download="barcode-{{ $vehicle->license_plate }}.{{ pathinfo($vehicle->barcode_path, PATHINFO_EXTENSION) }}"
-                           class="action-icon-btn btn-download" 
+                           class="action-icon-btn btn-download"
                            title="Download Barcode">
                             <i class="fas fa-download"></i>
                         </a>
                         @else
-                        <button class="action-icon-btn btn-download" 
-                                style="opacity: 0.5; cursor: not-allowed;" 
+                        <button class="action-icon-btn btn-download"
+                                style="opacity: 0.5; cursor: not-allowed;"
                                 title="Barcode tidak tersedia"
                                 disabled>
                             <i class="fas fa-download"></i>
@@ -880,7 +907,7 @@
     <div class="pagination-info">
         {{ __('common.showing') }} {{ $vehicles->firstItem() }} {{ __('common.to') }} {{ $vehicles->lastItem() }} {{ __('common.of') }} {{ $vehicles->total() }} {{ __('common.results') }}
     </div>
-    
+
     <div class="pagination-controls">
         <!-- Previous Button -->
         @if($vehicles->onFirstPage())
@@ -892,7 +919,7 @@
                 <i class="fas fa-chevron-left"></i> {{ __('common.previous') }}
             </a>
         @endif
-        
+
         <!-- Page Numbers -->
         <div class="pagination-numbers">
             @foreach(range(1, $vehicles->lastPage()) as $page)
@@ -903,7 +930,7 @@
                 @endif
             @endforeach
         </div>
-        
+
         <!-- Next Button -->
         @if($vehicles->hasMorePages())
             <a href="{{ $vehicles->nextPageUrl() }}" class="pagination-btn">
@@ -951,12 +978,20 @@
 <script>
 function confirmDelete(event, vehicleName) {
     event.preventDefault();
-    
+
     if (confirm('{{ __("common.confirm_delete_vehicle") }}'.replace(':name', vehicleName))) {
         event.target.submit();
     }
-    
+
     return false;
+}
+
+function clearSearchInput(inputId) {
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.value = '';
+        input.form.submit();
+    }
 }
 </script>
 @endpush

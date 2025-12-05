@@ -73,6 +73,26 @@
     .search-btn:hover {
         background: #2980b9;
     }
+    .clear-search-btn {
+        position: absolute;
+        right: 48px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: #95a5a6;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 14px;
+    }
+    .clear-search-btn:hover {
+        color: #e74c3c;
+    }
     .sortable-header {
         cursor: pointer;
         text-decoration: none;
@@ -112,17 +132,17 @@
 
 <!-- Status Filter Tabs -->
 <div class="status-tabs mb-4">
-    <a href="{{ route('orders.index', ['status' => 'Active']) }}" 
+    <a href="{{ route('orders.index', ['status' => 'Active']) }}"
        class="status-tab {{ $status === 'Active' ? 'active' : '' }}">
         <i class="fas fa-play-circle"></i> Active Orders
         <span class="badge">{{ \App\Models\Order::where('status', 'Active')->count() }}</span>
     </a>
-    <a href="{{ route('orders.index', ['status' => 'Completed']) }}" 
+    <a href="{{ route('orders.index', ['status' => 'Completed']) }}"
        class="status-tab {{ $status === 'Completed' ? 'active' : '' }}">
         <i class="fas fa-check-circle"></i> History (Completed)
         <span class="badge">{{ \App\Models\Order::where('status', 'Completed')->count() }}</span>
     </a>
-    <a href="{{ route('orders.index', ['status' => 'All']) }}" 
+    <a href="{{ route('orders.index', ['status' => 'All']) }}"
        class="status-tab {{ $status === 'All' ? 'active' : '' }}">
         <i class="fas fa-list"></i> All Orders
         <span class="badge">{{ \App\Models\Order::count() }}</span>
@@ -133,11 +153,18 @@
 <form action="{{ route('orders.index') }}" method="GET" class="search-form">
     <input type="hidden" name="status" value="{{ $status }}">
     <div class="search-input-wrapper">
-        <input type="text" 
-               name="search" 
-               class="search-input" 
-               placeholder="Search by vehicle name, license plate, or customer..." 
-               value="{{ request('search') }}">
+        <input type="text"
+               id="orderSearch"
+               name="search"
+               class="search-input"
+               placeholder="Search by vehicle name, license plate, or customer..."
+               value="{{ request('search') }}"
+               autofocus>
+        @if(request('search'))
+        <button type="button" class="clear-search-btn" onclick="clearSearchInput('orderSearch')">
+            <i class="fas fa-times"></i>
+        </button>
+        @endif
         <button type="submit" class="search-btn">
             <i class="fas fa-search"></i>
         </button>
@@ -228,7 +255,7 @@
                             <td data-label="Start Date">{{ $order->start_date->format('d M Y') }}</td>
                             <td data-label="End Date">{{ $order->end_date->format('d M Y') }}</td>
                             <td data-label="Status">
-                                <span class="badge bg-{{ $order->status_color }}" 
+                                <span class="badge bg-{{ $order->status_color }}"
                                     @if($order->rental_type === 'Sewa Harian')
                                         title="Hijau (Untuk semua sewa Harian)"
                                     @elseif($order->remaining_days < 0)
@@ -250,13 +277,13 @@
                                         </button>
                                     </form>
                                     @endif
-                                    
+
                                     @if(auth()->user()->canManageVehicles())
                                     <a href="{{ route('orders.edit', $order->id) }}" class="action-icon-btn btn-edit" title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
                                     @endif
-                                    
+
                                     @if(auth()->user()->canDeleteRecords())
                                     <form action="{{ route('orders.destroy', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this order?')">
                                         @csrf
@@ -319,7 +346,7 @@
         </div>
     </div>
 
-    
+
 </div>
 
 <style>
@@ -652,4 +679,16 @@
     }
 }
 </style>
+
+@push('scripts')
+<script>
+function clearSearchInput(inputId) {
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.value = '';
+        input.form.submit();
+    }
+}
+</script>
+@endpush
 @endsection

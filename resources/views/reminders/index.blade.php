@@ -416,15 +416,7 @@
     @if(isset($selectedVehicle))
         <form action="{{ route('reminders.index') }}" method="GET" class="search-form">
             <input type="hidden" name="vehicle" value="{{ $selectedVehicle->id }}">
-            <div class="search-input-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" 
-                       name="search" 
-                       placeholder="Search by title, category, or notes..." 
-                       value="{{ request('search') }}"
-                       autocomplete="off">
-                <button type="button" class="clear-search" onclick="this.previousElementSibling.value=''; this.closest('form').submit();">
-                    <i class="fas fa-times"></i>
+  <i class="fas fa-times"></i>
                 </button>
             </div>
         </form>
@@ -484,7 +476,7 @@
                         @else
                             <span class="reminder-badge pending">Pending</span>
                         @endif
-                        
+
                         <div class="reminder-actions">
                             <a href="{{ route('reminders.edit', $reminder->id) }}" class="btn-action btn-edit" title="Edit">
                                 <i class="fas fa-edit"></i>
@@ -566,13 +558,13 @@
             </div>
             <div class="modal-body pt-0" style="padding: 10px 24px 20px 24px; max-height: 400px; overflow-y: auto;">
                 @foreach($vehicles ?? [] as $vehicle)
-                    <a href="{{ route('reminders.index', ['vehicle' => $vehicle->id]) }}" 
+                    <a href="{{ route('reminders.index', ['vehicle' => $vehicle->id]) }}"
                        class="vehicle-modal-item {{ isset($selectedVehicle) && $selectedVehicle->id == $vehicle->id ? 'active' : '' }}"
                        style="display: flex; align-items: center; padding: 12px 16px; border-radius: 12px; text-decoration: none; transition: all 0.2s; margin-bottom: 8px; background: {{ isset($selectedVehicle) && $selectedVehicle->id == $vehicle->id ? '#f0f4ff' : 'transparent' }};"
                        onmouseover="if(!this.classList.contains('active')) this.style.background='#f8f9fa'"
                        onmouseout="if(!this.classList.contains('active')) this.style.background='transparent'">
                         <div style="width: 48px; height: 48px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <img src="{{ $vehicle->getBrandLogoUrl() }}" 
+                            <img src="{{ $vehicle->getBrandLogoUrl() }}"
                                  alt="{{ $vehicle->brand }}"
                                  style="width: 32px; height: 32px; object-fit: contain;">
                         </div>
@@ -594,7 +586,7 @@
             </div>
             <div class="modal-footer border-0 pt-0" style="padding: 10px 24px 20px 24px;">
                 <div class="d-grid gap-2 w-100">
-                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('vehicles.create') }}'" 
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('vehicles.create') }}'"
                             style="background: #667eea; border: none; padding: 12px; font-weight: 600; border-radius: 10px;">
                         <i class="fas fa-plus me-2"></i>Add New Vehicles
                     </button>
@@ -605,8 +597,6 @@
 </div>
 
 @endsection
-
-
 
 
 
