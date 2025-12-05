@@ -66,12 +66,19 @@
                                     <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ old('vehicle_id') }}" required>
 
                                     <div class="dropdown-menu w-100 p-2" aria-labelledby="vehicleDropdownBtn">
-                                        <div class="mb-2">
+                                        <div class="mb-2 position-relative">
                                             <input type="text"
-                                                   class="form-control form-control-sm"
+                                                   class="form-control form-control-sm pe-4"
                                                    id="vehicleSearchInput"
                                                    placeholder="Cari kendaraan..."
                                                    onclick="event.stopPropagation()">
+                                            <button type="button"
+                                                    class="btn btn-sm position-absolute"
+                                                    style="right: 5px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"
+                                                    id="clearVehicleSearch"
+                                                    onclick="clearSearch('vehicleSearchInput', 'clearVehicleSearch'); event.stopPropagation();">
+                                                <i class="fas fa-times text-muted"></i>
+                                            </button>
                                         </div>
                                         <div class="vehicle-list-container" style="max-height: 250px; overflow-y: auto;">
                                             @php
@@ -376,10 +383,42 @@
 
 @push('scripts')
 <script>
+// Clear search function
+function clearSearch(inputId, buttonId) {
+    const input = document.getElementById(inputId);
+    const button = document.getElementById(buttonId);
+    if (input) {
+        input.value = '';
+        input.focus();
+        input.dispatchEvent(new Event('input'));
+    }
+    if (button) {
+        button.style.display = 'none';
+    }
+}
+
+// Auto-focus when dropdown opens and show/hide clear button
+document.getElementById('vehicleDropdownBtn')?.addEventListener('shown.bs.dropdown', function() {
+    const searchInput = document.getElementById('vehicleSearchInput');
+    if (searchInput) {
+        setTimeout(() => {
+            searchInput.focus();
+        }, 100);
+    }
+});
+
 // Vehicle Custom Dropdown Logic
-document.getElementById('vehicleSearchInput')?.addEventListener('input', function(e) {
+const vehicleSearchInput = document.getElementById('vehicleSearchInput');
+const clearVehicleBtn = document.getElementById('clearVehicleSearch');
+
+vehicleSearchInput?.addEventListener('input', function(e) {
     const searchText = e.target.value.toLowerCase();
     const items = document.querySelectorAll('.vehicle-option');
+
+    // Show/hide clear button
+    if (clearVehicleBtn) {
+        clearVehicleBtn.style.display = searchText ? 'block' : 'none';
+    }
 
     items.forEach(item => {
         const text = item.getAttribute('data-text').toLowerCase();

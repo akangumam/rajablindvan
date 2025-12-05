@@ -37,7 +37,7 @@
         border-color: #3498db;
         box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
     }
-    
+
     /* Field Style - Drivvo inspired */
     .field-group {
         margin-bottom: 20px;
@@ -49,7 +49,7 @@
     .field-icon {
         display: none; /* Hide individual field icons */
     }
-    
+
     /* ===== VEHICLE MODAL POPUP ===== */
     .vehicle-modal {
         display: none;
@@ -196,7 +196,7 @@
         from { transform: translateY(50px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
-    
+
     .page-title-section {
         display: flex;
         align-items: center;
@@ -224,7 +224,7 @@
         font-weight: 600;
         color: #212529;
     }
-    
+
     /* Drivvo Style Inputs */
     .form-control,
     .form-select {
@@ -376,7 +376,7 @@
         color: #3498db;
         font-size: 20px;
     }
-    
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .content-area {
@@ -430,9 +430,9 @@
                 <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 14px;"></i>
             @endif
         </div>
-        
+
         <div style="border-bottom: 1px solid #e9ecef; margin-bottom: 24px;"></div>
-        
+
         <!-- Page Title -->
         <div style="display: flex; align-items: center; margin-bottom: 24px;">
             <div class="title-icon">
@@ -655,7 +655,14 @@
         </div>
         <div class="vehicle-modal-search" style="position: relative;">
             <i class="fas fa-search vehicle-search-icon"></i>
-            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." onkeyup="filterVehicles()">
+            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." onkeyup="filterVehicles()" oninput="toggleClearButton('vehicleSearch', 'clearVehicleSearch')">
+            <button type="button"
+                    class="btn btn-sm position-absolute"
+                    style="right: 10px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none; z-index: 10;"
+                    id="clearVehicleSearch"
+                    onclick="clearSearchAndFilter('vehicleSearch', 'clearVehicleSearch')">
+                <i class="fas fa-times text-muted"></i>
+            </button>
         </div>
         <div class="vehicle-modal-body">
             @php
@@ -732,6 +739,14 @@ litersInput.addEventListener('input', calculateTotalCost);
 function openVehicleModal() {
     document.getElementById('vehicleModal').classList.add('show');
     document.body.style.overflow = 'hidden';
+
+    // Auto-focus search input
+    setTimeout(() => {
+        const searchInput = document.getElementById('vehicleSearch');
+        if (searchInput) {
+            searchInput.focus();
+        }
+    }, 300);
 }
 
 function closeVehicleModal() {
@@ -745,6 +760,29 @@ document.getElementById('vehicleModal').addEventListener('click', function(e) {
         closeVehicleModal();
     }
 });
+
+// Toggle clear button visibility
+function toggleClearButton(inputId, buttonId) {
+    const input = document.getElementById(inputId);
+    const button = document.getElementById(buttonId);
+    if (input && button) {
+        button.style.display = input.value ? 'block' : 'none';
+    }
+}
+
+// Clear search and re-filter
+function clearSearchAndFilter(inputId, buttonId) {
+    const input = document.getElementById(inputId);
+    const button = document.getElementById(buttonId);
+    if (input) {
+        input.value = '';
+        input.focus();
+        filterVehicles();
+    }
+    if (button) {
+        button.style.display = 'none';
+    }
+}
 
 // Vehicle search filter
 function filterVehicles() {

@@ -1228,6 +1228,63 @@
         });
     </script>
 
+    <!-- Global Search Dropdown Helper -->
+    <script>
+        // Global function to clear search input
+        window.clearSearch = function(inputId, buttonId) {
+            const input = document.getElementById(inputId);
+            const button = document.getElementById(buttonId);
+            if (input) {
+                input.value = '';
+                input.focus();
+                input.dispatchEvent(new Event('input'));
+            }
+            if (button) {
+                button.style.display = 'none';
+            }
+        };
+
+        // Auto-focus search input when dropdown opens
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle all Bootstrap dropdowns
+            document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(function(dropdown) {
+                dropdown.addEventListener('shown.bs.dropdown', function() {
+                    const dropdownMenu = this.nextElementSibling;
+                    if (dropdownMenu) {
+                        const searchInput = dropdownMenu.querySelector('input[type="text"], input[type="search"]');
+                        if (searchInput) {
+                            setTimeout(() => {
+                                searchInput.focus();
+                            }, 100);
+                        }
+                    }
+                });
+            });
+
+            // Handle modal search inputs
+            document.querySelectorAll('.modal').forEach(function(modal) {
+                modal.addEventListener('shown.bs.modal', function() {
+                    const searchInput = this.querySelector('input[id$="SearchInput"], input[id="searchInput"]');
+                    if (searchInput) {
+                        setTimeout(() => {
+                            searchInput.focus();
+                        }, 300);
+                    }
+                });
+            });
+
+            // Add clear button functionality to all search inputs
+            document.querySelectorAll('input[id$="SearchInput"], input[id="searchInput"]').forEach(function(input) {
+                const clearBtn = document.getElementById('clear' + input.id.charAt(0).toUpperCase() + input.id.slice(1).replace('Input', ''));
+                if (clearBtn) {
+                    input.addEventListener('input', function() {
+                        clearBtn.style.display = this.value ? 'block' : 'none';
+                    });
+                }
+            });
+        });
+    </script>
+
     @stack('scripts')
 
     <!-- Auto Logout Configuration -->
