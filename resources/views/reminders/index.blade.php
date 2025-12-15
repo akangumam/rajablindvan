@@ -416,7 +416,17 @@
     @if(isset($selectedVehicle))
         <form action="{{ route('reminders.index') }}" method="GET" class="search-form">
             <input type="hidden" name="vehicle" value="{{ $selectedVehicle->id }}">
-  <i class="fas fa-times"></i>
+            <div class="search-input-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text"
+                       id="reminderSearch"
+                       name="search"
+                       placeholder="Search by title, category, or notes..."
+                       value="{{ request('search') }}"
+                       autocomplete="off"
+                       autofocus>
+                <button type="button" class="clear-search" onclick="this.previousElementSibling.value=''; this.closest('form').submit();">
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
         </form>
@@ -597,6 +607,8 @@
 </div>
 
 @endsection
+
+
 
 
 
