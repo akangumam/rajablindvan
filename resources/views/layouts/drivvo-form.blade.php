@@ -438,8 +438,15 @@
             <button class="vehicle-modal-close" onclick="closeVehicleModal()">&times;</button>
         </div>
         <div class="vehicle-modal-search" style="position: relative;">
-            <i class="fas fa-search vehicle-search-icon"></i>
-            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." onkeyup="filterVehicles()">
+            <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
+            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." style="padding-left: 40px; padding-right: 40px;" onkeyup="filterVehicles()" autofocus>
+            <button type="button"
+                    class="btn btn-sm position-absolute"
+                    style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none; z-index: 10;"
+                    id="clearVehicleSearch"
+                    onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();">
+                <i class="fas fa-times text-muted"></i>
+            </button>
         </div>
         <div class="vehicle-modal-body">
             @php
