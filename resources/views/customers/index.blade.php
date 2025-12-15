@@ -503,21 +503,18 @@
 
 <!-- Search Form -->
 <form action="{{ route('customers.index') }}" method="GET" class="search-form">
-    <div class="search-input-wrapper">
+    <div class="search-input-wrapper position-relative">
+        <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
         <input type="text"
                id="customerSearch"
                name="search"
                class="search-input"
                placeholder="Search by company name, PIC name, or contact number..."
                value="{{ request('search') }}"
+               style="padding-left: 40px; padding-right: 40px;"
                autofocus>
-        @if(request('search'))
-        <button type="button" class="clear-search-btn" onclick="clearSearchInput('customerSearch')">
-            <i class="fas fa-times"></i>
-        </button>
-        @endif
-        <button type="submit" class="search-btn">
-            <i class="fas fa-search"></i>
+        <button type="button" class="clear-search-btn position-absolute" onclick="clearSearchInput('customerSearch')" style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; {{ request('search') ? '' : 'display: none;' }}">
+            <i class="fas fa-times text-muted"></i>
         </button>
     </div>
 </form>

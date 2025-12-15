@@ -152,21 +152,18 @@
 <!-- Search Form -->
 <form action="{{ route('orders.index') }}" method="GET" class="search-form">
     <input type="hidden" name="status" value="{{ $status }}">
-    <div class="search-input-wrapper">
+    <div class="search-input-wrapper position-relative">
+        <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
         <input type="text"
                id="orderSearch"
                name="search"
                class="search-input"
                placeholder="Search by vehicle name, license plate, or customer..."
                value="{{ request('search') }}"
+               style="padding-left: 40px; padding-right: 40px;"
                autofocus>
-        @if(request('search'))
-        <button type="button" class="clear-search-btn" onclick="clearSearchInput('orderSearch')">
-            <i class="fas fa-times"></i>
-        </button>
-        @endif
-        <button type="submit" class="search-btn">
-            <i class="fas fa-search"></i>
+        <button type="button" class="clear-search-btn position-absolute" onclick="clearSearchInput('orderSearch')" style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; {{ request('search') ? '' : 'display: none;' }}">
+            <i class="fas fa-times text-muted"></i>
         </button>
     </div>
 </form>
