@@ -592,11 +592,16 @@
             </div>
             <div class="modal-body">
                 <!-- Search Box -->
-                <div class="vehicle-search-box" style="position: relative; padding: 0 20px;">
-                    <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control" style="padding-right: 40px; padding-left: 12px;" autofocus>
-                    <button type="button" class="clear-vehicle-search" onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();" style="position: absolute; right: 26px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #999; cursor: pointer; font-size: 16px; display: none; z-index: 10; padding: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-times"></i>
-                    </button>
+                <div class="vehicle-search-box" style="padding: 0 20px;">
+                    <div class="position-relative">
+                        <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control pe-4" autofocus>
+                        <button type="button"
+                                class="btn btn-sm position-absolute clear-vehicle-search"
+                                style="right: 5px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"
+                                onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();">
+                            <i class="fas fa-times text-muted"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Vehicle List -->
