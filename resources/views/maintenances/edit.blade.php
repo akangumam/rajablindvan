@@ -67,17 +67,18 @@
                                     <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ old('vehicle_id', $maintenance->vehicle_id) }}" required>
 
                                     <div class="dropdown-menu w-100 p-2" aria-labelledby="vehicleDropdownBtn">
-                                        <div class="mb-2" style="position: relative;">
+                                        <div class="mb-2 position-relative">
+                                            <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
                                             <input type="text"
                                                    class="form-control form-control-sm"
                                                    id="vehicleSearchInput"
                                                    placeholder="Cari kendaraan..."
+                                                   style="padding-left: 40px; padding-right: 40px;"
                                                    autofocus
-                                                   style="padding-right: 35px;"
                                                    onclick="event.stopPropagation()">
                                             <button type="button"
                                                     class="btn position-absolute"
-                                                    style="right: 5px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none; z-index: 10;"
+                                                    style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none; z-index: 10;"
                                                     id="clearVehicleSearch"
                                                     onclick="document.getElementById('vehicleSearchInput').value=''; document.getElementById('clearVehicleSearch').style.display='none'; event.stopPropagation();">
                                                 <i class="fas fa-times text-muted"></i>

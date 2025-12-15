@@ -67,15 +67,17 @@
 
                                     <div class="dropdown-menu w-100 p-2" aria-labelledby="vehicleDropdownBtn">
                                         <div class="mb-2 position-relative">
+                                            <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
                                             <input type="text"
-                                                   class="form-control form-control-sm pe-4"
+                                                   class="form-control form-control-sm"
                                                    id="vehicleSearchInput"
                                                    placeholder="Cari kendaraan..."
+                                                   style="padding-left: 40px; padding-right: 40px;"
                                                    onclick="event.stopPropagation()"
                                                    autofocus>
                                             <button type="button"
                                                     class="btn btn-sm position-absolute"
-                                                    style="right: 5px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"
+                                                    style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"
                                                     id="clearVehicleSearch"
                                                     onclick="clearSearch('vehicleSearchInput', 'clearVehicleSearch'); event.stopPropagation();">
                                                 <i class="fas fa-times text-muted"></i>
