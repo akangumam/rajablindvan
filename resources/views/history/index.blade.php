@@ -594,10 +594,11 @@
                 <!-- Search Box -->
                 <div class="vehicle-search-box" style="padding: 0 20px;">
                     <div class="position-relative">
-                        <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control pe-4" autofocus>
+                        <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
+                        <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control" style="padding-left: 40px; padding-right: 40px;" autofocus>
                         <button type="button"
                                 class="btn btn-sm position-absolute clear-vehicle-search"
-                                style="right: 5px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"
+                                style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"
                                 onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();">
                             <i class="fas fa-times text-muted"></i>
                         </button>
