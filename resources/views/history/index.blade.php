@@ -639,10 +639,12 @@
 
 <script>
 // Vehicle Search Filter
-const vehicleSearchInput = document.getElementById('vehicleSearch');
-const clearBtn = document.querySelector('.clear-vehicle-search');
-
 function filterVehicles() {
+    const vehicleSearchInput = document.getElementById('vehicleSearch');
+    const clearBtn = document.querySelector('.clear-vehicle-search');
+    
+    if (!vehicleSearchInput) return;
+    
     const searchTerm = vehicleSearchInput.value.toLowerCase();
     const vehicleItems = document.querySelectorAll('.vehicle-item');
 
@@ -661,7 +663,26 @@ function filterVehicles() {
     });
 }
 
-vehicleSearchInput?.addEventListener('input', filterVehicles);
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    const vehicleSearchInput = document.getElementById('vehicleSearch');
+    
+    // Add live search event listener
+    if (vehicleSearchInput) {
+        vehicleSearchInput.addEventListener('input', filterVehicles);
+    }
+    
+    // Auto-focus when modal opens
+    const vehicleModal = document.getElementById('vehicleSelectModal');
+    if (vehicleModal) {
+        vehicleModal.addEventListener('shown.bs.modal', function() {
+            const searchInput = document.getElementById('vehicleSearch');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        });
+    }
+});
 
 // Select Vehicle Function
 function selectVehicle(vehicleId) {
