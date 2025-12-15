@@ -439,10 +439,7 @@
                     </div>
                     <i class="fas fa-chevron-down"></i>
                 @else
-                    <span>
-                        <i class="fas fa-search me-2"></i>
-                        Select Vehicle to View History
-                    </span>
+                    <span>Select Vehicle to View History</span>
                     <i class="fas fa-chevron-down"></i>
                 @endif
             </button>
@@ -595,9 +592,9 @@
             </div>
             <div class="modal-body">
                 <!-- Search Box -->
-                <div class="vehicle-search-box" style="position: relative;">
-                    <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control" style="padding-right: 35px;" autofocus>
-                    <button type="button" class="clear-vehicle-search" onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #999; cursor: pointer; font-size: 18px; display: none; z-index: 1; padding: 4px 8px; line-height: 1;">
+                <div class="vehicle-search-box" style="position: relative; padding: 0 20px;">
+                    <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control" style="padding-right: 40px; padding-left: 12px;" autofocus>
+                    <button type="button" class="clear-vehicle-search" onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();" style="position: absolute; right: 26px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #999; cursor: pointer; font-size: 16px; display: none; z-index: 10; padding: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
