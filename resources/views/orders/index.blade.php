@@ -689,6 +689,23 @@ function clearSearchInput(inputId) {
         input.form.submit();
     }
 }
+
+// Live search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('orderSearch');
+    const tableRows = document.querySelectorAll('.table tbody tr');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+});
 </script>
 @endpush
 @endsection

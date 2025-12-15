@@ -652,12 +652,7 @@ function confirmDelete(event, userName) {
 
     return false;
 }
-</script>
-@endpush
-@endsection
 
-@push('scripts')
-<script>
 function clearSearchInput(inputId) {
     const input = document.getElementById(inputId);
     if (input) {
@@ -665,8 +660,26 @@ function clearSearchInput(inputId) {
         input.form.submit();
     }
 }
+
+// Live search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('customerSearch');
+    const tableRows = document.querySelectorAll('.user-table tbody tr');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+});
 </script>
 @endpush
+@endsection
 
 
 

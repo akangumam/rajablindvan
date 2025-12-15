@@ -993,6 +993,31 @@ function clearSearchInput(inputId) {
         input.form.submit();
     }
 }
+
+// Live search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('vehicleSearch');
+    const tableRows = document.querySelectorAll('.vehicle-table tbody tr');
+    const mobileCards = document.querySelectorAll('.vehicle-card');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            // Filter table rows
+            tableRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+
+            // Filter mobile cards
+            mobileCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+});
 </script>
 @endpush
 @endsection

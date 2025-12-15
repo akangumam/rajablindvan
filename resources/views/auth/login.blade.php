@@ -332,7 +332,7 @@
                 <dotlottie-player
                     src="{{ asset('assets/images/car_loading_page.lottie') }}"
                     background="transparent"
-                    speed="1"
+                    speed="1.5"
                     loop
                     autoplay>
                 </dotlottie-player>

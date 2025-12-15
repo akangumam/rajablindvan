@@ -16,13 +16,13 @@
         $lastFill = $vehicle->fuelFills()->latest('fill_date')->first();
         $lastMaintenance = $vehicle->maintenances()->latest('maintenance_date')->first();
         $lastTrip = $vehicle->trips()->latest('trip_date')->first();
-        
+
         $odometerValues = collect([
             $lastFill ? $lastFill->odometer : 0,
             $lastMaintenance ? $lastMaintenance->odometer : 0,
             $lastTrip ? $lastTrip->end_odometer ?? $lastTrip->start_odometer : 0
         ]);
-        
+
         $lastOdometer = $odometerValues->max();
     }
 @endphp
@@ -52,9 +52,9 @@
 <div class="field-group">
     <label class="form-label">Odometer (km)</label>
     <div class="input-group">
-        <input type="number" step="0.01" name="odometer" id="odometerInput" class="form-control" 
-               value="{{ old('odometer') }}" 
-               min="{{ $lastOdometer }}" 
+        <input type="number" step="0.01" name="odometer" id="odometerInput" class="form-control"
+               value="{{ old('odometer') }}"
+               min="{{ $lastOdometer }}"
                placeholder="Enter Current Odometer" required>
         <span class="input-group-text">km</span>
     </div>
@@ -68,11 +68,11 @@
 <!-- Type Bahan Bakar -->
 <div class="field-group">
     <label class="form-label">Type bahan bakar</label>
-    <input type="text" name="fuel_type" id="fuelTypeInput" class="form-control" 
-           value="{{ old('fuel_type') }}" 
-           placeholder="Select Type bahan bakar" 
-           readonly 
-           onclick="openFuelTypeModal()" 
+    <input type="text" name="fuel_type" id="fuelTypeInput" class="form-control"
+           value="{{ old('fuel_type') }}"
+           placeholder="Select Type bahan bakar"
+           readonly
+           onclick="openFuelTypeModal()"
            style="cursor: pointer; background: white;" required>
     <input type="hidden" id="fuelTypeValue" name="fuel_type_value">
 </div>
@@ -176,8 +176,8 @@
         <label class="form-check-label" for="missedFilling" style="color: #5B7C99; font-size: 15px; order: 1;">
             Pengisian bahan bakar seNot yetnya terlewatkan?
         </label>
-        <input class="form-check-input" type="checkbox" name="missed_filling" id="missedFilling" value="1" 
-               {{ old('missed_filling') ? 'checked' : '' }} 
+        <input class="form-check-input" type="checkbox" name="missed_filling" id="missedFilling" value="1"
+               {{ old('missed_filling') ? 'checked' : '' }}
                style="order: 2; margin: 0; width: 48px; height: 24px; cursor: pointer;">
     </div>
 </div>
@@ -218,10 +218,10 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="fuelTypeSearch" class="form-control" placeholder="Search bahan bakar..." style="border-left: 0;">
+                        <input type="text" id="fuelTypeSearch" class="form-control" placeholder="Search bahan bakar..." style="border-left: 0;" autofocus>
                     </div>
                 </div>
-                
+
                 <!-- Fuel Types List -->
                 <div id="fuelTypeList" style="max-height: 300px; overflow-y: auto;">
                     <div class="fuel-type-item" data-value="Bensin" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
@@ -240,7 +240,7 @@
                         <span style="color: #5B7C99; font-size: 15px;">Etanol</span>
                     </div>
                 </div>
-                
+
                 <!-- Add New Button -->
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0;">
                     <button type="button" class="btn" onclick="showAddFuelTypeForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
@@ -288,7 +288,7 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="Gas StationsSearch" class="form-control" placeholder="Search Gas Stations..." style="border-left: 0;">
+                        <input type="text" id="Gas StationsSearch" class="form-control" placeholder="Search Gas Stations..." style="border-left: 0;" autofocus>
                     </div>
                 </div>
                 <div id="Gas StationsList" style="max-height: 300px; overflow-y: auto;">
@@ -351,7 +351,7 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="driverSearch" class="form-control" placeholder="Search pengendara..." style="border-left: 0;">
+                        <input type="text" id="driverSearch" class="form-control" placeholder="Search pengendara..." style="border-left: 0;" autofocus>
                     </div>
                 </div>
                 <div id="driverList" style="max-height: 300px; overflow-y: auto;">
@@ -414,7 +414,7 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="reasonSearch" class="form-control" placeholder="Search Reasons..." style="border-left: 0;">
+                        <input type="text" id="reasonSearch" class="form-control" placeholder="Search Reasons..." style="border-left: 0;" autofocus>
                     </div>
                 </div>
                 <div id="reasonList" style="max-height: 300px; overflow-y: auto;">
@@ -477,7 +477,7 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="paymentMethodSearch" class="form-control" placeholder="Search Payment Methods..." style="border-left: 0;">
+                        <input type="text" id="paymentMethodSearch" class="form-control" placeholder="Search Payment Methods..." style="border-left: 0;" autofocus>
                     </div>
                 </div>
                 <div id="paymentMethodList" style="max-height: 300px; overflow-y: auto;">
@@ -541,7 +541,7 @@ function openFuelTypeModal() {
 document.getElementById('fuelTypeSearch').addEventListener('input', function() {
     const searchText = this.value.toLowerCase();
     const items = document.querySelectorAll('.fuel-type-item');
-    
+
     items.forEach(item => {
         const text = item.textContent.toLowerCase();
         if (text.includes(searchText)) {
@@ -558,12 +558,12 @@ document.querySelectorAll('.fuel-type-item').forEach(item => {
         const value = this.getAttribute('data-value');
         document.getElementById('fuelTypeInput').value = value;
         document.getElementById('fuelTypeValue').value = value;
-        
+
         // Close modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('fuelTypeModal'));
         modal.hide();
     });
-    
+
     // Hover effect
     item.addEventListener('mouseenter', function() {
         this.style.backgroundColor = '#f0f0f0';
@@ -577,7 +577,7 @@ document.querySelectorAll('.fuel-type-item').forEach(item => {
 function showAddFuelTypeForm() {
     const fuelModal = bootstrap.Modal.getInstance(document.getElementById('fuelTypeModal'));
     fuelModal.hide();
-    
+
     const addModal = new bootstrap.Modal(document.getElementById('addFuelTypeModal'));
     addModal.show();
 }
@@ -585,12 +585,12 @@ function showAddFuelTypeForm() {
 // Add new fuel type
 function addNewFuelType() {
     const newFuelName = document.getElementById('newFuelTypeName').value.trim();
-    
+
     if (newFuelName === '') {
         alert('Mohon Enter fuel name');
         return;
     }
-    
+
     // Check if already exists
     const existingItems = document.querySelectorAll('.fuel-type-item');
     let exists = false;
@@ -599,12 +599,12 @@ function addNewFuelType() {
             exists = true;
         }
     });
-    
+
     if (exists) {
         alert('Bahan bakar ini already exists in list');
         return;
     }
-    
+
     // Add to list
     const fuelTypeList = document.getElementById('fuelTypeList');
     const newItem = document.createElement('div');
@@ -614,17 +614,17 @@ function addNewFuelType() {
     newItem.style.cursor = 'pointer';
     newItem.style.borderBottom = '1px solid #f0f0f0';
     newItem.innerHTML = `<span style="color: #5B7C99; font-size: 15px;">${newFuelName}</span>`;
-    
+
     // Add click event
     newItem.addEventListener('click', function() {
         const value = this.getAttribute('data-value');
         document.getElementById('fuelTypeInput').value = value;
         document.getElementById('fuelTypeValue').value = value;
-        
+
         const modal = bootstrap.Modal.getInstance(document.getElementById('fuelTypeModal'));
         modal.hide();
     });
-    
+
     // Add hover effect
     newItem.addEventListener('mouseenter', function() {
         this.style.backgroundColor = '#f0f0f0';
@@ -632,20 +632,20 @@ function addNewFuelType() {
     newItem.addEventListener('mouseleave', function() {
         this.style.backgroundColor = 'white';
     });
-    
+
     fuelTypeList.appendChild(newItem);
-    
+
     // Close add modal and show main modal
     const addModal = bootstrap.Modal.getInstance(document.getElementById('addFuelTypeModal'));
     addModal.hide();
-    
+
     // Select the newly added item
     document.getElementById('fuelTypeInput').value = newFuelName;
     document.getElementById('fuelTypeValue').value = newFuelName;
-    
+
     // Clear input
     document.getElementById('newFuelTypeName').value = '';
-    
+
     // Show success message
     alert('Bahan bakar "' + newFuelName + '" berhasil ditambahkan!');
 }
@@ -692,21 +692,21 @@ function showAddGas StationsForm() {
 function addNewGas Stations() {
     const newName = document.getElementById('newGas StationsName').value.trim();
     if (!newName) { alert('Mohon Enter gas station name'); return; }
-    
+
     const Gas StationsList = document.getElementById('Gas StationsList');
     const newItem = document.createElement('div');
     newItem.className = 'Gas Stations-item';
     newItem.setAttribute('data-value', newName);
     newItem.style.cssText = 'padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;';
     newItem.innerHTML = `<span style="color: #5B7C99; font-size: 15px;">${newName}</span>`;
-    
+
     newItem.addEventListener('click', function() {
         document.getElementById('Gas StationsInput').value = this.getAttribute('data-value');
         bootstrap.Modal.getInstance(document.getElementById('Gas StationsModal')).hide();
     });
     newItem.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     newItem.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
-    
+
     Gas StationsList.appendChild(newItem);
     bootstrap.Modal.getInstance(document.getElementById('addGas StationsModal')).hide();
     document.getElementById('Gas StationsInput').value = newName;
@@ -746,21 +746,21 @@ function showAddDriverForm() {
 function addNewDriver() {
     const newName = document.getElementById('newDriverName').value.trim();
     if (!newName) { alert('Mohon Enter driver name'); return; }
-    
+
     const driverList = document.getElementById('driverList');
     const newItem = document.createElement('div');
     newItem.className = 'driver-item';
     newItem.setAttribute('data-value', newName);
     newItem.style.cssText = 'padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;';
     newItem.innerHTML = `<span style="color: #5B7C99; font-size: 15px;">${newName}</span>`;
-    
+
     newItem.addEventListener('click', function() {
         document.getElementById('driverInput').value = this.getAttribute('data-value');
         bootstrap.Modal.getInstance(document.getElementById('driverModal')).hide();
     });
     newItem.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     newItem.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
-    
+
     driverList.appendChild(newItem);
     bootstrap.Modal.getInstance(document.getElementById('addDriverModal')).hide();
     document.getElementById('driverInput').value = newName;
@@ -800,21 +800,21 @@ function showAddReasonForm() {
 function addNewReason() {
     const newName = document.getElementById('newReasonName').value.trim();
     if (!newName) { alert('Mohon Enter reason'); return; }
-    
+
     const reasonList = document.getElementById('reasonList');
     const newItem = document.createElement('div');
     newItem.className = 'reason-item';
     newItem.setAttribute('data-value', newName);
     newItem.style.cssText = 'padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;';
     newItem.innerHTML = `<span style="color: #5B7C99; font-size: 15px;">${newName}</span>`;
-    
+
     newItem.addEventListener('click', function() {
         document.getElementById('reasonInput').value = this.getAttribute('data-value');
         bootstrap.Modal.getInstance(document.getElementById('reasonModal')).hide();
     });
     newItem.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     newItem.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
-    
+
     reasonList.appendChild(newItem);
     bootstrap.Modal.getInstance(document.getElementById('addReasonModal')).hide();
     document.getElementById('reasonInput').value = newName;
@@ -854,21 +854,21 @@ function showAddPaymentMethodForm() {
 function addNewPaymentMethod() {
     const newName = document.getElementById('newPaymentMethodName').value.trim();
     if (!newName) { alert('Mohon Enter payment method'); return; }
-    
+
     const paymentMethodList = document.getElementById('paymentMethodList');
     const newItem = document.createElement('div');
     newItem.className = 'payment-method-item';
     newItem.setAttribute('data-value', newName);
     newItem.style.cssText = 'padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;';
     newItem.innerHTML = `<span style="color: #5B7C99; font-size: 15px;">${newName}</span>`;
-    
+
     newItem.addEventListener('click', function() {
         document.getElementById('paymentMethodInput').value = this.getAttribute('data-value');
         bootstrap.Modal.getInstance(document.getElementById('paymentMethodModal')).hide();
     });
     newItem.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     newItem.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
-    
+
     paymentMethodList.appendChild(newItem);
     bootstrap.Modal.getInstance(document.getElementById('addPaymentMethodModal')).hide();
     document.getElementById('paymentMethodInput').value = newName;
@@ -884,7 +884,7 @@ document.getElementById('totalPrice').addEventListener('input', calculateFromTot
 function calculateFromPriceAndLiters() {
     const pricePerLiter = parseFloat(document.getElementById('pricePerLiter').value) || 0;
     const liters = parseFloat(document.getElementById('liters').value) || 0;
-    
+
     if (pricePerLiter > 0 && liters > 0) {
         const total = pricePerLiter * liters;
         document.getElementById('totalPrice').value = total.toFixed(2);
@@ -894,7 +894,7 @@ function calculateFromPriceAndLiters() {
 function calculateFromTotal() {
     const totalPrice = parseFloat(document.getElementById('totalPrice').value) || 0;
     const liters = parseFloat(document.getElementById('liters').value) || 0;
-    
+
     if (totalPrice > 0 && liters > 0) {
         const pricePerLiter = totalPrice / liters;
         document.getElementById('pricePerLiter').value = pricePerLiter.toFixed(2);
@@ -919,7 +919,7 @@ function openTimePicker() {
     const timeInput = document.getElementById('timeInput');
     const currentTime = timeInput.value || '{{ date("H:i") }}';
     const [hours, minutes] = currentTime.split(':');
-    
+
     // Create time picker modal
     const modal = document.createElement('div');
     modal.className = 'time-picker-modal';
@@ -944,9 +944,9 @@ function openTimePicker() {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
-    
+
     // Draw clock
     setTimeout(() => {
         drawClock(parseInt(hours), parseInt(minutes));
@@ -974,37 +974,37 @@ let selectingHour = true;
 function drawClock(hour, minute) {
     selectedHour = hour;
     selectedMinute = minute;
-    
+
     const canvas = document.getElementById('clockCanvas');
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     const centerX = 140;
     const centerY = 140;
     const radius = 120;
-    
+
     // Clear canvas
     ctx.clearRect(0, 0, 280, 280);
-    
+
     // Draw clock circle
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     ctx.fillStyle = '#f0f0f0';
     ctx.fill();
-    
+
     // Draw numbers
     ctx.fillStyle = '#333';
     ctx.font = 'bold 16px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    
+
     if (selectingHour) {
         // Draw hours
         for (let i = 1; i <= 12; i++) {
             const angle = (i - 3) * Math.PI / 6;
             const x = centerX + radius * 0.7 * Math.cos(angle);
             const y = centerY + radius * 0.7 * Math.sin(angle);
-            
+
             if (i === selectedHour || (selectedHour > 12 && i === selectedHour - 12)) {
                 ctx.beginPath();
                 ctx.arc(x, y, 20, 0, 2 * Math.PI);
@@ -1014,7 +1014,7 @@ function drawClock(hour, minute) {
             } else {
                 ctx.fillStyle = '#666';
             }
-            
+
             ctx.fillText(i, x, y);
         }
     } else {
@@ -1023,9 +1023,9 @@ function drawClock(hour, minute) {
             const angle = (i / 5 - 3) * Math.PI / 6;
             const x = centerX + radius * 0.7 * Math.cos(angle);
             const y = centerY + radius * 0.7 * Math.sin(angle);
-            
+
             const displayMinute = i === 0 ? '00' : i.toString().padStart(2, '0');
-            
+
             if (i === selectedMinute) {
                 ctx.beginPath();
                 ctx.arc(x, y, 20, 0, 2 * Math.PI);
@@ -1035,16 +1035,16 @@ function drawClock(hour, minute) {
             } else {
                 ctx.fillStyle = '#666';
             }
-            
+
             ctx.fillText(displayMinute, x, y);
         }
     }
-    
+
     // Draw hand
-    const hyoungle = selectingHour 
+    const hyoungle = selectingHour
         ? (selectedHour - 3) * Math.PI / 6
         : (selectedMinute / 5 - 3) * Math.PI / 6;
-    
+
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(
@@ -1054,20 +1054,20 @@ function drawClock(hour, minute) {
     ctx.strokeStyle = '#1976d2';
     ctx.lineWidth = 2;
     ctx.stroke();
-    
+
     // Center dot
     ctx.beginPath();
     ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
     ctx.fillStyle = '#1976d2';
     ctx.fill();
-    
+
     // Add click handler
     canvas.onclick = function(e) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left - centerX;
         const y = e.clientY - rect.top - centerY;
         const angle = Math.atan2(y, x);
-        
+
         if (selectingHour) {
             let hour = Math.round((angle + Math.PI / 2) / (Math.PI / 6));
             if (hour <= 0) hour += 12;
@@ -1081,7 +1081,7 @@ function drawClock(hour, minute) {
             selectedMinute = minute;
             drawClock(selectedHour, selectedMinute);
         }
-        
+
         updateTimeDisplay();
     };
 }
@@ -1089,7 +1089,7 @@ function drawClock(hour, minute) {
 function updateTimeDisplay() {
     const timeDisplay = document.getElementById('timeDisplay');
     if (timeDisplay) {
-        timeDisplay.textContent = selectedHour.toString().padStart(2, '0') + ':' + 
+        timeDisplay.textContent = selectedHour.toString().padStart(2, '0') + ':' +
                                   selectedMinute.toString().padStart(2, '0');
     }
 }
@@ -1233,6 +1233,76 @@ input[type="time"]::-webkit-clear-button {
     display: none;
 }
 </style>
+
+<script>
+// Live search for all modal search inputs
+document.addEventListener('DOMContentLoaded', function() {
+    // Fuel Type Search
+    const fuelTypeSearch = document.getElementById('fuelTypeSearch');
+    if (fuelTypeSearch) {
+        fuelTypeSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const items = document.querySelectorAll('.fuel-type-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+
+    // Gas Stations Search
+    const gasStationsSearch = document.getElementById('Gas StationsSearch');
+    if (gasStationsSearch) {
+        gasStationsSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const items = document.querySelectorAll('.Gas Stations-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+
+    // Driver Search
+    const driverSearch = document.getElementById('driverSearch');
+    if (driverSearch) {
+        driverSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const items = document.querySelectorAll('.driver-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+
+    // Reason Search
+    const reasonSearch = document.getElementById('reasonSearch');
+    if (reasonSearch) {
+        reasonSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const items = document.querySelectorAll('.reason-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+
+    // Payment Method Search
+    const paymentMethodSearch = document.getElementById('paymentMethodSearch');
+    if (paymentMethodSearch) {
+        paymentMethodSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const items = document.querySelectorAll('.payment-method-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+});
+</script>
 @endpush
 
 

@@ -606,6 +606,27 @@
     </div>
 </div>
 
+@push('scripts')
+<script>
+// Live search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('reminderSearch');
+    const reminderCards = document.querySelectorAll('.reminder-card');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            reminderCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    }
+});
+</script>
+@endpush
+
 @endsection
 
 
