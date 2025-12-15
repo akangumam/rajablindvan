@@ -6,6 +6,7 @@
     <title>Login - Raja Blind Van</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <style>
         * {
             margin: 0;
@@ -230,7 +231,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: none;
             align-items: center;
             justify-content: center;
@@ -246,243 +247,51 @@
             text-align: center;
             color: white;
             width: 100%;
+            max-width: 600px;
+            padding: 40px;
+        }
+
+        /* Lottie Animation Container */
+        .lottie-container {
+            width: 100%;
             max-width: 500px;
-            padding: 20px;
-        }
-
-        /* Road Scene Container */
-        .road-scene {
-            width: 100%;
-            height: 200px;
-            position: relative;
-            margin-bottom: 30px;
-            perspective: 200px;
-        }
-
-        /* Sky with moving clouds */
-        .sky {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60%;
-            background: linear-gradient(to bottom, #1a1a2e 0%, #2d3561 100%);
-            overflow: hidden;
-        }
-
-        .stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .star {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite;
-        }
-
-        .star:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
-        .star:nth-child(2) { top: 25%; left: 45%; animation-delay: 0.3s; }
-        .star:nth-child(3) { top: 15%; left: 70%; animation-delay: 0.6s; }
-        .star:nth-child(4) { top: 30%; left: 85%; animation-delay: 0.9s; }
-        .star:nth-child(5) { top: 8%; left: 55%; animation-delay: 1.2s; }
-        .star:nth-child(6) { top: 35%; left: 30%; animation-delay: 0.4s; }
-        .star:nth-child(7) { top: 20%; left: 10%; animation-delay: 0.7s; }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.5); }
-        }
-
-        /* Moon */
-        .moon {
-            position: absolute;
-            top: 15px;
-            right: 40px;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-            border-radius: 50%;
-            box-shadow: 0 0 30px rgba(255, 255, 200, 0.5);
-        }
-
-        /* Road */
-        .road {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-            background: linear-gradient(to bottom, #2c3e50 0%, #1a252f 100%);
-            border-top: 4px solid #f1c40f;
-        }
-
-        /* Road markings */
-        .road-markings {
-            position: absolute;
-            bottom: 20%;
-            left: 0;
-            width: 200%;
-            height: 8px;
+            height: 300px;
+            margin: 0 auto 30px;
             display: flex;
-            animation: roadMove 0.8s linear infinite;
+            align-items: center;
+            justify-content: center;
         }
 
-        .marking {
-            width: 60px;
-            height: 100%;
-            background: white;
-            margin-right: 40px;
-            border-radius: 2px;
-        }
-
-        @keyframes roadMove {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100px); }
-        }
-
-        /* Van Container */
-        .van-container {
-            position: absolute;
-            bottom: 35px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: vanBounce 0.3s ease-in-out infinite;
-        }
-
-        @keyframes vanBounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-4px); }
-        }
-
-        /* Van SVG Style */
-        .van-svg {
-            width: 140px;
-            height: 80px;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
-        }
-
-        /* Wheels */
-        .wheel {
-            animation: wheelSpin 0.3s linear infinite;
-            transform-origin: center;
-        }
-
-        @keyframes wheelSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Headlights glow */
-        .headlight-glow {
-            position: absolute;
-            right: -30px;
-            bottom: 25px;
-            width: 80px;
-            height: 30px;
-            background: linear-gradient(to right, rgba(255,255,150,0.6), transparent);
-            filter: blur(10px);
-            animation: headlightFlicker 0.5s ease-in-out infinite;
-        }
-
-        @keyframes headlightFlicker {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
-        }
-
-        /* Exhaust smoke */
-        .smoke-container {
-            position: absolute;
-            left: -20px;
-            bottom: 15px;
-        }
-
-        .smoke {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: rgba(200, 200, 200, 0.6);
-            border-radius: 50%;
-            animation: smokeRise 1s ease-out infinite;
-        }
-
-        .smoke:nth-child(1) { animation-delay: 0s; }
-        .smoke:nth-child(2) { animation-delay: 0.2s; left: 5px; }
-        .smoke:nth-child(3) { animation-delay: 0.4s; left: -5px; }
-
-        @keyframes smokeRise {
-            0% {
-                opacity: 0.8;
-                transform: translateY(0) translateX(0) scale(0.5);
-            }
-            50% {
-                opacity: 0.4;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-40px) translateX(-30px) scale(1.5);
-            }
-        }
-
-        /* Speed lines */
-        .speed-lines {
-            position: absolute;
-            left: 0;
-            bottom: 50px;
+        dotlottie-player {
             width: 100%;
-            height: 40px;
-            overflow: hidden;
-        }
-
-        .speed-line {
-            position: absolute;
-            height: 2px;
-            background: linear-gradient(to left, rgba(255,255,255,0.5), transparent);
-            animation: speedLine 0.5s linear infinite;
-        }
-
-        .speed-line:nth-child(1) { top: 10px; width: 40px; animation-delay: 0s; }
-        .speed-line:nth-child(2) { top: 20px; width: 60px; animation-delay: 0.15s; }
-        .speed-line:nth-child(3) { top: 30px; width: 35px; animation-delay: 0.3s; }
-
-        @keyframes speedLine {
-            0% { left: 40%; opacity: 1; }
-            100% { left: -20%; opacity: 0; }
+            height: 100%;
         }
 
         /* Progress bar */
         .progress-container {
             width: 100%;
-            height: 6px;
+            height: 4px;
             background: rgba(255,255,255,0.2);
-            border-radius: 3px;
+            border-radius: 2px;
             overflow: hidden;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background: linear-gradient(90deg, #ffffff, rgba(255,255,255,0.6), #ffffff);
             background-size: 200% 100%;
-            border-radius: 3px;
-            animation: progressMove 2s ease-in-out infinite, progressGradient 1s linear infinite;
-            width: 0%;
-        }
-
-        @keyframes progressMove {
-            0% { width: 0%; }
-            50% { width: 70%; }
-            100% { width: 100%; }
+            border-radius: 2px;
+            animation: progressGradient 1.5s linear infinite;
+            width: 100%;
         }
 
         @keyframes progressGradient {
             0% { background-position: 0% 50%; }
             100% { background-position: 200% 50%; }
         }
+
+
 
         .loading-text {
             font-size: 22px;
@@ -518,110 +327,15 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
-            <!-- Road Scene with Van Animation -->
-            <div class="road-scene">
-                <!-- Sky with stars -->
-                <div class="sky">
-                    <div class="stars">
-                        <div class="star"></div>
-                        <div class="star"></div>
-                        <div class="star"></div>
-                        <div class="star"></div>
-                        <div class="star"></div>
-                        <div class="star"></div>
-                        <div class="star"></div>
-                    </div>
-                    <div class="moon"></div>
-                </div>
-
-                <!-- Road with markings -->
-                <div class="road">
-                    <div class="road-markings">
-                        <div class="marking"></div>
-                        <div class="marking"></div>
-                        <div class="marking"></div>
-                        <div class="marking"></div>
-                        <div class="marking"></div>
-                        <div class="marking"></div>
-                        <div class="marking"></div>
-                        <div class="marking"></div>
-                        <div class="marking"></div>
-                        <div class="marking"></div>
-                    </div>
-                </div>
-
-                <!-- Speed Lines -->
-                <div class="speed-lines">
-                    <div class="speed-line"></div>
-                    <div class="speed-line"></div>
-                    <div class="speed-line"></div>
-                </div>
-
-                <!-- Van -->
-                <div class="van-container">
-                    <!-- Headlight glow -->
-                    <div class="headlight-glow"></div>
-
-                    <!-- Exhaust smoke -->
-                    <div class="smoke-container">
-                        <div class="smoke"></div>
-                        <div class="smoke"></div>
-                        <div class="smoke"></div>
-                    </div>
-
-                    <!-- Van SVG -->
-                    <svg class="van-svg" viewBox="0 0 140 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Van Body -->
-                        <rect x="10" y="25" width="95" height="40" rx="5" fill="#3498db"/>
-                        <rect x="10" y="25" width="95" height="40" rx="5" fill="url(#vanGradient)"/>
-
-                        <!-- Cabin -->
-                        <path d="M105 35 L105 65 L130 65 L130 45 L115 35 Z" fill="#2980b9"/>
-                        <path d="M107 37 L107 50 L125 50 L125 45 L115 37 Z" fill="#87CEEB" opacity="0.8"/>
-
-                        <!-- Windows -->
-                        <rect x="15" y="30" width="20" height="15" rx="2" fill="#87CEEB" opacity="0.8"/>
-                        <rect x="40" y="30" width="20" height="15" rx="2" fill="#87CEEB" opacity="0.8"/>
-                        <rect x="65" y="30" width="20" height="15" rx="2" fill="#87CEEB" opacity="0.8"/>
-
-                        <!-- Stripe -->
-                        <rect x="10" y="50" width="95" height="5" fill="#e74c3c"/>
-
-                        <!-- Headlights -->
-                        <circle cx="128" cy="55" r="4" fill="#f1c40f"/>
-                        <circle cx="128" cy="55" r="6" fill="#f1c40f" opacity="0.3"/>
-
-                        <!-- Tail lights -->
-                        <rect x="10" y="52" width="4" height="8" rx="1" fill="#e74c3c"/>
-
-                        <!-- Wheels -->
-                        <g class="wheel">
-                            <circle cx="35" cy="65" r="12" fill="#2c3e50"/>
-                            <circle cx="35" cy="65" r="8" fill="#7f8c8d"/>
-                            <circle cx="35" cy="65" r="3" fill="#2c3e50"/>
-                            <rect x="33" y="57" width="4" height="16" fill="#95a5a6" opacity="0.5"/>
-                            <rect x="27" y="63" width="16" height="4" fill="#95a5a6" opacity="0.5"/>
-                        </g>
-                        <g class="wheel">
-                            <circle cx="95" cy="65" r="12" fill="#2c3e50"/>
-                            <circle cx="95" cy="65" r="8" fill="#7f8c8d"/>
-                            <circle cx="95" cy="65" r="3" fill="#2c3e50"/>
-                            <rect x="93" y="57" width="4" height="16" fill="#95a5a6" opacity="0.5"/>
-                            <rect x="87" y="63" width="16" height="4" fill="#95a5a6" opacity="0.5"/>
-                        </g>
-
-                        <!-- Logo on van -->
-                        <text x="50" y="48" font-size="8" fill="white" font-weight="bold">RAJA</text>
-
-                        <!-- Gradient definition -->
-                        <defs>
-                            <linearGradient id="vanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#3498db"/>
-                                <stop offset="100%" stop-color="#2980b9"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                </div>
+            <!-- Lottie Animation -->
+            <div class="lottie-container">
+                <dotlottie-player
+                    src="{{ asset('assets/images/car_loading_page.lottie') }}"
+                    background="transparent"
+                    speed="1"
+                    loop
+                    autoplay>
+                </dotlottie-player>
             </div>
 
             <!-- Progress Bar -->
