@@ -596,9 +596,8 @@
             <div class="modal-body">
                 <!-- Search Box -->
                 <div class="vehicle-search-box" style="position: relative;">
-                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
-                    <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control" style="padding-left: 40px; padding-right: 40px;" autofocus>
-                    <button type="button" class="clear-vehicle-search" onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #95a5a6; cursor: pointer; font-size: 16px; display: none; z-index: 1; padding: 4px;">
+                    <input type="text" id="vehicleSearch" placeholder="Search Vehicle..." class="form-control" style="padding-right: 35px;" autofocus>
+                    <button type="button" class="clear-vehicle-search" onclick="document.getElementById('vehicleSearch').value=''; filterVehicles();" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #999; cursor: pointer; font-size: 18px; display: none; z-index: 1; padding: 4px 8px; line-height: 1;">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -642,9 +641,9 @@
 function filterVehicles() {
     const vehicleSearchInput = document.getElementById('vehicleSearch');
     const clearBtn = document.querySelector('.clear-vehicle-search');
-    
+
     if (!vehicleSearchInput) return;
-    
+
     const searchTerm = vehicleSearchInput.value.toLowerCase();
     const vehicleItems = document.querySelectorAll('.vehicle-item');
 
@@ -666,12 +665,12 @@ function filterVehicles() {
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     const vehicleSearchInput = document.getElementById('vehicleSearch');
-    
+
     // Add live search event listener
     if (vehicleSearchInput) {
         vehicleSearchInput.addEventListener('input', filterVehicles);
     }
-    
+
     // Auto-focus when modal opens
     const vehicleModal = document.getElementById('vehicleSelectModal');
     if (vehicleModal) {
