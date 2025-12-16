@@ -567,7 +567,26 @@
                 <h5 class="modal-title fw-semibold" id="vehicleReminderModalLabel" style="font-size: 18px; color: #333;">Select Vehicle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body pt-0" style="padding: 10px 24px 20px 24px; max-height: 400px; overflow-y: auto;">
+            <div class="modal-body pt-0" style="padding: 10px 24px 20px 24px;">
+                <!-- Searchbar -->
+                <div class="position-relative mb-3">
+                    <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
+                    <input type="text"
+                           id="vehicleReminderSearch"
+                           class="form-control"
+                           placeholder="Search vehicle..."
+                           style="padding-left: 40px; padding-right: 40px; border-radius: 10px;"
+                           autofocus>
+                    <button type="button"
+                            id="clearVehicleReminderSearch"
+                            class="btn btn-sm position-absolute"
+                            style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;">
+                        <i class="fas fa-times text-muted"></i>
+                    </button>
+                </div>
+
+                <!-- Vehicle List -->
+                <div id="vehicleReminderList" style="max-height: 400px; overflow-y: auto;">
                 @foreach($vehicles ?? [] as $vehicle)
                     <a href="{{ route('reminders.index', ['vehicle' => $vehicle->id]) }}"
                        class="vehicle-modal-item {{ isset($selectedVehicle) && $selectedVehicle->id == $vehicle->id ? 'active' : '' }}"
@@ -594,6 +613,7 @@
                         @endif
                     </a>
                 @endforeach
+                </div>
             </div>
             <div class="modal-footer border-0 pt-0" style="padding: 10px 24px 20px 24px;">
                 <div class="d-grid gap-2 w-100">
@@ -623,6 +643,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 card.style.display = text.includes(searchTerm) ? '' : 'none';
             });
         });
+    }
+
+    // Vehicle modal searchbar - auto-focus when modal opens
+    const vehicleReminderModal = document.getElementById('vehicleReminderModal');
+    if (vehicleReminderModal) {
+        vehicleReminderModal.addEventListener('shown.bs.modal', function() {
+            const searchInput = document.getElementById('vehicleReminderSearch');
+            if (searchInput) {
+                setTimeout(() => {
+                    searchInput.focus();
+                }, 100);
+            }
+        });
+    }
+
+    // Vehicle modal searchbar - live search
+    const vehicleSearchInput = document.getElementById('vehicleReminderSearch');
+    const clearVehicleBtn = document.getElementById('clearVehicleReminderSearch');
+    const vehicleItems = document.querySelectorAll('.vehicle-modal-item');
+
+    if (vehicleSearchInput) {
+        vehicleSearchInput.addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase();
+
+            // Show/hide clear button
+            if (clearVehicleBtn) {
+                clearVehicleBtn.style.display = searchText ? 'block' : 'none';
+            }
+
+            // Filter vehicle items
+            vehicleItems.forEach(item => {
+                const vehicleName = item.querySelector('div[style*="font-size: 15px"]')?.textContent.toLowerCase() || '';
+                const vehicleBrand = item.querySelector('div[style*="font-size: 13px"]')?.textContent.toLowerCase() || '';
+                const matchText = vehicleName + ' ' + vehicleBrand;
+
+                if (matchText.includes(searchText)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Clear button functionality
+        if (clearVehicleBtn) {
+            clearVehicleBtn.addEventListener('click', function() {
+                vehicleSearchInput.value = '';
+                this.style.display = 'none';
+
+                // Show all items
+                vehicleItems.forEach(item => {
+                    item.style.display = 'flex';
+                });
+
+                vehicleSearchInput.focus();
+            });
+        }
     }
 });
 </script>

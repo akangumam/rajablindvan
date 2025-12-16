@@ -101,6 +101,7 @@
                                                    data-brand="{{ $veh->brand }}"
                                                    data-model="{{ $veh->model }}"
                                                    data-plate="{{ $veh->license_plate }}"
+                                                   data-odometer="{{ $veh->getLatestOdometer() }}"
                                                    data-text="{{ $veh->brand }} {{ $veh->model }} ({{ $veh->license_plate }})"
                                                    onclick="selectVehicle(this, event)">
                                                     <div class="d-flex justify-content-between align-items-center">
@@ -135,6 +136,7 @@
                     </h5>
 
                     <div class="row">
+
                         <!-- Date -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold">
@@ -164,7 +166,7 @@
                                    name="income_time"
                                    id="income_time"
                                    class="form-control @error('income_time') is-invalid @enderror"
-                                   value="{{ old('income_time') }}"
+                                   value="{{ old('income_time', date('H:i')) }}"
                                    required>
                             @error('income_time')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -176,6 +178,9 @@
                             <label class="form-label fw-semibold">
                                 <i class="fas fa-tachometer-alt me-2 text-primary"></i>
                                 Odometer
+                                <span id="lastOdometerDisplay" class="ms-2" style="display:none; font-weight: normal; font-size: 0.9rem;">
+                                    (Last: <span id="lastOdometerValue" class="fw-bold text-dark"></span> <span class="text-danger">*</span>)
+                                </span>
                             </label>
                             <div class="input-group">
                                 <input type="number"
@@ -200,18 +205,19 @@
                                 Jenis Pendapatan
                                 <span class="text-danger">*</span>
                             </label>
-                            <select name="income_type_id" id="incomeTypeSelect" class="form-select @error('income_type_id') is-invalid @enderror" required>
+                            <select name="type" id="incomeTypeSelect" class="form-select @error('type') is-invalid @enderror" required>
                                 <option value="">Pilih Jenis Pendapatan</option>
                                 @php
                                     $incomeTypes = \App\Models\IncomeType::active()->orderBy('name')->get();
                                 @endphp
+                                <option value="new" class="fw-bold text-primary">+ Tambah Jenis Baru</option>
                                 @foreach($incomeTypes as $incomeType)
-                                    <option value="{{ $incomeType->id }}" {{ old('income_type_id') == $incomeType->id ? 'selected' : '' }}>
+                                    <option value="{{ $incomeType->name }}" {{ old('type') == $incomeType->name ? 'selected' : '' }}>
                                         {{ $incomeType->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('income_type_id')
+                            @error('type')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -225,15 +231,14 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text">Rp</span>
-                                <input type="number"
+                                <input type="text"
                                        name="amount"
                                        id="amount"
-                                       class="form-control @error('amount') is-invalid @enderror"
+                                       class="form-control currency-input @error('amount') is-invalid @enderror"
                                        placeholder="Masukkan jumlah pendapatan"
                                        value="{{ old('amount') }}"
                                        required
-                                       min="0"
-                                       step="1">
+                                       inputmode="numeric">
                             </div>
                             @error('amount')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -386,6 +391,21 @@
 
 @push('scripts')
 <script>
+// Auto-fill current time when user focuses on time input
+document.addEventListener('DOMContentLoaded', function() {
+    const timeInput = document.getElementById('income_time');
+    if (timeInput && !timeInput.value) {
+        timeInput.addEventListener('focus', function() {
+            if (!this.value) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                this.value = `${hours}:${minutes}`;
+            }
+        }, { once: true });
+    }
+});
+
 // Clear search function
 function clearSearch(inputId, buttonId) {
     const input = document.getElementById(inputId);
@@ -437,9 +457,46 @@ function selectVehicle(element, event) {
     event.preventDefault();
     const value = element.getAttribute('data-value');
     const text = element.getAttribute('data-text');
+    const odometer = parseFloat(element.getAttribute('data-odometer')) || 0;
 
     document.getElementById('vehicle_id').value = value;
     document.getElementById('vehicleDropdownText').textContent = text;
+
+    // Auto-fill and strict validation logic
+    const odometerInput = document.getElementById('odometer');
+    const odometerHelp = document.getElementById('odometerHelp');
+    const lastOdometerDisplay = document.getElementById('lastOdometerDisplay');
+    const lastOdometerValue = document.getElementById('lastOdometerValue');
+
+    if (odometerInput) {
+        // Set values and constraints
+        odometerInput.value = odometer;
+        odometerInput.min = odometer;
+
+        // Update Label Display (Outside column)
+        if (lastOdometerDisplay && lastOdometerValue && odometer > 0) {
+            lastOdometerDisplay.style.display = 'inline-block';
+            lastOdometerValue.textContent = odometer + ' KM';
+        } else if (lastOdometerDisplay) {
+            lastOdometerDisplay.style.display = 'none';
+        }
+
+        // Helper text below input (Optional backup)
+        if (odometerHelp) {
+             odometerHelp.textContent = odometer > 0 ? `Minimal input: ${odometer} KM` : '';
+        }
+
+        // Input Validation Visuals
+        odometerInput.oninput = function() {
+            if (parseFloat(this.value) < odometer) {
+                this.classList.add('is-invalid');
+                if (odometerHelp) odometerHelp.textContent = `Error: Nilai tidak boleh di bawah ${odometer} KM`;
+            } else {
+                this.classList.remove('is-invalid');
+                if (odometerHelp) odometerHelp.textContent = `Minimal input: ${odometer} KM`;
+            }
+        };
+    }
 
     document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
@@ -517,6 +574,23 @@ function clearFile() {
         filePreview.classList.remove('show');
     }
 }
+
+// Handle Add New Redirection
+document.addEventListener('DOMContentLoaded', function() {
+    const incomeTypeSelect = document.getElementById('incomeTypeSelect');
+
+    if (incomeTypeSelect) {
+        incomeTypeSelect.addEventListener('change', function() {
+            if (this.value === 'new') {
+                if (confirm('Anda akan diarahkan ke halaman pengaturan untuk menambah jenis pendapatan baru. Lanjutkan?')) {
+                    window.location.href = "{{ route('settings.income-types') }}";
+                } else {
+                    this.value = ""; // Reset
+                }
+            }
+        });
+    }
+});
 
 // Form validation
 document.getElementById('incomeForm')?.addEventListener('submit', function(e) {

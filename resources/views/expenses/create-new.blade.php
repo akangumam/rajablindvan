@@ -98,6 +98,7 @@
                                                 <a class="dropdown-item vehicle-option"
                                                    href="#"
                                                    data-value="{{ $veh->id }}"
+                                                   data-odometer="{{ $veh->getLatestOdometer() }}"
                                                    data-text="{{ $veh->brand }} {{ $veh->model }} - {{ $veh->license_plate }}"
                                                    onclick="selectVehicle(this, event)">
                                                     {{ $veh->brand }} {{ $veh->model }} - {{ $veh->license_plate }}
@@ -167,16 +168,18 @@
                             <label class="form-label fw-semibold">
                                 <i class="fas fa-tachometer-alt me-2 text-primary"></i>
                                 Odometer
+                                <span id="lastOdometerDisplay" class="ms-2" style="display:none; font-weight: normal; font-size: 0.9rem;">
+                                    (Last: <span id="lastOdometerValue" class="fw-bold text-dark"></span>)
+                                </span>
                             </label>
                             <div class="input-group">
-                                <input type="number"
+                                <input type="text"
                                        name="odometer"
                                        id="odometer"
-                                       class="form-control @error('odometer') is-invalid @enderror"
+                                       class="form-control currency-input @error('odometer') is-invalid @enderror"
                                        placeholder="Masukkan odometer"
                                        value="{{ old('odometer') }}"
-                                       min="0"
-                                       step="1">
+                                       inputmode="numeric">
                                 <span class="input-group-text">KM</span>
                             </div>
                             @error('odometer')
@@ -196,6 +199,7 @@
                                 @php
                                     $expenseTypes = \App\Models\ExpenseType::active()->orderBy('name')->get();
                                 @endphp
+                                <option value="new" class="fw-bold text-primary">+ Tambah Jenis Baru</option>
                                 @foreach($expenseTypes as $expenseType)
                                     <option value="{{ $expenseType->id }}" data-name="{{ $expenseType->name }}" {{ old('expense_type_id') == $expenseType->id ? 'selected' : '' }}>
                                         {{ $expenseType->name }}
@@ -258,6 +262,7 @@
                                 @php
                                     $locations = \App\Models\Location::active()->orderBy('name')->get();
                                 @endphp
+                                <option value="new" class="fw-bold text-primary">+ Tambah Tempat Baru</option>
                                 @if($locations->count() > 0)
                                     @foreach($locations as $location)
                                         <option value="{{ $location->name }}" {{ old('place') == $location->name ? 'selected' : '' }}>
@@ -320,15 +325,14 @@
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text">Rp</span>
-                                <input type="number"
+                                <input type="text"
                                        name="amount"
                                        id="amount"
-                                       class="form-control @error('amount') is-invalid @enderror"
+                                       class="form-control currency-input @error('amount') is-invalid @enderror"
                                        placeholder="Masukkan jumlah biaya"
                                        value="{{ old('amount') }}"
                                        required
-                                       min="0"
-                                       step="1">
+                                       inputmode="numeric">
                             </div>
                             @error('amount')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -467,7 +471,32 @@
 
 @push('scripts')
 <script>
+// Auto-fill current time when user focuses on time input
+document.addEventListener('DOMContentLoaded', function() {
+    const timeInput = document.getElementById('expense_time');
+    if (timeInput && !timeInput.value) {
+        timeInput.addEventListener('focus', function() {
+            if (!this.value) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                this.value = `${hours}:${minutes}`;
+            }
+        }, { once: true });
+    }
+});
+
 // Vehicle Custom Dropdown Logic
+// Auto-focus when dropdown opens
+document.getElementById('vehicleDropdownBtn')?.addEventListener('shown.bs.dropdown', function() {
+    const searchInput = document.getElementById('vehicleSearchInput');
+    if (searchInput) {
+        setTimeout(() => {
+            searchInput.focus();
+        }, 100);
+    }
+});
+
 document.getElementById('vehicleSearchInput')?.addEventListener('input', function(e) {
     const searchText = e.target.value.toLowerCase();
     const items = document.querySelectorAll('.vehicle-option');
@@ -492,9 +521,32 @@ function selectVehicle(element, event) {
     event.preventDefault();
     const value = element.getAttribute('data-value');
     const text = element.getAttribute('data-text');
+    const odometer = parseFloat(element.getAttribute('data-odometer')) || 0;
 
     document.getElementById('vehicle_id').value = value;
     document.getElementById('vehicleDropdownText').textContent = text;
+
+    // Smart Odometer Logic
+    const odometerInput = document.getElementById('odometer');
+    const lastOdometerDisplay = document.getElementById('lastOdometerDisplay');
+    const lastOdometerValue = document.getElementById('lastOdometerValue');
+
+    if (odometerInput) {
+        // Use global formatter if available, else raw
+        const formattedOdo = typeof formatCurrency === 'function' ? formatCurrency(odometer) : odometer;
+        odometerInput.value = formattedOdo;
+        // Store raw min for validation logic if needed manually,
+        // but since input is text, we rely on server validation mostly,
+        // plus maybe strict client check on parse.
+
+        // Update UI Label
+        if (lastOdometerDisplay && lastOdometerValue && odometer > 0) {
+            lastOdometerDisplay.style.display = 'inline-block';
+            lastOdometerValue.textContent = formattedOdo + ' KM';
+        } else if (lastOdometerDisplay) {
+            lastOdometerDisplay.style.display = 'none';
+        }
+    }
 
     document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('active'));
     element.classList.add('active');
@@ -593,6 +645,36 @@ function handleExpenseTypeChange(selectElement) {
         kirInput.setAttribute('required', 'required');
     }
 }
+
+// Handle Add New Redirection
+document.addEventListener('DOMContentLoaded', function() {
+    const expenseTypeSelect = document.getElementById('expenseTypeSelect');
+    const placeSelect = document.getElementById('place');
+
+    if (expenseTypeSelect) {
+        expenseTypeSelect.addEventListener('change', function() {
+            if (this.value === 'new') {
+                if (confirm('Anda akan diarahkan ke halaman pengaturan untuk menambah jenis pengeluaran baru. Lanjutkan?')) {
+                    window.location.href = "{{ route('settings.expense-types') }}";
+                } else {
+                    this.value = ""; // Reset
+                }
+            }
+        });
+    }
+
+    if (placeSelect) {
+        placeSelect.addEventListener('change', function() {
+            if (this.value === 'new') {
+                if (confirm('Anda akan diarahkan ke halaman pengaturan untuk menambah tempat baru. Lanjutkan?')) {
+                    window.location.href = "{{ route('settings.locations') }}";
+                } else {
+                    this.value = ""; // Reset
+                }
+            }
+        });
+    }
+});
 
 // Form validation
 document.getElementById('expenseForm')?.addEventListener('submit', function(e) {

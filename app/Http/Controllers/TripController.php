@@ -14,7 +14,7 @@ class TripController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+
         // Filter trips based on user type
         if ($user && $user->isPengelola()) {
             $trips = Trip::with('vehicle')
@@ -41,7 +41,7 @@ class TripController extends Controller
     public function create(Request $request)
     {
         $user = auth()->user();
-        
+
         // Filter vehicles based on user type
         if ($user && $user->isPengelola()) {
             $vehicles = Vehicle::active()->orderBy('name')->get();
@@ -50,19 +50,19 @@ class TripController extends Controller
         } else {
             $vehicles = Vehicle::active()->orderBy('name')->get();
         }
-        
+
         // If vehicle_id is provided in query string
         if ($request->has('vehicle_id')) {
             $vehicle = Vehicle::findOrFail($request->vehicle_id);
-            
+
             // Check access for Sopir
             if ($user && $user->isSopir() && !$user->hasAccessToVehicle($vehicle->id)) {
                 abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
             }
-            
+
             return view('trips.create', compact('vehicles', 'vehicle'));
         }
-        
+
         return view('trips.create', compact('vehicles'));
     }
 
@@ -73,12 +73,12 @@ class TripController extends Controller
     {
         $user = auth()->user();
         $vehicle = Vehicle::findOrFail($request->vehicle_id);
-        
+
         // Check access for Sopir
         if ($user && $user->isSopir() && !$user->hasAccessToVehicle($vehicle->id)) {
             abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
         }
-        
+
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'trip_date' => 'required|date',
@@ -94,6 +94,12 @@ class TripController extends Controller
             'route_type' => 'nullable|string|max:255',
             'notes' => 'nullable|string'
         ]);
+
+        // Validate Start Odometer (Must be >= last recorded)
+        $lastOdometer = $vehicle->getLatestOdometer();
+        if ($validated['start_odometer'] < $lastOdometer) {
+            return back()->withErrors(['start_odometer' => "Odometer Awal tidak boleh lebih kecil dari nilai terakhir tercatat ($lastOdometer KM)."])->withInput();
+        }
 
         // Calculate distance if end_odometer is provided
         if (!empty($validated['end_odometer']) && empty($validated['distance'])) {

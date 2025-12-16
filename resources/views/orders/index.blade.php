@@ -691,10 +691,16 @@ function clearSearchInput(inputId) {
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('orderSearch');
     const tableRows = document.querySelectorAll('.table tbody tr');
+    const clearBtn = document.querySelector('.clear-search-btn');
 
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
+
+            // Show/hide clear button
+            if (clearBtn) {
+                clearBtn.style.display = searchTerm ? 'block' : 'none';
+            }
 
             tableRows.forEach(row => {
                 const text = row.textContent.toLowerCase();

@@ -1237,6 +1237,19 @@ input[type="time"]::-webkit-clear-button {
 <script>
 // Live search for all modal search inputs
 document.addEventListener('DOMContentLoaded', function() {
+    // Auto-fill current time when user focuses on time input
+    const timeInput = document.getElementById('timeInput');
+    if (timeInput && !timeInput.value) {
+        timeInput.addEventListener('focus', function() {
+            if (!this.value) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                this.value = `${hours}:${minutes}`;
+            }
+        }, { once: true });
+    }
+
     // Fuel Type Search
     const fuelTypeSearch = document.getElementById('fuelTypeSearch');
     if (fuelTypeSearch) {

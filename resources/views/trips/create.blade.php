@@ -16,13 +16,13 @@
         $lastFill = $vehicle->fuelFills()->latest('fill_date')->first();
         $lastMaintenance = $vehicle->maintenances()->latest('maintenance_date')->first();
         $lastTrip = $vehicle->trips()->latest('trip_date')->first();
-        
+
         $odometerValues = collect([
             $lastFill ? $lastFill->odometer : 0,
             $lastMaintenance ? $lastMaintenance->odometer : 0,
             $lastTrip ? $lastTrip->end_odometer ?? $lastTrip->start_odometer : 0
         ]);
-        
+
         $lastOdometer = $odometerValues->max();
     }
 @endphp
@@ -39,7 +39,7 @@
         <div class="field-group">
             <label class="form-label">Waktu Start</label>
             <div class="input-group">
-                <input type="time" name="start_time" id="startTimeInput" class="form-control" value="{{ old('start_time') }}" style="border-right: 0;">
+                <input type="time" name="start_time" id="startTimeInput" class="form-control" value="{{ old('start_time', date('H:i')) }}" style="border-right: 0;">
                 <button type="button" class="input-group-text" onclick="openStartTimePicker()" style="cursor: pointer; background: white; border-left: 0;">
                     <i class="far fa-clock" style="color: #6c757d;"></i>
                 </button>
@@ -50,9 +50,9 @@
         <div class="field-group">
             <label class="form-label">Waktu End</label>
             <div class="input-group">
-                <input type="time" name="end_time" id="endTimeInput" class="form-control" value="{{ old('end_time') }}" style="border-right: 0;">
+                <input type="time" name="end_time" id="endTimeInput" class="form-control" value="{{ old('end_time', date('H:i')) }}" style="border-right: 0;">
                 <button type="button" class="input-group-text" onclick="openEndTimePicker()" style="cursor: pointer; background: white; border-left: 0;">
-                    <i class="far fa-clock" style="color: #6c757d;"></i>
+                    <i class="far fa-clock" style="color: #6c757d;">
                 </button>
             </div>
         </div>
@@ -65,8 +65,8 @@
         <div class="field-group">
             <label class="form-label">Start Odometer</label>
             <div class="input-group">
-                <input type="number" step="0.01" name="start_odometer" id="startOdometer" class="form-control" 
-                       value="{{ old('start_odometer') }}" 
+                <input type="number" step="0.01" name="start_odometer" id="startOdometer" class="form-control"
+                       value="{{ old('start_odometer') }}"
                        min="{{ $lastOdometer }}"
                        placeholder="Enter start odometer" required>
                 <span class="input-group-text">km</span>
@@ -170,7 +170,7 @@ document.getElementById('endOdometer').addEventListener('input', calculateDistan
 function calculateDistance() {
     const startOdometer = parseFloat(document.getElementById('startOdometer').value) || 0;
     const endOdometer = parseFloat(document.getElementById('endOdometer').value) || 0;
-    
+
     if (endOdometer > startOdometer) {
         const distance = endOdometer - startOdometer;
         document.getElementById('distance').value = distance.toFixed(2);
@@ -181,6 +181,25 @@ function calculateDistance() {
 
 // Time Pickers for Start and End Time
 let currentTimePickerType = 'start'; // 'start' or 'end'
+
+// Auto-fill current time when user focuses on time inputs
+document.addEventListener('DOMContentLoaded', function() {
+    const startTimeInput = document.getElementById('startTimeInput');
+    const endTimeInput = document.getElementById('endTimeInput');
+
+    [startTimeInput, endTimeInput].forEach(timeInput => {
+        if (timeInput && !timeInput.value) {
+            timeInput.addEventListener('focus', function() {
+                if (!this.value) {
+                    const now = new Date();
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    this.value = `${hours}:${minutes}`;
+                }
+            }, { once: true });
+        }
+    });
+});
 
 function openStartTimePicker() {
     currentTimePickerType = 'start';
@@ -197,7 +216,7 @@ function openEndTimePicker() {
 function openTimePickerModal(timeInput) {
     const currentTime = timeInput.value || '{{ date("H:i") }}';
     const [hours, minutes] = currentTime.split(':');
-    
+
     const modal = document.createElement('div');
     modal.className = 'time-picker-modal';
     modal.innerHTML = `
@@ -221,7 +240,7 @@ function openTimePickerModal(timeInput) {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
     setTimeout(() => { drawClock(parseInt(hours), parseInt(minutes)); }, 100);
 }
@@ -247,33 +266,33 @@ let selectingHour = true;
 function drawClock(hour, minute) {
     selectedHour = hour;
     selectedMinute = minute;
-    
+
     const canvas = document.getElementById('clockCanvas');
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     const centerX = 140;
     const centerY = 140;
     const radius = 120;
-    
+
     ctx.clearRect(0, 0, 280, 280);
-    
+
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     ctx.fillStyle = '#f0f0f0';
     ctx.fill();
-    
+
     ctx.fillStyle = '#333';
     ctx.font = 'bold 16px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    
+
     if (selectingHour) {
         for (let i = 1; i <= 12; i++) {
             const angle = (i - 3) * Math.PI / 6;
             const x = centerX + radius * 0.7 * Math.cos(angle);
             const y = centerY + radius * 0.7 * Math.sin(angle);
-            
+
             if (i === selectedHour || (selectedHour > 12 && i === selectedHour - 12)) {
                 ctx.beginPath();
                 ctx.arc(x, y, 20, 0, 2 * Math.PI);
@@ -283,7 +302,7 @@ function drawClock(hour, minute) {
             } else {
                 ctx.fillStyle = '#666';
             }
-            
+
             ctx.fillText(i, x, y);
         }
     } else {
@@ -291,9 +310,9 @@ function drawClock(hour, minute) {
             const angle = (i / 5 - 3) * Math.PI / 6;
             const x = centerX + radius * 0.7 * Math.cos(angle);
             const y = centerY + radius * 0.7 * Math.sin(angle);
-            
+
             const displayMinute = i === 0 ? '00' : i.toString().padStart(2, '0');
-            
+
             if (i === selectedMinute) {
                 ctx.beginPath();
                 ctx.arc(x, y, 20, 0, 2 * Math.PI);
@@ -303,15 +322,15 @@ function drawClock(hour, minute) {
             } else {
                 ctx.fillStyle = '#666';
             }
-            
+
             ctx.fillText(displayMinute, x, y);
         }
     }
-    
-    const hyoungle = selectingHour 
+
+    const hyoungle = selectingHour
         ? (selectedHour - 3) * Math.PI / 6
         : (selectedMinute / 5 - 3) * Math.PI / 6;
-    
+
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.lineTo(
@@ -321,18 +340,18 @@ function drawClock(hour, minute) {
     ctx.strokeStyle = '#1976d2';
     ctx.lineWidth = 2;
     ctx.stroke();
-    
+
     ctx.beginPath();
     ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
     ctx.fillStyle = '#1976d2';
     ctx.fill();
-    
+
     canvas.onclick = function(e) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left - centerX;
         const y = e.clientY - rect.top - centerY;
         const angle = Math.atan2(y, x);
-        
+
         if (selectingHour) {
             let hour = Math.round((angle + Math.PI / 2) / (Math.PI / 6));
             if (hour <= 0) hour += 12;
@@ -346,7 +365,7 @@ function drawClock(hour, minute) {
             selectedMinute = minute;
             drawClock(selectedHour, selectedMinute);
         }
-        
+
         updateTimeDisplay();
     };
 }
@@ -354,7 +373,7 @@ function drawClock(hour, minute) {
 function updateTimeDisplay() {
     const timeDisplay = document.getElementById('timeDisplay');
     if (timeDisplay) {
-        timeDisplay.textContent = selectedHour.toString().padStart(2, '0') + ':' + 
+        timeDisplay.textContent = selectedHour.toString().padStart(2, '0') + ':' +
                                   selectedMinute.toString().padStart(2, '0');
     }
 }

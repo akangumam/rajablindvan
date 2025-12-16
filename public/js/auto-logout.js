@@ -5,7 +5,7 @@
  * It allows users to refresh pages and navigate between pages, but requires re-login
  * when opening a new tab after all previous tabs were closed.
  *
- * @version 2.1.0 - Fixed navigation issue
+ * @version 2.3.0 - Increased inactivity threshold to 15m
  * @author Raja Blind Van Development Team
  */
 
@@ -21,9 +21,9 @@
     // =================================================================
     const CONFIG = {
         SESSION_CHECK_INTERVAL: 5000,        // 5 seconds
-        INACTIVITY_THRESHOLD: 3000,          // 3 seconds (increased from 2s)
+        INACTIVITY_THRESHOLD: 900000,        // 15 minutes (increased from 60s)
         OLD_DATA_CLEANUP_TIME: 86400000,     // 24 hours
-        NAVIGATION_GRACE_PERIOD: 500,        // 500ms grace period for navigation
+        NAVIGATION_GRACE_PERIOD: 1000,       // 1000ms grace period for navigation
         STORAGE_KEYS: {
             AUTHENTICATED: 'sessionAuth',
             TAB_COUNT: 'activeTabCount',

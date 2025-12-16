@@ -478,7 +478,7 @@
         <!-- Odometer Field -->
         <div class="field-group">
             <label class="form-label" for="odometer">Odometer (km)</label>
-            <input type="number" class="form-control @error('odometer') is-invalid @enderror" id="odometer" name="odometer" value="{{ old('odometer', isset($vehicle) ? $vehicle->getMinimumOdometer() : '') }}" step="0.1" min="{{ isset($vehicle) ? $vehicle->getMinimumOdometer() : 0 }}" placeholder="Odometer (km)" required>
+            <input type="text" class="form-control currency-input @error('odometer') is-invalid @enderror" id="odometer" name="odometer" value="{{ old('odometer', isset($vehicle) ? $vehicle->getMinimumOdometer() : '') }}" inputmode="numeric" placeholder="Odometer (km)" required>
             @if(isset($vehicle))
                 <div class="helper-text">Latest Odometer: {{ number_format($vehicle->getMinimumOdometer()) }} km</div>
             @endif
@@ -508,14 +508,14 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label" for="price_per_liter">Price / L</label>
-                    <input type="number" class="form-control @error('price_per_liter') is-invalid @enderror" id="price_per_liter" name="price_per_liter" value="{{ old('price_per_liter') }}" step="50" min="0" placeholder="Price / L" required>
+                    <input type="text" class="form-control currency-input @error('price_per_liter') is-invalid @enderror" id="price_per_liter" name="price_per_liter" value="{{ old('price_per_liter') }}" placeholder="Price / L" required inputmode="numeric">
                     @error('price_per_liter')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="total_cost_input">Total Cost</label>
-                    <input type="number" class="form-control" id="total_cost_input" step="100" min="0" placeholder="Total Cost">
+                    <input type="text" class="form-control currency-input" id="total_cost_input" placeholder="Total Cost" inputmode="numeric">
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="liters">Liter</label>
@@ -705,6 +705,21 @@
 
 @push('scripts')
 <script>
+// Auto-fill current time when user focuses on time input
+document.addEventListener('DOMContentLoaded', function() {
+    const timeInput = document.getElementById('fill_time');
+    if (timeInput && !timeInput.value) {
+        timeInput.addEventListener('focus', function() {
+            if (!this.value) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                this.value = `${hours}:${minutes}`;
+            }
+        }, { once: true });
+    }
+});
+
 // Auto calculate liters or total cost
 const pricePerLiter = document.getElementById('price_per_liter');
 const totalCostInput = document.getElementById('total_cost_input');
@@ -712,8 +727,8 @@ const litersInput = document.getElementById('liters');
 
 // Calculate liters when total cost changes
 totalCostInput.addEventListener('input', function() {
-    const price = parseFloat(pricePerLiter.value) || 0;
-    const total = parseFloat(this.value) || 0;
+    const price = parseCurrency(pricePerLiter.value) || 0;
+    const total = parseCurrency(this.value) || 0;
 
     if (price > 0 && total > 0) {
         const liters = total / price;
@@ -723,12 +738,12 @@ totalCostInput.addEventListener('input', function() {
 
 // Calculate total cost when price or liters change
 function calculateTotalCost() {
-    const price = parseFloat(pricePerLiter.value) || 0;
+    const price = parseCurrency(pricePerLiter.value) || 0;
     const liters = parseFloat(litersInput.value) || 0;
 
     if (price > 0 && liters > 0) {
         const total = price * liters;
-        totalCostInput.value = Math.round(total);
+        totalCostInput.value = formatCurrency(Math.round(total));
     }
 }
 

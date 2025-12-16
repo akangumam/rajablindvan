@@ -486,6 +486,21 @@
 
 @push('scripts')
 <script>
+// Auto-fill current time when user focuses on time input
+document.addEventListener('DOMContentLoaded', function() {
+    const timeInput = document.getElementById('service_time');
+    if (timeInput && !timeInput.value) {
+        timeInput.addEventListener('focus', function() {
+            if (!this.value) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                this.value = `${hours}:${minutes}`;
+            }
+        }, { once: true });
+    }
+});
+
 // Service Selection Logic
 let availableServices = [];
 
@@ -743,6 +758,16 @@ document.getElementById('serviceSearchInput')?.addEventListener('input', functio
 });
 
 // Vehicle Custom Dropdown Logic
+// Auto-focus when dropdown opens
+document.getElementById('vehicleDropdownBtn')?.addEventListener('shown.bs.dropdown', function() {
+    const searchInput = document.getElementById('vehicleSearchInput');
+    if (searchInput) {
+        setTimeout(() => {
+            searchInput.focus();
+        }, 100);
+    }
+});
+
 document.getElementById('vehicleSearchInput')?.addEventListener('input', function(e) {
     const searchText = e.target.value.toLowerCase();
     const items = document.querySelectorAll('.vehicle-option');

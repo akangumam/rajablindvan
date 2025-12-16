@@ -91,6 +91,7 @@
                                                 <a class="dropdown-item vehicle-option"
                                                    href="#"
                                                    data-value="{{ $vehicle->id }}"
+                                                   data-odometer="{{ $vehicle->getLatestOdometer() }}"
                                                    data-text="{{ $vehicle->brand }} {{ $vehicle->model }} - {{ $vehicle->license_plate }}"
                                                    onclick="selectVehicle(this, event)">
                                                     {{ $vehicle->brand }} {{ $vehicle->model }} - {{ $vehicle->license_plate }}
@@ -160,18 +161,19 @@
                             <label class="form-label fw-semibold">
                                 <i class="fas fa-tachometer-alt me-2 text-primary"></i>
                                 Odometer
-                                <span class="text-danger">*</span>
+                                <span id="lastOdometerDisplay" class="ms-2" style="display:none; font-weight: normal; font-size: 0.9rem;">
+                                    (Last: <span id="lastOdometerValue" class="fw-bold text-dark"></span> <span class="text-danger">*</span>)
+                                </span>
                             </label>
                             <div class="input-group">
-                                <input type="number"
+                                <input type="text"
                                        name="odometer"
                                        id="odometer"
-                                       class="form-control @error('odometer') is-invalid @enderror"
+                                       class="form-control currency-input @error('odometer') is-invalid @enderror"
                                        placeholder="Masukkan odometer"
                                        value="{{ old('odometer') }}"
                                        required
-                                       min="0"
-                                       step="1">
+                                       inputmode="numeric">
                                 <span class="input-group-text">KM</span>
                             </div>
                             @error('odometer')
@@ -790,6 +792,19 @@
 <script>
 // Set current time when page loads
 document.addEventListener('DOMContentLoaded', function() {
+    // Auto-fill current time when user focuses on time input
+    const timeInput = document.getElementById('service_time');
+    if (timeInput && !timeInput.value) {
+        timeInput.addEventListener('focus', function() {
+            if (!this.value) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                this.value = `${hours}:${minutes}`;
+            }
+        }, { once: true });
+    }
+
     // Focus on vehicle select
     const vehicleSelect = document.getElementById('vehicle_id');
     if (vehicleSelect && !vehicleSelect.value) {
@@ -935,7 +950,7 @@ function renderServiceList(filter = '') {
         // Format existing price if any
         let price = '';
         if (selectedService && selectedService.price) {
-            price = formatNumber(selectedService.price);
+            price = formatCurrency(selectedService.price);
         }
 
         const item = document.createElement('div');
@@ -944,9 +959,9 @@ function renderServiceList(filter = '') {
             <input type="checkbox" class="service-checkbox" id="check_${service.id}"
                    ${isSelected ? 'checked' : ''} onchange="toggleServicePrice('${service.id}', this)">
             <label class="service-name" for="check_${service.id}">${service.name}</label>
-            <input type="text" class="service-price-input ${isSelected ? '' : 'hidden'}"
+            <input type="text" class="service-price-input currency-input ${isSelected ? '' : 'hidden'}"
                    id="price_${service.id}" placeholder="Harga (Rp)" value="${price}"
-                   oninput="formatPriceInput(this); updateServicePrice('${service.id}', this.value)">
+                   oninput="this.value = formatCurrency(this.value, true); updateServicePrice('${service.id}', this.value)">
         `;
         container.appendChild(item);
     });
@@ -957,15 +972,16 @@ function formatNumber(num) {
 }
 
 function formatPriceInput(input) {
-    // Remove non-numeric characters
-    let value = input.value.replace(/\D/g, '');
-
-    // Format with dots
-    if (value) {
-        value = parseInt(value, 10).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    if (typeof formatCurrency === 'function') {
+        input.value = formatCurrency(input.value);
+    } else {
+        // Fallback if global function not loaded
+        let value = input.value.replace(/\D/g, '');
+        if (value) {
+            value = parseInt(value, 10).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        input.value = value;
     }
-
-    input.value = value;
 }
 
 function toggleServicePrice(serviceId, checkbox) {
@@ -991,9 +1007,8 @@ function toggleServicePrice(serviceId, checkbox) {
 function updateServicePrice(serviceId, formattedPrice) {
     const index = selectedServices.findIndex(s => s.id === serviceId);
     if (index !== -1) {
-        // Store raw number (remove dots)
-        const rawPrice = formattedPrice.replace(/\./g, '');
-        selectedServices[index].price = rawPrice;
+        // Store raw number using global parser
+        selectedServices[index].price = parseCurrency(formattedPrice);
     }
 }
 
@@ -1089,10 +1104,26 @@ document.getElementById('serviceSearchInput')?.addEventListener('input', functio
     }
 });
 
+// Auto-focus when dropdown opens
+document.getElementById('vehicleDropdownBtn')?.addEventListener('shown.bs.dropdown', function() {
+    const searchInput = document.getElementById('vehicleSearchInput');
+    if (searchInput) {
+        setTimeout(() => {
+            searchInput.focus();
+        }, 100);
+    }
+});
+
 // Vehicle Custom Dropdown Logic
 document.getElementById('vehicleSearchInput')?.addEventListener('input', function(e) {
     const searchText = e.target.value.toLowerCase();
     const items = document.querySelectorAll('.vehicle-option');
+
+    // Show/hide clear button
+    const clearBtn = document.getElementById('clearVehicleSearch');
+    if (clearBtn) {
+        clearBtn.style.display = searchText ? 'block' : 'none';
+    }
 
     items.forEach(item => {
         const text = item.getAttribute('data-text').toLowerCase();
@@ -1108,9 +1139,38 @@ function selectVehicle(element, event) {
     event.preventDefault();
     const value = element.getAttribute('data-value');
     const text = element.getAttribute('data-text');
+    const odometer = parseFloat(element.getAttribute('data-odometer')) || 0;
 
     document.getElementById('vehicle_id').value = value;
     document.getElementById('vehicleDropdownText').textContent = text;
+
+    // Auto-fill and strict validation logic
+    const odometerInput = document.getElementById('odometer');
+    const lastOdometerDisplay = document.getElementById('lastOdometerDisplay');
+    const lastOdometerValue = document.getElementById('lastOdometerValue');
+
+    if (odometerInput) {
+        // Set values and constraints
+        odometerInput.value = odometer; // Pre-fill with last known
+        odometerInput.min = odometer;
+
+        // Update Label Display
+        if (lastOdometerDisplay && lastOdometerValue && odometer > 0) {
+            lastOdometerDisplay.style.display = 'inline-block';
+            lastOdometerValue.textContent = odometer + ' KM';
+        } else if (lastOdometerDisplay) {
+            lastOdometerDisplay.style.display = 'none';
+        }
+
+        // Input Validation Visuals
+        odometerInput.oninput = function() {
+            if (parseFloat(this.value) < odometer) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        };
+    }
 
     // Highlight selected
     document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('active'));

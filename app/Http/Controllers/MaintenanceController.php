@@ -130,6 +130,12 @@ class MaintenanceController extends Controller
             'notes' => 'nullable|string'
         ]);
 
+        // Validate Odometer (Must be >= last recorded)
+        $lastOdometer = $vehicle->getLatestOdometer();
+        if ($validated['odometer'] < $lastOdometer) {
+            return back()->withErrors(['odometer' => "Odometer tidak boleh lebih kecil dari nilai terakhir tercatat ($lastOdometer KM)."])->withInput();
+        }
+
         // Process selected_services
         $selectedServices = json_decode($request->selected_services, true);
         $serviceNames = [];
@@ -140,7 +146,7 @@ class MaintenanceController extends Controller
             foreach ($selectedServices as $service) {
                 $name = $service['name'] ?? 'Unknown Service';
                 $price = isset($service['price']) ? (float)$service['price'] : 0;
-                
+
                 $serviceNames[] = $name;
                 $serviceDetails[] = "$name (Rp " . number_format($price, 0, ',', '.') . ")";
                 $calculatedTotalCost += $price;
@@ -149,7 +155,7 @@ class MaintenanceController extends Controller
 
         // Populate service_type with comma-separated names (truncate if too long)
         $validated['service_type'] = Str::limit(implode(', ', $serviceNames), 250);
-        
+
         // Add detailed breakdown to description or parts_replaced
         $breakdown = implode("\n", $serviceDetails);
         if (!empty($validated['description'])) {
@@ -174,10 +180,10 @@ class MaintenanceController extends Controller
             $originalName = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $storedName = Str::uuid() . '.' . $extension;
-            
+
             $path = $file->storeAs('maintenances', $storedName, 'public');
             $validated['attachment'] = $path;
-            
+
             // Track file in storage management
             UploadedFile::create([
                 'original_name' => $originalName,
@@ -202,7 +208,7 @@ class MaintenanceController extends Controller
 
         // Set default values
         $validated['status'] = 'Completed';
-        
+
         Maintenance::create($validated);
 
         return redirect()->route('maintenances.index')
@@ -278,7 +284,7 @@ class MaintenanceController extends Controller
         return redirect()->route('maintenances.index')
             ->with('success', 'Data perawatan berhasil dihapus!');
     }
-    
+
     /**
      * Determine file type based on mime type and extension
      */

@@ -1289,8 +1289,10 @@
 
     <!-- Auto Logout Configuration -->
     @auth
-    <script src="{{ asset('js/auto-logout.js') }}?v=2.1.0"></script>
+    <script src="{{ asset('js/auto-logout.js') }}?v=2.3.0"></script>
     @endauth
+
+    @include('layouts.currency-script')
 </body>
 </html>
 

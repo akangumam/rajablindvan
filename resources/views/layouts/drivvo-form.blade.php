@@ -493,6 +493,14 @@
 function openVehicleModal() {
     document.getElementById('vehicleModal').classList.add('show');
     document.body.style.overflow = 'hidden';
+
+    // Auto-focus searchbar after modal opens
+    setTimeout(() => {
+        const searchInput = document.getElementById('vehicleSearch');
+        if (searchInput) {
+            searchInput.focus();
+        }
+    }, 100);
 }
 
 function closeVehicleModal() {

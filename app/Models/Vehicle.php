@@ -97,6 +97,11 @@ class Vehicle extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function incomes(): HasMany
+    {
+        return $this->hasMany(Income::class);
+    }
+
     public function trips(): HasMany
     {
         return $this->hasMany(Trip::class);
@@ -124,11 +129,13 @@ class Vehicle extends Model
     {
         $latestFuel = $this->fuelFills()->latest('fill_date')->first();
         $latestMaintenance = $this->maintenances()->latest('maintenance_date')->first();
-        
+        $latestIncome = $this->incomes()->latest('income_date')->first();
+
         $fuelOdo = $latestFuel ? $latestFuel->odometer : 0;
         $maintenanceOdo = $latestMaintenance ? $latestMaintenance->odometer : 0;
-        
-        return (float) max($this->odometer ?? 0, $fuelOdo, $maintenanceOdo);
+        $incomeOdo = $latestIncome ? $latestIncome->odometer : 0;
+
+        return (float) max($this->odometer ?? 0, $fuelOdo, $maintenanceOdo, $incomeOdo);
     }
 
     public function getTotalExpenses(): float
@@ -194,7 +201,7 @@ class Vehicle extends Model
                                 ->where('end_date', '>=', $endDate);
                           });
                 })->exists();
-            
+
             return !$conflictingRentals;
         }
 
@@ -225,12 +232,12 @@ class Vehicle extends Model
     {
         $brandLower = strtolower($this->brand);
         $logoPath = "assets/logos/brands/{$brandLower}.svg";
-        
+
         // Check if specific brand logo exists
         if (file_exists(public_path($logoPath))) {
             return $logoPath;
         }
-        
+
         // Return default logo if brand specific doesn't exist
         return "assets/logos/brands/default.svg";
     }

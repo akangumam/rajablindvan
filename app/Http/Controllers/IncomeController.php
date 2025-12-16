@@ -16,7 +16,7 @@ class IncomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+
         // Filter incomes based on user type
         if ($user && $user->isPengelola()) {
             $incomes = Income::with(['vehicle', 'user'])
@@ -43,7 +43,7 @@ class IncomeController extends Controller
     public function create(Request $request)
     {
         $user = auth()->user();
-        
+
         // Filter vehicles based on user type
         if ($user && $user->isPengelola()) {
             $vehicles = Vehicle::active()->orderBy('name')->get();
@@ -52,23 +52,23 @@ class IncomeController extends Controller
         } else {
             $vehicles = Vehicle::active()->orderBy('name')->get();
         }
-        
+
         // Get reference data for dropdowns
         $incomeTypes = \App\Models\IncomeType::active()->orderBy('name')->get();
         $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
-        
+
         // If vehicle_id is provided in query string
         if ($request->has('vehicle_id')) {
             $vehicle = Vehicle::findOrFail($request->vehicle_id);
-            
+
             // Check access for Sopir
             if ($user && $user->isSopir() && !$user->hasAccessToVehicle($vehicle->id)) {
                 abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
             }
-            
+
             return view('incomes.create', compact('vehicles', 'vehicle', 'incomeTypes', 'paymentMethods'));
         }
-        
+
         return view('incomes.create', compact('vehicles', 'incomeTypes', 'paymentMethods'));
     }
 
@@ -79,12 +79,12 @@ class IncomeController extends Controller
     {
         $user = auth()->user();
         $vehicle = Vehicle::findOrFail($request->vehicle_id);
-        
+
         // Check access for Sopir
         if ($user && $user->isSopir() && !$user->hasAccessToVehicle($vehicle->id)) {
             abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
         }
-        
+
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'income_date' => 'required|date',
@@ -96,6 +96,12 @@ class IncomeController extends Controller
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120'
         ]);
 
+        // Validate Odometer (Must be >= last recorded)
+        $lastOdometer = $vehicle->getLatestOdometer();
+        if (!empty($validated['odometer']) && $validated['odometer'] < $lastOdometer) {
+            return back()->withErrors(['odometer' => "Odometer tidak boleh lebih kecil dari nilai terakhir tercatat ($lastOdometer KM)."])->withInput();
+        }
+
         // Set default time to now if not provided
         if (empty($validated['income_time'])) {
             $validated['income_time'] = now()->format('H:i');
@@ -103,7 +109,7 @@ class IncomeController extends Controller
 
         // Set user_id to logged in user
         $validated['user_id'] = auth()->id();
-        
+
         // Keep description for backward compatibility (use notes as description)
         $validated['description'] = $validated['notes'] ?? 'Income entry';
 
@@ -113,10 +119,10 @@ class IncomeController extends Controller
             $originalName = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $storedName = Str::uuid() . '.' . $extension;
-            
+
             $path = $file->storeAs('incomes', $storedName, 'public');
             $validated['attachment'] = $path;
-            
+
             // Track file in storage management
             UploadedFile::create([
                 'original_name' => $originalName,
@@ -130,6 +136,11 @@ class IncomeController extends Controller
         }
 
         Income::create($validated);
+
+        // Update vehicle odometer if higher
+        if (!empty($validated['odometer']) && $validated['odometer'] > $vehicle->odometer) {
+            $vehicle->update(['odometer' => $validated['odometer']]);
+        }
 
         return redirect()->route('incomes.index')
             ->with('success', 'Income has been added successfully!');
@@ -166,7 +177,7 @@ class IncomeController extends Controller
     {
         //
     }
-    
+
     /**
      * Determine file type based on mime type and extension
      */

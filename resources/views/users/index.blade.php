@@ -213,7 +213,7 @@
         color: #999;
         margin-bottom: 24px;
     }
-    
+
     /* Custom Pagination Style */
     .pagination-container {
         display: flex;
@@ -224,18 +224,18 @@
         border-top: 1px solid #e9ecef;
         margin-top: -1px;
     }
-    
+
     .pagination-info {
         color: #6c757d;
         font-size: 14px;
     }
-    
+
     .pagination-links {
         display: flex;
         gap: 8px;
         align-items: center;
     }
-    
+
     .pagination-links .page-link {
         padding: 8px 16px;
         border: 1px solid #dee2e6;
@@ -247,19 +247,19 @@
         transition: all 0.2s ease;
         background: white;
     }
-    
+
     .pagination-links .page-link:hover {
         background: #f8f9fa;
         border-color: #3498db;
         color: #3498db;
     }
-    
+
     .pagination-links .page-link.active {
         background: #3498db;
         color: white;
         border-color: #3498db;
     }
-    
+
     .pagination-links .page-link.disabled {
         opacity: 0.5;
         cursor: not-allowed;
@@ -405,6 +405,25 @@
             padding: 5px 12px;
         }
     }
+
+    /* Search Input Styling */
+    .search-input-wrapper {
+        position: relative;
+        max-width: 400px;
+    }
+    .search-input {
+        width: 100%;
+        padding: 10px 40px 10px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    .search-input:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
 </style>
 
 <div class="page-header">
@@ -435,6 +454,23 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
+
+<!-- Search Bar -->
+<div class="search-input-wrapper position-relative" style="margin-bottom: 20px;">
+    <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
+    <input type="text"
+           id="userSearch"
+           class="search-input"
+           placeholder="Search by name, email, or position..."
+           style="padding-left: 40px; padding-right: 40px;"
+           autofocus>
+    <button type="button"
+            id="clearUserSearch"
+            class="btn btn-sm position-absolute"
+            style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;">
+        <i class="fas fa-times text-muted"></i>
+    </button>
+</div>
 
 @if($users->count() > 0)
 <div class="user-table-container">
@@ -504,7 +540,7 @@
             @endforeach
         </tbody>
     </table>
-    
+
     @if($users->hasPages())
     <div class="pagination-container">
         <div class="pagination-info">
@@ -565,13 +601,56 @@
 <script>
 function confirmDelete(event, userName) {
     event.preventDefault();
-    
+
     if (confirm('Apakah Anda yakin ingin menghapus pengguna "' + userName + '"?\n\nTindakan ini tidak dapat dibatalkan.')) {
         event.target.submit();
     }
-    
+
     return false;
 }
+
+// Live search functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('userSearch');
+    const clearBtn = document.getElementById('clearUserSearch');
+    const tableRows = document.querySelectorAll('.user-table tbody tr');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase();
+
+            // Show/hide clear button
+            if (clearBtn) {
+                clearBtn.style.display = searchText ? 'block' : 'none';
+            }
+
+            // Filter table rows
+            tableRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Clear button functionality
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                this.style.display = 'none';
+
+                // Show all rows
+                tableRows.forEach(row => {
+                    row.style.display = '';
+                });
+
+                searchInput.focus();
+            });
+        }
+    }
+});
 </script>
 @endpush
 @endsection

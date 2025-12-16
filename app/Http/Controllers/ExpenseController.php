@@ -18,39 +18,39 @@ class ExpenseController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+
         // Apply location filter
         $locationId = LocationFilter::getLocationId();
-        
+
         // Filter expenses based on user type
         if ($user && $user->isPengelola()) {
             $query = Expense::with(['vehicle', 'location']);
-            
+
             if ($locationId) {
                 $query->where('location_id', $locationId);
             }
-            
+
             $expenses = $query->latest('expense_date')->paginate(20);
         } elseif ($user && $user->isSopir()) {
             $vehicleIds = $user->vehicles()->pluck('vehicles.id');
             $query = Expense::with(['vehicle', 'location'])
                 ->whereIn('vehicle_id', $vehicleIds);
-            
+
             if ($locationId) {
                 $query->where('location_id', $locationId);
             }
-            
+
             $expenses = $query->latest('expense_date')->paginate(20);
         } else {
             $query = Expense::with(['vehicle', 'location']);
-            
+
             if ($locationId) {
                 $query->where('location_id', $locationId);
             }
-            
+
             $expenses = $query->latest('expense_date')->paginate(20);
         }
-        
+
         // Get locations for filter dropdown
         $locations = Location::active()->get();
         $selectedLocation = $locationId;
@@ -64,7 +64,7 @@ class ExpenseController extends Controller
     public function create(Request $request)
     {
         $user = auth()->user();
-        
+
         // Filter vehicles based on user type
         if ($user && $user->isPengelola()) {
             $vehicles = Vehicle::active()->orderBy('name')->get();
@@ -73,27 +73,27 @@ class ExpenseController extends Controller
         } else {
             $vehicles = Vehicle::active()->orderBy('name')->get();
         }
-        
+
         // Get reference data for dropdowns
         $expenseTypes = \App\Models\ExpenseType::active()->orderBy('name')->get();
         $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
-        
+
         // Get reference data for dropdowns
         $expenseTypes = \App\Models\ExpenseType::active()->orderBy('name')->get();
         $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
-        
+
         // If vehicle_id is provided in query string
         if ($request->has('vehicle_id')) {
             $vehicle = Vehicle::findOrFail($request->vehicle_id);
-            
+
             // Check access for Sopir
             if ($user && $user->isSopir() && !$user->hasAccessToVehicle($vehicle->id)) {
                 abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
             }
-            
+
             return view('expenses.create-new', compact('vehicles', 'vehicle', 'expenseTypes', 'paymentMethods'));
         }
-        
+
         return view('expenses.create-new', compact('vehicles', 'expenseTypes', 'paymentMethods'));
     }
 
@@ -112,35 +112,40 @@ class ExpenseController extends Controller
     {
         $user = auth()->user();
         $vehicle = Vehicle::findOrFail($request->vehicle_id);
-        
+
         // Check access for Sopir
         if ($user && $user->isSopir() && !$user->hasAccessToVehicle($vehicle->id)) {
             abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
         }
-        
+
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
             'expense_date' => 'required|date',
             'expense_time' => 'nullable',
             'odometer' => 'nullable|numeric|min:0',
-            'expense_type' => 'nullable|string|max:255',
+            'expense_type_id' => 'required|exists:expense_types,id',
             'place' => 'nullable|string|max:255',
             'user_id' => 'nullable|exists:users,id',
-            'category' => 'required|string|max:255',
-            'subcategory' => 'nullable|string|max:255',
-            'description' => 'required|string',
             'amount' => 'required|numeric|min:0',
-            'total_cost' => 'nullable|numeric|min:0',
-            'vendor' => 'nullable|string|max:255',
-            'payment_method' => 'nullable|string|max:255',
-            'receipt_number' => 'nullable|string|max:255',
-            'is_recurring' => 'boolean',
-            'recurring_period' => 'nullable|string|max:255',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
             'notes' => 'nullable|string',
+            'payment_method_id' => 'nullable|exists:payment_methods,id',
             'stnk_expiry_date' => 'nullable|date',
             'kir_expiry_date' => 'nullable|date'
         ]);
+
+        // Validate Odometer (Must be >= last recorded)
+        // Only if odometer is provided
+        if (!empty($validated['odometer'])) {
+            $lastOdometer = $vehicle->getLatestOdometer();
+            if ($validated['odometer'] < $lastOdometer) {
+                return back()->withErrors(['odometer' => "Odometer tidak boleh lebih kecil dari nilai terakhir tercatat ($lastOdometer KM)."])->withInput();
+            }
+
+            // Update Vehicle Odometer if higher
+            if ($validated['odometer'] > $vehicle->odometer) {
+                $vehicle->update(['odometer' => $validated['odometer']]);
+            }
+        }
 
         // Handle file upload
         if ($request->hasFile('attachment')) {
@@ -148,10 +153,10 @@ class ExpenseController extends Controller
             $originalName = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $storedName = Str::uuid() . '.' . $extension;
-            
+
             $path = $file->storeAs('expenses', $storedName, 'public');
             $validated['attachment'] = $path;
-            
+
             // Track file in storage management
             UploadedFile::create([
                 'original_name' => $originalName,
@@ -168,9 +173,29 @@ class ExpenseController extends Controller
         if (!isset($validated['user_id'])) {
             $validated['user_id'] = auth()->id();
         }
-        
+
         // Set location_id from vehicle
         $validated['location_id'] = $vehicle->location_id;
+
+        // Populate derived fields (Category, Description, etc)
+        $expenseType = \App\Models\ExpenseType::find($validated['expense_type_id']);
+        if ($expenseType) {
+            $validated['category'] = $expenseType->name;
+            $validated['expense_type'] = $expenseType->name; // Legacy support if column exists
+        } else {
+             $validated['category'] = 'General';
+        }
+
+        // Use notes as description if description is missing
+        $validated['description'] = $request->notes ?? ($validated['category'] . ' - ' . $vehicle->license_plate);
+
+        // Map Payment Method Name if needed by legacy columns
+        if (!empty($validated['payment_method_id'])) {
+             $pm = \App\Models\PaymentMethod::find($validated['payment_method_id']);
+             if ($pm) {
+                 $validated['payment_method'] = $pm->name;
+             }
+        }
 
         Expense::create($validated);
 
@@ -209,7 +234,7 @@ class ExpenseController extends Controller
     {
         //
     }
-    
+
     /**
      * Determine file type based on mime type and extension
      */
