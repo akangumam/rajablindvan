@@ -47,7 +47,7 @@ class SettingsController extends Controller
     {
         $dateFormat = Setting::get('date_format', 'd/m/Y');
         $currencyFormat = Setting::get('currency_format', 'idr');
-        
+
         return view('settings.format', compact('dateFormat', 'currencyFormat'));
     }
 
@@ -100,13 +100,13 @@ class SettingsController extends Controller
     public function fileStorage()
     {
         $files = UploadedFile::orderBy('created_at', 'desc')->get();
-        
+
         // Calculate total storage used
         $totalSize = UploadedFile::sum('file_size');
         $totalSizeGB = $totalSize / 1073741824; // Convert to GB
         $storageLimit = 10240 / 1024; // 10240 MB = 10 GB limit
         $usagePercentage = $totalSizeGB > 0 ? ($totalSizeGB / $storageLimit) * 100 : 0;
-        
+
         // Calculate storage by category (only valid categories)
         $categories = [
             'fuel' => UploadedFile::where('category', 'fuel')->sum('file_size'),
@@ -115,7 +115,7 @@ class SettingsController extends Controller
             'service' => UploadedFile::where('category', 'service')->sum('file_size'),
             'vehicle' => UploadedFile::where('category', 'vehicle')->sum('file_size'),
         ];
-        
+
         // Convert to MB and calculate percentages
         $categoryStats = [];
         foreach ($categories as $cat => $size) {
@@ -126,18 +126,18 @@ class SettingsController extends Controller
                 'percentage' => $percentage
             ];
         }
-        
+
         // Calculate unused storage
         $usedStorageMB = $totalSize / 1048576;
         $storageLimitMB = $storageLimit * 1024; // Convert GB to MB
         $unusedMB = $storageLimitMB - $usedStorageMB;
         $unusedPercentage = $storageLimitMB > 0 ? ($unusedMB / $storageLimitMB) * 100 : 100;
-        
+
         return view('settings.file-storage', compact(
-            'files', 
-            'totalSize', 
-            'totalSizeGB', 
-            'storageLimit', 
+            'files',
+            'totalSize',
+            'totalSizeGB',
+            'storageLimit',
             'usagePercentage',
             'categoryStats',
             'unusedMB',
@@ -162,14 +162,14 @@ class SettingsController extends Controller
             $originalName = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $storedName = Str::uuid() . '.' . $extension;
-            
+
             // Store file
             $path = $file->storeAs('uploads', $storedName, 'public');
-            
+
             // Determine file type
             $mimeType = $file->getMimeType();
             $fileType = $this->determineFileType($mimeType, $extension);
-            
+
             // Save to database
             UploadedFile::create([
                 'original_name' => $originalName,
@@ -183,7 +183,7 @@ class SettingsController extends Controller
 
             return redirect()->route('settings.file-storage')
                 ->with('success', 'File uploaded successfully!');
-                
+
         } catch (\Exception $e) {
             return redirect()->route('settings.file-storage')
                 ->with('error', 'Failed to upload file: ' . $e->getMessage());
@@ -197,7 +197,7 @@ class SettingsController extends Controller
     {
         $file = UploadedFile::findOrFail($id);
         $filePath = storage_path('app/public/' . $file->file_path);
-        
+
         if (!file_exists($filePath)) {
             return redirect()->route('settings.file-storage')
                 ->with('error', 'File not found!');
@@ -213,16 +213,16 @@ class SettingsController extends Controller
     {
         try {
             $file = UploadedFile::findOrFail($id);
-            
+
             // Delete physical file
             Storage::disk('public')->delete($file->file_path);
-            
+
             // Delete from database
             $file->delete();
 
             return redirect()->route('settings.file-storage')
                 ->with('success', 'File deleted successfully!');
-                
+
         } catch (\Exception $e) {
             return redirect()->route('settings.file-storage')
                 ->with('error', 'Failed to delete file: ' . $e->getMessage());
@@ -235,7 +235,7 @@ class SettingsController extends Controller
     public function downloadAllFiles()
     {
         $files = UploadedFile::all();
-        
+
         if ($files->isEmpty()) {
             return redirect()->route('settings.file-storage')
                 ->with('error', 'No files to download!');
@@ -280,7 +280,7 @@ class SettingsController extends Controller
         } elseif (in_array($extension, ['js', 'php', 'html', 'css', 'json', 'xml'])) {
             return 'code';
         }
-        
+
         return 'file';
     }
 
@@ -358,7 +358,7 @@ class SettingsController extends Controller
     public function updateLocation(Request $request, $id)
     {
         $location = Location::findOrFail($id);
-        
+
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:locations,name,' . $id,
             'code' => 'required|string|max:10|unique:locations,code,' . $id,
@@ -427,7 +427,7 @@ class SettingsController extends Controller
 
         $serviceType = ServiceType::create([
             'name' => $validated['name'],
-            'description' => $validated['description'],
+            'description' => $request->description ?? null,
             'is_active' => true
         ]);
 
@@ -441,7 +441,7 @@ class SettingsController extends Controller
     public function updateServiceType(Request $request, $id)
     {
         $serviceType = ServiceType::findOrFail($id);
-        
+
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:service_types,name,' . $id,
             'description' => 'nullable|string'
@@ -493,7 +493,7 @@ class SettingsController extends Controller
 
         $expenseType = ExpenseType::create([
             'name' => $validated['name'],
-            'description' => $validated['description'],
+            'description' => $request->description ?? null,
             'is_active' => true
         ]);
 
@@ -507,7 +507,7 @@ class SettingsController extends Controller
     public function updateExpenseType(Request $request, $id)
     {
         $expenseType = ExpenseType::findOrFail($id);
-        
+
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:expense_types,name,' . $id,
             'description' => 'nullable|string'
@@ -559,7 +559,7 @@ class SettingsController extends Controller
 
         $incomeType = IncomeType::create([
             'name' => $validated['name'],
-            'description' => $validated['description'],
+            'description' => $request->description ?? null,
             'is_active' => true
         ]);
 
@@ -573,7 +573,7 @@ class SettingsController extends Controller
     public function updateIncomeType(Request $request, $id)
     {
         $incomeType = IncomeType::findOrFail($id);
-        
+
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:income_types,name,' . $id,
             'description' => 'nullable|string'
@@ -643,7 +643,7 @@ class SettingsController extends Controller
     public function updatePaymentMethod(Request $request, $id)
     {
         $paymentMethod = PaymentMethod::findOrFail($id);
-        
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string'
