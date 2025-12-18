@@ -234,10 +234,15 @@
 
                         <!-- Place -->
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold">
-                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>
-                                Tempat Servis
-                                <span class="text-danger">*</span>
+                            <label class="form-label fw-semibold d-flex justify-content-between align-items-center">
+                                <span>
+                                    <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                                    Tempat Servis
+                                    <span class="text-danger">*</span>
+                                </span>
+                                <a href="javascript:void(0)" onclick="openQuickAddLocationModal()" class="btn btn-sm btn-link text-primary p-0 text-decoration-none">
+                                    <i class="fas fa-plus-circle me-1"></i>Tambah Tempat
+                                </a>
                             </label>
                             <select name="place"
                                     id="place"
@@ -247,6 +252,7 @@
                                 @php
                                     $locations = \App\Models\Location::active()->get();
                                 @endphp
+                                <option value="new" class="fw-bold text-primary" onclick="openQuickAddLocationModal()">+ Tambah Tempat Baru</option>
                                 @if($locations->count() > 0)
                                     @foreach($locations as $location)
                                         <option value="{{ $location->name }}" {{ old('place', $maintenance->place) == $location->name ? 'selected' : '' }}>
@@ -372,7 +378,7 @@
                 </div>
 
                 <!-- Add New Service Type Button -->
-                <button type="button" class="btn btn-sm btn-outline-secondary mt-3 w-100" onclick="addNewServiceType()">
+                <button type="button" class="btn btn-sm btn-outline-secondary mt-3 w-100" onclick="openQuickAddServiceTypeModal()">
                     <i class="fas fa-plus-circle me-2"></i>Tambah Baru
                 </button>
             </div>
@@ -382,6 +388,66 @@
                     <i class="fas fa-check me-2"></i>Pilih
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Quick Add Location -->
+<div class="modal fade" id="quickAddLocationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fas fa-map-marker-alt me-2"></i>Tambah Tempat Baru</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="quickAddLocationForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Tempat <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" required placeholder="Contoh: Bengkel Maju">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kode <span class="text-danger">*</span></label>
+                        <input type="text" name="code" class="form-control" required placeholder="Contoh: BM01">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Alamat <span class="text-danger">*</span></label>
+                        <textarea name="address" class="form-control" required placeholder="Alamat lengkap bengkel"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Quick Add Service Type -->
+<div class="modal fade" id="quickAddServiceTypeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fas fa-wrench me-2"></i>Tambah Jenis Servis Baru</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="quickAddServiceTypeForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Servis <span class="text-danger">*</span></label>
+                        <input type="text" name="name" id="new_service_name_input" class="form-control" required placeholder="Contoh: Service AC">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea name="description" class="form-control" placeholder="Keterangan singkat (opsional)"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -492,6 +558,129 @@
 
 @push('scripts')
 <script>
+// AJAX Quick Add Functions
+let quickAddLocationModal;
+let quickAddServiceTypeModal;
+
+function openQuickAddLocationModal() {
+    if (!quickAddLocationModal) {
+        quickAddLocationModal = new bootstrap.Modal(document.getElementById('quickAddLocationModal'));
+    }
+    quickAddLocationModal.show();
+}
+
+function openQuickAddServiceTypeModal() {
+    if (!quickAddServiceTypeModal) {
+        quickAddServiceTypeModal = new bootstrap.Modal(document.getElementById('quickAddServiceTypeModal'));
+    }
+    const currentSearch = document.getElementById('serviceSearchInput').value;
+    if (currentSearch) {
+        document.getElementById('new_service_name_input').value = currentSearch;
+    }
+    quickAddServiceTypeModal.show();
+}
+
+// Handle Add New Redirection (Replaced by AJAX)
+document.addEventListener('DOMContentLoaded', function() {
+    const placeSelect = document.getElementById('place');
+
+    if (placeSelect) {
+        placeSelect.addEventListener('change', function() {
+            if (this.value === 'new') {
+                this.value = ""; // Reset dropdown
+                openQuickAddLocationModal();
+            }
+        });
+    }
+
+    // Handle AJAX forms
+    document.getElementById('quickAddLocationForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+
+        fetch("{{ route('settings.locations.store') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add to select
+                const option = new Option(data.data.name, data.data.name, true, true);
+                placeSelect.add(option, placeSelect.options[1]);
+                quickAddLocationModal.hide();
+                this.reset();
+            } else {
+                alert('Error: ' + (data.message || 'Gagal menyimpan data'));
+            }
+        })
+        .catch(err => alert('Gagal menghubungkan ke server'))
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Simpan';
+        });
+    });
+
+    document.getElementById('quickAddServiceTypeForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+
+        fetch("{{ route('settings.service-types.store') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const newService = {
+                    id: data.data.id.toString(),
+                    name: data.data.name
+                };
+
+                // Add to availableServices
+                availableServices.push(newService);
+                availableServices.sort((a, b) => a.name.localeCompare(b.name));
+
+                // Re-render and select
+                renderServiceList(document.getElementById('serviceSearchInput').value);
+
+                // Find and check the new item
+                setTimeout(() => {
+                    const checkbox = document.getElementById(`check_${newService.id}`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                        toggleServicePrice(newService.id, checkbox);
+                    }
+                }, 100);
+
+                quickAddServiceTypeModal.hide();
+                this.reset();
+            } else {
+                alert('Error: ' + (data.message || 'Gagal menyimpan data'));
+            }
+        })
+        .catch(err => alert('Gagal menghubungkan ke server'))
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Simpan';
+        });
+    });
+});
+
 // Auto-fill current time when user focuses on time input
 document.addEventListener('DOMContentLoaded', function() {
     const timeInput = document.getElementById('service_time');

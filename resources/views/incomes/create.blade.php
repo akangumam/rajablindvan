@@ -210,7 +210,7 @@
                                 @php
                                     $incomeTypes = \App\Models\IncomeType::active()->orderBy('name')->get();
                                 @endphp
-                                <option value="new" class="fw-bold text-primary">+ Tambah Jenis Baru</option>
+                                <option value="new" class="fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#quickAddIncomeTypeModal">+ Tambah Jenis Baru</option>
                                 @foreach($incomeTypes as $incomeType)
                                     <option value="{{ $incomeType->name }}" {{ old('type') == $incomeType->name ? 'selected' : '' }}>
                                         {{ $incomeType->name }}
@@ -298,8 +298,32 @@
                         <i class="fas fa-times me-2"></i>Batal
                     </a>
                     <button type="submit" class="btn btn-success">
-                        <i class="fas fa-save me-2"></i>Simpan Pendapatan
+                        <i class="fas fa-save me-2"></i>Simpan
                     </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Quick Add Income Type -->
+<div class="modal fade" id="quickAddIncomeTypeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fas fa-tags me-2"></i>Tambah Jenis Pendapatan Baru</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="quickAddIncomeTypeForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Jenis Pendapatan <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" required placeholder="Contoh: Bonus Driver">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
@@ -575,21 +599,55 @@ function clearFile() {
     }
 }
 
-// Handle Add New Redirection
+// Handle AJAX form submission
 document.addEventListener('DOMContentLoaded', function() {
     const incomeTypeSelect = document.getElementById('incomeTypeSelect');
+    let quickAddIncomeTypeModal;
 
     if (incomeTypeSelect) {
         incomeTypeSelect.addEventListener('change', function() {
             if (this.value === 'new') {
-                if (confirm('Anda akan diarahkan ke halaman pengaturan untuk menambah jenis pendapatan baru. Lanjutkan?')) {
-                    window.location.href = "{{ route('settings.income-types') }}";
-                } else {
-                    this.value = ""; // Reset
+                this.value = ""; // Reset
+                if (!quickAddIncomeTypeModal) {
+                    quickAddIncomeTypeModal = new bootstrap.Modal(document.getElementById('quickAddIncomeTypeModal'));
                 }
+                quickAddIncomeTypeModal.show();
             }
         });
     }
+
+    document.getElementById('quickAddIncomeTypeForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+
+        fetch("{{ route('settings.income-types.store') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const option = new Option(data.data.name, data.data.name, true, true);
+                incomeTypeSelect.add(option, incomeTypeSelect.options[incomeTypeSelect.options.length]);
+                if (quickAddIncomeTypeModal) quickAddIncomeTypeModal.hide();
+                this.reset();
+            } else {
+                alert('Error: ' + (data.message || 'Gagal menyimpan data'));
+            }
+        })
+        .catch(err => alert('Gagal menghubungkan ke server'))
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Simpan';
+        });
+    });
 });
 
 // Form validation

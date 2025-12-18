@@ -205,7 +205,7 @@
                                 @php
                                     $expenseTypes = \App\Models\ExpenseType::active()->orderBy('name')->get();
                                 @endphp
-                                <option value="new" class="fw-bold text-primary">+ Tambah Jenis Baru</option>
+                                <option value="new" class="fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#quickAddExpenseTypeModal">+ Tambah Jenis Baru</option>
                                 @foreach($expenseTypes as $expenseType)
                                     <option value="{{ $expenseType->id }}" data-name="{{ $expenseType->name }}" {{ old('expense_type_id') == $expenseType->id ? 'selected' : '' }}>
                                         {{ $expenseType->name }}
@@ -268,7 +268,7 @@
                                 @php
                                     $locations = \App\Models\Location::active()->orderBy('name')->get();
                                 @endphp
-                                <option value="new" class="fw-bold text-primary">+ Tambah Tempat Baru</option>
+                                <option value="new" class="fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#quickAddLocationModal">+ Tambah Tempat Baru</option>
                                 @if($locations->count() > 0)
                                     @foreach($locations as $location)
                                         <option value="{{ $location->name }}" {{ old('place') == $location->name ? 'selected' : '' }}>
@@ -383,9 +383,74 @@
                     <a href="{{ route('expenses.index') }}" class="btn btn-secondary">
                         <i class="fas fa-times me-2"></i>Batal
                     </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i>Simpan Pengeluaran
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-save me-2"></i>Simpan
                     </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Quick Add Expense Type -->
+<div class="modal fade" id="quickAddExpenseTypeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fas fa-tags me-2"></i>Tambah Jenis Pengeluaran Baru</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="quickAddExpenseTypeForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Jenis Pengeluaran <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" required placeholder="Contoh: Pajak Tahunan">
+                        <div class="invalid-feedback" id="expenseTypeNameError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea name="description" class="form-control" placeholder="Keterangan singkat (opsional)"></textarea>
+                        <div class="invalid-feedback" id="expenseTypeDescriptionError"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Quick Add Location -->
+<div class="modal fade" id="quickAddLocationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fas fa-map-marker-alt me-2"></i>Tambah Tempat Baru</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="quickAddLocationForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nama Tempat <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" required placeholder="Contoh: Bengkel Maju">
+                        <div class="invalid-feedback" id="locationNameError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kode <span class="text-danger">*</span></label>
+                        <input type="text" name="code" class="form-control" required placeholder="Contoh: BM01">
+                        <div class="invalid-feedback" id="locationCodeError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Alamat <span class="text-danger">*</span></label>
+                        <textarea name="address" class="form-control" required placeholder="Alamat lengkap bengkel"></textarea>
+                        <div class="invalid-feedback" id="locationAddressError"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
@@ -652,19 +717,21 @@ function handleExpenseTypeChange(selectElement) {
     }
 }
 
-// Handle Add New Redirection
+// Handle AJAX form submission
 document.addEventListener('DOMContentLoaded', function() {
     const expenseTypeSelect = document.getElementById('expenseTypeSelect');
     const placeSelect = document.getElementById('place');
+    let quickAddExpenseTypeModal;
+    let quickAddLocationModal;
 
     if (expenseTypeSelect) {
         expenseTypeSelect.addEventListener('change', function() {
             if (this.value === 'new') {
-                if (confirm('Anda akan diarahkan ke halaman pengaturan untuk menambah jenis pengeluaran baru. Lanjutkan?')) {
-                    window.location.href = "{{ route('settings.expense-types') }}";
-                } else {
-                    this.value = ""; // Reset
+                this.value = ""; // Reset
+                if (!quickAddExpenseTypeModal) {
+                    quickAddExpenseTypeModal = new bootstrap.Modal(document.getElementById('quickAddExpenseTypeModal'));
                 }
+                quickAddExpenseTypeModal.show();
             }
         });
     }
@@ -672,14 +739,82 @@ document.addEventListener('DOMContentLoaded', function() {
     if (placeSelect) {
         placeSelect.addEventListener('change', function() {
             if (this.value === 'new') {
-                if (confirm('Anda akan diarahkan ke halaman pengaturan untuk menambah tempat baru. Lanjutkan?')) {
-                    window.location.href = "{{ route('settings.locations') }}";
-                } else {
-                    this.value = ""; // Reset
+                this.value = ""; // Reset
+                if (!quickAddLocationModal) {
+                    quickAddLocationModal = new bootstrap.Modal(document.getElementById('quickAddLocationModal'));
                 }
+                quickAddLocationModal.show();
             }
         });
     }
+
+    document.getElementById('quickAddExpenseTypeForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+
+        fetch("{{ route('settings.expense-types.store') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const option = new Option(data.data.name, data.data.id, true, true);
+                option.setAttribute('data-name', data.data.name);
+                expenseTypeSelect.add(option, expenseTypeSelect.options[expenseTypeSelect.options.length]);
+                if (quickAddExpenseTypeModal) quickAddExpenseTypeModal.hide();
+                this.reset();
+                handleExpenseTypeChange(expenseTypeSelect);
+            } else {
+                alert('Error: ' + (data.message || 'Gagal menyimpan data'));
+            }
+        })
+        .catch(err => alert('Gagal menghubungkan ke server'))
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Simpan';
+        });
+    });
+
+    document.getElementById('quickAddLocationForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+
+        fetch("{{ route('settings.locations.store') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const option = new Option(data.data.name, data.data.name, true, true);
+                placeSelect.add(option, placeSelect.options[placeSelect.options.length]);
+                if (quickAddLocationModal) quickAddLocationModal.hide();
+                this.reset();
+            } else {
+                alert('Error: ' + (data.message || 'Gagal menyimpan data'));
+            }
+        })
+        .catch(err => alert('Gagal menghubungkan ke server'))
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Simpan';
+        });
+    });
 });
 
 // Form validation
