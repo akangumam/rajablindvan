@@ -71,7 +71,7 @@
                                             <input type="text"
                                                    class="form-control form-control-sm"
                                                    id="vehicleSearchInput"
-                                                   placeholder="Cari kendaraan..."
+                                                   placeholder="Cari Nama atau No Plat..."
                                                    style="padding-left: 40px; padding-right: 40px;"
                                                    autofocus
                                                    onclick="event.stopPropagation()">
@@ -99,10 +99,16 @@
                                                    href="#"
                                                    data-value="{{ $veh->id }}"
                                                    data-odometer="{{ $veh->getLatestOdometer() }}"
-                                                   data-text="{{ $veh->brand }} {{ $veh->model }} - {{ $veh->license_plate }}"
+                                                   data-text="{{ $veh->name }} {{ $veh->license_plate }}"
                                                    onclick="selectVehicle(this, event)">
-                                                    {{ $veh->brand }} {{ $veh->model }} - {{ $veh->license_plate }}
-                                                </a>
+                                                     <div class="d-flex justify-content-between align-items-center">
+                                                         <div>
+                                                             <strong>{{ $veh->name }}</strong>
+                                                             <br>
+                                                             <small class="text-muted">{{ $veh->license_plate }}</small>
+                                                         </div>
+                                                     </div>
+                                                 </a>
                                             @endforeach
                                         </div>
                                     </div>

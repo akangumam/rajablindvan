@@ -25,8 +25,8 @@
                         <select class="form-select @error('vehicle_id') is-invalid @enderror" id="vehicle_id" name="vehicle_id" required>
                             <option value="">Select Vehicle</option>
                             @forelse($vehicles as $vehicle)
-                            <option value="{{ $vehicle->id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
-                                {{ $vehicle->name }}
+                            <option value="{{ $vehicle->id }}" {{ (isset($selectedVehicle) && $selectedVehicle->id == $vehicle->id) || old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
+                                {{ $vehicle->name }} - {{ $vehicle->license_plate }}
                             </option>
                             @empty
                             <option value="" disabled>No vehicles available</option>

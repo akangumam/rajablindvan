@@ -20,7 +20,7 @@
             <option value="">Select Vehicle</option>
             @foreach($vehicles ?? [] as $veh)
                 <option value="{{ $veh->id }}" {{ old('vehicle_id') == $veh->id ? 'selected' : '' }}>
-                    {{ $veh->name }} - {{ $veh->brand }} {{ $veh->model }}
+                    {{ $veh->name }} - {{ $veh->license_plate }}
                 </option>
             @endforeach
         </select>
@@ -43,7 +43,7 @@
             @enderror
         </div>
     </div>
-    
+
     <div class="col-md-4">
         <div class="field-group">
             <label class="form-label">

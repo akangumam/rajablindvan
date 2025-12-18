@@ -72,7 +72,7 @@
                                             <input type="text"
                                                    class="form-control form-control-sm"
                                                    id="vehicleSearchInput"
-                                                   placeholder="Cari kendaraan..."
+                                                   placeholder="Cari Nama atau No Plat..."
                                                    style="padding-left: 40px; padding-right: 40px;"
                                                    autofocus
                                                    onclick="event.stopPropagation()">
@@ -89,10 +89,16 @@
                                                 <a class="dropdown-item vehicle-option"
                                                    href="#"
                                                    data-value="{{ $vehicle->id }}"
-                                                   data-text="{{ $vehicle->brand }} {{ $vehicle->model }} - {{ $vehicle->license_plate }}"
+                                                   data-text="{{ $vehicle->name }} {{ $vehicle->license_plate }}"
                                                    onclick="selectVehicle(this, event)">
-                                                    {{ $vehicle->brand }} {{ $vehicle->model }} - {{ $vehicle->license_plate }}
-                                                </a>
+                                                     <div class="d-flex justify-content-between align-items-center">
+                                                         <div>
+                                                             <strong>{{ $vehicle->name }}</strong>
+                                                             <br>
+                                                             <small class="text-muted">{{ $vehicle->license_plate }}</small>
+                                                         </div>
+                                                     </div>
+                                                 </a>
                                             @endforeach
                                         </div>
                                     </div>

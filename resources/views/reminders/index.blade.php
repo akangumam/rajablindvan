@@ -426,7 +426,11 @@
                        style="padding-left: 40px; padding-right: 40px;"
                        autocomplete="off"
                        autofocus>
-                <button type="button" class="clear-search position-absolute" onclick="this.previousElementSibling.value=''; this.closest('form').submit();" style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; {{ request('search') ? '' : 'display: none;' }}">
+                <button type="button"
+                        id="clearSearch"
+                        class="clear-search position-absolute"
+                        onclick="clearSearchInput('reminderSearch')"
+                        style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: {{ request('search') ? 'block' : 'none' }};">
                     <i class="fas fa-times text-muted"></i>
                 </button>
             </div>
@@ -574,7 +578,7 @@
                     <input type="text"
                            id="vehicleReminderSearch"
                            class="form-control"
-                           placeholder="Search vehicle..."
+                           placeholder="Cari Nama atau No Plat..."
                            style="padding-left: 40px; padding-right: 40px; border-radius: 10px;"
                            autofocus>
                     <button type="button"
@@ -603,7 +607,7 @@
                                 {{ $vehicle->name }}
                             </div>
                             <div style="font-size: 13px; color: #999;">
-                                {{ $vehicle->brand }} {{ $vehicle->model }}
+                                {{ $vehicle->license_plate }}
                             </div>
                         </div>
                         @if(isset($selectedVehicle) && $selectedVehicle->id == $vehicle->id)
@@ -632,11 +636,17 @@
 // Live search functionality
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('reminderSearch');
-    const reminderCards = document.querySelectorAll('.reminder-card');
+    const reminderCards = document.querySelectorAll('.reminder-item'); // Updated selector to match reminder list items
+    const clearBtn = document.getElementById('clearSearch');
 
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
+
+            // Toggle clear button
+            if (clearBtn) {
+                clearBtn.style.display = searchTerm.length > 0 ? 'block' : 'none';
+            }
 
             reminderCards.forEach(card => {
                 const text = card.textContent.toLowerCase();
@@ -702,6 +712,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+function clearSearchInput(inputId) {
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.value = '';
+        input.form.submit();
+    }
+}
 </script>
 @endpush
 

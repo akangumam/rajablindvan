@@ -162,7 +162,11 @@
                value="{{ request('search') }}"
                style="padding-left: 40px; padding-right: 40px;"
                autofocus>
-        <button type="button" class="clear-search-btn position-absolute" onclick="clearSearchInput('orderSearch')" style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; {{ request('search') ? '' : 'display: none;' }}">
+        <button type="button"
+                id="clearSearch"
+                class="clear-search-btn position-absolute"
+                onclick="clearSearchInput('orderSearch')"
+                style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: {{ request('search') ? 'flex' : 'none' }};">
             <i class="fas fa-times text-muted"></i>
         </button>
     </div>
@@ -698,8 +702,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const searchTerm = this.value.toLowerCase();
 
             // Show/hide clear button
+            const clearBtn = document.getElementById('clearSearch');
             if (clearBtn) {
-                clearBtn.style.display = searchTerm ? 'block' : 'none';
+                clearBtn.style.display = searchTerm ? 'flex' : 'none';
             }
 
             tableRows.forEach(row => {

@@ -513,7 +513,11 @@
                value="{{ request('search') }}"
                style="padding-left: 40px; padding-right: 40px;"
                autofocus>
-        <button type="button" class="clear-search-btn position-absolute" onclick="clearSearchInput('customerSearch')" style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; {{ request('search') ? '' : 'display: none;' }}">
+        <button type="button"
+                id="clearSearch"
+                class="clear-search-btn position-absolute"
+                onclick="clearSearchInput('customerSearch')"
+                style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: {{ request('search') ? 'block' : 'none' }};">
             <i class="fas fa-times text-muted"></i>
         </button>
     </div>
@@ -662,7 +666,7 @@ function clearSearchInput(inputId) {
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('customerSearch');
     const tableRows = document.querySelectorAll('.user-table tbody tr');
-    const clearBtn = document.querySelector('.clear-search-btn');
+    const clearBtn = document.getElementById('clearSearch');
 
     if (searchInput) {
         searchInput.addEventListener('input', function() {

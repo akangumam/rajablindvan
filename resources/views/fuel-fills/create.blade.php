@@ -176,7 +176,7 @@
     }
     .vehicle-item-name {
         font-size: 15px;
-        font-weight: 500;
+        font-weight: 700;
         color: #2c3e50;
         margin-bottom: 2px;
     }
@@ -655,7 +655,7 @@
         </div>
         <div class="vehicle-modal-search" style="position: relative;">
             <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
-            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Search Vehicle..." style="padding-left: 40px; padding-right: 40px;" autofocus onkeyup="filterVehicles()" oninput="toggleClearButton('vehicleSearch', 'clearVehicleSearch')">
+            <input type="text" id="vehicleSearch" class="vehicle-search-input" placeholder="Cari Nama atau No Plat..." style="padding-left: 40px; padding-right: 40px;" autofocus onkeyup="filterVehicles()" oninput="toggleClearButton('vehicleSearch', 'clearVehicleSearch')">
             <button type="button"
                     class="btn btn-sm position-absolute"
                     style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none; z-index: 10;"
@@ -675,7 +675,9 @@
                 <a href="{{ route('fuel-fills.create', ['vehicle_id' => $v->id]) }}"
                    class="vehicle-list-item {{ isset($vehicle) && $vehicle->id == $v->id ? 'active' : '' }}"
                    data-vehicle-name="{{ strtolower($v->name) }}"
-                   data-vehicle-plate="{{ strtolower($v->license_plate) }}">
+                   data-vehicle-plate="{{ strtolower($v->license_plate) }}"
+                   data-vehicle-brand="{{ strtolower($v->brand) }}"
+                   data-vehicle-model="{{ strtolower($v->model) }}">
                     @if(file_exists(public_path($vLogoPath)))
                         <img src="{{ asset($vLogoPath) }}" alt="{{ $v->brand }}" class="vehicle-item-logo">
                     @else
@@ -807,8 +809,13 @@ function filterVehicles() {
     vehicleItems.forEach(item => {
         const vehicleName = item.getAttribute('data-vehicle-name') || '';
         const vehiclePlate = item.getAttribute('data-vehicle-plate') || '';
+        const vehicleBrand = item.getAttribute('data-vehicle-brand') || '';
+        const vehicleModel = item.getAttribute('data-vehicle-model') || '';
 
-        if (vehicleName.includes(searchInput) || vehiclePlate.includes(searchInput)) {
+        if (vehicleName.includes(searchInput) ||
+            vehiclePlate.includes(searchInput) ||
+            vehicleBrand.includes(searchInput) ||
+            vehicleModel.includes(searchInput)) {
             item.style.display = 'flex';
         } else {
             item.style.display = 'none';
