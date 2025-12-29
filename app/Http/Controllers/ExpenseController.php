@@ -102,7 +102,18 @@ class ExpenseController extends Controller
      */
     public function createForVehicle(Vehicle $vehicle)
     {
-        return view('expenses.create-new', compact('vehicle'));
+        $user = auth()->user();
+
+        // Get vehicles based on user role
+        if ($user && $user->isPengelola()) {
+            $vehicles = Vehicle::where('is_active', true)->orderBy('name')->get();
+        } elseif ($user && $user->isSopir()) {
+            $vehicles = $user->vehicles()->where('is_active', true)->orderBy('name')->get();
+        } else {
+            $vehicles = Vehicle::where('is_active', true)->orderBy('name')->get();
+        }
+
+        return view('expenses.create-new', compact('vehicle', 'vehicles'));
     }
 
     /**

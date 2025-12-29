@@ -79,7 +79,27 @@ class MaintenanceController extends Controller
      */
     public function createForVehicle(Vehicle $vehicle)
     {
-        return view('maintenances.create', compact('vehicle'));
+        $user = auth()->user();
+
+        // Get vehicles based on user role
+        if ($user && $user->isPengelola()) {
+            $vehicles = Vehicle::where('is_active', true)->orderBy('name')->get();
+        } elseif ($user && $user->isSopir()) {
+            $vehicles = $user->vehicles()->where('is_active', true)->orderBy('name')->get();
+        } else {
+            $vehicles = Vehicle::where('is_active', true)->orderBy('name')->get();
+        }
+
+        // Get users for dropdown
+        $users = \App\Models\User::whereIn('user_type', ['manager', 'super_admin', 'sopir'])->orderBy('name')->get();
+
+        // Get service types
+        $serviceTypes = \App\Models\ServiceType::where('is_active', true)->orderBy('name')->get();
+
+        // Get payment methods
+        $paymentMethods = \App\Models\PaymentMethod::where('is_active', true)->orderBy('name')->get();
+
+        return view('maintenances.create', compact('vehicle', 'vehicles', 'users', 'serviceTypes', 'paymentMethods'));
     }
 
     /**

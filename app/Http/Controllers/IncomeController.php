@@ -73,6 +73,34 @@ class IncomeController extends Controller
     }
 
     /**
+     * Create income for specific vehicle
+     */
+    public function createForVehicle(Vehicle $vehicle)
+    {
+        $user = auth()->user();
+
+        // Check access for Sopir
+        if ($user && $user->isSopir() && !$user->hasAccessToVehicle($vehicle->id)) {
+            abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
+        }
+
+        // Get vehicles based on user role
+        if ($user && $user->isPengelola()) {
+            $vehicles = Vehicle::active()->orderBy('name')->get();
+        } elseif ($user && $user->isSopir()) {
+            $vehicles = $user->vehicles()->where('is_active', true)->orderBy('name')->get();
+        } else {
+            $vehicles = Vehicle::active()->orderBy('name')->get();
+        }
+
+        // Get reference data for dropdowns
+        $incomeTypes = \App\Models\IncomeType::active()->orderBy('name')->get();
+        $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
+
+        return view('incomes.create', compact('vehicle', 'vehicles', 'incomeTypes', 'paymentMethods'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)

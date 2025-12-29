@@ -55,71 +55,74 @@
                                     <span class="text-danger">*</span>
                                 </label>
 
-                                <div class="dropdown" id="vehicleDropdown">
-                                    <button class="form-select text-start d-flex justify-content-between align-items-center"
-                                            type="button"
-                                            id="vehicleDropdownBtn"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                        <span id="vehicleDropdownText">Pilih Kendaraan</span>
-                                    </button>
-                                    <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ old('vehicle_id') }}" required>
+                                @if(isset($vehicle) && $vehicle)
+                                    {{-- Locked vehicle selection --}}
+                                    <div class="form-control bg-light" style="cursor: not-allowed;">
+                                        <strong>{{ $vehicle->name }}</strong> - {{ $vehicle->license_plate }}
+                                    </div>
+                                    <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ $vehicle->id }}" required>
+                                    <small class="text-muted d-block mt-1">
+                                        <i class="fas fa-lock me-1"></i>
+                                        Kendaraan terkunci untuk pendapatan ini
+                                    </small>
+                                @else
+                                    {{-- Normal vehicle selection --}}
+                                    <div class="dropdown" id="vehicleDropdown">
+                                        <button class="form-select text-start d-flex justify-content-between align-items-center"
+                                                type="button"
+                                                id="vehicleDropdownBtn"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                            <span id="vehicleDropdownText">Pilih Kendaraan</span>
+                                        </button>
+                                        <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ old('vehicle_id') }}" required>
 
-                                    <div class="dropdown-menu w-100 p-2" aria-labelledby="vehicleDropdownBtn">
-                                        <div class="mb-2 position-relative">
-                                            <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
-                                            <input type="text"
-                                                   class="form-control form-control-sm"
-                                                   id="vehicleSearchInput"
-                                                   placeholder="Cari Nama atau No Plat..."
-                                                   style="padding-left: 40px; padding-right: 40px;"
-                                                   onclick="event.stopPropagation()"
-                                                   autofocus>
-                                            <button type="button"
-                                                    class="btn btn-sm position-absolute"
-                                                    style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"
-                                                    id="clearVehicleSearch"
-                                                    onclick="clearSearch('vehicleSearchInput', 'clearVehicleSearch'); event.stopPropagation();">
-                                                <i class="fas fa-times text-muted"></i>
-                                            </button>
-                                        </div>
-                                        <div class="vehicle-list-container" style="max-height: 250px; overflow-y: auto;">
-                                            @php
-                                                $user = auth()->user();
-                                                if ($user && $user->isPengelola()) {
-                                                    $vehicles = \App\Models\Vehicle::active()->orderBy('brand')->get();
-                                                } elseif ($user && $user->isSopir()) {
-                                                    $vehicles = $user->vehicles()->where('is_active', true)->orderBy('brand')->get();
-                                                } else {
-                                                    $vehicles = \App\Models\Vehicle::active()->orderBy('brand')->get();
-                                                }
-                                            @endphp
-                                            @foreach($vehicles as $veh)
-                                                <a class="dropdown-item vehicle-option"
-                                                   href="#"
-                                                   data-value="{{ $veh->id }}"
-                                                   data-brand="{{ $veh->brand }}"
-                                                   data-model="{{ $veh->model }}"
-                                                   data-plate="{{ $veh->license_plate }}"
-                                                   data-odometer="{{ $veh->getLatestOdometer() }}"
-                                                   data-text="{{ $veh->name }} {{ $veh->license_plate }}"
-                                                   onclick="selectVehicle(this, event)">
-                                                     <div class="d-flex justify-content-between align-items-center">
-                                                         <div>
-                                                             <strong>{{ $veh->name }}</strong>
-                                                             <br>
-                                                             <small class="text-muted">{{ $veh->license_plate }}</small>
+                                        <div class="dropdown-menu w-100 p-2" aria-labelledby="vehicleDropdownBtn">
+                                            <div class="mb-2 position-relative">
+                                                <i class="fas fa-search position-absolute" style="left: 12px; top: 50%; transform: translateY(-50%); color: #999; z-index: 1;"></i>
+                                                <input type="text"
+                                                       class="form-control form-control-sm"
+                                                       id="vehicleSearchInput"
+                                                       placeholder="Cari Nama atau No Plat..."
+                                                       style="padding-left: 40px; padding-right: 40px;"
+                                                       onclick="event.stopPropagation()"
+                                                       autofocus>
+                                                <button type="button"
+                                                        class="btn btn-sm position-absolute"
+                                                        style="right: 12px; top: 50%; transform: translateY(-50%); padding: 0; width: 24px; height: 24px; border: none; background: transparent; display: none;"
+                                                        id="clearVehicleSearch"
+                                                        onclick="clearSearch('vehicleSearchInput', 'clearVehicleSearch'); event.stopPropagation();">
+                                                    <i class="fas fa-times text-muted"></i>
+                                                </button>
+                                            </div>
+                                            <div class="vehicle-list-container" style="max-height: 250px; overflow-y: auto;">
+                                                @foreach($vehicles as $veh)
+                                                    <a class="dropdown-item vehicle-option"
+                                                       href="#"
+                                                       data-value="{{ $veh->id }}"
+                                                       data-brand="{{ $veh->brand }}"
+                                                       data-model="{{ $veh->model }}"
+                                                       data-plate="{{ $veh->license_plate }}"
+                                                       data-odometer="{{ $veh->getLatestOdometer() }}"
+                                                       data-text="{{ $veh->name }} {{ $veh->license_plate }}"
+                                                       onclick="selectVehicle(this, event)">
+                                                         <div class="d-flex justify-content-between align-items-center">
+                                                             <div>
+                                                                 <strong>{{ $veh->name }}</strong>
+                                                                 <br>
+                                                                 <small class="text-muted">{{ $veh->license_plate }}</small>
+                                                             </div>
                                                          </div>
-                                                     </div>
-                                                 </a>
-                                            @endforeach
+                                                     </a>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <small class="text-muted d-block mt-1">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    Pilih kendaraan dari daftar
-                                </small>
+                                    <small class="text-muted d-block mt-1">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Pilih kendaraan dari daftar
+                                    </small>
+                                @endif
                                 @error('vehicle_id')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
