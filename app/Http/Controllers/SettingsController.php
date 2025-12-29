@@ -416,55 +416,83 @@ class SettingsController extends Controller
 
     public function storeServiceType(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:service_types,name',
-            'description' => 'nullable|string',
-            'price' => 'nullable|numeric|min:0'
-        ], [
-            'name.required' => __('common.service_type_name_required'),
-            'name.unique' => __('common.service_type_name_unique'),
-            'name.max' => __('common.service_type_name_max'),
-            'price.numeric' => 'Harga harus berupa angka',
-            'price.min' => 'Harga tidak boleh negatif',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:service_types,name',
+                'description' => 'nullable|string',
+                'price' => 'nullable|numeric|min:0'
+            ], [
+                'name.required' => __('common.service_type_name_required'),
+                'name.unique' => __('common.service_type_name_unique'),
+                'name.max' => __('common.service_type_name_max'),
+                'price.numeric' => 'Harga harus berupa angka',
+                'price.min' => 'Harga tidak boleh negatif',
+            ]);
 
-        $serviceType = ServiceType::create([
-            'name' => $validated['name'],
-            'description' => $request->description ?? null,
-            'price' => $request->price ?? null,
-            'is_active' => true
-        ]);
+            $serviceType = ServiceType::create([
+                'name' => $validated['name'],
+                'description' => $request->description ?? null,
+                'price' => $request->price ?? null,
+                'is_active' => true
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => __('common.service_type_added_successfully'),
-            'data' => $serviceType
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => __('common.service_type_added_successfully'),
+                'data' => $serviceType
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->validator->errors()->first()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function updateServiceType(Request $request, $id)
     {
-        $serviceType = ServiceType::findOrFail($id);
+        try {
+            $serviceType = ServiceType::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:service_types,name,' . $id,
-            'description' => 'nullable|string',
-            'price' => 'nullable|numeric|min:0'
-        ], [
-            'name.required' => __('common.service_type_name_required'),
-            'name.unique' => __('common.service_type_name_unique'),
-            'name.max' => __('common.service_type_name_max'),
-            'price.numeric' => 'Harga harus berupa angka',
-            'price.min' => 'Harga tidak boleh negatif',
-        ]);
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:service_types,name,' . $id,
+                'description' => 'nullable|string',
+                'price' => 'nullable|numeric|min:0'
+            ], [
+                'name.required' => __('common.service_type_name_required'),
+                'name.unique' => __('common.service_type_name_unique'),
+                'name.max' => __('common.service_type_name_max'),
+                'price.numeric' => 'Harga harus berupa angka',
+                'price.min' => 'Harga tidak boleh negatif',
+            ]);
 
-        $serviceType->update($validated);
+            // Update fields explicitly
+            $serviceType->name = $validated['name'];
+            $serviceType->description = $validated['description'] ?? null;
+            $serviceType->price = $validated['price'] ?? null;
+            $serviceType->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => __('common.service_type_updated_successfully'),
-            'data' => $serviceType
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => __('common.service_type_updated_successfully'),
+                'data' => $serviceType
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->validator->errors()->first()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroyServiceType($id)

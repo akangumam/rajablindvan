@@ -636,7 +636,12 @@ function SIMPANService() {
             description: description
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => Promise.reject(err));
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             alert(data.message);
@@ -648,7 +653,11 @@ function SIMPANService() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Gagal menyimpan jenis service. Silakan coba lagi.');
+        if (error.message) {
+            alert('Error: ' + error.message);
+        } else {
+            alert('Gagal menyimpan jenis service. Silakan coba lagi.');
+        }
     });
 }
 
