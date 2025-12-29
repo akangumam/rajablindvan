@@ -418,16 +418,20 @@ class SettingsController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:service_types,name',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'price' => 'nullable|numeric|min:0'
         ], [
             'name.required' => __('common.service_type_name_required'),
             'name.unique' => __('common.service_type_name_unique'),
             'name.max' => __('common.service_type_name_max'),
+            'price.numeric' => 'Harga harus berupa angka',
+            'price.min' => 'Harga tidak boleh negatif',
         ]);
 
         $serviceType = ServiceType::create([
             'name' => $validated['name'],
             'description' => $request->description ?? null,
+            'price' => $request->price ?? null,
             'is_active' => true
         ]);
 
@@ -444,11 +448,14 @@ class SettingsController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:service_types,name,' . $id,
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'price' => 'nullable|numeric|min:0'
         ], [
             'name.required' => __('common.service_type_name_required'),
             'name.unique' => __('common.service_type_name_unique'),
             'name.max' => __('common.service_type_name_max'),
+            'price.numeric' => 'Harga harus berupa angka',
+            'price.min' => 'Harga tidak boleh negatif',
         ]);
 
         $serviceType->update($validated);
@@ -508,6 +515,13 @@ class SettingsController extends Controller
     {
         $expenseType = ExpenseType::findOrFail($id);
 
+        if ($expenseType->is_system) {
+            return response()->json([
+                'success' => false,
+                'message' => 'System default types cannot be edited.'
+            ], 403);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:expense_types,name,' . $id,
             'description' => 'nullable|string'
@@ -529,6 +543,13 @@ class SettingsController extends Controller
     public function destroyExpenseType($id)
     {
         $expenseType = ExpenseType::findOrFail($id);
+
+        if ($expenseType->is_system) {
+            return response()->json([
+                'success' => false,
+                'message' => 'System default types cannot be deleted.'
+            ], 403);
+        }
         $expenseType->delete();
 
         return response()->json([

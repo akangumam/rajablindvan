@@ -156,6 +156,13 @@
     font-weight: 500;
 }
 
+.service-price {
+    font-size: 13px;
+    color: #28a745;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
 .service-actions {
     display: flex;
     gap: 10px;
@@ -484,7 +491,7 @@
                             <i class="fas fa-plus me-1"></i> TAMBAH BARU SERVICE
                         </button>
                     </div>
-                    
+
                     @if($serviceTypes->isEmpty())
                         <div class="service-list-item" style="justify-content: center; color: #999;">
                             Belum ada jenis service. Klik "TAMBAH BARU SERVICE" untuk menambahkan.
@@ -496,10 +503,15 @@
                                 <div class="service-icon">
                                     <i class="fas fa-wrench"></i>
                                 </div>
-                                <div class="service-name">{{ $serviceType->name }}</div>
+                                <div>
+                                    <div class="service-name">{{ $serviceType->name }}</div>
+                                    @if($serviceType->price)
+                                    <div class="service-price">Harga Referensi: Rp {{ number_format($serviceType->price, 0, ',', '.') }}</div>
+                                    @endif
+                                </div>
                             </div>
                             <div class="service-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $serviceType->id }}, '{{ $serviceType->name }}', '{{ $serviceType->description }}')">
+                                <button class="btn-edit" onclick="openEditModal({{ $serviceType->id }}, '{{ $serviceType->name }}', '{{ $serviceType->description }}', '{{ $serviceType->price }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn-delete" onclick="confirmDelete({{ $serviceType->id }}, '{{ $serviceType->name }}')">
@@ -530,6 +542,11 @@
                     <input type="text" class="form-control" id="serviceName" placeholder="Masukkan nama jenis service" required>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Harga Referensi (Rp)</label>
+                    <input type="text" class="form-control" id="servicePrice" placeholder="Masukkan harga referensi (opsional)" oninput="formatPriceInput(this)">
+                    <small class="form-text text-muted">Harga ini akan menjadi referensi saat membuat servis baru</small>
+                </div>
+                <div class="form-group">
                     <label class="form-label">Deskripsi</label>
                     <textarea class="form-control" id="serviceDescription" placeholder="Masukkan deskripsi (opsional)" rows="3"></textarea>
                 </div>
@@ -551,15 +568,22 @@ function openAddModal() {
     document.getElementById('modalTitle').textContent = 'TAMBAH BARU SERVICE';
     document.getElementById('serviceId').value = '';
     document.getElementById('serviceName').value = '';
+    document.getElementById('servicePrice').value = '';
     document.getElementById('serviceDescription').value = '';
     document.getElementById('serviceModal').classList.add('show');
 }
 
-function openEditModal(id, name, description) {
+function openEditModal(id, name, description, price) {
     isEditMode = true;
     document.getElementById('modalTitle').textContent = 'Edit Jenis Service';
     document.getElementById('serviceId').value = id;
     document.getElementById('serviceName').value = name;
+    const priceInput = document.getElementById('servicePrice');
+    if (price) {
+        priceInput.value = formatNumberWithDots(price);
+    } else {
+        priceInput.value = '';
+    }
     document.getElementById('serviceDescription').value = description || '';
     document.getElementById('serviceModal').classList.add('show');
 }
@@ -568,20 +592,35 @@ function closeModal() {
     document.getElementById('serviceModal').classList.remove('show');
 }
 
+function formatPriceInput(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value) {
+        value = formatNumberWithDots(value);
+    }
+    input.value = value;
+}
+
+function formatNumberWithDots(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 function SIMPANService() {
     const id = document.getElementById('serviceId').value;
     const name = document.getElementById('serviceName').value.trim();
+    const priceFormatted = document.getElementById('servicePrice').value.trim();
+    // Remove dots from formatted price
+    const price = priceFormatted.replace(/\./g, '');
     const description = document.getElementById('serviceDescription').value.trim();
-    
+
     if (!name) {
         alert('Mohon masukkan nama jenis service');
         return;
     }
 
-    const url = isEditMode 
+    const url = isEditMode
         ? '{{ route("settings.service-types.update", ":id") }}'.replace(':id', id)
         : '{{ route("settings.service-types.store") }}';
-    
+
     const method = isEditMode ? 'PUT' : 'POST';
 
     fetch(url, {
@@ -593,6 +632,7 @@ function SIMPANService() {
         },
         body: JSON.stringify({
             name: name,
+            price: price || null,
             description: description
         })
     })

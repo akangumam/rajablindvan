@@ -17,6 +17,7 @@ class ExpenseType extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_system' => 'boolean',
     ];
 
     /**

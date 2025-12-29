@@ -162,7 +162,7 @@
                             <div class="text-end">
                                 <div class="fuel-amount">Rp {{ number_format($fuel->total_cost, 0, ',', '.') }}</div>
                                 <div class="fuel-date">
-                                    <i class="bi bi-calendar3"></i> {{ $fuel->fill_date->format('d M Y, H:i') }}
+                                    <i class="bi bi-calendar3"></i> {{ $fuel->fill_date->format($appDateFormat . ', H:i') }}
                                 </div>
                             </div>
                         </div>

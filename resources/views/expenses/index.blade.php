@@ -31,7 +31,7 @@
     .category-toll { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
     .category-fine { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
     .category-other { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
-    
+
     .expense-amount {
         font-size: 20px;
         font-weight: 700;
@@ -193,7 +193,7 @@
                             <div class="text-end">
                                 <div class="expense-amount">Rp {{ number_format($expense->amount, 0, ',', '.') }}</div>
                                 <div class="expense-date">
-                                    <i class="bi bi-calendar3"></i> {{ $expense->expense_date->format('d M Y') }}
+                                    <i class="bi bi-calendar3"></i> {{ $expense->expense_date->format($appDateFormat) }}
                                 </div>
                             </div>
                         </div>

@@ -478,7 +478,7 @@
                         <div class="reminder-meta">
                             <i class="fas fa-tag me-1"></i>{{ $reminder->category }}
                             <span class="mx-2">•</span>
-                            <i class="far fa-calendar me-1"></i>{{ $reminder->due_date->format('d/m/Y') }}
+                            <i class="far fa-calendar me-1"></i>{{ $reminder->due_date->format($appDateFormat) }}
                             @if($reminder->estimated_cost)
                                 <span class="mx-2">•</span>
                                 <i class="fas fa-dollar-sign me-1"></i>Rp {{ number_format($reminder->estimated_cost, 0, ',', '.') }}

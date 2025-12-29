@@ -472,7 +472,7 @@
                             <i class="fas fa-plus me-1"></i> TAMBAH BARU PENGELUARAN
                         </button>
                     </div>
-                    
+
                     @if($expenseTypes->isEmpty())
                         <div class="expense-list-item" style="justify-content: center; color: #999;">
                             Belum ada jenis pengeluaran. Klik "TAMBAH BARU PENGELUARAN" untuk menambahkan.
@@ -487,12 +487,16 @@
                                 <div class="expense-name">{{ $expenseType->name }}</div>
                             </div>
                             <div class="expense-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $expenseType->id }}, '{{ $expenseType->name }}', '{{ $expenseType->description }}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-delete" onclick="confirmDelete({{ $expenseType->id }}, '{{ $expenseType->name }}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                @if($expenseType->is_system)
+                                    <span class="badge bg-secondary" style="font-size: 11px; padding: 6px 10px; border-radius: 4px;">DEFAULT SYSTEM</span>
+                                @else
+                                    <button class="btn-edit" onclick="openEditModal({{ $expenseType->id }}, '{{ $expenseType->name }}', '{{ $expenseType->description }}')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-delete" onclick="confirmDelete({{ $expenseType->id }}, '{{ $expenseType->name }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                @endif
                             </div>
                         </div>
                         @endforeach
@@ -560,16 +564,16 @@ function SIMPANExpense() {
     const id = document.getElementById('expenseId').value;
     const name = document.getElementById('expenseName').value.trim();
     const description = document.getElementById('expenseDescription').value.trim();
-    
+
     if (!name) {
         alert('Mohon masukkan nama jenis pengeluaran');
         return;
     }
 
-    const url = isEditMode 
+    const url = isEditMode
         ? '{{ route("settings.expense-types.update", ":id") }}'.replace(':id', id)
         : '{{ route("settings.expense-types.store") }}';
-    
+
     const method = isEditMode ? 'PUT' : 'POST';
 
     fetch(url, {

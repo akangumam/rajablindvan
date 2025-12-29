@@ -137,7 +137,7 @@
                             <div class="fw-bold small">{{ $maintenance->vehicle->name }}</div>
                             <div class="text-muted small">{{ $maintenance->type }}</div>
                             <div class="text-muted small">
-                                {{ $maintenance->next_maintenance_date->format('d M Y') }}
+                                {{ $maintenance->next_maintenance_date->format($appDateFormat) }}
                             </div>
                         </div>
                     </div>
@@ -174,7 +174,7 @@
                             <div class="text-muted small">
                                 {{ $fuel->liters }}L - Rp {{ number_format($fuel->total_cost, 0, ',', '.') }}
                             </div>
-                            <div class="text-muted small">{{ $fuel->fill_date->format('d M Y') }}</div>
+                            <div class="text-muted small">{{ $fuel->fill_date->format($appDateFormat) }}</div>
                         </div>
                     </div>
                 @empty
@@ -206,7 +206,7 @@
                             <div class="text-muted small">
                                 {{ $maintenance->type }} - Rp {{ number_format($maintenance->cost, 0, ',', '.') }}
                             </div>
-                            <div class="text-muted small">{{ $maintenance->maintenance_date->format('d M Y') }}</div>
+                            <div class="text-muted small">{{ $maintenance->maintenance_date->format($appDateFormat) }}</div>
                         </div>
                     </div>
                 @empty
@@ -238,7 +238,7 @@
                             <div class="text-muted small">
                                 {{ $expense->category_label }} - Rp {{ number_format($expense->amount, 0, ',', '.') }}
                             </div>
-                            <div class="text-muted small">{{ $expense->expense_date->format('d M Y') }}</div>
+                            <div class="text-muted small">{{ $expense->expense_date->format($appDateFormat) }}</div>
                         </div>
                     </div>
                 @empty
@@ -289,15 +289,15 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group">
-                                            <a href="{{ route('vehicles.show', $summary['vehicle']) }}" 
+                                            <a href="{{ route('vehicles.show', $summary['vehicle']) }}"
                                                class="btn btn-outline-primary">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="{{ route('fuel-fills.create-for-vehicle', $summary['vehicle']) }}" 
+                                            <a href="{{ route('fuel-fills.create-for-vehicle', $summary['vehicle']) }}"
                                                class="btn btn-outline-success">
                                                 <i class="bi bi-fuel-pump"></i>
                                             </a>
-                                            <a href="{{ route('maintenances.create-for-vehicle', $summary['vehicle']) }}" 
+                                            <a href="{{ route('maintenances.create-for-vehicle', $summary['vehicle']) }}"
                                                class="btn btn-outline-warning">
                                                 <i class="bi bi-tools"></i>
                                             </a>

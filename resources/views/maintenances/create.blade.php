@@ -951,7 +951,7 @@ let availableServices = [];
 @if(isset($serviceTypes) && $serviceTypes->count() > 0)
     availableServices = [
         @foreach($serviceTypes as $type)
-        { id: '{{ Str::slug($type->name) }}', name: '{{ $type->name }}' },
+        { id: '{{ Str::slug($type->name) }}', name: '{{ $type->name }}', refPrice: {{ $type->price ?? 0 }} },
         @endforeach
     ];
 @else
@@ -1025,12 +1025,17 @@ function renderServiceList(filter = '') {
             price = formatCurrency(selectedService.price);
         }
 
+        // Reference price label
+        const refPriceLabel = service.refPrice && service.refPrice > 0
+            ? `<small class="text-muted ms-2">(Ref: Rp ${formatCurrency(service.refPrice.toString())})</small>`
+            : '';
+
         const item = document.createElement('div');
         item.className = 'service-item';
         item.innerHTML = `
             <input type="checkbox" class="service-checkbox" id="check_${service.id}"
                    ${isSelected ? 'checked' : ''} onchange="toggleServicePrice('${service.id}', this)">
-            <label class="service-name" for="check_${service.id}">${service.name}</label>
+            <label class="service-name" for="check_${service.id}">${service.name}${refPriceLabel}</label>
             <input type="text" class="service-price-input currency-input ${isSelected ? '' : 'hidden'}"
                    id="price_${service.id}" placeholder="Harga (Rp)" value="${price}"
                    oninput="this.value = formatCurrency(this.value, true); updateServicePrice('${service.id}', this.value)">
@@ -1060,13 +1065,21 @@ function toggleServicePrice(serviceId, checkbox) {
     const priceInput = document.getElementById(`price_${serviceId}`);
     if (checkbox.checked) {
         priceInput.classList.remove('hidden');
-        priceInput.focus();
 
         // Add to selected services if not exists
         const service = availableServices.find(s => s.id === serviceId);
         if (!selectedServices.some(s => s.id === serviceId)) {
-            selectedServices.push({ ...service, price: '' });
+            // Auto-fill with reference price if available
+            const refPrice = service.refPrice || 0;
+            if (refPrice > 0) {
+                priceInput.value = formatCurrency(refPrice.toString());
+                selectedServices.push({ ...service, price: refPrice });
+            } else {
+                selectedServices.push({ ...service, price: '' });
+            }
         }
+
+        priceInput.focus();
     } else {
         priceInput.classList.add('hidden');
         priceInput.value = '';

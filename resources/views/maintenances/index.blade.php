@@ -47,7 +47,7 @@
                                 @forelse($maintenances as $key => $maintenance)
                                 <tr>
                                     <td>{{ $maintenances->firstItem() + $key }}</td>
-                                    <td>{{ $maintenance->maintenance_date ? $maintenance->maintenance_date->format('d/m/Y') : '-' }}</td>
+                                    <td>{{ $maintenance->maintenance_date ? $maintenance->maintenance_date->format($appDateFormat) : '-' }}</td>
                                     <td>
                                         <strong>{{ $maintenance->vehicle->name ?? '-' }}</strong><br>
                                         <small class="text-muted">{{ $maintenance->vehicle->license_plate ?? '-' }}</small>

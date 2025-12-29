@@ -23,6 +23,10 @@
     <!-- Mobile Responsive CSS -->
     <link rel="stylesheet" href="{{ asset('css/mobile-responsive.css') }}">
 
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
+
     <!-- Custom CSS -->
     <style>
         * {
@@ -1069,6 +1073,36 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get format from server-shared variable (if available) or default
+            const dateFormat = "{{ $appDateFormat ?? 'Y-m-d' }}";
+
+            // Convert PHP date format to Flatpickr format if necessary
+            // Most PHP tokens d, m, Y, F, M, l, D are supported by Flatpickr directly.
+
+            flatpickr("input[type='date']", {
+                altInput: true,
+                altFormat: dateFormat,
+                dateFormat: "Y-m-d",
+                allowInput: true, // Allow manual typing
+                theme: "airbnb"
+            });
+
+            // Also support dedicated class
+            flatpickr(".datepicker", {
+                altInput: true,
+                altFormat: dateFormat,
+                dateFormat: "Y-m-d",
+                allowInput: true,
+                theme: "airbnb"
+            });
+        });
+    </script>
+
 
     <!-- Location Filter Script -->
     <script>

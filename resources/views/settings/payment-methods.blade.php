@@ -640,7 +640,7 @@
                             <i class="fas fa-plus me-1"></i> TAMBAH BARU METHOD
                         </button>
                     </div>
-                    
+
                     @if($paymentMethods->isEmpty())
                         <div class="payment-list-item" style="justify-content: center; color: #999;">
                             No Metode Pembayaran found. Click "TAMBAH BARU METHOD" to create one.
@@ -655,7 +655,7 @@
                                 <div class="payment-name">{{ $paymentMethod->name }}</div>
                             </div>
                             <div class="payment-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $paymentMethod->id }}, '{{ $paymentMethod->name }}', '{{ $paymentMethod->description }}')"
+                                <button class="btn-edit" onclick="openEditModal({{ $paymentMethod->id }}, '{{ $paymentMethod->name }}', '{{ $paymentMethod->description }}')">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn-delete" onclick="confirmDelete({{ $paymentMethod->id }}, '{{ $paymentMethod->name }}')">
@@ -728,16 +728,16 @@ function SIMPANPayment() {
     const id = document.getElementById('paymentId').value;
     const name = document.getElementById('paymentName').value.trim();
     const description = document.getElementById('paymentDescription').value.trim();
-    
+
     if (!name) {
         alert('Please enter payment method name');
         return;
     }
 
-    const url = isEditMode 
+    const url = isEditMode
         ? '{{ route("settings.payment-methods.update", ":id") }}'.replace(':id', id)
         : '{{ route("settings.payment-methods.store") }}';
-    
+
     const method = isEditMode ? 'PUT' : 'POST';
 
     fetch(url, {

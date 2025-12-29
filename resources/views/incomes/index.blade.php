@@ -162,7 +162,7 @@
         <tbody>
             @foreach($incomes as $income)
             <tr>
-                <td>{{ $income->income_date->format('d/m/Y') }}</td>
+                <td>{{ $income->income_date->format($appDateFormat) }}</td>
                 <td>{{ $income->vehicle->name }}</td>
                 <td>{{ $income->type ?? ($income->category ?? '-') }}</td>
                 <td>{{ $income->user->name ?? '-' }}</td>
@@ -177,7 +177,7 @@
             @endforeach
         </tbody>
     </table>
-    
+
     @if($incomes->hasPages())
     <div style="padding: 20px; border-top: 1px solid #e9ecef;">
         {{ $incomes->links() }}

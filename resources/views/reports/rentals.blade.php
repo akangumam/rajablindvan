@@ -16,7 +16,7 @@
                     <a href="{{ route('reports.rentals.excel') }}{{ request()->getQueryString() ? '?' . request()->getQueryString() : '' }}" class="btn btn-success">
                         <i class="fas fa-file-excel me-1"></i>Export Excel
                     </a>
-                    <a href="{{ route('reports.rentals.pdf', request()->query()) }}" 
+                    <a href="{{ route('reports.rentals.pdf', request()->query()) }}"
                        class="btn btn-danger" target="_blank">
                         <i class="fas fa-file-pdf me-1"></i>Export PDF
                     </a>
@@ -168,7 +168,7 @@
                                 <tr>
                                     <td>
                                         <div class="fw-bold">{{ $rental->rental_code }}</div>
-                                        <small class="text-muted">{{ $rental->created_at->format('d M Y') }}</small>
+                                        <small class="text-muted">{{ $rental->created_at->format($appDateFormat) }}</small>
                                     </td>
                                     <td>
                                         <div class="fw-bold">{{ $rental->customer->name }}</div>
@@ -179,8 +179,8 @@
                                         <small class="text-muted">{{ $rental->vehicle->license_plate }}</small>
                                     </td>
                                     <td>
-                                        <div>{{ $rental->start_date->format('d M Y') }}</div>
-                                        <div>{{ $rental->end_date->format('d M Y') }}</div>
+                                        <div>{{ $rental->start_date->format($appDateFormat) }}</div>
+                                        <div>{{ $rental->end_date->format($appDateFormat) }}</div>
                                         @if($rental->isOverdue())
                                             <small class="text-danger">
                                                 <i class="fas fa-exclamation-triangle"></i>
