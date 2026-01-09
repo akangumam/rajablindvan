@@ -79,9 +79,20 @@ class DashboardController extends Controller
             ->count();
 
         // Monitoring Alerts - STNK, KIR, GPS Overdue
-        $stnkOverdue = $vehiclesQuery->whereDate('stnk_expiry_date', '<', Carbon::now())->count();
-        $kirOverdue = $vehiclesQuery->whereDate('kir_expiry_date', '<', Carbon::now())->count();
-        $gpsOverdue = $vehiclesQuery->whereDate('gps_expiry_date', '<', Carbon::now())->count();
+        // Need fresh queries because $vehiclesQuery was modified by previous where() calls
+        $stnkQuery = Vehicle::query();
+        $kirQuery = Vehicle::query();
+        $gpsQuery = Vehicle::query();
+
+        if ($locationId) {
+            $stnkQuery->where('location_id', $locationId);
+            $kirQuery->where('location_id', $locationId);
+            $gpsQuery->where('location_id', $locationId);
+        }
+
+        $stnkOverdue = $stnkQuery->whereNotNull('stnk_expiry_date')->whereDate('stnk_expiry_date', '<', Carbon::now())->count();
+        $kirOverdue = $kirQuery->whereNotNull('kir_expiry_date')->whereDate('kir_expiry_date', '<', Carbon::now())->count();
+        $gpsOverdue = $gpsQuery->whereNotNull('gps_expiry_date')->whereDate('gps_expiry_date', '<', Carbon::now())->count();
 
         // Recent activities (last 10)
         $recentActivities = $this->getRecentActivities($user, $locationId);
