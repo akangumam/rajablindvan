@@ -78,6 +78,11 @@ class DashboardController extends Controller
             ->whereDate('end_date', '<', Carbon::now())
             ->count();
 
+        // Monitoring Alerts - STNK, KIR, GPS Overdue
+        $stnkOverdue = $vehiclesQuery->whereDate('stnk_expiry_date', '<', Carbon::now())->count();
+        $kirOverdue = $vehiclesQuery->whereDate('kir_expiry_date', '<', Carbon::now())->count();
+        $gpsOverdue = $vehiclesQuery->whereDate('gps_expiry_date', '<', Carbon::now())->count();
+
         // Recent activities (last 10)
         $recentActivities = $this->getRecentActivities($user, $locationId);
 
@@ -117,6 +122,9 @@ class DashboardController extends Controller
                 'alerts' => [
                     'upcoming_maintenance' => $upcomingMaintenance,
                     'overdue_rentals' => $overdueRentals,
+                    'stnk_overdue' => $stnkOverdue,
+                    'kir_overdue' => $kirOverdue,
+                    'gps_overdue' => $gpsOverdue,
                 ],
                 'location_stats' => $locationStats,
                 'recent_activities' => $recentActivities,
@@ -138,7 +146,7 @@ class DashboardController extends Controller
         for ($i = 5; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
             $monthYear = $date->format('Y-m');
-            
+
             $query = Rental::where('status', 'completed')
                 ->whereRaw("strftime('%Y-%m', start_date) = ?", [$monthYear]);
 
@@ -215,7 +223,7 @@ class DashboardController extends Controller
             });
 
         $activities = $activities->merge($recentRentals)->merge($recentMaintenance);
-        
+
         return $activities->sortByDesc('timestamp')->take(10)->values();
     }
 }

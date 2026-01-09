@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\RentalController;
+use App\Http\Controllers\Api\MonitoringController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,5 +48,12 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
         Route::get('/', [RentalController::class, 'index']);
         Route::get('/active', [RentalController::class, 'active']);
         Route::get('/{id}', [RentalController::class, 'show']);
+    });
+
+    // Monitoring (Read-Only)
+    Route::prefix('monitoring')->group(function () {
+        Route::get('/stnk-overdue', [MonitoringController::class, 'stnkOverdue']);
+        Route::get('/kir-overdue', [MonitoringController::class, 'kirOverdue']);
+        Route::get('/gps-overdue', [MonitoringController::class, 'gpsOverdue']);
     });
 });
