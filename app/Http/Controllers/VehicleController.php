@@ -662,10 +662,13 @@ class VehicleController extends Controller
 
             // Log file upload
             UploadedFile::create([
+                'original_name' => $file->getClientOriginalName(),
+                'stored_name' => basename($filePath),
                 'file_name' => $validated['document_name'],
                 'file_path' => $filePath,
                 'file_size' => $file->getSize(),
                 'mime_type' => $file->getMimeType(),
+                'file_type' => $this->determineFileType($file->getMimeType(), $file->getClientOriginalExtension()),
                 'category' => 'vehicle',
                 'uploaded_by' => auth()->id(),
                 'related_id' => $vehicle->id
