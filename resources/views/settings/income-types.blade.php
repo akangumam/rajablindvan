@@ -417,21 +417,21 @@
                 </a>
             </li>
             <li class="settings-page-menu-item">
+                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link active">
+                    <i class="fas fa-wallet" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
+                    Jenis Pendapatan
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-wrench" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Service
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-receipt" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Pengeluaran
-                </a>
-            </li>
-            <li class="settings-page-menu-item">
-                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link active">
-                    <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
-                    Jenis Pendapatan
                 </a>
             </li>
             @if(auth()->user()->hasRole(['super_admin']))
@@ -472,7 +472,7 @@
                             <i class="fas fa-plus me-1"></i> TAMBAH BARU PENDAPATAN
                         </button>
                     </div>
-                    
+
                     @if($incomeTypes->isEmpty())
                         <div class="income-list-item" style="justify-content: center; color: #999;">
                             Belum ada jenis pendapatan. Klik "TAMBAH BARU PENDAPATAN" untuk menambahkan.
@@ -560,16 +560,16 @@ function SIMPANIncome() {
     const id = document.getElementById('incomeId').value;
     const name = document.getElementById('incomeName').value.trim();
     const description = document.getElementById('incomeDescription').value.trim();
-    
+
     if (!name) {
         alert('Mohon masukkan nama jenis pendapatan');
         return;
     }
 
-    const url = isEditMode 
+    const url = isEditMode
         ? '{{ route("settings.income-types.update", ":id") }}'.replace(':id', id)
         : '{{ route("settings.income-types.store") }}';
-    
+
     const method = isEditMode ? 'PUT' : 'POST';
 
     fetch(url, {

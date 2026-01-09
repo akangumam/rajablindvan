@@ -609,21 +609,21 @@
                 </a>
             </li>
             <li class="settings-page-menu-item">
+                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
+                    <i class="fas fa-wallet" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
+                    Jenis Pendapatan
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-wrench" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Services
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-receipt" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Pengeluaran
-                </a>
-            </li>
-            <li class="settings-page-menu-item">
-                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
-                    Jenis Pendapatan
                 </a>
             </li>
             @if(auth()->user()->hasRole(['super_admin']))
@@ -666,7 +666,7 @@
                             <i class="fas fa-plus me-1"></i> TAMBAH TEMPAT BARU
                         </button>
                     </div>
-                    
+
                     @if($locations->isEmpty())
                         <div class="Lokasi-list-item" style="grid-column: 1 / -1; justify-self: center; color: #999;">
                             Belum ada tempat. Klik "TAMBAH TEMPAT BARU" untuk menambahkan.
@@ -685,8 +685,8 @@
                             </div>
                             <div class="Lokasi-coordinates">
                                 @if($location->latitude && $location->longitude)
-                                    <a href="https://www.google.com/maps?q={{ $location->latitude }},{{ $location->longitude }}" 
-                                       target="_blank" 
+                                    <a href="https://www.google.com/maps?q={{ $location->latitude }},{{ $location->longitude }}"
+                                       target="_blank"
                                        class="coordinate-link"
                                        title="Buka di Google Maps">
                                         <i class="fas fa-map-marker-alt"></i>
@@ -725,7 +725,7 @@
                 <input type="hidden" id="LokasiId" value="">
                 <input type="hidden" id="LokasiLatitude" value="">
                 <input type="hidden" id="LokasiLongitude" value="">
-                
+
                 <div class="form-group">
                     <label class="form-label">Nama Tempat <span class="required">*</span></label>
                     <input type="text" class="form-control" id="LokasiName" placeholder="Masukkan nama tempat" required>
@@ -734,7 +734,7 @@
                         Nama tempat harus diisi
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Kode Tempat <span class="required">*</span></label>
                     <input type="text" class="form-control" id="LokasiCode" placeholder="Contoh: JKT, BDG" required>
@@ -743,7 +743,7 @@
                         Kode tempat harus diisi
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Alamat <span class="required">*</span></label>
                     <textarea class="form-control" id="LokasiAddress" placeholder="Masukkan alamat lengkap" rows="2" required></textarea>
@@ -752,17 +752,17 @@
                         Alamat harus diisi
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Telepon</label>
                     <input type="text" class="form-control" id="LokasiPhone" placeholder="Nomor telepon (opsional)">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Nama Manager</label>
                     <input type="text" class="form-control" id="LokasiManager" placeholder="Nama manager (opsional)">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Pin Lokasi pada Peta</label>
                     <div class="map-info">
@@ -809,26 +809,26 @@ function initMap(lat = -6.2088, lng = 106.8456) {
     if (map !== null) {
         map.remove();
     }
-    
+
     // Create map
     map = L.map('map').setView([lat, lng], 13);
-    
+
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
     }).addTo(map);
-    
+
     // Add click event to map
     map.on('click', function(e) {
         placeMarker(e.latlng);
     });
-    
+
     // Place initial marker if coordinates exist
     if (lat && lng) {
         placeMarker(L.latLng(lat, lng));
     }
-    
+
     // Fix map display issues
     setTimeout(function() {
         map.invalidateSize();
@@ -841,18 +841,18 @@ function placeMarker(latlng) {
     if (marker !== null) {
         map.removeLayer(marker);
     }
-    
+
     // Add new marker
     marker = L.marker(latlng).addTo(map);
-    
+
     // Update coordinates
     currentLat = latlng.lat;
     currentLng = latlng.lng;
-    
+
     // Update hidden inputs
     document.getElementById('LokasiLatitude').value = currentLat.toFixed(8);
     document.getElementById('LokasiLongitude').value = currentLng.toFixed(8);
-    
+
     // Update display
     document.getElementById('displayLatitude').textContent = currentLat.toFixed(8);
     document.getElementById('displayLongitude').textContent = currentLng.toFixed(8);
@@ -871,9 +871,9 @@ function openAddModal() {
     document.getElementById('LokasiLongitude').value = '';
     document.getElementById('displayLatitude').textContent = '-';
     document.getElementById('displayLongitude').textContent = '-';
-    
+
     document.getElementById('LokasiModal').classList.add('show');
-    
+
     // Initialize map with default location (Jakarta)
     setTimeout(function() {
         initMap(-6.2088, 106.8456);
@@ -891,7 +891,7 @@ function openEditModal(location) {
     document.getElementById('LokasiManager').value = location.manager_name || '';
     document.getElementById('LokasiLatitude').value = location.latitude || '';
     document.getElementById('LokasiLongitude').value = location.longitude || '';
-    
+
     // Update coordinate display
     if (location.latitude && location.longitude) {
         document.getElementById('displayLatitude').textContent = parseFloat(location.latitude).toFixed(8);
@@ -900,9 +900,9 @@ function openEditModal(location) {
         document.getElementById('displayLatitude').textContent = '-';
         document.getElementById('displayLongitude').textContent = '-';
     }
-    
+
     document.getElementById('LokasiModal').classList.add('show');
-    
+
     // Initialize map with existing coordinates or default
     setTimeout(function() {
         const lat = location.latitude ? parseFloat(location.latitude) : -6.2088;
@@ -930,39 +930,39 @@ function SIMPANLokasi() {
     const manager = document.getElementById('LokasiManager').value.trim();
     const latitude = document.getElementById('LokasiLatitude').value;
     const longitude = document.getElementById('LokasiLongitude').value;
-    
+
     // Reset all error states
     clearValidationErrors();
-    
+
     let hasError = false;
-    
+
     // Validate nama tempat
     if (!name) {
         showValidationError('LokasiName', 'errorLokasiName');
         hasError = true;
     }
-    
+
     // Validate kode tempat
     if (!code) {
         showValidationError('LokasiCode', 'errorLokasiCode');
         hasError = true;
     }
-    
+
     // Validate alamat
     if (!address) {
         showValidationError('LokasiAddress', 'errorLokasiAddress');
         hasError = true;
     }
-    
+
     // If there are validation errors, stop here
     if (hasError) {
         return;
     }
 
-    const url = isEditMode 
+    const url = isEditMode
         ? '{{ route("settings.locations.update", ":id") }}'.replace(':id', id)
         : '{{ route("settings.locations.store") }}';
-    
+
     const method = isEditMode ? 'PUT' : 'POST';
 
     const data = {
@@ -1004,7 +1004,7 @@ function SIMPANLokasi() {
 function showValidationError(fieldId, errorId) {
     const field = document.getElementById(fieldId);
     const error = document.getElementById(errorId);
-    
+
     if (field) {
         field.classList.add('error');
         // Remove error class when user starts typing
@@ -1015,7 +1015,7 @@ function showValidationError(fieldId, errorId) {
             }
         }, { once: true });
     }
-    
+
     if (error) {
         error.classList.add('show');
     }
@@ -1027,7 +1027,7 @@ function clearValidationErrors() {
     document.querySelectorAll('.form-control.error').forEach(function(el) {
         el.classList.remove('error');
     });
-    
+
     // Hide all error messages
     document.querySelectorAll('.error-message.show').forEach(function(el) {
         el.classList.remove('show');

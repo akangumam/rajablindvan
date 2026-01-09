@@ -368,21 +368,21 @@
                 </a>
             </li>
             <li class="settings-page-menu-item">
+                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
+                    <i class="fas fa-wallet" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
+                    Jenis Pendapatan
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-wrench" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Services
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-receipt" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Pengeluaran
-                </a>
-            </li>
-            <li class="settings-page-menu-item">
-                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
-                    Jenis Pendapatan
                 </a>
             </li>
             @if(auth()->user()->hasRole(['super_admin']))
@@ -456,19 +456,19 @@
                 <div class="storage-usage">
                     <div class="storage-usage-title">Using {{ number_format($usedStorageMB, 2) }} MB ({{ number_format($usagePercentage, 2) }}%) of {{ number_format($storageLimitMB, 0) }} MB</div>
                     <div class="storage-usage-bar">
-                        <div class="storage-usage-fill" style="width: {{ min($usagePercentage, 100) }}%; background: linear-gradient(90deg, 
-                            #ff9500 0%, 
-                            #ff9500 {{ $categoryStats['fuel']['percentage'] }}%, 
-                            #ff5722 {{ $categoryStats['fuel']['percentage'] }}%, 
-                            #ff5722 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] }}%, 
-                            #4caf50 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] }}%, 
-                            #4caf50 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] }}%, 
+                        <div class="storage-usage-fill" style="width: {{ min($usagePercentage, 100) }}%; background: linear-gradient(90deg,
+                            #ff9500 0%,
+                            #ff9500 {{ $categoryStats['fuel']['percentage'] }}%,
+                            #ff5722 {{ $categoryStats['fuel']['percentage'] }}%,
+                            #ff5722 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] }}%,
+                            #4caf50 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] }}%,
+                            #4caf50 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] }}%,
                             #795548 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] }}%,
                             #795548 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] + $categoryStats['service']['percentage'] }}%,
-                            #2196f3 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] + $categoryStats['service']['percentage'] }}%, 
+                            #2196f3 {{ $categoryStats['fuel']['percentage'] + $categoryStats['expense']['percentage'] + $categoryStats['income']['percentage'] + $categoryStats['service']['percentage'] }}%,
                             #795548 100%);"></div>
                     </div>
-                    
+
                     <!-- Category Legend -->
                     <div class="storage-legend" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 15px;">
                         <div class="legend-item" style="display: flex; align-items: center; gap: 8px;">
@@ -503,7 +503,7 @@
                 <label class="storage-field-label">List Uploaded File</label>
                 <div class="file-list">
                     <div class="file-list-header">Uploaded Files ({{ $files->count() }})</div>
-                    
+
                     @forelse($files as $file)
                     <div class="file-list-item">
                         <div class="file-info">

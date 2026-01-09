@@ -597,6 +597,11 @@
                         <input type="text" name="name" id="new_service_name_input" class="form-control" required placeholder="Contoh: Service AC">
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Harga Referensi (Rp)</label>
+                        <input type="text" name="price" id="new_service_price_input" class="form-control" placeholder="Masukkan harga referensi (opsional)" oninput="formatQuickAddPriceInput(this)">
+                        <small class="form-text text-muted">Harga ini akan menjadi referensi saat membuat servis baru</small>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Deskripsi</label>
                         <textarea name="description" class="form-control" placeholder="Keterangan singkat (opsional)"></textarea>
                     </div>
@@ -875,6 +880,15 @@
 
 @push('scripts')
 <script>
+// Function to format price input with dots (global scope for inline oninput)
+function formatQuickAddPriceInput(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value) {
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    input.value = value;
+}
+
 // Set current time when page loads
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-fill current time when user focuses on time input
@@ -1348,6 +1362,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('quickAddServiceTypeForm')?.addEventListener('submit', function(e) {
         e.preventDefault();
         const formData = new FormData(this);
+
+        // Process price: remove dots before sending
+        const priceInput = document.getElementById('new_service_price_input');
+        if (priceInput && priceInput.value) {
+            const priceValue = priceInput.value.replace(/\./g, '');
+            formData.set('price', priceValue);
+        }
+
         const submitBtn = this.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';

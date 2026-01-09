@@ -256,6 +256,24 @@
                             </small>
                         </div>
 
+                        <!-- GPS Expiry Date (Conditional) -->
+                        <div class="col-md-6 mb-3" id="gpsExpiryGroup" style="display: none;">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-satellite-dish me-2 text-primary"></i>
+                                Kadaluarsa GPS Selanjutnya
+                                <span class="text-danger">*</span>
+                            </label>
+                            <input type="date"
+                                   name="gps_expiry_date"
+                                   id="gpsExpiryDate"
+                                   class="form-control"
+                                   value="{{ old('gps_expiry_date') }}">
+                            <small class="text-muted d-block mt-1">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Tanggal kadaluarsa GPS berikutnya
+                            </small>
+                        </div>
+
                         <!-- Place -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-semibold">
@@ -697,14 +715,18 @@ function handleExpenseTypeChange(selectElement) {
 
     const stnkGroup = document.getElementById('stnkExpiryGroup');
     const kirGroup = document.getElementById('kirExpiryGroup');
+    const gpsGroup = document.getElementById('gpsExpiryGroup');
     const stnkInput = document.getElementById('stnkExpiryDate');
     const kirInput = document.getElementById('kirExpiryDate');
+    const gpsInput = document.getElementById('gpsExpiryDate');
 
-    // Hide both by default
+    // Hide all by default
     stnkGroup.style.display = 'none';
     kirGroup.style.display = 'none';
+    gpsGroup.style.display = 'none';
     stnkInput.removeAttribute('required');
     kirInput.removeAttribute('required');
+    gpsInput.removeAttribute('required');
 
     // Show relevant field based on expense type
     if (expenseTypeName.toLowerCase().includes('perpanjangan stnk') ||
@@ -717,6 +739,11 @@ function handleExpenseTypeChange(selectElement) {
                expenseTypeName.toLowerCase().includes('kir')) {
         kirGroup.style.display = 'block';
         kirInput.setAttribute('required', 'required');
+    } else if (expenseTypeName.toLowerCase().includes('perpanjangan gps') ||
+               expenseTypeName.toLowerCase().includes('gps extension') ||
+               expenseTypeName.toLowerCase().includes('gps')) {
+        gpsGroup.style.display = 'block';
+        gpsInput.setAttribute('required', 'required');
     }
 }
 

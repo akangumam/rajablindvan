@@ -251,21 +251,21 @@
                 </a>
             </li>
             <li class="settings-page-menu-item">
+                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
+                    <i class="fas fa-wallet" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
+                    Jenis Pendapatan
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-wrench" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Services
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-receipt" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Pengeluaran
-                </a>
-            </li>
-            <li class="settings-page-menu-item">
-                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
-                    Jenis Pendapatan
                 </a>
             </li>
             @if(auth()->user()->hasRole(['super_admin']))
@@ -299,7 +299,7 @@
 
         <form action="{{ route('settings.format.save') }}" method="POST">
             @csrf
-            
+
             <div class="settings-page-section">
                 <h3 class="settings-page-section-title">Format Tanggal</h3>
                 <div class="settings-page-field">
@@ -347,7 +347,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const dateFormatSelect = document.getElementById('date_format');
     const dateExample = document.getElementById('dateExample');
-    
+
     // Format examples untuk setiap option
     const dateFormats = {
         'd/m/Y': '14/10/2025',
@@ -363,24 +363,24 @@ document.addEventListener('DOMContentLoaded', function() {
         'M d, Y': 'Oct 14, 2025',
         'l, F d, Y': 'Tuesday, October 14, 2025'
     };
-    
+
     // Set initial preview
     if (dateFormatSelect && dateExample) {
         dateExample.textContent = dateFormats[dateFormatSelect.value] || '14/10/2025';
-        
+
         dateFormatSelect.addEventListener('change', function() {
             const selectedFormat = this.value;
             dateExample.textContent = dateFormats[selectedFormat] || '14/10/2025';
         });
     }
-    
+
     const currencyFormatSelect = document.getElementById('currency_format');
     const currencyExample = document.getElementById('currencyExample');
-    
+
     // Set initial preview
     if (currencyFormatSelect && currencyExample) {
         currencyExample.textContent = currencyFormatSelect.value === 'usd' ? '$ 1,000.00' : 'Rp 1.000,00';
-        
+
         currencyFormatSelect.addEventListener('change', function() {
             const selectedFormat = this.value;
             currencyExample.textContent = selectedFormat === 'usd' ? '$ 1,000.00' : 'Rp 1.000,00';

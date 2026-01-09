@@ -417,21 +417,21 @@
                 </a>
             </li>
             <li class="settings-page-menu-item">
+                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
+                    <i class="fas fa-wallet" style="color: #9b59b6; font-size: 14px; margin-right: 12px;"></i>
+                    Jenis Pendapatan
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-wrench" style="color: #95a5a6; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-wrench" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Service
                 </a>
             </li>
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-page-menu-link active">
-                    <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
+                    <i class="fas fa-receipt" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
                     Jenis Pengeluaran
-                </a>
-            </li>
-            <li class="settings-page-menu-item">
-                <a href="{{ route('settings.income-types') }}" class="settings-page-menu-link">
-                    <i class="fas fa-coins" style="color: #27ae60; font-size: 14px; margin-right: 12px;"></i>
-                    Jenis Pendapatan
                 </a>
             </li>
             @if(auth()->user()->hasRole(['super_admin']))

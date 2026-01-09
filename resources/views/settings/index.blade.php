@@ -386,10 +386,20 @@ body {
                 </a>
             </li>
             <li class="settings-item">
-                <a href="{{ route('settings.service-types') }}" class="settings-link">
+                <a href="{{ route('settings.income-types') }}" class="settings-link">
                     <div class="settings-link-content">
                         <span class="settings-number">5.</span>
-                        <i class="fas fa-wrench" style="color: #95a5a6; font-size: 16px;"></i>
+                        <i class="fas fa-wallet" style="color: #9b59b6; font-size: 16px;"></i>
+                        <span class="settings-label">Jenis Pendapatan</span>
+                    </div>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
+                </a>
+            </li>
+            <li class="settings-item">
+                <a href="{{ route('settings.service-types') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">6.</span>
+                        <i class="fas fa-wrench" style="color: #3498db; font-size: 16px;"></i>
                         <span class="settings-label">Jenis Service</span>
                     </div>
                     <i class="fas fa-chevron-right Pengaturan-arrow"></i>
@@ -398,19 +408,9 @@ body {
             <li class="settings-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-link">
                     <div class="settings-link-content">
-                        <span class="settings-number">6.</span>
-                        <i class="fas fa-money-bill-wave" style="color: #e67e22; font-size: 16px;"></i>
-                        <span class="settings-label">Jenis Pengeluaran</span>
-                    </div>
-                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
-                </a>
-            </li>
-            <li class="settings-item">
-                <a href="{{ route('settings.income-types') }}" class="settings-link">
-                    <div class="settings-link-content">
                         <span class="settings-number">7.</span>
-                        <i class="fas fa-coins" style="color: #27ae60; font-size: 16px;"></i>
-                        <span class="settings-label">Jenis Pendapatan</span>
+                        <i class="fas fa-receipt" style="color: #e67e22; font-size: 16px;"></i>
+                        <span class="settings-label">Jenis Pengeluaran</span>
                     </div>
                     <i class="fas fa-chevron-right Pengaturan-arrow"></i>
                 </a>

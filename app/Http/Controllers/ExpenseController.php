@@ -141,7 +141,8 @@ class ExpenseController extends Controller
             'notes' => 'nullable|string',
             'payment_method_id' => 'nullable|exists:payment_methods,id',
             'stnk_expiry_date' => 'nullable|date',
-            'kir_expiry_date' => 'nullable|date'
+            'kir_expiry_date' => 'nullable|date',
+            'gps_expiry_date' => 'nullable|date'
         ]);
 
         // Validate Odometer (Must be >= last recorded)
@@ -206,6 +207,22 @@ class ExpenseController extends Controller
              if ($pm) {
                  $validated['payment_method'] = $pm->name;
              }
+        }
+
+        // Update vehicle expiry dates if provided
+        $vehicleUpdates = [];
+        if (!empty($validated['stnk_expiry_date'])) {
+            $vehicleUpdates['stnk_expiry_date'] = $validated['stnk_expiry_date'];
+        }
+        if (!empty($validated['kir_expiry_date'])) {
+            $vehicleUpdates['kir_expiry_date'] = $validated['kir_expiry_date'];
+        }
+        if (!empty($validated['gps_expiry_date'])) {
+            $vehicleUpdates['gps_expiry_date'] = $validated['gps_expiry_date'];
+        }
+
+        if (!empty($vehicleUpdates)) {
+            $vehicle->update($vehicleUpdates);
         }
 
         Expense::create($validated);
