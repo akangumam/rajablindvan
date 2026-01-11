@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\RentalController;
 use App\Http\Controllers\Api\MonitoringController;
+use App\Http\Controllers\Api\HistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,4 +57,11 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
         Route::get('/kir-overdue', [MonitoringController::class, 'kirOverdue']);
         Route::get('/gps-overdue', [MonitoringController::class, 'gpsOverdue']);
     });
+
+    // History (Read-Only)
+    Route::prefix('history')->group(function () {
+        Route::get('/', [HistoryController::class, 'index']);
+        Route::get('/stats', [HistoryController::class, 'stats']);
+    });
+    Route::get('/vehicles/{vehicleId}/next-refueling', [HistoryController::class, 'nextRefueling']);
 });

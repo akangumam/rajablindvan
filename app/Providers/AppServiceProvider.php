@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register Observers for auto-recording history
+        \App\Models\FuelFill::observe(\App\Observers\FuelFillObserver::class);
+        \App\Models\Maintenance::observe(\App\Observers\MaintenanceObserver::class);
+        \App\Models\Expense::observe(\App\Observers\ExpenseObserver::class);
+
         // Share vehicle data with all views using drivvo layout
         view()->composer('layouts.drivvo', \App\View\Composers\VehicleComposer::class);
 
