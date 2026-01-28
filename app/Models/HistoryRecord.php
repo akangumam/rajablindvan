@@ -150,17 +150,26 @@ class HistoryRecord extends Model
         $typeMapping = [
             'parkir' => 'parking',
             'parking' => 'parking',
+            'park' => 'parking',
             'tol' => 'toll',
             'toll' => 'toll',
             'cuci' => 'wash',
             'wash' => 'wash',
+            'steam' => 'wash',
+            'salon' => 'wash',
+            'poles' => 'wash',
+            'wax' => 'wash',
         ];
 
         $type = 'other';
+        // Check category first
         $category = strtolower($expense->category ?? '');
+        // Also check description as fallback
+        $description = strtolower($expense->description ?? '');
+        $textToCheck = $category . ' ' . $description;
 
         foreach ($typeMapping as $key => $value) {
-            if (str_contains($category, $key)) {
+            if (str_contains($textToCheck, $key)) {
                 $type = $value;
                 break;
             }
