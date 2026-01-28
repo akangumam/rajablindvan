@@ -172,12 +172,26 @@ class HistoryRecord extends Model
         // Try to match payment method with registered payment methods
         $matchedPaymentMethod = static::findMatchingPaymentMethod($expense->payment_method);
 
+        // Get location name - handle if location is an object or string
+        $locationName = null;
+        if ($expense->location !== null) {
+            if (is_object($expense->location)) {
+                $locationName = $expense->location->name ?? null;
+            } else {
+                $locationName = $expense->location;
+            }
+        }
+        // Fallback to place field if location is empty
+        if (empty($locationName) && !empty($expense->place)) {
+            $locationName = $expense->place;
+        }
+
         return static::create([
             'vehicle_id' => $expense->vehicle_id,
             'type' => $type,
             'title' => $expense->description ?? $expense->category,
             'description' => $expense->notes,
-            'location' => $expense->location,
+            'location' => $locationName,
             'cost' => $expense->amount ?? $expense->cost,
             'odometer' => null,
             'date' => $expense->expense_date,
