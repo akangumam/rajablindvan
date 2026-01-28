@@ -20,17 +20,20 @@ class MaintenanceController extends Controller
         // Filter maintenances based on user type
         if ($user && $user->isPengelola()) {
             $maintenances = Maintenance::with('vehicle')
-                ->latest('maintenance_date')
+                ->orderBy('maintenance_date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(20);
         } elseif ($user && $user->isSopir()) {
             $vehicleIds = $user->vehicles()->pluck('vehicles.id');
             $maintenances = Maintenance::with('vehicle')
                 ->whereIn('vehicle_id', $vehicleIds)
-                ->latest('maintenance_date')
+                ->orderBy('maintenance_date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(20);
         } else {
             $maintenances = Maintenance::with('vehicle')
-                ->latest('maintenance_date')
+                ->orderBy('maintenance_date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(20);
         }
 
