@@ -847,8 +847,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Form validation
+// Form validation and double-submit prevention
 document.getElementById('expenseForm')?.addEventListener('submit', function(e) {
+    const form = this;
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    // Prevent double submit
+    if (form.dataset.submitting === 'true') {
+        e.preventDefault();
+        return false;
+    }
+
     const requiredFields = [
         { id: 'vehicle_id', name: 'Kendaraan' },
         { id: 'expense_date', name: 'Tanggal' },
@@ -876,6 +885,13 @@ document.getElementById('expenseForm')?.addEventListener('submit', function(e) {
         e.preventDefault();
         alert('Mohon lengkapi field berikut:\n- ' + missingFields.join('\n- '));
         return false;
+    }
+
+    // Mark form as submitting and disable button
+    form.dataset.submitting = 'true';
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
     }
 });
 </script>

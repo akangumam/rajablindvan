@@ -546,12 +546,20 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Form submission validation - check if vehicle is selected
+// Form submission validation - check if vehicle is selected and prevent double submit
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('{{ $formId ?? "mainForm" }}');
 
     if (form) {
         form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            // Prevent double submit
+            if (form.dataset.submitting === 'true') {
+                e.preventDefault();
+                return false;
+            }
+
             // Check if vehicle is required for this form
             @if(!isset($hideVehicleSelector) || !$hideVehicleSelector)
             const vehicleIdInput = form.querySelector('input[name="vehicle_id"]');
@@ -563,6 +571,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
             @endif
+
+            // Mark form as submitting and disable button
+            form.dataset.submitting = 'true';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>SAVING...';
+            }
 
             return true;
         });

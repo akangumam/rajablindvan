@@ -3,6 +3,8 @@
 @section('title', 'Vehicle History')
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/timeline-history.css') }}">
+
 <!-- Page Header -->
 <div class="page-header">
     <h1 class="page-title">
@@ -479,38 +481,111 @@
                 </form>
             </div>
 
-            @if($historyData && count($historyData) > 0)
-            <div class="table-responsive">
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Category</th>
-                            <th>Amount</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($historyData as $item)
-                        <tr>
-                            <td>{{ $item['date'] }}</td>
-                            <td>
-                                <span class="type-badge badge-{{ strtolower($item['type']) }}">
-                                    {{ $item['type'] }}
-                                </span>
-                            </td>
-                            <td>{{ $item['category'] }}</td>
-                            <td>
-                                <span class="{{ $item['type'] == 'Income' ? 'amount-positive' : 'amount-negative' }}">
-                                    {{ $item['type'] == 'Income' ? '+' : '-' }} Rp {{ number_format($item['amount'], 0, ',', '.') }}
-                                </span>
-                            </td>
-                            <td>{{ $item['notes'] }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            @if($groupedHistory && count($groupedHistory) > 0)
+            <div class="history-timeline">
+                @foreach($groupedHistory as $month => $records)
+                <div class="timeline-month">
+                    <div class="month-header">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>{{ $month }}</span>
+                    </div>
+
+                    @foreach($records as $index => $record)
+                    <div class="timeline-item">
+                        <div class="timeline-indicator">
+                            @if($index > 0)
+                            <div class="timeline-line-top"></div>
+                            @endif
+                            <div class="timeline-icon {{ strtolower($record->type) }}">
+                                @switch($record->type)
+                                    @case('refueling')
+                                        <i class="fas fa-gas-pump"></i>
+                                        @break
+                                    @case('oil_change')
+                                        <i class="fas fa-oil-can"></i>
+                                        @break
+                                    @case('service')
+                                        <i class="fas fa-tools"></i>
+                                        @break
+                                    @case('registration')
+                                        <i class="fas fa-file-alt"></i>
+                                        @break
+                                    @case('labor_cost')
+                                        <i class="fas fa-user-tie"></i>
+                                        @break
+                                    @case('transport_application')
+                                        <i class="fas fa-truck"></i>
+                                        @break
+                                    @case('work')
+                                        <i class="fas fa-briefcase"></i>
+                                        @break
+                                    @case('checklist')
+                                        <i class="fas fa-check-square"></i>
+                                        @break
+                                    @default
+                                        <i class="fas fa-circle"></i>
+                                @endswitch
+                            </div>
+                            @if($index < count($records) - 1)
+                            <div class="timeline-line-bottom"></div>
+                            @endif
+                        </div>
+
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h4>{{ ucwords(str_replace('_', ' ', $record->type)) }}</h4>
+                                <span class="timeline-date">{{ \Carbon\Carbon::parse($record->date)->format('d M Y') }}</span>
+                            </div>
+
+                            <div class="timeline-details">
+                                @if($record->extra_data)
+                                    @php $details = is_string($record->extra_data) ? json_decode($record->extra_data, true) : $record->extra_data; @endphp
+
+                                    @if(isset($details['service_type']))
+                                    <div class="detail-item">
+                                        <i class="fas fa-wrench"></i>
+                                        <span><strong>{{ $details['service_type'] }}</strong></span>
+                                    </div>
+                                    @endif
+
+                                    @if(isset($details['liters']))
+                                    <div class="detail-item">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                        <span>{{ $details['liters'] }} Liter</span>
+                                    </div>
+                                    @endif
+
+                                    @if($record->odometer)
+                                    <div class="detail-item">
+                                        <i class="fas fa-road"></i>
+                                        <span>{{ number_format($record->odometer) }} km</span>
+                                    </div>
+                                    @endif
+
+                                    @if($record->location)
+                                    <div class="detail-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ $record->location }}</span>
+                                    </div>
+                                    @endif
+                                @endif
+
+                                @if($record->description)
+                                <div class="detail-item">
+                                    <i class="fas fa-comment"></i>
+                                    <span>{{ $record->description }}</span>
+                                </div>
+                                @endif
+                            </div>
+
+                            <div class="timeline-cost">
+                                Rp {{ number_format($record->cost, 0, ',', '.') }}
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @endforeach
             </div>
             @else
             <div class="empty-state">
@@ -518,7 +593,7 @@
                     <i class="fas fa-inbox"></i>
                 </div>
                 <div class="empty-message">No transaction history yet</div>
-                <div class="empty-hint">Start adding income, service, or expense records</div>
+                <div class="empty-hint">Start adding fuel fills, maintenance, or expense records</div>
             </div>
             @endif
         </div>
@@ -539,27 +614,21 @@
 
             <div class="performance-grid">
                 <div class="performance-item">
-                    <div class="performance-label">Income</div>
-                    <div class="performance-value value-income">
-                        Rp {{ number_format($lastMonthPerformance['income'], 0, ',', '.') }}
+                    <div class="performance-label">Total Transactions</div>
+                    <div class="performance-value">
+                        {{ $lastMonthPerformance['total_transactions'] }}
                     </div>
                 </div>
                 <div class="performance-item">
-                    <div class="performance-label">Service</div>
-                    <div class="performance-value value-service">
-                        Rp {{ number_format($lastMonthPerformance['service'], 0, ',', '.') }}
-                    </div>
-                </div>
-                <div class="performance-item">
-                    <div class="performance-label">Expense</div>
+                    <div class="performance-label">Total Cost</div>
                     <div class="performance-value value-expense">
-                        Rp {{ number_format($lastMonthPerformance['expense'], 0, ',', '.') }}
+                        Rp {{ number_format($lastMonthPerformance['total_cost'], 0, ',', '.') }}
                     </div>
                 </div>
                 <div class="performance-item">
-                    <div class="performance-label">Balance</div>
-                    <div class="performance-value value-balance">
-                        Rp {{ number_format($lastMonthPerformance['balance'], 0, ',', '.') }}
+                    <div class="performance-label">Avg Cost per Transaction</div>
+                    <div class="performance-value">
+                        Rp {{ number_format($lastMonthPerformance['avg_cost'], 0, ',', '.') }}
                     </div>
                 </div>
             </div>

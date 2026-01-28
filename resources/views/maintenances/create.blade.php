@@ -1431,8 +1431,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Form validation before submit
+// Form validation before submit and double-submit prevention
 document.getElementById('maintenanceForm')?.addEventListener('submit', function(e) {
+    const form = this;
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    // Prevent double submit
+    if (form.dataset.submitting === 'true') {
+        e.preventDefault();
+        return false;
+    }
+
     const requiredFields = [
         { id: 'vehicle_id', name: 'Kendaraan' },
         { id: 'service_date', name: 'Tanggal Servis' },
@@ -1473,6 +1482,13 @@ document.getElementById('maintenanceForm')?.addEventListener('submit', function(
         e.preventDefault();
         alert('Mohon lengkapi field berikut:\n- ' + missingFields.join('\n- '));
         return false;
+    }
+
+    // Mark form as submitting and disable button
+    form.dataset.submitting = 'true';
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
     }
 });
 </script>

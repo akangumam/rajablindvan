@@ -74,13 +74,17 @@ class HistoryRecord extends Model
      */
     public static function createFromFuelFill($fuelFill)
     {
+        // Try to match location with registered locations
+        $locationText = $fuelFill->location ?? $fuelFill->gas_station ?? $fuelFill->station_name;
+        $matchedLocation = static::findMatchingLocation($locationText);
+
         return static::create([
             'vehicle_id' => $fuelFill->vehicle_id,
             'type' => 'refueling',
             'title' => 'Pengisian BBM',
             'description' => $fuelFill->notes,
-            'location' => $fuelFill->location ?? $fuelFill->station_name,
-            'cost' => $fuelFill->cost,
+            'location' => $matchedLocation ?: $locationText,
+            'cost' => $fuelFill->total_cost ?? $fuelFill->cost,
             'odometer' => $fuelFill->odometer,
             'date' => $fuelFill->fill_date,
             'extra_data' => [
@@ -102,23 +106,35 @@ class HistoryRecord extends Model
         $title = 'Servis';
 
         // Detect oil change
-        if (str_contains(strtolower($maintenance->service_type ?? ''), 'oli')) {
+        if (str_contains(strtolower($maintenance->service_type ?? ''), 'oli') ||
+            str_contains(strtolower($maintenance->type ?? ''), 'oil')) {
             $type = 'oil_change';
             $title = 'Ganti Oli';
         }
+
+        $date = $maintenance->maintenance_date ?? $maintenance->service_date;
+
+        // Try to match location with registered locations
+        $locationText = $maintenance->workshop ?? $maintenance->workshop_name ?? $maintenance->location;
+        $matchedLocation = static::findMatchingLocation($locationText);
+
+        // Try to match service type with registered service types
+        $serviceTypeText = $maintenance->service_type ?? $maintenance->type;
+        $matchedServiceType = static::findMatchingServiceType($serviceTypeText);
 
         return static::create([
             'vehicle_id' => $maintenance->vehicle_id,
             'type' => $type,
             'title' => $title,
             'description' => $maintenance->notes,
-            'location' => $maintenance->workshop_name ?? $maintenance->location,
-            'cost' => $maintenance->total_cost,
+            'location' => $matchedLocation ?: $locationText,
+            'cost' => $maintenance->cost ?? $maintenance->total_cost,
             'odometer' => $maintenance->odometer,
-            'date' => $maintenance->service_date,
+            'date' => $date,
             'extra_data' => [
-                'service_type' => $maintenance->service_type,
-                'workshop' => $maintenance->workshop_name,
+                'service_type' => $matchedServiceType ?: $serviceTypeText,
+                'workshop' => $matchedLocation ?: ($maintenance->workshop ?? $maintenance->workshop_name),
+                'checklist' => 'checklist',
             ],
             'related_id' => $maintenance->id,
             'related_type' => 'App\Models\Maintenance',
@@ -130,21 +146,31 @@ class HistoryRecord extends Model
      */
     public static function createFromExpense($expense)
     {
-        // Map expense category to history type
+        // Map expense categories to history types
         $typeMapping = [
-            'registration' => 'registration',
-            'stnk' => 'registration',
-            'labor' => 'labor_cost',
-            'transport' => 'transport_application',
+            'parkir' => 'parking',
+            'parking' => 'parking',
+            'tol' => 'toll',
+            'toll' => 'toll',
+            'cuci' => 'wash',
+            'wash' => 'wash',
         ];
 
         $type = 'other';
+        $category = strtolower($expense->category ?? '');
+
         foreach ($typeMapping as $key => $value) {
-            if (str_contains(strtolower($expense->category ?? ''), $key)) {
+            if (str_contains($category, $key)) {
                 $type = $value;
                 break;
             }
         }
+
+        // Try to match expense category with registered expense types
+        $matchedExpenseType = static::findMatchingExpenseType($expense->category);
+
+        // Try to match payment method with registered payment methods
+        $matchedPaymentMethod = static::findMatchingPaymentMethod($expense->payment_method);
 
         return static::create([
             'vehicle_id' => $expense->vehicle_id,
@@ -152,12 +178,12 @@ class HistoryRecord extends Model
             'title' => $expense->description ?? $expense->category,
             'description' => $expense->notes,
             'location' => $expense->location,
-            'cost' => $expense->amount,
+            'cost' => $expense->amount ?? $expense->cost,
             'odometer' => null,
             'date' => $expense->expense_date,
             'extra_data' => [
-                'category' => $expense->category,
-                'payment_method' => $expense->payment_method,
+                'category' => $matchedExpenseType ?: $expense->category,
+                'payment_method' => $matchedPaymentMethod ?: $expense->payment_method,
             ],
             'related_id' => $expense->id,
             'related_type' => 'App\Models\Expense',
@@ -165,25 +191,123 @@ class HistoryRecord extends Model
     }
 
     /**
-     * Create history record from Income (for rental/work)
+     * Find matching registered location by name
      */
-    public static function createFromIncome($income)
+    private static function findMatchingLocation($locationText)
     {
-        return static::create([
-            'vehicle_id' => $income->vehicle_id,
-            'type' => 'work',
-            'title' => $income->description ?? 'Pekerjaan',
-            'description' => $income->notes,
-            'location' => $income->location,
-            'cost' => -$income->amount, // Negative untuk income
-            'odometer' => null,
-            'date' => $income->income_date,
-            'extra_data' => [
-                'type' => $income->type,
-                'customer' => $income->customer_name,
-            ],
-            'related_id' => $income->id,
-            'related_type' => 'App\Models\Income',
-        ]);
+        if (empty($locationText)) {
+            return null;
+        }
+
+        // Try exact match first
+        $location = \App\Models\Location::where('is_active', true)
+            ->where('name', $locationText)
+            ->first();
+
+        if ($location) {
+            return $location->name . ($location->address ? ' - ' . $location->address : '');
+        }
+
+        // Try partial match (case insensitive)
+        $location = \App\Models\Location::where('is_active', true)
+            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($locationText) . '%'])
+            ->first();
+
+        if ($location) {
+            return $location->name . ($location->address ? ' - ' . $location->address : '');
+        }
+
+        // No match found, return original text
+        return null;
+    }
+
+    /**
+     * Find matching service type by name
+     */
+    private static function findMatchingServiceType($serviceTypeText)
+    {
+        if (empty($serviceTypeText)) {
+            return null;
+        }
+
+        // Try exact match
+        $serviceType = \App\Models\ServiceType::where('is_active', true)
+            ->where('name', $serviceTypeText)
+            ->first();
+
+        if ($serviceType) {
+            return $serviceType->name;
+        }
+
+        // Try partial match (case insensitive)
+        $serviceType = \App\Models\ServiceType::where('is_active', true)
+            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($serviceTypeText) . '%'])
+            ->first();
+
+        if ($serviceType) {
+            return $serviceType->name;
+        }
+
+        return null;
+    }
+
+    /**
+     * Find matching expense type by category
+     */
+    private static function findMatchingExpenseType($categoryText)
+    {
+        if (empty($categoryText)) {
+            return null;
+        }
+
+        // Try exact match
+        $expenseType = \App\Models\ExpenseType::where('is_active', true)
+            ->where('name', $categoryText)
+            ->first();
+
+        if ($expenseType) {
+            return $expenseType->name;
+        }
+
+        // Try partial match (case insensitive)
+        $expenseType = \App\Models\ExpenseType::where('is_active', true)
+            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($categoryText) . '%'])
+            ->first();
+
+        if ($expenseType) {
+            return $expenseType->name;
+        }
+
+        return null;
+    }
+
+    /**
+     * Find matching payment method by name
+     */
+    private static function findMatchingPaymentMethod($paymentMethodText)
+    {
+        if (empty($paymentMethodText)) {
+            return null;
+        }
+
+        // Try exact match
+        $paymentMethod = \App\Models\PaymentMethod::where('is_active', true)
+            ->where('name', $paymentMethodText)
+            ->first();
+
+        if ($paymentMethod) {
+            return $paymentMethod->name;
+        }
+
+        // Try partial match (case insensitive)
+        $paymentMethod = \App\Models\PaymentMethod::where('is_active', true)
+            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($paymentMethodText) . '%'])
+            ->first();
+
+        if ($paymentMethod) {
+            return $paymentMethod->name;
+        }
+
+        return null;
     }
 }

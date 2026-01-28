@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\FuelFill;
 use App\Models\HistoryRecord;
+use App\Models\Location;
 
 class FuelFillObserver
 {
