@@ -545,7 +545,7 @@
 
                         <div class="timeline-content">
                             <div class="timeline-header">
-                                <h4>{{ ucwords(str_replace('_', ' ', $record->type)) }}</h4>
+                                <h4>{{ $record->title ?: ucwords(str_replace('_', ' ', $record->type)) }}</h4>
                                 <span class="timeline-date">{{ \Carbon\Carbon::parse($record->date)->format('d M Y') }}</span>
                             </div>
 
