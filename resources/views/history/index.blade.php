@@ -522,6 +522,18 @@
                                     @case('checklist')
                                         <i class="fas fa-check-square"></i>
                                         @break
+                                    @case('wash')
+                                        <i class="fas fa-shower"></i>
+                                        @break
+                                    @case('parking')
+                                        <i class="fas fa-parking"></i>
+                                        @break
+                                    @case('toll')
+                                        <i class="fas fa-road"></i>
+                                        @break
+                                    @case('other')
+                                        <i class="fas fa-receipt"></i>
+                                        @break
                                     @default
                                         <i class="fas fa-circle"></i>
                                 @endswitch
