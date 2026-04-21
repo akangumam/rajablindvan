@@ -69,10 +69,10 @@ class RentalController extends Controller
                 ];
             }),
             'meta' => [
-                'current_page' => $rentals->currentPage(),
-                'last_page' => $rentals->lastPage(),
-                'per_page' => $rentals->perPage(),
-                'total' => $rentals->total(),
+                'current_page' => $orders->currentPage(),
+                'last_page' => $orders->lastPage(),
+                'per_page' => $orders->perPage(),
+                'total' => $orders->total(),
             ],
         ], 200);
     }
