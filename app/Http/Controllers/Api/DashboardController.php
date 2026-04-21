@@ -37,9 +37,24 @@ class DashboardController extends Controller
 
         // Get statistics
         $totalVehicles = $vehiclesQuery->count();
-        $availableVehicles = $vehiclesQuery->where('status', 'available')->count();
-        $rentedVehicles = $vehiclesQuery->where('status', 'rented')->count();
-        $maintenanceVehicles = $vehiclesQuery->where('status', 'maintenance')->count();
+        
+        $rentedVehicles = (clone $vehiclesQuery)->where(function($query) {
+            $query->whereHas('rentals', function($q) {
+                $q->whereIn('status', ['active', 'booked']);
+            })->orWhereHas('orders', function($q) {
+                $q->where('status', 'Active');
+            });
+        })->count();
+
+        $availableVehicles = (clone $vehiclesQuery)->where('is_active', true)
+            ->whereDoesntHave('rentals', function($query) {
+                $query->whereIn('status', ['active', 'booked']);
+            })
+            ->whereDoesntHave('orders', function($query) {
+                $query->where('status', 'Active');
+            })->count();
+            
+        $maintenanceVehicles = (clone $vehiclesQuery)->where('status', 'maintenance')->count();
 
         // Active rentals
         $activeRentals = $rentalsQuery->whereIn('status', ['active', 'ongoing'])->count();

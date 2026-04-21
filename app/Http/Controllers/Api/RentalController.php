@@ -39,7 +39,7 @@ class RentalController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $rentals->map(function ($rental) {
+            'data' => collect($rentals->items())->map(function ($rental) {
                 return [
                     'id' => $rental->id,
                     'vehicle' => [
