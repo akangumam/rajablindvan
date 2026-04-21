@@ -213,8 +213,28 @@ class Vehicle extends Model
      */
     public function getCurrentRentalStatus(): ?string
     {
-        $activeRental = $this->rentals()->whereIn('status', ['reserved', 'active'])->first();
-        return $activeRental ? $activeRental->status : null;
+        $activeRental = $this->rentals()->whereIn('status', ['reserved', 'active', 'booked'])->latest()->first();
+        if ($activeRental) {
+            return $activeRental->status;
+        }
+        
+        $activeOrder = $this->orders()->where('status', 'Active')->latest()->first();
+        if ($activeOrder) {
+            return 'booked';
+        }
+        
+        return null;
+    }
+
+    /**
+     * Check if vehicle is currently booked (used by Web Dashboard)
+     */
+    public function isCurrentlyBooked(): bool
+    {
+        $hasActiveRental = $this->rentals()->whereIn('status', ['active', 'booked'])->exists();
+        $hasActiveOrder = $this->orders()->where('status', 'Active')->exists();
+        
+        return $hasActiveRental || $hasActiveOrder;
     }
 
     /**

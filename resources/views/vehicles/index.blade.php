@@ -796,9 +796,13 @@
                 </td>
                 <td class="model-text">{{ $vehicle->model }}</td>
                 <td>
-                    <span class="Status-badge {{ $vehicle->is_active ? 'Status-Active' : 'Status-nonActive' }}">
-                        {{ $vehicle->is_active ? __('common.active') : __('common.inactive') }}
-                    </span>
+                    @if(!$vehicle->is_active)
+                        <span class="Status-badge Status-nonActive">{{ __('common.inactive') }}</span>
+                    @elseif($vehicle->isCurrentlyBooked())
+                        <span class="Status-badge" style="background: #ffebee; color: #c62828;">{{ __('common.rented') }}</span>
+                    @else
+                        <span class="Status-badge Status-Active" style="background: #e8f5e9; color: #2e7d32;">{{ __('common.available') }}</span>
+                    @endif
                 </td>
                 <td>
                     <div class="action-buttons">
@@ -854,9 +858,13 @@
                     </div>
                     <div class="vehicle-card-subtitle">{{ $vehicle->license_plate }}</div>
                 </div>
-                <span class="Status-badge {{ $vehicle->is_active ? 'Status-Active' : 'Status-nonActive' }}">
-                    {{ $vehicle->is_active ? __('common.active') : __('common.inactive') }}
-                </span>
+                @if(!$vehicle->is_active)
+                    <span class="Status-badge Status-nonActive">{{ __('common.inactive') }}</span>
+                @elseif($vehicle->isCurrentlyBooked())
+                    <span class="Status-badge" style="background: #ffebee; color: #c62828;">{{ __('common.rented') }}</span>
+                @else
+                    <span class="Status-badge Status-Active" style="background: #e8f5e9; color: #2e7d32;">{{ __('common.available') }}</span>
+                @endif
             </div>
 
             <div class="vehicle-card-body">
