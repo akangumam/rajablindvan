@@ -14,7 +14,13 @@ class VehicleController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $query = Vehicle::with(['location:id,name']);
+        $query = Vehicle::with(['location:id,name'])
+            ->withExists(['rentals as is_rented' => function($q) {
+                $q->where('status', 'active')->orWhere('status', 'booked');
+            }])
+            ->withExists(['orders as is_ordered' => function($q) {
+                $q->where('status', 'Active');
+            }]);
 
         // Apply location filter for non-admin users
         if (!$user->isAdmin() && $user->location_id) {
@@ -23,7 +29,27 @@ class VehicleController extends Controller
 
         // Filter by status if provided
         if ($request->has('status')) {
-            $query->where('status', $request->status);
+            $status = $request->status;
+            if ($status === 'rented' || $status === 'booked') {
+                $query->where(function($q) {
+                    $q->whereHas('rentals', function($r) {
+                        $r->where('status', 'active')->orWhere('status', 'booked');
+                    })
+                    ->orWhereHas('orders', function($o) {
+                        $o->where('status', 'Active');
+                    });
+                });
+            } elseif ($status === 'available') {
+                $query->whereDoesntHave('rentals', function($r) {
+                        $r->where('status', 'active')->orWhere('status', 'booked');
+                    })
+                    ->whereDoesntHave('orders', function($o) {
+                        $o->where('status', 'Active');
+                    })
+                    ->where('status', '!=', 'maintenance');
+            } else {
+                $query->where('status', $status);
+            }
         }
 
         // Filter by location if provided (for admin)
@@ -53,7 +79,7 @@ class VehicleController extends Controller
                     'license_plate' => $vehicle->license_plate,
                     'year' => $vehicle->year,
                     'color' => $vehicle->color,
-                    'status' => $vehicle->status,
+                    'status' => ($vehicle->is_rented || $vehicle->is_ordered) ? 'rented' : ($vehicle->status === 'rented' ? 'available' : $vehicle->status),
                     'capacity' => $vehicle->capacity,
                     'daily_rate' => (float) $vehicle->daily_rate,
                     'hourly_rate' => (float) $vehicle->hourly_rate,
@@ -84,7 +110,14 @@ class VehicleController extends Controller
     public function show(Request $request, $id)
     {
         $user = $request->user();
-        $vehicle = Vehicle::with(['location:id,name'])->find($id);
+        $vehicle = Vehicle::with(['location:id,name'])
+            ->withExists(['rentals as is_rented' => function($q) {
+                $q->where('status', 'active')->orWhere('status', 'booked');
+            }])
+            ->withExists(['orders as is_ordered' => function($q) {
+                $q->where('status', 'Active');
+            }])
+            ->find($id);
 
         if (!$vehicle) {
             return response()->json([
@@ -116,7 +149,7 @@ class VehicleController extends Controller
                 'license_plate' => $vehicle->license_plate,
                 'year' => $vehicle->year,
                 'color' => $vehicle->color,
-                'status' => $vehicle->status,
+                'status' => ($vehicle->is_rented || $vehicle->is_ordered) ? 'rented' : ($vehicle->status === 'rented' ? 'available' : $vehicle->status),
                 'capacity' => $vehicle->capacity,
                 'daily_rate' => (float) $vehicle->daily_rate,
                 'hourly_rate' => (float) $vehicle->hourly_rate,
