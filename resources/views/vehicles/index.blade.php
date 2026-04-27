@@ -233,45 +233,6 @@
     .action-btn i {
         font-size: 16px;
     }
-    .empty-state {
-        text-align: center;
-        padding: 40px 20px;
-        max-width: 700px;
-        margin: 0 auto;
-        min-height: calc(100vh - 200px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        top: -40px;
-    }
-    .empty-icon {
-        width: 160px;
-        height: 160px;
-        margin: 0 auto 40px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 80px;
-        box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
-    }
-    .empty-title {
-        font-size: 32px;
-        font-weight: 800;
-        color: #1a1a1a;
-        margin-bottom: 20px;
-        letter-spacing: -0.5px;
-    }
-    .empty-description {
-        font-size: 17px;
-        color: #6c757d;
-        line-height: 1.7;
-        margin-bottom: 40px;
-        max-width: 500px;
-    }
     .inactive-badge {
         position: absolute;
         top: 12px;
@@ -1036,9 +997,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 @endpush
 @endsection
-
-
-
 
 
 

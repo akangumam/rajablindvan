@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Rental;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,7 @@ class RentalController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $query = \App\Models\Order::with(['vehicle:id,brand,model,license_plate', 'customer:id,name,phone']);
+        $query = Order::with(['vehicle:id,brand,model,license_plate', 'customer:id,name,phone']);
 
         // Apply location filter for non-admin users
         if (!$user->isAdmin() && $user->location_id) {
@@ -83,7 +84,7 @@ class RentalController extends Controller
     public function active(Request $request)
     {
         $user = $request->user();
-        $query = \App\Models\Order::with(['vehicle:id,brand,model,license_plate', 'customer:id,name,phone'])
+        $query = Order::with(['vehicle:id,brand,model,license_plate', 'customer:id,name,phone'])
             ->where('status', 'Active');
 
         // Apply location filter for non-admin users
@@ -165,18 +166,18 @@ class RentalController extends Controller
                     'email' => $rental->customer->email,
                     'address' => $rental->customer->address,
                 ],
-                'start_date' => $rental->start_date->format('Y-m-d H:i'),
-                'end_date' => $rental->end_date->format('Y-m-d H:i'),
+                'start_date' => $rental->start_date->format('Y-m-d'),
+                'end_date' => $rental->end_date->format('Y-m-d'),
                 'status' => $rental->status,
                 'rental_type' => $rental->rental_type,
-                'total_days' => $rental->total_days,
-                'rate' => (float) $rental->rate,
-                'total_price' => (float) $rental->total_price,
+                'total_days' => $rental->duration_days,
+                'daily_rate' => (float) $rental->daily_rate,
+                'total_price' => (float) $rental->total_amount,
                 'deposit' => (float) $rental->deposit,
                 'pickup_location' => $rental->pickup_location,
-                'dropoff_location' => $rental->dropoff_location,
+                'dropoff_location' => $rental->return_location,
                 'notes' => $rental->notes,
-                'is_overdue' => $rental->end_date->isPast() && in_array($rental->status, ['active', 'ongoing']),
+                'is_overdue' => $rental->isOverdue(),
                 'days_remaining' => $rental->end_date->diffInDays(now(), false),
                 'created_at' => $rental->created_at->toIso8601String(),
                 'updated_at' => $rental->updated_at->toIso8601String(),
