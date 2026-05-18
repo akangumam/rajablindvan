@@ -130,19 +130,20 @@ class ExpenseController extends Controller
         }
 
         $validated = $request->validate([
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'expense_date' => 'required|date',
-            'expense_time' => 'nullable',
-            'odometer' => 'nullable|numeric|min:0',
-            'expense_type_id' => 'required|exists:expense_types,id',
-            'place' => 'nullable|string|max:255',
-            'user_id' => 'nullable|exists:users,id',
-            'amount' => 'required|numeric|min:0',
-            'notes' => 'nullable|string',
+            'vehicle_id'        => 'required|exists:vehicles,id',
+            'expense_date'      => 'required|date',
+            'expense_time'      => 'nullable',
+            'odometer'          => 'nullable|numeric|min:0',
+            'expense_type_id'   => 'required|exists:expense_types,id',
+            'place'             => 'nullable|string|max:255',
+            'user_id'           => 'nullable|exists:users,id',
+            'amount'            => 'required|numeric|min:0',
+            'notes'             => 'nullable|string',
             'payment_method_id' => 'nullable|exists:payment_methods,id',
-            'stnk_expiry_date' => 'nullable|date',
-            'kir_expiry_date' => 'nullable|date',
-            'gps_expiry_date' => 'nullable|date'
+            'stnk_expiry_date'  => 'nullable|date',
+            'kir_expiry_date'   => 'nullable|date',
+            'gps_expiry_date'   => 'nullable|date',
+            'attachment'        => 'nullable|file|max:5120|mimes:jpg,jpeg,png,pdf,doc,docx',
         ]);
 
         // Validate Odometer (Must be >= last recorded)

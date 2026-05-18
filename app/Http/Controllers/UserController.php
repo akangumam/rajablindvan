@@ -44,14 +44,27 @@ class UserController extends Controller
 
             // Combine first and last name for the name field
             $validated['name'] = trim($validated['first_name'] . ' ' . $validated['last_name']);
-            
-            // Hash the password
-            $validated['password'] = Hash::make($validated['password']);
-            
-            // Set default is_active based on status
-            $validated['is_active'] = ($validated['status'] ?? 'active') == 'active';
 
-            $user = User::create($validated);
+            // Create user dengan field yang ada di $fillable saja
+            $user = User::create([
+                'name'       => $validated['name'],
+                'first_name' => $validated['first_name'],
+                'last_name'  => $validated['last_name'],
+                'email'      => $validated['email'],
+                'title'      => $validated['title'] ?? null,
+                'user_type'  => 'admin',
+            ]);
+
+            // Set field privileged secara eksplisit (tidak ada di $fillable)
+            $user->password  = Hash::make($validated['password']);
+            $user->is_active = ($validated['status'] === 'active');
+            $user->status    = $validated['status'];
+            $user->is_verified = true;
+            $user->email_verified_at = now();
+            $user->save();
+
+            // Set role via dedicated method (validasi internal)
+            $user->assignRole($validated['role']);
 
             return redirect()->route('users.index')
                 ->with('success', 'Pengguna "' . $user->name . '" berhasil dibuat.');
@@ -102,12 +115,24 @@ class UserController extends Controller
 
             // Combine first and last name for the name field
             $validated['name'] = trim($validated['first_name'] . ' ' . $validated['last_name']);
-            
-            // Set is_active based on status
-            $validated['is_active'] = ($validated['status'] ?? 'active') == 'active';
 
-            $user->update($validated);
-            
+            // Update field yang ada di $fillable
+            $user->update([
+                'name'       => $validated['name'],
+                'first_name' => $validated['first_name'],
+                'last_name'  => $validated['last_name'],
+                'email'      => $validated['email'],
+                'title'      => $validated['title'] ?? null,
+            ]);
+
+            // Update field privileged secara eksplisit
+            $user->is_active = ($validated['status'] === 'active');
+            $user->status    = $validated['status'];
+            $user->save();
+
+            // Update role via dedicated method
+            $user->assignRole($validated['role']);
+
             // If this is the current user, refresh user data in session
             if ($user->id === auth()->id()) {
                 auth()->setUser($user->fresh());
@@ -178,9 +203,9 @@ class UserController extends Controller
             'new_password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $user->update([
-            'password' => Hash::make($request->new_password),
-        ]);
+        // Set password secara eksplisit (tidak ada di $fillable)
+        $user->password = Hash::make($request->new_password);
+        $user->save();
 
         // TODO: Send email notification to user (when email is configured)
         // Mail::to($user->email)->send(new PasswordResetByAdmin($user));

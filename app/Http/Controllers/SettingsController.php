@@ -153,7 +153,12 @@ class SettingsController extends Controller
     public function uploadFile(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:10240', // Max 10MB
+            'file' => [
+                'required',
+                'file',
+                'max:10240', // Max 10MB
+                'mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,xls,xlsx,csv,zip',
+            ],
             'category' => 'required|string|in:fuel,expense,income,service,vehicle'
         ]);
 
