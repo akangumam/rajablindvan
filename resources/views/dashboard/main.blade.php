@@ -545,7 +545,9 @@
                     </div>
                     <span>Monitoring STNK</span>
                 </div>
-                <span class="badge-count bg-danger text-white">{{ count($stnkMonitoring) }}</span>
+                 <span class="badge-count {{ count($stnkMonitoring) > 0 ? 'bg-danger' : 'bg-success' }} text-white">
+                    {{ count($stnkMonitoring) > 0 ? count($stnkMonitoring) : '✓' }}
+                </span>
             </div>
             <div class="vehicle-list">
                 @forelse($stnkMonitoring as $item)
@@ -564,14 +566,20 @@
                             {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
                         </span>
                         <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
-                            <i class="fas fa-arrow-right"></i>
+                            Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
                 @empty
                 <div class="empty-state">
                     <div class="empty-icon"><i class="fas fa-check-circle text-success"></i></div>
-                    <p>Semua STNK masih berlaku</p>
+                    <p class="mb-1">Semua STNK masih berlaku</p>
+                    <small class="text-muted">Pastikan tanggal STNK sudah diisi di data kendaraan</small>
+                    <div class="mt-2">
+                        <a href="{{ route('vehicles.index') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-car me-1"></i> Kelola Kendaraan
+                        </a>
+                    </div>
                 </div>
                 @endforelse
             </div>
@@ -588,7 +596,9 @@
                     </div>
                     <span>Monitoring KIR</span>
                 </div>
-                <span class="badge-count bg-danger text-white">{{ count($kirMonitoring) }}</span>
+                <span class="badge-count {{ count($kirMonitoring) > 0 ? 'bg-danger' : 'bg-success' }} text-white">
+                    {{ count($kirMonitoring) > 0 ? count($kirMonitoring) : '✓' }}
+                </span>
             </div>
             <div class="vehicle-list">
                 @forelse($kirMonitoring as $item)
@@ -607,14 +617,20 @@
                             {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
                         </span>
                         <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
-                            <i class="fas fa-arrow-right"></i>
+                            Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
                 @empty
                 <div class="empty-state">
                     <div class="empty-icon"><i class="fas fa-check-circle text-success"></i></div>
-                    <p>Semua KIR masih berlaku</p>
+                    <p class="mb-1">Semua KIR masih berlaku</p>
+                    <small class="text-muted">Pastikan tanggal KIR sudah diisi di data kendaraan</small>
+                    <div class="mt-2">
+                        <a href="{{ route('vehicles.index') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-car me-1"></i> Kelola Kendaraan
+                        </a>
+                    </div>
                 </div>
                 @endforelse
             </div>
@@ -631,7 +647,9 @@
                     </div>
                     <span>Monitoring GPS</span>
                 </div>
-                <span class="badge-count bg-danger text-white">{{ count($gpsMonitoring) }}</span>
+                <span class="badge-count {{ count($gpsMonitoring) > 0 ? 'bg-danger' : 'bg-success' }} text-white">
+                    {{ count($gpsMonitoring) > 0 ? count($gpsMonitoring) : '✓' }}
+                </span>
             </div>
             <div class="vehicle-list">
                 @forelse($gpsMonitoring as $item)
@@ -650,14 +668,20 @@
                             {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
                         </span>
                         <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
-                            <i class="fas fa-arrow-right"></i>
+                            Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
                 @empty
                 <div class="empty-state">
                     <div class="empty-icon"><i class="fas fa-check-circle text-success"></i></div>
-                    <p>Semua GPS masih berlaku</p>
+                    <p class="mb-1">Semua GPS masih berlaku</p>
+                    <small class="text-muted">Pastikan tanggal GPS sudah diisi di data kendaraan</small>
+                    <div class="mt-2">
+                        <a href="{{ route('vehicles.index') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-car me-1"></i> Kelola Kendaraan
+                        </a>
+                    </div>
                 </div>
                 @endforelse
             </div>
