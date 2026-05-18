@@ -46,3 +46,14 @@ Thumbs.db
 rajablindvan_temp/
 *.sqlite
 .env.production
+
+# File sensitif - jangan pernah di-commit
+USER_CREDENTIALS.md
+check_users.php
+check_users_updated.php
+check_files.php
+cleanup_users.php
+assign_locations.php
+test_api.php
+test-observer.php
+*.local.php

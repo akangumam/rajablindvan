@@ -48,9 +48,12 @@ class VehicleController extends Controller
             });
         }
 
-        // Sorting functionality
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
+        // Sorting functionality — whitelist kolom yang boleh diurutkan
+        $allowedSortColumns = ['created_at', 'name', 'brand', 'model', 'license_plate', 'year', 'vehicle_type'];
+        $allowedSortOrders  = ['asc', 'desc'];
+
+        $sortBy    = in_array($request->get('sort_by'), $allowedSortColumns) ? $request->get('sort_by') : 'created_at';
+        $sortOrder = in_array(strtolower($request->get('sort_order')), $allowedSortOrders) ? strtolower($request->get('sort_order')) : 'desc';
 
         $query->orderBy($sortBy, $sortOrder);
 

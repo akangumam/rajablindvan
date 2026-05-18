@@ -35,23 +35,17 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember');
 
-        // Check if user exists
+        // Check if user exists — gunakan Auth::attempt langsung agar tidak bocor info email
         $user = User::where('email', $request->email)->first();
 
-        if (!$user) {
-            return back()->withErrors([
-                'email' => 'Email not found in our system.',
-            ])->withInput($request->only('email'));
-        }
-
-        // Check if user is active
-        if (!$user->is_active) {
+        // Check if user is active (boleh diinfokan agar user bisa hubungi admin)
+        if ($user && !$user->is_active) {
             return back()->withErrors([
                 'email' => 'Your account has been deactivated. Please contact administrator.',
             ])->withInput($request->only('email'));
         }
 
-        // Attempt login
+        // Attempt login — pesan generik agar tidak bocorkan apakah email terdaftar atau tidak
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
@@ -60,7 +54,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Invalid email or password.',
+            'email' => 'The provided credentials are incorrect.',
         ])->withInput($request->only('email'));
     }
 

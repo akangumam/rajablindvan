@@ -14,7 +14,7 @@ use App\Http\Middleware\LocationFilter;
 // Authentication Routes
 // =====================================================
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/login', [LoginController::class, 'login'])->name('login.post')->middleware('throttle:5,1'); // maks 5 percobaan per menit
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // =====================================================

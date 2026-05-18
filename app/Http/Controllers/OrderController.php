@@ -37,9 +37,13 @@ class OrderController extends Controller
             });
         }
 
-        // Sorting
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
+        // Sorting — whitelist kolom yang boleh diurutkan
+        $allowedSortColumns = ['created_at', 'start_date', 'end_date', 'total_price', 'status',
+                                'vehicle_name', 'license_plate', 'year', 'customer_name'];
+        $allowedSortOrders  = ['asc', 'desc'];
+
+        $sortBy    = in_array($request->get('sort_by'), $allowedSortColumns) ? $request->get('sort_by') : 'created_at';
+        $sortOrder = in_array(strtolower($request->get('sort_order')), $allowedSortOrders) ? strtolower($request->get('sort_order')) : 'desc';
 
         // Handle relationship sorting
         if ($sortBy === 'vehicle_name') {

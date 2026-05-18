@@ -22,8 +22,8 @@ use App\Http\Controllers\Api\HistoryController;
 
 // Public routes
 Route::prefix('v1')->group(function () {
-    // Authentication
-    Route::post('/login', [AuthController::class, 'login']);
+    // Authentication — maks 5 percobaan per menit per IP
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
 });
 
 // Protected routes
