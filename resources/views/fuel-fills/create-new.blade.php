@@ -114,17 +114,17 @@
     </div>
 </div>
 
-<!-- Gas Stations -->
+<!-- GasStation -->
 <div class="field-group">
     <label class="form-label">
         <i class="fas fa-gas-pump" style="color: #6c757d; margin-right: 8px;"></i>
-        Gas Stations
+        GasStation
     </label>
-    <input type="text" name="Gas Stations" id="Gas StationsInput" class="form-control"
-           value="{{ old('Gas Stations') }}"
-           placeholder="Select Gas Stations"
+    <input type="text" name="GasStation" id="GasStationInput" class="form-control"
+           value="{{ old('GasStation') }}"
+           placeholder="Select GasStation"
            readonly
-           onclick="openGas StationsModal()"
+           onclick="openGasStationModal()"
            style="cursor: pointer; background: white;">
 </div>
 
@@ -274,12 +274,12 @@
     </div>
 </div>
 
-<!-- Gas Stations Modal -->
-<div class="modal fade" id="Gas StationsModal" tabindex="-1" aria-labelledby="Gas StationsModalLabel" aria-hidden="true">
+<!-- GasStation Modal -->
+<div class="modal fade" id="GasStationModal" tabindex="-1" aria-labelledby="GasStationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="Gas StationsModalLabel" style="font-size: 18px; font-weight: 500;">Gas Stations</h5>
+                <h5 class="modal-title" id="GasStationModalLabel" style="font-size: 18px; font-weight: 500;">GasStation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 0;">
@@ -288,25 +288,25 @@
                         <span class="input-group-text" style="background: white; border-right: 0;">
                             <i class="fas fa-search" style="color: #6c757d;"></i>
                         </span>
-                        <input type="text" id="Gas StationsSearch" class="form-control" placeholder="Search Gas Stations..." style="border-left: 0;" autofocus>
+                        <input type="text" id="GasStationSearch" class="form-control" placeholder="Search GasStation..." style="border-left: 0;" autofocus>
                     </div>
                 </div>
-                <div id="Gas StationsList" style="max-height: 300px; overflow-y: auto;">
-                    <div class="Gas Stations-item" data-value="Shell" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+                <div id="GasStationList" style="max-height: 300px; overflow-y: auto;">
+                    <div class="GasStation-item" data-value="Shell" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">Shell</span>
                     </div>
-                    <div class="Gas Stations-item" data-value="Pertamina" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+                    <div class="GasStation-item" data-value="Pertamina" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">Pertamina</span>
                     </div>
-                    <div class="Gas Stations-item" data-value="Total" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+                    <div class="GasStation-item" data-value="Total" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">Total</span>
                     </div>
-                    <div class="Gas Stations-item" data-value="BP" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+                    <div class="GasStation-item" data-value="BP" style="padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
                         <span style="color: #5B7C99; font-size: 15px;">BP</span>
                     </div>
                 </div>
                 <div style="padding: 16px 20px; border-top: 2px solid #e0e0e0;">
-                    <button type="button" class="btn" onclick="showAddGas StationsForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
+                    <button type="button" class="btn" onclick="showAddGasStationForm()" style="width: 100%; padding: 12px; border: 2px solid #1976d2; border-radius: 24px; background: white; color: #1976d2; font-weight: 500; text-transform: uppercase; font-size: 14px;">
                         ADD NEW
                     </button>
                 </div>
@@ -315,23 +315,23 @@
     </div>
 </div>
 
-<!-- Add New Gas Stations Modal -->
-<div class="modal fade" id="addGas StationsModal" tabindex="-1" aria-labelledby="addGas StationsModalLabel" aria-hidden="true">
+<!-- Add New GasStation Modal -->
+<div class="modal fade" id="addGasStationModal" tabindex="-1" aria-labelledby="addGasStationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 12px;">
             <div class="modal-header" style="border-bottom: 1px solid #e0e0e0; padding: 16px 20px;">
-                <h5 class="modal-title" id="addGas StationsModalLabel" style="font-size: 18px; font-weight: 500;">Add Gas Station</h5>
+                <h5 class="modal-title" id="addGasStationModalLabel" style="font-size: 18px; font-weight: 500;">Add Gas Station</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding: 20px;">
                 <div class="mb-3">
-                    <label for="newGas StationsName" class="form-label">Name Gas Stations</label>
-                    <input type="text" class="form-control" id="newGas StationsName" placeholder="Contoh: Shell, Pertamina, dll">
+                    <label for="newGasStationName" class="form-label">Name GasStation</label>
+                    <input type="text" class="form-control" id="newGasStationName" placeholder="Contoh: Shell, Pertamina, dll">
                 </div>
             </div>
             <div class="modal-footer" style="border-top: 1px solid #e0e0e0; padding: 12px 16px;">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
-                <button type="button" class="btn btn-primary" onclick="addNewGas Stations()">Save</button>
+                <button type="button" class="btn btn-primary" onclick="addNewGasStation()">Save</button>
             </div>
         </div>
     </div>
@@ -660,58 +660,58 @@ function updateAttachmentButtonText(input) {
     }
 }
 
-// ===== Gas Stations MODAL FUNCTIONS =====
-function openGas StationsModal() {
-    const modal = new bootstrap.Modal(document.getElementById('Gas StationsModal'));
+// ===== GasStation MODAL FUNCTIONS =====
+function openGasStationModal() {
+    const modal = new bootstrap.Modal(document.getElementById('GasStationModal'));
     modal.show();
 }
 
-document.getElementById('Gas StationsSearch').addEventListener('input', function() {
+document.getElementById('GasStationSearch').addEventListener('input', function() {
     const searchText = this.value.toLowerCase();
-    const items = document.querySelectorAll('.Gas Stations-item');
+    const items = document.querySelectorAll('.GasStation-item');
     items.forEach(item => {
         const text = item.textContent.toLowerCase();
         item.style.display = text.includes(searchText) ? 'block' : 'none';
     });
 });
 
-document.querySelectorAll('.Gas Stations-item').forEach(item => {
+document.querySelectorAll('.GasStation-item').forEach(item => {
     item.addEventListener('click', function() {
-        document.getElementById('Gas StationsInput').value = this.getAttribute('data-value');
-        bootstrap.Modal.getInstance(document.getElementById('Gas StationsModal')).hide();
+        document.getElementById('GasStationInput').value = this.getAttribute('data-value');
+        bootstrap.Modal.getInstance(document.getElementById('GasStationModal')).hide();
     });
     item.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     item.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
 });
 
-function showAddGas StationsForm() {
-    bootstrap.Modal.getInstance(document.getElementById('Gas StationsModal')).hide();
-    new bootstrap.Modal(document.getElementById('addGas StationsModal')).show();
+function showAddGasStationForm() {
+    bootstrap.Modal.getInstance(document.getElementById('GasStationModal')).hide();
+    new bootstrap.Modal(document.getElementById('addGasStationModal')).show();
 }
 
-function addNewGas Stations() {
-    const newName = document.getElementById('newGas StationsName').value.trim();
+function addNewGasStation() {
+    const newName = document.getElementById('newGasStationName').value.trim();
     if (!newName) { alert('Mohon Enter gas station name'); return; }
 
-    const Gas StationsList = document.getElementById('Gas StationsList');
+    const GasStationList = document.getElementById('GasStationList');
     const newItem = document.createElement('div');
-    newItem.className = 'Gas Stations-item';
+    newItem.className = 'GasStation-item';
     newItem.setAttribute('data-value', newName);
     newItem.style.cssText = 'padding: 16px 20px; cursor: pointer; border-bottom: 1px solid #f0f0f0;';
     newItem.innerHTML = `<span style="color: #5B7C99; font-size: 15px;">${newName}</span>`;
 
     newItem.addEventListener('click', function() {
-        document.getElementById('Gas StationsInput').value = this.getAttribute('data-value');
-        bootstrap.Modal.getInstance(document.getElementById('Gas StationsModal')).hide();
+        document.getElementById('GasStationInput').value = this.getAttribute('data-value');
+        bootstrap.Modal.getInstance(document.getElementById('GasStationModal')).hide();
     });
     newItem.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f0f0f0'; });
     newItem.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });
 
-    Gas StationsList.appendChild(newItem);
-    bootstrap.Modal.getInstance(document.getElementById('addGas StationsModal')).hide();
-    document.getElementById('Gas StationsInput').value = newName;
-    document.getElementById('newGas StationsName').value = '';
-    alert('Gas Stations "' + newName + '" berhasil ditambahkan!');
+    GasStationList.appendChild(newItem);
+    bootstrap.Modal.getInstance(document.getElementById('addGasStationModal')).hide();
+    document.getElementById('GasStationInput').value = newName;
+    document.getElementById('newGasStationName').value = '';
+    alert('GasStation "' + newName + '" berhasil ditambahkan!');
 }
 
 // ===== DRIVER MODAL FUNCTIONS =====
@@ -1263,12 +1263,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Gas Stations Search
-    const gasStationsSearch = document.getElementById('Gas StationsSearch');
+    // GasStation Search
+    const gasStationsSearch = document.getElementById('GasStationSearch');
     if (gasStationsSearch) {
         gasStationsSearch.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
-            const items = document.querySelectorAll('.Gas Stations-item');
+            const items = document.querySelectorAll('.GasStation-item');
             items.forEach(item => {
                 const text = item.textContent.toLowerCase();
                 item.style.display = text.includes(searchTerm) ? '' : 'none';
