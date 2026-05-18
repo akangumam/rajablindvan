@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
                 'role' => 'admin',
                 'location_id' => null, // Admin can access all locations
                 'is_active' => true,
-                'password' => Hash::make('admin123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ],
             
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
                 'role' => 'manager',
                 'location_id' => $jakartaLocation->id,
                 'is_active' => true,
-                'password' => Hash::make('manager123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ],
             [
@@ -45,7 +45,7 @@ class UserSeeder extends Seeder
                 'role' => 'staff',
                 'location_id' => $jakartaLocation->id,
                 'is_active' => true,
-                'password' => Hash::make('staff123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ],
             [
@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
                 'role' => 'staff',
                 'location_id' => $jakartaLocation->id,
                 'is_active' => true,
-                'password' => Hash::make('staff123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ],
             
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
                 'role' => 'manager',
                 'location_id' => $bekasiLocation->id,
                 'is_active' => true,
-                'password' => Hash::make('manager123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ],
             [
@@ -77,7 +77,7 @@ class UserSeeder extends Seeder
                 'role' => 'staff',
                 'location_id' => $bekasiLocation->id,
                 'is_active' => true,
-                'password' => Hash::make('staff123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ],
             [
@@ -87,7 +87,7 @@ class UserSeeder extends Seeder
                 'role' => 'staff',
                 'location_id' => $bekasiLocation->id,
                 'is_active' => true,
-                'password' => Hash::make('staff123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ],
         ];

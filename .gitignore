@@ -57,3 +57,7 @@ assign_locations.php
 test_api.php
 test-observer.php
 *.local.php
+
+*.blade.php.backup
+*_original.blade.php
+test_*.php

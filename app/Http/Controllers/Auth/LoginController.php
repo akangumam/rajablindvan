@@ -7,9 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 
 class LoginController extends Controller
 {
+    use ThrottlesLogins;
+
+    protected int $maxAttempts = 5;      // max percobaan gagal
+    protected int $decayMinutes = 15;    // durasi lockout (menit)
+
+    /**
+     * Get the login username to be used by the controller.
+     */
+    public function username()
+    {
+        return 'email';
+    }
     /**
      * Show the login form.
      */
@@ -35,6 +48,11 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember');
 
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->fireLockoutEvent($request);
+            return $this->sendLockoutResponse($request);
+        }
+
         // Check if user exists — gunakan Auth::attempt langsung agar tidak bocor info email
         $user = User::where('email', $request->email)->first();
 
@@ -48,10 +66,13 @@ class LoginController extends Controller
         // Attempt login — pesan generik agar tidak bocorkan apakah email terdaftar atau tidak
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+            $this->clearLoginAttempts($request);
 
             return redirect()->intended(route('dashboard'))
                 ->with('success', 'Welcome back, ' . $user->name . '!');
         }
+
+        $this->incrementLoginAttempts($request);
 
         return back()->withErrors([
             'email' => 'The provided credentials are incorrect.',

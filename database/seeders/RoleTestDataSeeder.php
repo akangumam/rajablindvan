@@ -26,7 +26,7 @@ class RoleTestDataSeeder extends Seeder
 
         // Create or get Pengelola users
         $pengelola1 = User::firstOrCreate(
-            ['email' => 'admin@rajablindvan.com'],
+            ['email' => 'admin@example.com'],
             [
                 'name' => 'Admin Utama',
                 'password' => Hash::make('password'),
@@ -36,7 +36,7 @@ class RoleTestDataSeeder extends Seeder
         );
 
         $pengelola2 = User::firstOrCreate(
-            ['email' => 'manager@rajablindvan.com'],
+            ['email' => 'manager@example.com'],
             [
                 'name' => 'Manager Operasional',
                 'password' => Hash::make('password'),
@@ -47,7 +47,7 @@ class RoleTestDataSeeder extends Seeder
 
         // Create or get Sopir users
         $sopir1 = User::firstOrCreate(
-            ['email' => 'budi@rajablindvan.com'],
+            ['email' => 'budi@example.com'],
             [
                 'name' => 'Budi Santoso',
                 'password' => Hash::make('password'),
@@ -57,7 +57,7 @@ class RoleTestDataSeeder extends Seeder
         );
 
         $sopir2 = User::firstOrCreate(
-            ['email' => 'ahmad@rajablindvan.com'],
+            ['email' => 'ahmad@example.com'],
             [
                 'name' => 'Ahmad Wijaya',
                 'password' => Hash::make('password'),
@@ -67,7 +67,7 @@ class RoleTestDataSeeder extends Seeder
         );
 
         $sopir3 = User::firstOrCreate(
-            ['email' => 'slamet@rajablindvan.com'],
+            ['email' => 'slamet@example.com'],
             [
                 'name' => 'Slamet Raharjo',
                 'password' => Hash::make('password'),
@@ -77,7 +77,7 @@ class RoleTestDataSeeder extends Seeder
         );
 
         $sopir4 = User::firstOrCreate(
-            ['email' => 'joko@rajablindvan.com'],
+            ['email' => 'joko@example.com'],
             [
                 'name' => 'Joko Susilo',
                 'password' => Hash::make('password'),
@@ -187,27 +187,27 @@ class RoleTestDataSeeder extends Seeder
         $this->command->info('=== LOGIN CREDENTIALS ===');
         $this->command->info('');
         $this->command->info('PENGELOLA 1:');
-        $this->command->info('Email: admin@rajablindvan.com');
+        $this->command->info('Email: admin@example.com');
         $this->command->info('Password: password');
         $this->command->info('');
         $this->command->info('PENGELOLA 2:');
-        $this->command->info('Email: manager@rajablindvan.com');
+        $this->command->info('Email: manager@example.com');
         $this->command->info('Password: password');
         $this->command->info('');
         $this->command->info('SOPIR 1 (Has 2 vehicles):');
-        $this->command->info('Email: budi@rajablindvan.com');
+        $this->command->info('Email: budi@example.com');
         $this->command->info('Password: password');
         $this->command->info('');
         $this->command->info('SOPIR 2 (Has 2 vehicles):');
-        $this->command->info('Email: ahmad@rajablindvan.com');
+        $this->command->info('Email: ahmad@example.com');
         $this->command->info('Password: password');
         $this->command->info('');
         $this->command->info('SOPIR 3 (Has 1 vehicle):');
-        $this->command->info('Email: slamet@rajablindvan.com');
+        $this->command->info('Email: slamet@example.com');
         $this->command->info('Password: password');
         $this->command->info('');
         $this->command->info('SOPIR 4 (No vehicles assigned):');
-        $this->command->info('Email: joko@rajablindvan.com');
+        $this->command->info('Email: joko@example.com');
         $this->command->info('Password: password');
     }
 }

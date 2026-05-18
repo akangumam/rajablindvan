@@ -26,14 +26,7 @@ class User extends Authenticatable
         'title',
         'email',
         'phone',
-        'role',
         'user_type', // Pengelola or Sopir
-        'is_active',
-        'status',
-        'password',
-        'verification_code',
-        'code_expires_at',
-        'is_verified',
     ];
 
     /**
@@ -58,6 +51,15 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function assignRole(string $role): void
+    {
+        if (!in_array($role, ['super_admin', 'manager', 'operator', 'staff'])) {
+            throw new \InvalidArgumentException('Invalid role');
+        }
+        $this->role = $role;
+        $this->save();
     }
 
     // Relationships
