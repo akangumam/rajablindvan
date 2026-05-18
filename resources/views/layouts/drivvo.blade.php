@@ -804,6 +804,40 @@
                     </a>
                 </div>
 
+                <!-- Rentals (Sewa Kendaraan) -->
+                <div class="drivvo-nav-item">
+                    <a href="{{ route('rentals.index') }}" class="drivvo-nav-link {{ request()->routeIs('rentals.*') ? 'active' : '' }}">
+                        <i class="fas fa-key"></i>
+                        <span class="nav-text">Sewa Kendaraan</span>
+                    </a>
+                </div>
+
+                <div class="nav-divider"></div>
+
+                <!-- BBM (Fuel Fills) -->
+                <div class="drivvo-nav-item">
+                    <a href="{{ route('fuel-fills.index') }}" class="drivvo-nav-link {{ request()->routeIs('fuel-fills.*') ? 'active' : '' }}">
+                        <i class="fas fa-gas-pump"></i>
+                        <span class="nav-text">BBM & Bahan Bakar</span>
+                    </a>
+                </div>
+
+                <!-- Trips (Perjalanan) -->
+                <div class="drivvo-nav-item">
+                    <a href="{{ route('trips.index') }}" class="drivvo-nav-link {{ request()->routeIs('trips.*') ? 'active' : '' }}">
+                        <i class="fas fa-route"></i>
+                        <span class="nav-text">Perjalanan</span>
+                    </a>
+                </div>
+
+                <!-- Checklists -->
+                <div class="drivvo-nav-item">
+                    <a href="{{ route('checklists.index') }}" class="drivvo-nav-link {{ request()->routeIs('checklists.*') ? 'active' : '' }}">
+                        <i class="fas fa-tasks"></i>
+                        <span class="nav-text">Checklist</span>
+                    </a>
+                </div>
+
                 <!-- Users (Only for Administrator) -->
                 @auth
                 @if(Auth::user()->canManageUsers())
