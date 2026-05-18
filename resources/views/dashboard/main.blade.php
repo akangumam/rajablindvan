@@ -220,10 +220,114 @@
         opacity: 0.5;
     }
 
-    /* Mobile Responsive Styles */
+    /* ===== PREMIUM FLEET STAT CARDS ===== */
+    .fleet-stat-card {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 24px 28px;
+        border-radius: 16px;
+        color: white;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+        height: 100%;
+        min-height: 100px;
+    }
+
+    .fleet-stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+
+    .booked-card {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    }
+
+    .available-card {
+        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    }
+
+    .total-card {
+        background: linear-gradient(135deg, #2980b9 0%, #1a5276 100%);
+    }
+
+    .fleet-stat-icon {
+        font-size: 44px;
+        opacity: 0.85;
+        flex-shrink: 0;
+    }
+
+    .fleet-stat-content {
+        flex: 1;
+    }
+
+    .fleet-stat-number {
+        font-size: 48px;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+
+    .fleet-stat-label {
+        font-size: 15px;
+        font-weight: 500;
+        opacity: 0.9;
+        margin-bottom: 2px;
+    }
+
+    .fleet-stat-sub {
+        font-size: 11px;
+        font-weight: 700;
+        opacity: 0.7;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #7f8c8d;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        display: flex;
+        align-items: center;
+        padding: 0 4px;
+        border-left: 3px solid #e74c3c;
+        padding-left: 12px;
+    }
+
+    /* ===== BADGE COUNT ===== */
+    .badge-count {
+        font-size: 12px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        min-width: 28px;
+        text-align: center;
+    }
+
+
     @media (max-width: 768px) {
         .dashboard-header {
             padding: 20px 15px;
+        }
+
+        .fleet-stat-card {
+            padding: 18px 20px;
+            gap: 16px;
+        }
+
+        .fleet-stat-icon {
+            font-size: 32px;
+        }
+
+        .fleet-stat-number {
+            font-size: 36px;
+        }
+
+        .fleet-stat-label {
+            font-size: 13px;
         }
 
         .dashboard-title {
@@ -383,19 +487,66 @@
     <p class="dashboard-subtitle">Real-time fleet monitoring and expiry alerts</p>
 </div>
 
+{{-- ===== FLEET STATUS: BOOKED & AVAILABLE (PALING ATAS) ===== --}}
+<div class="row mb-4">
+    <div class="col-md-4 col-sm-12 mb-3 mb-md-0">
+        <div class="fleet-stat-card booked-card">
+            <div class="fleet-stat-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="fleet-stat-content">
+                <div class="fleet-stat-number">{{ $bookedVehicles }}</div>
+                <div class="fleet-stat-label">Kendaraan Dipesan</div>
+                <div class="fleet-stat-sub">BOOKED</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-12 mb-3 mb-md-0">
+        <div class="fleet-stat-card available-card">
+            <div class="fleet-stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="fleet-stat-content">
+                <div class="fleet-stat-number">{{ $availableVehicles }}</div>
+                <div class="fleet-stat-label">Kendaraan Tersedia</div>
+                <div class="fleet-stat-sub">AVAILABLE</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+        <div class="fleet-stat-card total-card">
+            <div class="fleet-stat-icon">
+                <i class="fas fa-car-side"></i>
+            </div>
+            <div class="fleet-stat-content">
+                <div class="fleet-stat-number">{{ $totalFleet }}</div>
+                <div class="fleet-stat-label">Total Armada</div>
+                <div class="fleet-stat-sub">TOTAL FLEET</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ===== SECTION LABEL ===== --}}
+<div class="section-label mb-3">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    Monitoring Masa Berlaku Dokumen
+</div>
+
+{{-- ===== MONITORING CARDS GRID ===== --}}
 <div class="row">
-    <!-- Section 1: STNK Monitoring -->
-    <div class="col-lg-6 col-md-12">
-        <div class="monitoring-card">
+    {{-- STNK --}}
+    <div class="col-lg-4 col-md-12 mb-4">
+        <div class="monitoring-card h-100">
             <div class="card-header-custom">
                 <div class="card-title-custom">
                     <div class="card-icon icon-blue">
                         <i class="fas fa-id-card"></i>
                     </div>
-                    <span>Monitoring STNK Journey Time</span>
+                    <span>Monitoring STNK</span>
                 </div>
+                <span class="badge-count bg-danger text-white">{{ count($stnkMonitoring) }}</span>
             </div>
-            
             <div class="vehicle-list">
                 @forelse($stnkMonitoring as $item)
                 <div class="vehicle-item">
@@ -403,44 +554,42 @@
                         <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
                         <div class="countdown-info">
                             <i class="fas fa-clock"></i>
-                            <span>{{ $item['days_until_expiry'] }} days {{ $item['status'] == 'red' ? 'overdue' : 'remaining' }}</span>
+                            <span>{{ $item['days_until_expiry'] }} hari {{ $item['status'] == 'red' ? 'terlewat' : 'tersisa' }}</span>
                             <span class="text-muted">•</span>
-                            <span>Expired: {{ $item['expiry_date'] }}</span>
+                            <span>{{ $item['expiry_date'] }}</span>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-2">
                         <span class="status-badge status-{{ $item['status'] }}">
                             {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
                         </span>
                         <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
-                            Vehicle Details <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
                 @empty
                 <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <p>All STNK documents are up to date</p>
+                    <div class="empty-icon"><i class="fas fa-check-circle text-success"></i></div>
+                    <p>Semua STNK masih berlaku</p>
                 </div>
                 @endforelse
             </div>
         </div>
     </div>
-    
-    <!-- Section 2: KIR Monitoring -->
-    <div class="col-lg-6 col-md-12">
-        <div class="monitoring-card">
+
+    {{-- KIR --}}
+    <div class="col-lg-4 col-md-12 mb-4">
+        <div class="monitoring-card h-100">
             <div class="card-header-custom">
                 <div class="card-title-custom">
                     <div class="card-icon icon-green">
                         <i class="fas fa-clipboard-check"></i>
                     </div>
-                    <span>Monitoring KIR Journey Time</span>
+                    <span>Monitoring KIR</span>
                 </div>
+                <span class="badge-count bg-danger text-white">{{ count($kirMonitoring) }}</span>
             </div>
-            
             <div class="vehicle-list">
                 @forelse($kirMonitoring as $item)
                 <div class="vehicle-item">
@@ -448,44 +597,42 @@
                         <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
                         <div class="countdown-info">
                             <i class="fas fa-clock"></i>
-                            <span>{{ $item['days_until_expiry'] }} days {{ $item['status'] == 'red' ? 'overdue' : 'remaining' }}</span>
+                            <span>{{ $item['days_until_expiry'] }} hari {{ $item['status'] == 'red' ? 'terlewat' : 'tersisa' }}</span>
                             <span class="text-muted">•</span>
-                            <span>Expired: {{ $item['expiry_date'] }}</span>
+                            <span>{{ $item['expiry_date'] }}</span>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-2">
                         <span class="status-badge status-{{ $item['status'] }}">
                             {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
                         </span>
                         <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
-                            Vehicle Details <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
                 @empty
                 <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <p>All KIR documents are up to date</p>
+                    <div class="empty-icon"><i class="fas fa-check-circle text-success"></i></div>
+                    <p>Semua KIR masih berlaku</p>
                 </div>
                 @endforelse
             </div>
         </div>
     </div>
-    
-    <!-- Section 3: GPS Monitoring -->
-    <div class="col-lg-6 col-md-12">
-        <div class="monitoring-card">
+
+    {{-- GPS --}}
+    <div class="col-lg-4 col-md-12 mb-4">
+        <div class="monitoring-card h-100">
             <div class="card-header-custom">
                 <div class="card-title-custom">
                     <div class="card-icon icon-purple">
                         <i class="fas fa-map-marker-alt"></i>
                     </div>
-                    <span>Monitoring GPS Journey Time</span>
+                    <span>Monitoring GPS</span>
                 </div>
+                <span class="badge-count bg-danger text-white">{{ count($gpsMonitoring) }}</span>
             </div>
-            
             <div class="vehicle-list">
                 @forelse($gpsMonitoring as $item)
                 <div class="vehicle-item">
@@ -493,60 +640,26 @@
                         <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
                         <div class="countdown-info">
                             <i class="fas fa-clock"></i>
-                            <span>{{ $item['days_until_expiry'] }} days {{ $item['status'] == 'red' ? 'overdue' : 'remaining' }}</span>
+                            <span>{{ $item['days_until_expiry'] }} hari {{ $item['status'] == 'red' ? 'terlewat' : 'tersisa' }}</span>
                             <span class="text-muted">•</span>
-                            <span>Expired: {{ $item['expiry_date'] }}</span>
+                            <span>{{ $item['expiry_date'] }}</span>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-2">
                         <span class="status-badge status-{{ $item['status'] }}">
                             {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
                         </span>
                         <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
-                            Vehicle Details <i class="fas fa-arrow-right"></i>
+                            <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
                 @empty
                 <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <p>All GPS documents are up to date</p>
+                    <div class="empty-icon"><i class="fas fa-check-circle text-success"></i></div>
+                    <p>Semua GPS masih berlaku</p>
                 </div>
                 @endforelse
-            </div>
-        </div>
-    </div>
-    
-    <!-- Section 3: Fleet Status -->
-    <div class="col-12">
-        <div class="monitoring-card">
-            <div class="card-header-custom">
-                <div class="card-title-custom">
-                    <div class="card-icon icon-orange">
-                        <i class="fas fa-car-side"></i>
-                    </div>
-                    <span>Monitoring Vehicle BOOKED and AVAILABLE</span>
-                </div>
-            </div>
-            
-            <div class="fleet-summary">
-                <div class="fleet-stat">
-                    <i class="fas fa-calendar-check" style="font-size: 36px; color: #e74c3c; margin-bottom: 12px;"></i>
-                    <div class="fleet-number booked-number">{{ $bookedVehicles }}</div>
-                    <div class="fleet-label">Booked</div>
-                </div>
-                <div class="fleet-stat">
-                    <i class="fas fa-check-circle" style="font-size: 36px; color: #27ae60; margin-bottom: 12px;"></i>
-                    <div class="fleet-number available-number">{{ $availableVehicles }}</div>
-                    <div class="fleet-label">Available</div>
-                </div>
-                <div class="fleet-stat">
-                    <i class="fas fa-car-side" style="font-size: 36px; color: #3498db; margin-bottom: 12px;"></i>
-                    <div class="fleet-number total-number">{{ $totalFleet }}</div>
-                    <div class="fleet-label">Total Fleet</div>
-                </div>
             </div>
         </div>
     </div>
