@@ -17,11 +17,11 @@ use ZipArchive;
 class SettingsController extends Controller
 {
     /**
-     * Display settings main page - redirect to format
+     * Display settings main page
      */
     public function index()
     {
-        return redirect()->route('settings.format');
+        return view('settings.index');
     }
 
     /**
