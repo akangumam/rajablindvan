@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Events\Lockout;
 
 class LoginController extends Controller
 {
-    use ThrottlesLogins;
 
     protected int $maxAttempts = 5;      // max percobaan gagal
     protected int $decayMinutes = 15;    // durasi lockout (menit)
@@ -91,5 +93,42 @@ class LoginController extends Controller
 
         return redirect()->route('login')
             ->with('success', 'You have been logged out successfully.');
+    }
+
+    protected function hasTooManyLoginAttempts(Request $request)
+    {
+        return RateLimiter::tooManyAttempts($this->throttleKey($request), $this->maxAttempts);
+    }
+
+    protected function incrementLoginAttempts(Request $request)
+    {
+        RateLimiter::hit($this->throttleKey($request), $this->decayMinutes * 60);
+    }
+
+    protected function clearLoginAttempts(Request $request)
+    {
+        RateLimiter::clear($this->throttleKey($request));
+    }
+
+    protected function fireLockoutEvent(Request $request)
+    {
+        event(new Lockout($request));
+    }
+
+    protected function sendLockoutResponse(Request $request)
+    {
+        $seconds = RateLimiter::availableIn($this->throttleKey($request));
+
+        throw ValidationException::withMessages([
+            $this->username() => trans('auth.throttle', [
+                'seconds' => $seconds,
+                'minutes' => ceil($seconds / 60),
+            ]),
+        ])->status(429);
+    }
+
+    protected function throttleKey(Request $request)
+    {
+        return Str::transliterate(Str::lower($request->input($this->username())).'|'.$request->ip());
     }
 }
