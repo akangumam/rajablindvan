@@ -32,7 +32,7 @@ class OrderSeeder extends Seeder
                 'rental_type' => 'Sewa Harian',
                 'start_date' => Carbon::now()->subDays(2),
                 'end_date' => Carbon::now()->addDays(1),
-                'status' => 'Active',
+                'status' => Order::STATUS_ACTIVE,
             ],
             [
                 'vehicle_id' => $vehicles->random()->id,
@@ -40,7 +40,7 @@ class OrderSeeder extends Seeder
                 'rental_type' => 'Sewa Harian',
                 'start_date' => Carbon::now(),
                 'end_date' => Carbon::now()->addDays(3),
-                'status' => 'Active',
+                'status' => Order::STATUS_ACTIVE,
             ],
             
             // Sewa Bulanan - akan jatuh tempo dalam 5 hari (kuning)
@@ -50,7 +50,7 @@ class OrderSeeder extends Seeder
                 'rental_type' => 'Sewa Bulanan',
                 'start_date' => Carbon::now()->subDays(25),
                 'end_date' => Carbon::now()->addDays(5),
-                'status' => 'Active',
+                'status' => Order::STATUS_ACTIVE,
             ],
             
             // Sewa Bulanan - sudah lewat jatuh tempo (merah)
@@ -60,7 +60,7 @@ class OrderSeeder extends Seeder
                 'rental_type' => 'Sewa Bulanan',
                 'start_date' => Carbon::now()->subMonths(2),
                 'end_date' => Carbon::now()->subDays(3),
-                'status' => 'Active',
+                'status' => Order::STATUS_ACTIVE,
             ],
             
             // Sewa Bulanan - masih aman (hijau)
@@ -70,7 +70,7 @@ class OrderSeeder extends Seeder
                 'rental_type' => 'Sewa Bulanan',
                 'start_date' => Carbon::now()->subDays(10),
                 'end_date' => Carbon::now()->addDays(20),
-                'status' => 'Active',
+                'status' => Order::STATUS_ACTIVE,
             ],
         ];
 

@@ -132,18 +132,18 @@
 
 <!-- Status Filter Tabs -->
 <div class="status-tabs mb-4">
-    <a href="{{ route('orders.index', ['status' => 'Active']) }}"
-       class="status-tab {{ $status === 'Active' ? 'active' : '' }}">
+    <a href="{{ route('orders.index', ['status' => 'active']) }}"
+       class="status-tab {{ $status === 'active' ? 'active' : '' }}">
         <i class="fas fa-play-circle"></i> Active Orders
-        <span class="badge">{{ \App\Models\Order::where('status', 'Active')->count() }}</span>
+        <span class="badge">{{ \App\Models\Order::where('status', 'active')->count() }}</span>
     </a>
-    <a href="{{ route('orders.index', ['status' => 'Completed']) }}"
-       class="status-tab {{ $status === 'Completed' ? 'active' : '' }}">
+    <a href="{{ route('orders.index', ['status' => 'completed']) }}"
+       class="status-tab {{ $status === 'completed' ? 'active' : '' }}">
         <i class="fas fa-check-circle"></i> History (Completed)
-        <span class="badge">{{ \App\Models\Order::where('status', 'Completed')->count() }}</span>
+        <span class="badge">{{ \App\Models\Order::where('status', 'completed')->count() }}</span>
     </a>
-    <a href="{{ route('orders.index', ['status' => 'All']) }}"
-       class="status-tab {{ $status === 'All' ? 'active' : '' }}">
+    <a href="{{ route('orders.index', ['status' => 'all']) }}"
+       class="status-tab {{ $status === 'all' ? 'active' : '' }}">
         <i class="fas fa-list"></i> All Orders
         <span class="badge">{{ \App\Models\Order::count() }}</span>
     </a>
@@ -270,7 +270,7 @@
                             </td>
                             <td data-label="Actions">
                                 <div class="action-buttons">
-                                    @if($order->status === 'Active')
+                                    @if($order->status === \App\Models\Order::STATUS_ACTIVE)
                                     <form action="{{ route('orders.complete', $order->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Mark this order as completed?')">
                                         @csrf
                                         <button type="submit" class="action-icon-btn btn-complete" title="Complete Order">

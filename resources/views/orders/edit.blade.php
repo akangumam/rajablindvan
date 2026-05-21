@@ -85,8 +85,9 @@
                     <div class="col-md-6 mb-3">
                         <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                         <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
-                            <option value="Active" {{ old('status', $order->status) == 'Active' ? 'selected' : '' }}>Active</option>
-                            <option value="Inactive" {{ old('status', $order->status) == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="active" {{ old('status', $order->status) == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="completed" {{ old('status', $order->status) == 'completed' ? 'selected' : '' }}>Completed</option>
+                            <option value="cancelled" {{ old('status', $order->status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                         </select>
                         @error('status')
                         <div class="invalid-feedback">{{ $message }}</div>

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\Rental;
 use Illuminate\Http\Request;
 
 class RentalController extends Controller
@@ -24,16 +23,8 @@ class RentalController extends Controller
             });
         }
 
-        // Filter by status
         if ($request->has('status')) {
-            $statusStr = $request->status;
-            if ($statusStr === 'aktif' || $statusStr === 'active') {
-                $query->where('status', 'Active');
-            } elseif ($statusStr === 'selesai' || $statusStr === 'completed') {
-                $query->where('status', 'Inactive');
-            } else {
-                $query->where('status', $statusStr);
-            }
+            $query->where('status', strtolower($request->status));
         }
 
         // Filter by location (for admin)
@@ -61,11 +52,11 @@ class RentalController extends Controller
                     ],
                     'start_date' => $order->start_date->format('Y-m-d H:i'),
                     'end_date' => $order->end_date->format('Y-m-d H:i'),
-                    'status' => $order->status === 'Active' ? 'aktif' : 'selesai',
+                    'status' => $order->status,
                     'rental_type' => $order->rental_type,
-                    'total_days' => max(1, $order->start_date->diffInDays($order->end_date)),
-                    'total_price' => 0,
-                    'is_overdue' => $order->end_date->isPast() && $order->status === 'Active',
+                    'total_days' => $order->total_days,
+                    'total_price' => $order->total_price,
+                    'is_overdue' => $order->end_date->isPast() && $order->status === Order::STATUS_ACTIVE,
                     'created_at' => $order->created_at->diffForHumans(),
                 ];
             }),
@@ -84,10 +75,9 @@ class RentalController extends Controller
     public function active(Request $request)
     {
         $user = $request->user();
-        $query = Order::with(['vehicle:id,brand,model,license_plate', 'customer:id,name,phone'])
-            ->where('status', 'Active');
+        $query = Order::with(['vehicle:id,brand,model,license_plate,daily_rental_rate,monthly_rental_rate', 'customer:id,name,phone'])
+            ->where('status', Order::STATUS_ACTIVE);
 
-        // Apply location filter for non-admin users
         if (!$user->isAdmin() && $user->location_id) {
             $query->whereHas('vehicle', function ($q) use ($user) {
                 $q->where('location_id', $user->location_id);
@@ -112,10 +102,10 @@ class RentalController extends Controller
                     ],
                     'start_date' => $order->start_date->format('Y-m-d H:i'),
                     'end_date' => $order->end_date->format('Y-m-d H:i'),
-                    'status' => 'aktif',
+                    'status' => $order->status,
                     'rental_type' => $order->rental_type,
-                    'total_days' => max(1, $order->start_date->diffInDays($order->end_date)),
-                    'total_price' => 0,
+                    'total_days' => $order->total_days,
+                    'total_price' => $order->total_price,
                     'days_remaining' => $order->end_date->diffInDays(now(), false),
                     'is_overdue' => $order->end_date->isPast(),
                     'created_at' => $order->created_at->diffForHumans(),
@@ -130,9 +120,9 @@ class RentalController extends Controller
     public function show(Request $request, $id)
     {
         $user = $request->user();
-        $rental = Rental::with(['vehicle.location', 'customer'])->find($id);
+        $order = Order::with(['vehicle.location', 'customer'])->find($id);
 
-        if (!$rental) {
+        if (!$order) {
             return response()->json([
                 'success' => false,
                 'message' => 'Rental not found',
@@ -140,7 +130,7 @@ class RentalController extends Controller
         }
 
         // Check location access
-        if (!$user->isAdmin() && $rental->vehicle->location_id != $user->location_id) {
+        if (!$user->isAdmin() && $order->vehicle->location_id != $user->location_id) {
             return response()->json([
                 'success' => false,
                 'message' => 'You do not have access to this rental',
@@ -150,37 +140,32 @@ class RentalController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                'id' => $rental->id,
+                'id' => $order->id,
                 'vehicle' => [
-                    'id' => $rental->vehicle->id,
-                    'brand' => $rental->vehicle->brand,
-                    'model' => $rental->vehicle->model,
-                    'license_plate' => $rental->vehicle->license_plate,
-                    'color' => $rental->vehicle->color,
-                    'location' => $rental->vehicle->location ? $rental->vehicle->location->name : null,
+                    'id' => $order->vehicle->id,
+                    'brand' => $order->vehicle->brand,
+                    'model' => $order->vehicle->model,
+                    'license_plate' => $order->vehicle->license_plate,
+                    'color' => $order->vehicle->color,
+                    'location' => $order->vehicle->location ? $order->vehicle->location->name : null,
                 ],
                 'customer' => [
-                    'id' => $rental->customer->id,
-                    'name' => $rental->customer->name,
-                    'phone' => $rental->customer->phone,
-                    'email' => $rental->customer->email,
-                    'address' => $rental->customer->address,
+                    'id' => $order->customer->id,
+                    'name' => $order->customer->name,
+                    'phone' => $order->customer->phone ?? '-',
+                    'email' => $order->customer->email ?? null,
+                    'address' => $order->customer->address ?? null,
                 ],
-                'start_date' => $rental->start_date->format('Y-m-d'),
-                'end_date' => $rental->end_date->format('Y-m-d'),
-                'status' => $rental->status,
-                'rental_type' => $rental->rental_type,
-                'total_days' => $rental->duration_days,
-                'daily_rate' => (float) $rental->daily_rate,
-                'total_price' => (float) $rental->total_amount,
-                'deposit' => (float) $rental->deposit,
-                'pickup_location' => $rental->pickup_location,
-                'dropoff_location' => $rental->return_location,
-                'notes' => $rental->notes,
-                'is_overdue' => $rental->isOverdue(),
-                'days_remaining' => $rental->end_date->diffInDays(now(), false),
-                'created_at' => $rental->created_at->toIso8601String(),
-                'updated_at' => $rental->updated_at->toIso8601String(),
+                'start_date' => $order->start_date->format('Y-m-d H:i'),
+                'end_date' => $order->end_date->format('Y-m-d H:i'),
+                'status' => $order->status,
+                'rental_type' => $order->rental_type,
+                'total_days' => $order->total_days,
+                'total_price' => (float) $order->total_price,
+                'is_overdue' => $order->end_date->isPast() && $order->status === Order::STATUS_ACTIVE,
+                'days_remaining' => $order->end_date->diffInDays(now(), false),
+                'created_at' => $order->created_at->toIso8601String(),
+                'updated_at' => $order->updated_at->toIso8601String(),
             ],
         ], 200);
     }

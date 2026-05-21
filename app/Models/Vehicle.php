@@ -32,8 +32,9 @@ class Vehicle extends Model
         'notes',
         'location_id',
         'is_active',
-        'daily_rate',
-        'monthly_rate',
+        'daily_rental_rate',
+        'weekly_rental_rate',
+        'monthly_rental_rate',
         'investor_id',
         'ownership_type'
     ];
@@ -218,7 +219,7 @@ class Vehicle extends Model
             return $activeRental->status;
         }
         
-        $activeOrder = $this->orders()->where('status', 'Active')->latest()->first();
+        $activeOrder = $this->orders()->where('status', 'active')->latest()->first();
         if ($activeOrder) {
             return 'booked';
         }
@@ -232,7 +233,7 @@ class Vehicle extends Model
     public function isCurrentlyBooked(): bool
     {
         $hasActiveRental = $this->rentals()->whereIn('status', ['active', 'booked'])->exists();
-        $hasActiveOrder = $this->orders()->where('status', 'Active')->exists();
+        $hasActiveOrder = $this->orders()->where('status', 'active')->exists();
         
         return $hasActiveRental || $hasActiveOrder;
     }

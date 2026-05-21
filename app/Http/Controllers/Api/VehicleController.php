@@ -19,7 +19,7 @@ class VehicleController extends Controller
                 $q->where('status', 'active')->orWhere('status', 'booked');
             }])
             ->withExists(['orders as is_ordered' => function($q) {
-                $q->where('status', 'Active');
+                $q->where('status', 'active');
             }]);
 
         // Apply location filter for non-admin users
@@ -36,7 +36,7 @@ class VehicleController extends Controller
                         $r->where('status', 'active')->orWhere('status', 'booked');
                     })
                     ->orWhereHas('orders', function($o) {
-                        $o->where('status', 'Active');
+                        $o->where('status', 'active');
                     });
                 });
             } elseif ($status === 'available') {
@@ -44,7 +44,7 @@ class VehicleController extends Controller
                         $r->where('status', 'active')->orWhere('status', 'booked');
                     })
                     ->whereDoesntHave('orders', function($o) {
-                        $o->where('status', 'Active');
+                        $o->where('status', 'active');
                     })
                     ->where('status', '!=', 'maintenance');
             } else {
@@ -80,8 +80,8 @@ class VehicleController extends Controller
                     'year' => $vehicle->year,
                     'color' => $vehicle->color,
                     'status' => ($vehicle->is_rented || $vehicle->is_ordered) ? 'rented' : ($vehicle->is_active ? 'available' : 'inactive'),
-                    'daily_rate' => (float) $vehicle->daily_rate,
-                    'monthly_rate' => (float) $vehicle->monthly_rate,
+                    'daily_rate' => (float) $vehicle->daily_rental_rate,
+                    'monthly_rate' => (float) $vehicle->monthly_rental_rate,
                     'location' => $vehicle->location ? [
                         'id' => $vehicle->location->id,
                         'name' => $vehicle->location->name,
@@ -112,7 +112,7 @@ class VehicleController extends Controller
                 $q->where('status', 'active')->orWhere('status', 'booked');
             }])
             ->withExists(['orders as is_ordered' => function($q) {
-                $q->where('status', 'Active');
+                $q->where('status', 'active');
             }])
             ->find($id);
 

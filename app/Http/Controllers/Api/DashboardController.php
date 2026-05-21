@@ -42,7 +42,7 @@ class DashboardController extends Controller
             $query->whereHas('rentals', function($q) {
                 $q->whereIn('status', ['active', 'booked']);
             })->orWhereHas('orders', function($q) {
-                $q->where('status', 'Active');
+                $q->where('status', 'active');
             });
         })->count();
 
@@ -51,7 +51,7 @@ class DashboardController extends Controller
                 $query->whereIn('status', ['active', 'booked']);
             })
             ->whereDoesntHave('orders', function($query) {
-                $query->where('status', 'Active');
+                $query->where('status', 'active');
             })->count();
             
         $maintenanceVehicles = (clone $vehiclesQuery)->where('status', 'maintenance')->count();

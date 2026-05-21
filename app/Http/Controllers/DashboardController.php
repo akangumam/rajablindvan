@@ -7,6 +7,7 @@ use App\Models\Vehicle;
 use App\Models\FuelFill;
 use App\Models\Maintenance;
 use App\Models\Expense;
+use App\Models\Income;
 use App\Models\Location;
 use App\Http\Middleware\LocationFilter;
 use Carbon\Carbon;
@@ -51,7 +52,7 @@ class DashboardController extends Controller
                               ->orWhere('status', 'booked');
                         })
                         ->orWhereHas('orders', function($q) {
-                            $q->where('status', 'Active');
+                            $q->where('status', 'active');
                         });
                     })->count();
                 
@@ -141,7 +142,7 @@ class DashboardController extends Controller
                   ->orWhere('status', 'booked');
             })
             ->orWhereHas('orders', function($q) {
-                $q->where('status', 'Active');
+                $q->where('status', 'active');
             });
         });
         
@@ -151,7 +152,7 @@ class DashboardController extends Controller
                       ->orWhere('status', 'booked');
             })
             ->whereDoesntHave('orders', function($query) {
-                $query->where('status', 'Active');
+                $query->where('status', 'active');
             });
         
         if ($locationId) {
@@ -163,10 +164,28 @@ class DashboardController extends Controller
         $availableVehicles = $availableQuery->count();
         $totalFleet = $bookedVehicles + $availableVehicles;
         
+        // Section 5: Financial Summary - This Month
+        $incomeQuery = Income::whereYear('income_date', Carbon::now()->year)
+            ->whereMonth('income_date', Carbon::now()->month);
+        $expenseQuery = Expense::whereYear('expense_date', Carbon::now()->year)
+            ->whereMonth('expense_date', Carbon::now()->month);
+
+        if ($locationId) {
+            $incomeQuery->whereHas('vehicle', fn($q) => $q->where('location_id', $locationId));
+            $expenseQuery->where('location_id', $locationId);
+        }
+
+        $monthlyIncome  = (float) $incomeQuery->sum('amount');
+        $monthlyExpense = (float) $expenseQuery->sum('amount');
+        $monthlyProfit  = $monthlyIncome - $monthlyExpense;
+
+        // Section 6: Fuel/Expense chart data (6 months)
+        $fuelChartData = $this->getFuelExpensesChartData($locationId);
+
         // Get locations for filter dropdown
         $locations = Location::active()->get();
         $selectedLocation = $locationId;
-        
+
         return view('dashboard.main', compact(
             'stnkMonitoring',
             'kirMonitoring',
@@ -176,29 +195,42 @@ class DashboardController extends Controller
             'totalFleet',
             'locationStats',
             'locations',
-            'selectedLocation'
+            'selectedLocation',
+            'monthlyIncome',
+            'monthlyExpense',
+            'monthlyProfit',
+            'fuelChartData'
         ));
     }
 
-    private function getFuelExpensesChartData()
+    private function getFuelExpensesChartData($locationId = null)
     {
-        $months = [];
-        $data = [];
+        $months  = [];
+        $income  = [];
+        $expense = [];
 
         for ($i = 5; $i >= 0; $i--) {
-            $date = Carbon::now()->subMonths($i);
+            $date     = Carbon::now()->subMonths($i);
             $months[] = $date->format('M Y');
-            
-            $monthlyExpense = FuelFill::whereYear('fill_date', $date->year)
-                ->whereMonth('fill_date', $date->month)
-                ->sum('total_cost');
-                
-            $data[] = $monthlyExpense;
+
+            $incomeQuery = Income::whereYear('income_date', $date->year)
+                ->whereMonth('income_date', $date->month);
+            $expenseQuery = Expense::whereYear('expense_date', $date->year)
+                ->whereMonth('expense_date', $date->month);
+
+            if ($locationId) {
+                $incomeQuery->whereHas('vehicle', fn($q) => $q->where('location_id', $locationId));
+                $expenseQuery->where('location_id', $locationId);
+            }
+
+            $income[]  = (float) $incomeQuery->sum('amount');
+            $expense[] = (float) $expenseQuery->sum('amount');
         }
 
         return [
-            'labels' => $months,
-            'data' => $data
+            'labels'  => $months,
+            'income'  => $income,
+            'expense' => $expense,
         ];
     }
 }

@@ -16,9 +16,8 @@ class OrderController extends Controller
     {
         $query = Order::with(['vehicle', 'customer']);
         
-        // Filter by status (default: Active)
-        $status = $request->get('status', 'Active');
-        if ($status !== 'All') {
+        $status = strtolower($request->get('status', 'active'));
+        if ($status !== 'all') {
             $query->where('status', $status);
         }
 
@@ -128,7 +127,7 @@ class OrderController extends Controller
             'rental_type' => 'required|in:Sewa Harian,Sewa Bulanan',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'status' => 'required|in:Active,Completed,Cancelled',
+            'status' => 'required|in:active,completed,cancelled',
         ]);
 
         $order->update($validated);
@@ -142,7 +141,7 @@ class OrderController extends Controller
     public function complete(Order $order)
     {
         $order->update([
-            'status' => 'Completed',
+            'status' => 'completed',
             'completed_at' => now()
         ]);
 
