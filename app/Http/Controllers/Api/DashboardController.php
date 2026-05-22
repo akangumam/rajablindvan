@@ -37,9 +37,13 @@ class DashboardController extends Controller
         }
 
         // Auto-complete expired orders
-        Order::whereIn('status', ['active', 'Active', 'ACTIVE'])
-            ->where('end_date', '<', Carbon::today())
-            ->update(['status' => 'completed', 'completed_at' => now()]);
+        try {
+            Order::whereIn('status', ['active', 'Active', 'ACTIVE'])
+                ->where('end_date', '<', Carbon::today())
+                ->update(['status' => 'completed', 'completed_at' => now()]);
+        } catch (\Exception $e) {
+            // Silently fail
+        }
 
         // Get statistics
         $totalVehicles = $vehiclesQuery->count();

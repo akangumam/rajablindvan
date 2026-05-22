@@ -20,10 +20,14 @@ class DashboardController extends Controller
         $user = auth()->user();
         $locationId = LocationFilter::getLocationId();
         
-        // Auto-complete expired orders
-        Order::whereIn('status', ['active', 'Active', 'ACTIVE'])
-            ->where('end_date', '<', Carbon::today())
-            ->update(['status' => 'completed', 'completed_at' => now()]);
+        // Auto-complete expired orders (safe - won't crash if column missing)
+        try {
+            Order::whereIn('status', ['active', 'Active', 'ACTIVE'])
+                ->where('end_date', '<', Carbon::today())
+                ->update(['status' => 'completed', 'completed_at' => now()]);
+        } catch (\Exception $e) {
+            // Silently fail - completed_at column may not exist yet
+        }
         
         // Persist selected vehicle to session
         if ($request->has('vehicle_id')) {
@@ -195,41 +199,45 @@ class DashboardController extends Controller
 
         // Section 7: Rental Expiry Monitoring (Sewa yang akan berakhir)
         $rentalExpiryMonitoring = [];
-        $rentalExpiryQuery = Order::with(['vehicle', 'customer'])
-            ->whereIn('status', ['active', 'Active', 'ACTIVE']);
-        
-        if ($locationId) {
-            $rentalExpiryQuery->whereHas('vehicle', fn($q) => $q->where('location_id', $locationId));
-        }
-        
-        $activeOrders = $rentalExpiryQuery->get();
-        foreach ($activeOrders as $order) {
-            $daysUntilEnd = Carbon::today()->diffInDays($order->end_date, false);
+        try {
+            $rentalExpiryQuery = Order::with(['vehicle', 'customer'])
+                ->whereIn('status', ['active', 'Active', 'ACTIVE']);
             
-            // Show orders expiring within 7 days or already overdue
-            if ($daysUntilEnd <= 7) {
-                $status = $daysUntilEnd < 0 ? 'red' : ($daysUntilEnd <= 3 ? 'yellow' : 'green');
-                $rentalExpiryMonitoring[] = [
-                    'id' => $order->id,
-                    'vehicle_name' => $order->vehicle->name ?? '-',
-                    'license_plate' => $order->vehicle->license_plate ?? '-',
-                    'customer' => $order->customer->name ?? '-',
-                    'rental_type' => $order->rental_type,
-                    'end_date' => $order->end_date->format('d M Y'),
-                    'days_remaining' => abs(round($daysUntilEnd)),
-                    'status' => $status,
-                    'is_overdue' => $daysUntilEnd < 0,
-                ];
+            if ($locationId) {
+                $rentalExpiryQuery->whereHas('vehicle', fn($q) => $q->where('location_id', $locationId));
             }
-        }
+            
+            $activeOrders = $rentalExpiryQuery->get();
+            foreach ($activeOrders as $order) {
+                $daysUntilEnd = Carbon::today()->diffInDays($order->end_date, false);
+                
+                // Show orders expiring within 7 days or already overdue
+                if ($daysUntilEnd <= 7) {
+                    $status = $daysUntilEnd < 0 ? 'red' : ($daysUntilEnd <= 3 ? 'yellow' : 'green');
+                    $rentalExpiryMonitoring[] = [
+                        'id' => $order->id,
+                        'vehicle_name' => $order->vehicle->name ?? '-',
+                        'license_plate' => $order->vehicle->license_plate ?? '-',
+                        'customer' => $order->customer->name ?? '-',
+                        'rental_type' => $order->rental_type,
+                        'end_date' => $order->end_date->format('d M Y'),
+                        'days_remaining' => abs(round($daysUntilEnd)),
+                        'status' => $status,
+                        'is_overdue' => $daysUntilEnd < 0,
+                    ];
+                }
+            }
 
-        // Sort: overdue first, then by days remaining ascending
-        usort($rentalExpiryMonitoring, function ($a, $b) {
-            if ($a['is_overdue'] !== $b['is_overdue']) {
-                return $a['is_overdue'] ? -1 : 1;
-            }
-            return $a['days_remaining'] - $b['days_remaining'];
-        });
+            // Sort: overdue first, then by days remaining ascending
+            usort($rentalExpiryMonitoring, function ($a, $b) {
+                if ($a['is_overdue'] !== $b['is_overdue']) {
+                    return $a['is_overdue'] ? -1 : 1;
+                }
+                return $a['days_remaining'] - $b['days_remaining'];
+            });
+        } catch (\Exception $e) {
+            // Silently fail if orders table structure differs
+        }
 
         return view('dashboard.main', compact(
             'stnkMonitoring',
