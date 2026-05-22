@@ -136,7 +136,7 @@ class DashboardController extends Controller
         }
         
         // Section 4: Monitoring Vehicle BOOKED and AVAILABLE
-        $bookedQuery = Vehicle::where(function($query) {
+        $bookedQuery = Vehicle::where('is_active', true)->where(function($query) {
             $query->whereHas('rentals', function($q) {
                 $q->where('status', 'active')
                   ->orWhere('status', 'booked');

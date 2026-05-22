@@ -75,8 +75,8 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $vehicles = Vehicle::all(); // Get all vehicles
-        $customers = Customer::all();
+        $vehicles = Vehicle::where('is_active', true)->orderBy('name')->get();
+        $customers = Customer::orderBy('name')->get();
         return view('orders.create', compact('vehicles', 'customers'));
     }
 
@@ -93,7 +93,7 @@ class OrderController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
-        Order::create($validated);
+        Order::create(array_merge($validated, ['status' => Order::STATUS_ACTIVE]));
 
         return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
@@ -111,8 +111,8 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
-        $vehicles = Vehicle::all(); // Get all vehicles
-        $customers = Customer::all();
+        $vehicles = Vehicle::where('is_active', true)->orderBy('name')->get();
+        $customers = Customer::orderBy('name')->get();
         return view('orders.edit', compact('order', 'vehicles', 'customers'));
     }
 
