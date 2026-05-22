@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
+use App\Models\Order;
 use App\Models\Rental;
 use App\Models\FuelFill;
 use App\Models\Maintenance;
@@ -35,23 +36,28 @@ class DashboardController extends Controller
             $expensesQuery->where('location_id', $locationId);
         }
 
+        // Auto-complete expired orders
+        Order::whereIn('status', ['active', 'Active', 'ACTIVE'])
+            ->where('end_date', '<', Carbon::today())
+            ->update(['status' => 'completed', 'completed_at' => now()]);
+
         // Get statistics
         $totalVehicles = $vehiclesQuery->count();
         
-        $rentedVehicles = (clone $vehiclesQuery)->where(function($query) {
+        $rentedVehicles = (clone $vehiclesQuery)->where('is_active', true)->where(function($query) {
             $query->whereHas('rentals', function($q) {
-                $q->whereIn('status', ['active', 'booked']);
+                $q->whereIn('status', ['active', 'Active', 'ACTIVE', 'booked', 'Booked', 'BOOKED']);
             })->orWhereHas('orders', function($q) {
-                $q->where('status', 'active');
+                $q->whereIn('status', ['active', 'Active', 'ACTIVE']);
             });
         })->count();
 
         $availableVehicles = (clone $vehiclesQuery)->where('is_active', true)
             ->whereDoesntHave('rentals', function($query) {
-                $query->whereIn('status', ['active', 'booked']);
+                $query->whereIn('status', ['active', 'Active', 'ACTIVE', 'booked', 'Booked', 'BOOKED']);
             })
             ->whereDoesntHave('orders', function($query) {
-                $query->where('status', 'active');
+                $query->whereIn('status', ['active', 'Active', 'ACTIVE']);
             })->count();
             
         $maintenanceVehicles = (clone $vehiclesQuery)->where('status', 'maintenance')->count();

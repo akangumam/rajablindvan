@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class RentalController extends Controller
 {
@@ -23,8 +24,14 @@ class RentalController extends Controller
             });
         }
 
+        // Auto-complete expired orders
+        Order::whereIn('status', ['active', 'Active', 'ACTIVE'])
+            ->where('end_date', '<', Carbon::today())
+            ->update(['status' => 'completed', 'completed_at' => now()]);
+
         if ($request->has('status')) {
-            $query->where('status', strtolower($request->status));
+            $status = strtolower($request->status);
+            $query->whereIn('status', [$status, ucfirst($status), strtoupper($status)]);
         }
 
         // Filter by location (for admin)
@@ -76,7 +83,7 @@ class RentalController extends Controller
     {
         $user = $request->user();
         $query = Order::with(['vehicle:id,brand,model,license_plate,daily_rental_rate,monthly_rental_rate', 'customer:id,name,phone'])
-            ->where('status', Order::STATUS_ACTIVE);
+            ->whereIn('status', ['active', 'Active', 'ACTIVE']);
 
         if (!$user->isAdmin() && $user->location_id) {
             $query->whereHas('vehicle', function ($q) use ($user) {
