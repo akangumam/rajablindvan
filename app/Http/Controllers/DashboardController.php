@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
+use App\Models\Order;
 use App\Models\FuelFill;
 use App\Models\Maintenance;
 use App\Models\Expense;
@@ -18,6 +19,11 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         $locationId = LocationFilter::getLocationId();
+        
+        // Auto-complete expired orders
+        Order::whereIn('status', ['active', 'Active', 'ACTIVE'])
+            ->where('end_date', '<', Carbon::today())
+            ->update(['status' => 'completed', 'completed_at' => now()]);
         
         // Persist selected vehicle to session
         if ($request->has('vehicle_id')) {
@@ -187,6 +193,44 @@ class DashboardController extends Controller
         $locations = Location::active()->get();
         $selectedLocation = $locationId;
 
+        // Section 7: Rental Expiry Monitoring (Sewa yang akan berakhir)
+        $rentalExpiryMonitoring = [];
+        $rentalExpiryQuery = Order::with(['vehicle', 'customer'])
+            ->whereIn('status', ['active', 'Active', 'ACTIVE']);
+        
+        if ($locationId) {
+            $rentalExpiryQuery->whereHas('vehicle', fn($q) => $q->where('location_id', $locationId));
+        }
+        
+        $activeOrders = $rentalExpiryQuery->get();
+        foreach ($activeOrders as $order) {
+            $daysUntilEnd = Carbon::today()->diffInDays($order->end_date, false);
+            
+            // Show orders expiring within 7 days or already overdue
+            if ($daysUntilEnd <= 7) {
+                $status = $daysUntilEnd < 0 ? 'red' : ($daysUntilEnd <= 3 ? 'yellow' : 'green');
+                $rentalExpiryMonitoring[] = [
+                    'id' => $order->id,
+                    'vehicle_name' => $order->vehicle->name ?? '-',
+                    'license_plate' => $order->vehicle->license_plate ?? '-',
+                    'customer' => $order->customer->name ?? '-',
+                    'rental_type' => $order->rental_type,
+                    'end_date' => $order->end_date->format('d M Y'),
+                    'days_remaining' => abs(round($daysUntilEnd)),
+                    'status' => $status,
+                    'is_overdue' => $daysUntilEnd < 0,
+                ];
+            }
+        }
+
+        // Sort: overdue first, then by days remaining ascending
+        usort($rentalExpiryMonitoring, function ($a, $b) {
+            if ($a['is_overdue'] !== $b['is_overdue']) {
+                return $a['is_overdue'] ? -1 : 1;
+            }
+            return $a['days_remaining'] - $b['days_remaining'];
+        });
+
         return view('dashboard.main', compact(
             'stnkMonitoring',
             'kirMonitoring',
@@ -200,7 +244,8 @@ class DashboardController extends Controller
             'monthlyIncome',
             'monthlyExpense',
             'monthlyProfit',
-            'fuelChartData'
+            'fuelChartData',
+            'rentalExpiryMonitoring'
         ));
     }
 

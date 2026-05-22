@@ -182,6 +182,75 @@
 </div>
 @endif
 
+{{-- ===== RENTAL EXPIRY MONITORING ===== --}}
+<div class="section-label mb-3">
+    <i class="fas fa-calendar-alt me-2"></i>
+    Monitoring Masa Sewa
+</div>
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="monitoring-card">
+            <div class="card-header-custom">
+                <div class="card-title-custom">
+                    <div class="card-icon icon-orange">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <span>Sewa Akan Berakhir / Sudah Lewat</span>
+                </div>
+                <span class="badge-count {{ count($rentalExpiryMonitoring) > 0 ? 'bg-danger' : 'bg-success' }} text-white">
+                    {{ count($rentalExpiryMonitoring) > 0 ? count($rentalExpiryMonitoring) : '✓' }}
+                </span>
+            </div>
+            <div class="vehicle-list">
+                @forelse($rentalExpiryMonitoring as $item)
+                <div class="vehicle-item">
+                    <div class="vehicle-info">
+                        <div class="vehicle-name">{{ $item['vehicle_name'] }} <small class="text-muted">({{ $item['license_plate'] }})</small></div>
+                        <div class="countdown-info">
+                            <i class="fas fa-user"></i>
+                            <span>{{ $item['customer'] }}</span>
+                            <span class="text-muted">•</span>
+                            <span class="badge {{ $item['rental_type'] === 'Sewa Harian' ? 'bg-info' : 'bg-warning text-dark' }}" style="font-size:11px;">{{ $item['rental_type'] }}</span>
+                            <span class="text-muted">•</span>
+                            <i class="fas fa-clock"></i>
+                            <span>
+                                @if($item['is_overdue'])
+                                    <strong class="text-danger">{{ $item['days_remaining'] }} hari terlewat</strong>
+                                @else
+                                    {{ $item['days_remaining'] }} hari tersisa
+                                @endif
+                            </span>
+                            <span class="text-muted">•</span>
+                            <span>Berakhir: {{ $item['end_date'] }}</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="status-badge status-{{ $item['status'] }}">
+                            @if($item['status'] === 'red')
+                                LEWAT
+                            @elseif($item['status'] === 'yellow')
+                                SEGERA
+                            @else
+                                AMAN
+                            @endif
+                        </span>
+                        <a href="{{ route('orders.index', ['status' => 'active']) }}" class="action-link">
+                            Detail <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                @empty
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-check-circle text-success"></i></div>
+                    <p class="mb-1">Tidak ada sewa yang akan segera berakhir</p>
+                    <small class="text-muted">Semua pesanan aktif masih memiliki waktu lebih dari 7 hari</small>
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+</div>
+
 {{-- ===== SECTION LABEL ===== --}}
 <div class="section-label mb-3">
     <i class="fas fa-exclamation-triangle me-2"></i>
