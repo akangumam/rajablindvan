@@ -18,7 +18,7 @@ class OrderController extends Controller
         
         $status = strtolower($request->get('status', 'active'));
         if ($status !== 'all') {
-            $query->where('status', $status);
+            $query->whereIn('status', [$status, ucfirst($status), strtoupper($status)]);
         }
 
         // Search functionality

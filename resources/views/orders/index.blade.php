@@ -135,12 +135,12 @@
     <a href="{{ route('orders.index', ['status' => 'active']) }}"
        class="status-tab {{ $status === 'active' ? 'active' : '' }}">
         <i class="fas fa-play-circle"></i> Active Orders
-        <span class="badge">{{ \App\Models\Order::where('status', 'active')->count() }}</span>
+        <span class="badge">{{ \App\Models\Order::whereIn('status', ['active', 'Active', 'ACTIVE'])->count() }}</span>
     </a>
     <a href="{{ route('orders.index', ['status' => 'completed']) }}"
        class="status-tab {{ $status === 'completed' ? 'active' : '' }}">
         <i class="fas fa-check-circle"></i> History (Completed)
-        <span class="badge">{{ \App\Models\Order::where('status', 'completed')->count() }}</span>
+        <span class="badge">{{ \App\Models\Order::whereIn('status', ['completed', 'Completed', 'COMPLETED'])->count() }}</span>
     </a>
     <a href="{{ route('orders.index', ['status' => 'all']) }}"
        class="status-tab {{ $status === 'all' ? 'active' : '' }}">
