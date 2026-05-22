@@ -219,7 +219,7 @@ class Vehicle extends Model
             return $activeRental->status;
         }
         
-        $activeOrder = $this->orders()->where('status', 'active')->latest()->first();
+        $activeOrder = $this->orders()->whereIn('status', ['active', 'Active', 'ACTIVE'])->latest()->first();
         if ($activeOrder) {
             return 'booked';
         }
@@ -232,8 +232,8 @@ class Vehicle extends Model
      */
     public function isCurrentlyBooked(): bool
     {
-        $hasActiveRental = $this->rentals()->whereIn('status', ['active', 'booked'])->exists();
-        $hasActiveOrder = $this->orders()->where('status', 'active')->exists();
+        $hasActiveRental = $this->rentals()->whereIn('status', ['active', 'Active', 'ACTIVE', 'booked', 'Booked', 'BOOKED'])->exists();
+        $hasActiveOrder = $this->orders()->whereIn('status', ['active', 'Active', 'ACTIVE'])->exists();
         
         return $hasActiveRental || $hasActiveOrder;
     }

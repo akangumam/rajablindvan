@@ -46,13 +46,14 @@ class DashboardController extends Controller
                     ->count();
                 
                 $locationBooked = Vehicle::where('location_id', $location->id)
+                    ->where('is_active', true)
                     ->where(function($query) {
                         $query->whereHas('rentals', function($q) {
-                            $q->where('status', 'active')
-                              ->orWhere('status', 'booked');
+                            $q->whereIn('status', ['active', 'Active', 'ACTIVE'])
+                              ->orWhereIn('status', ['booked', 'Booked', 'BOOKED']);
                         })
                         ->orWhereHas('orders', function($q) {
-                            $q->where('status', 'active');
+                            $q->whereIn('status', ['active', 'Active', 'ACTIVE']);
                         });
                     })->count();
                 
@@ -138,21 +139,21 @@ class DashboardController extends Controller
         // Section 4: Monitoring Vehicle BOOKED and AVAILABLE
         $bookedQuery = Vehicle::where('is_active', true)->where(function($query) {
             $query->whereHas('rentals', function($q) {
-                $q->where('status', 'active')
-                  ->orWhere('status', 'booked');
+                $q->whereIn('status', ['active', 'Active', 'ACTIVE'])
+                  ->orWhereIn('status', ['booked', 'Booked', 'BOOKED']);
             })
             ->orWhereHas('orders', function($q) {
-                $q->where('status', 'active');
+                $q->whereIn('status', ['active', 'Active', 'ACTIVE']);
             });
         });
         
         $availableQuery = Vehicle::where('is_active', true)
             ->whereDoesntHave('rentals', function($query) {
-                $query->where('status', 'active')
-                      ->orWhere('status', 'booked');
+                $query->whereIn('status', ['active', 'Active', 'ACTIVE'])
+                      ->orWhereIn('status', ['booked', 'Booked', 'BOOKED']);
             })
             ->whereDoesntHave('orders', function($query) {
-                $query->where('status', 'active');
+                $query->whereIn('status', ['active', 'Active', 'ACTIVE']);
             });
         
         if ($locationId) {

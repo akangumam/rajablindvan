@@ -9,6 +9,10 @@
 
     <title>Radja Blind Van - @yield('title', 'Dashboard')</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/logos/brands/Radja-Blind-Van-Logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/logos/brands/Radja-Blind-Van-Logo.png') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
