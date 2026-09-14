@@ -16,12 +16,12 @@ class SuperAdminSeeder extends Seeder
     {
         // Create Administrator (Full Access - previously Super Admin)
         User::updateOrCreate(
-            ['email' => env('ADMIN_EMAIL', 'admin@example.com')],
+            ['email' => env('ADMIN_EMAIL', 'admin@rajablindvan.com')],
             [
                 'name' => 'Administrator',
                 'first_name' => 'Admin',
                 'last_name' => 'System',
-                'password' => Hash::make(env('ADMIN_PASSWORD', 'password')),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'admin123')),
                 'role' => 'super_admin',
                 'user_type' => 'admin',
                 'title' => 'Administrator',
@@ -35,12 +35,12 @@ class SuperAdminSeeder extends Seeder
 
         // Create Sales User
         User::updateOrCreate(
-            ['email' => 'sales@example.com'],
+            ['email' => 'sales@rajablindvan.com'],
             [
                 'name' => 'Sales Team',
                 'first_name' => 'Sales',
                 'last_name' => 'Demo',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('sales123'),
                 'role' => 'manager',
                 'user_type' => 'manager',
                 'title' => 'Sales',
@@ -54,12 +54,12 @@ class SuperAdminSeeder extends Seeder
 
         // Create Operation User
         User::updateOrCreate(
-            ['email' => 'operation@example.com'],
+            ['email' => 'operation@rajablindvan.com'],
             [
                 'name' => 'Operation Team',
                 'first_name' => 'Operation',
                 'last_name' => 'Demo',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('operation123'),
                 'role' => 'operator',
                 'user_type' => 'driver',
                 'title' => 'Operation',
