@@ -78,8 +78,8 @@ class DashboardController extends Controller
 
         // Monthly expenses
         $monthlyExpenses = $expensesQuery
-            ->whereYear('date', Carbon::now()->year)
-            ->whereMonth('date', Carbon::now()->month)
+            ->whereYear('expense_date', Carbon::now()->year)
+            ->whereMonth('expense_date', Carbon::now()->month)
             ->sum('amount');
 
         // Net income
