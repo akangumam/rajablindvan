@@ -119,8 +119,13 @@ class VehicleController extends Controller
 
             // Handle new location
             if ($validated['location_id'] === 'new') {
+                $locName = $validated['new_location_name'];
+                $locCode = strtoupper(substr(preg_replace('/[^a-zA-Z0-9]/', '', $locName), 0, 3)) . rand(100, 999);
+                
                 $location = \App\Models\Location::create([
-                    'name' => $validated['new_location_name']
+                    'name' => $locName,
+                    'code' => $locCode,
+                    'is_active' => true
                 ]);
                 $validated['location_id'] = $location->id;
             } else {
@@ -305,8 +310,13 @@ class VehicleController extends Controller
 
         // Handle new location
         if ($validated['location_id'] === 'new') {
+            $locName = $validated['new_location_name'];
+            $locCode = strtoupper(substr(preg_replace('/[^a-zA-Z0-9]/', '', $locName), 0, 3)) . rand(100, 999);
+            
             $location = \App\Models\Location::create([
-                'name' => $validated['new_location_name']
+                'name' => $locName,
+                'code' => $locCode,
+                'is_active' => true
             ]);
             $validated['location_id'] = $location->id;
         } else {
