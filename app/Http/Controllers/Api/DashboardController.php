@@ -229,8 +229,8 @@ class DashboardController extends Controller
                 return [
                     'type' => 'rental',
                     'title' => 'Rental Created',
-                    'description' => "{$rental->customer->name} rented {$rental->vehicle->brand} {$rental->vehicle->model}",
-                    'vehicle' => $rental->vehicle->license_plate,
+                    'description' => "{$rental->customer?->name} rented {$rental->vehicle?->brand} {$rental->vehicle?->model}",
+                    'vehicle' => $rental->vehicle?->license_plate,
                     'time' => $rental->created_at->diffForHumans(),
                     'timestamp' => $rental->created_at->toIso8601String(),
                 ];
@@ -251,8 +251,8 @@ class DashboardController extends Controller
                 return [
                     'type' => 'maintenance',
                     'title' => 'Maintenance Scheduled',
-                    'description' => "{$maintenance->vehicle->brand} {$maintenance->vehicle->model} - {$maintenance->type}",
-                    'vehicle' => $maintenance->vehicle->license_plate,
+                    'description' => "{$maintenance->vehicle?->brand} {$maintenance->vehicle?->model} - {$maintenance->type}",
+                    'vehicle' => $maintenance->vehicle?->license_plate,
                     'time' => $maintenance->created_at->diffForHumans(),
                     'timestamp' => $maintenance->created_at->toIso8601String(),
                 ];
