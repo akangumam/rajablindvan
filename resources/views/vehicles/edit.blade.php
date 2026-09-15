@@ -309,14 +309,18 @@
 
                 <div class="col-md-6 mb-4">
                     <label class="form-label">Lokasi <span class="text-danger">*</span></label>
-                    <select class="form-select" name="location_id" required>
+                    <select class="form-select" name="location_id" id="locationSelect" required>
                         <option value="">-- Pilih Lokasi --</option>
                         @foreach(\App\Models\Location::all() as $location)
                             <option value="{{ $location->id }}" {{ old('location_id', $vehicle->location_id) == $location->id ? 'selected' : '' }}>
                                 {{ $location->name }}
                             </option>
                         @endforeach
+                        <option value="new" {{ old('location_id') == 'new' ? 'selected' : '' }}>+ Tambah Lokasi Baru</option>
                     </select>
+                    <div id="newLocationWrapper" class="mt-2 {{ old('location_id') == 'new' ? '' : 'd-none' }}">
+                        <input type="text" class="form-control" name="new_location_name" id="newLocationName" placeholder="Masukkan Nama Lokasi Baru" value="{{ old('new_location_name') }}">
+                    </div>
                 </div>
             </div>
 
@@ -333,8 +337,30 @@
                     } else if (value.startsWith('investor_')) {
                         ownershipType.value = 'investor';
                         investorId.value = value.replace('investor_', '');
+                    } else {
+                        ownershipType.value = '';
+                        investorId.value = '';
                     }
                 });
+
+                // Handle Location select logic
+                const locationSelect = document.getElementById('locationSelect');
+                const newLocationWrapper = document.getElementById('newLocationWrapper');
+                const newLocationName = document.getElementById('newLocationName');
+
+                function toggleNewLocation() {
+                    if (locationSelect.value === 'new') {
+                        newLocationWrapper.classList.remove('d-none');
+                        newLocationName.setAttribute('required', 'required');
+                    } else {
+                        newLocationWrapper.classList.add('d-none');
+                        newLocationName.removeAttribute('required');
+                    }
+                }
+                
+                locationSelect.addEventListener('change', toggleNewLocation);
+                // Run once on load
+                toggleNewLocation();
 
                 // Trigger on page load untuk set initial values
                 document.addEventListener('DOMContentLoaded', function() {

@@ -80,17 +80,17 @@ class DashboardController extends Controller
             // ── STNK / KIR / GPS overdue ────────────────────────────────
             $stnkOverdue = $this->safeCount(fn() => $this->freshVehicleBase($locationId)
                 ->whereNotNull('stnk_expiry_date')
-                ->whereDate('stnk_expiry_date', '<', Carbon::now())
+                ->whereDate('stnk_expiry_date', '<=', Carbon::now()->addDays(30))
                 ->count());
 
             $kirOverdue = $this->safeCount(fn() => $this->freshVehicleBase($locationId)
                 ->whereNotNull('kir_expiry_date')
-                ->whereDate('kir_expiry_date', '<', Carbon::now())
+                ->whereDate('kir_expiry_date', '<=', Carbon::now()->addDays(30))
                 ->count());
 
             $gpsOverdue = $this->safeCount(fn() => $this->freshVehicleBase($locationId)
                 ->whereNotNull('gps_expiry_date')
-                ->whereDate('gps_expiry_date', '<', Carbon::now())
+                ->whereDate('gps_expiry_date', '<=', Carbon::now()->addDays(7))
                 ->count());
 
             // ── Recent activities ───────────────────────────────────────

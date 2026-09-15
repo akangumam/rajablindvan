@@ -97,7 +97,8 @@ class VehicleController extends Controller
                 'gps_expiry_date' => 'nullable|date',
                 'ownership_type' => 'required|in:company,investor',
                 'investor_id' => 'nullable|exists:investors,id',
-                'location_id' => 'required|exists:locations,id',
+                'location_id' => 'required',
+                'new_location_name' => 'required_if:location_id,new|nullable|string|max:255',
                 'document_name' => 'nullable|string|max:255',
                 'barcode_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'vehicle_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
@@ -115,6 +116,19 @@ class VehicleController extends Controller
             if (empty($validated['name'])) {
                 $validated['name'] = $validated['brand'] . ' ' . $validated['model'];
             }
+
+            // Handle new location
+            if ($validated['location_id'] === 'new') {
+                $location = \App\Models\Location::create([
+                    'name' => $validated['new_location_name']
+                ]);
+                $validated['location_id'] = $location->id;
+            } else {
+                if (!\App\Models\Location::where('id', $validated['location_id'])->exists()) {
+                    return redirect()->back()->withInput()->withErrors(['location_id' => 'Lokasi yang dipilih tidak valid.']);
+                }
+            }
+            unset($validated['new_location_name']);
 
             // Set investor_id to null if ownership_type is company
             if ($validated['ownership_type'] === 'company') {
@@ -269,7 +283,8 @@ class VehicleController extends Controller
             'gps_expiry_date' => 'nullable|date',
             'ownership_type' => 'required|in:company,investor',
             'investor_id' => 'nullable|exists:investors,id',
-            'location_id' => 'required|exists:locations,id',
+            'location_id' => 'required',
+            'new_location_name' => 'required_if:location_id,new|nullable|string|max:255',
             'document_name' => 'nullable|string|max:255',
             'barcode_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'vehicle_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:5120',
@@ -287,6 +302,19 @@ class VehicleController extends Controller
         if ($validated['ownership_type'] === 'company') {
             $validated['investor_id'] = null;
         }
+
+        // Handle new location
+        if ($validated['location_id'] === 'new') {
+            $location = \App\Models\Location::create([
+                'name' => $validated['new_location_name']
+            ]);
+            $validated['location_id'] = $location->id;
+        } else {
+            if (!\App\Models\Location::where('id', $validated['location_id'])->exists()) {
+                return redirect()->back()->withInput()->withErrors(['location_id' => 'Lokasi yang dipilih tidak valid.']);
+            }
+        }
+        unset($validated['new_location_name']);
 
         // Handle barcode image upload
         if ($request->hasFile('barcode_image')) {
