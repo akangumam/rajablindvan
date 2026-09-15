@@ -134,7 +134,7 @@ class VehicleController extends Controller
         // Get vehicle statistics
         $totalRentals = $vehicle->rentals()->count();
         $activeRentals = $vehicle->rentals()->whereIn('status', ['active', 'ongoing'])->count();
-        $totalRevenue = $vehicle->rentals()->where('status', 'completed')->sum('total_price');
+        $totalRevenue = $vehicle->rentals()->where('status', 'completed')->sum('total_amount');
         $totalMaintenance = $vehicle->maintenances()->sum('cost');
 
         return response()->json([
@@ -147,8 +147,8 @@ class VehicleController extends Controller
                 'year' => $vehicle->year,
                 'color' => $vehicle->color,
                 'status' => ($vehicle->is_rented || $vehicle->is_ordered) ? 'rented' : ($vehicle->is_active ? 'available' : 'inactive'),
-                'daily_rate' => (float) $vehicle->daily_rate,
-                'monthly_rate' => (float) $vehicle->monthly_rate,
+                'daily_rate' => (float) $vehicle->daily_rental_rate,
+                'monthly_rate' => (float) $vehicle->monthly_rental_rate,
                 'location' => $vehicle->location ? [
                     'id' => $vehicle->location->id,
                     'name' => $vehicle->location->name,
@@ -160,9 +160,9 @@ class VehicleController extends Controller
                 'chassis_number' => $vehicle->chassis_number,
                 'engine_number' => $vehicle->engine_number,
                 'stnk_number' => $vehicle->stnk_number,
-                'stnk_expiry_date' => $vehicle->stnk_expiry_date ? $vehicle->stnk_expiry_date->format('Y-m-d') : null,
-                'kir_expiry_date' => $vehicle->kir_expiry_date ? $vehicle->kir_expiry_date->format('Y-m-d') : null,
-                'gps_expiry_date' => $vehicle->gps_expiry_date ? $vehicle->gps_expiry_date->format('Y-m-d') : null,
+                'stnk_expiry_date' => $vehicle->stnk_expiry_date ? date('Y-m-d', strtotime($vehicle->stnk_expiry_date)) : null,
+                'kir_expiry_date' => $vehicle->kir_expiry_date ? date('Y-m-d', strtotime($vehicle->kir_expiry_date)) : null,
+                'gps_expiry_date' => $vehicle->gps_expiry_date ? date('Y-m-d', strtotime($vehicle->gps_expiry_date)) : null,
                 'notes' => $vehicle->notes,
                 'statistics' => [
                     'total_rentals' => $totalRentals,
