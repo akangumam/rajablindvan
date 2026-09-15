@@ -18,7 +18,7 @@ class MonitoringController extends Controller
         $locationId = $user->isAdmin() ? null : $user->location_id;
 
         $query = Vehicle::with(['location:id,name'])
-            ->whereDate('stnk_expiry_date', '<', Carbon::now())
+            ->whereDate('stnk_expiry_date', '<=', Carbon::now()->addDays(30))
             ->orderBy('stnk_expiry_date', 'asc');
 
         if ($locationId) {
@@ -57,7 +57,7 @@ class MonitoringController extends Controller
         $locationId = $user->isAdmin() ? null : $user->location_id;
 
         $query = Vehicle::with(['location:id,name'])
-            ->whereDate('kir_expiry_date', '<', Carbon::now())
+            ->whereDate('kir_expiry_date', '<=', Carbon::now()->addDays(30))
             ->orderBy('kir_expiry_date', 'asc');
 
         if ($locationId) {
@@ -96,7 +96,7 @@ class MonitoringController extends Controller
         $locationId = $user->isAdmin() ? null : $user->location_id;
 
         $query = Vehicle::with(['location:id,name'])
-            ->whereDate('gps_expiry_date', '<', Carbon::now())
+            ->whereDate('gps_expiry_date', '<=', Carbon::now()->addDays(7))
             ->orderBy('gps_expiry_date', 'asc');
 
         if ($locationId) {
