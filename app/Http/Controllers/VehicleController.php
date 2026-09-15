@@ -125,6 +125,7 @@ class VehicleController extends Controller
                 $location = \App\Models\Location::create([
                     'name' => $locName,
                     'code' => $locCode,
+                    'address' => '-',
                     'is_active' => true
                 ]);
                 $validated['location_id'] = $location->id;
@@ -316,6 +317,7 @@ class VehicleController extends Controller
             $location = \App\Models\Location::create([
                 'name' => $locName,
                 'code' => $locCode,
+                'address' => '-',
                 'is_active' => true
             ]);
             $validated['location_id'] = $location->id;
