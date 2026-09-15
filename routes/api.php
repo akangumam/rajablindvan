@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\RentalController;
 use App\Http\Controllers\Api\MonitoringController;
 use App\Http\Controllers\Api\HistoryController;
+use App\Http\Controllers\Api\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,9 @@ Route::prefix('v1')->middleware(['auth:sanctum', 'throttle:60,1'])->group(functi
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/dashboard/monthly-revenue', [DashboardController::class, 'monthlyRevenue']);
 
+    // Customers
+    Route::get('/customers', [CustomerController::class, 'index']);
+
     // Vehicles (Read-Only)
     Route::prefix('vehicles')->group(function () {
         Route::get('/', [VehicleController::class, 'index']);
@@ -44,11 +48,13 @@ Route::prefix('v1')->middleware(['auth:sanctum', 'throttle:60,1'])->group(functi
         Route::get('/{id}/maintenances', [VehicleController::class, 'maintenances']);
     });
 
-    // Rentals (Read-Only)
+    // Rentals
     Route::prefix('rentals')->group(function () {
         Route::get('/', [RentalController::class, 'index']);
+        Route::post('/', [RentalController::class, 'store']);
         Route::get('/active', [RentalController::class, 'active']);
         Route::get('/{id}', [RentalController::class, 'show']);
+        Route::post('/{id}/complete', [RentalController::class, 'complete']);
     });
 
     // Monitoring (Read-Only)

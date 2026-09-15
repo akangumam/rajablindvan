@@ -180,4 +180,95 @@ class RentalController extends Controller
             ],
         ], 200);
     }
+
+    /**
+     * Store a newly created rental
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'customer_id' => 'required|exists:customers,id',
+            'rental_type' => 'required|in:Sewa Harian,Sewa Bulanan',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $vehicle = \App\Models\Vehicle::find($request->vehicle_id);
+        
+        if ($vehicle->status !== 'available') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kendaraan tidak tersedia untuk disewa'
+            ], 422);
+        }
+
+        $order = Order::create([
+            'vehicle_id' => $request->vehicle_id,
+            'customer_id' => $request->customer_id,
+            'rental_type' => $request->rental_type,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => Order::STATUS_ACTIVE,
+        ]);
+
+        // Update vehicle status
+        $vehicle->update(['status' => 'rented']);
+
+        // Create History Record for rental start
+        \App\Models\HistoryRecord::create([
+            'vehicle_id' => $vehicle->id,
+            'type' => 'rental',
+            'title' => 'Mulai Sewa (' . $request->rental_type . ')',
+            'description' => 'Disewa oleh customer ID: ' . $request->customer_id . ' sampai ' . $request->end_date,
+            'date' => $request->start_date,
+            'cost' => 0,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Penyewaan berhasil dibuat',
+            'data' => $order
+        ], 201);
+    }
+
+    /**
+     * Complete an active rental
+     */
+    public function complete(Request $request, $id)
+    {
+        $order = Order::find($id);
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Rental not found'], 404);
+        }
+
+        if ($order->status !== Order::STATUS_ACTIVE) {
+            return response()->json(['success' => false, 'message' => 'Rental is not active'], 422);
+        }
+
+        $order->update([
+            'status' => Order::STATUS_COMPLETED,
+            'completed_at' => now()
+        ]);
+
+        if ($order->vehicle) {
+            $order->vehicle->update(['status' => 'available']);
+            
+            // Create History Record for rental complete (recording cost)
+            \App\Models\HistoryRecord::create([
+                'vehicle_id' => $order->vehicle->id,
+                'type' => 'rental_payment',
+                'title' => 'Pembayaran Sewa (' . $order->rental_type . ')',
+                'description' => 'Sewa Selesai. Total Pendapatan: Rp ' . number_format($order->total_price, 0, ',', '.'),
+                'date' => now(),
+                'cost' => $order->total_price,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Penyewaan berhasil diselesaikan'
+        ], 200);
+    }
 }

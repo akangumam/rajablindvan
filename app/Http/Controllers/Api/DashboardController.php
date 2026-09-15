@@ -74,7 +74,7 @@ class DashboardController extends Controller
             ->where('status', 'completed')
             ->whereYear('start_date', Carbon::now()->year)
             ->whereMonth('start_date', Carbon::now()->month)
-            ->sum('total_price');
+            ->sum('total_amount');
 
         // Monthly expenses
         $monthlyExpenses = $expensesQuery
@@ -192,7 +192,7 @@ class DashboardController extends Controller
                 });
             }
 
-            $revenue = $query->sum('total_price');
+            $revenue = $query->sum('total_amount');
 
             $months[] = $date->format('M Y');
             $revenues[] = (float) $revenue;

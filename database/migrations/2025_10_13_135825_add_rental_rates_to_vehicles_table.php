@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            $table->decimal('daily_rental_rate', 12, 2)->nullable()->after('purchase_date');
+            $table->decimal('daily_rental_rate', 12, 2)->nullable();
             $table->decimal('weekly_rental_rate', 12, 2)->nullable()->after('daily_rental_rate');
             $table->decimal('monthly_rental_rate', 12, 2)->nullable()->after('weekly_rental_rate');
         });
