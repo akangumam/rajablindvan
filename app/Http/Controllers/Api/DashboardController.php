@@ -6,260 +6,293 @@ use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
 use App\Models\Order;
 use App\Models\Rental;
-use App\Models\FuelFill;
 use App\Models\Maintenance;
 use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     /**
-     * Get dashboard statistics
+     * Get dashboard statistics - fully defensive, never crashes
      */
     public function index(Request $request)
     {
-        $user = $request->user();
-        $locationId = $user->isAdmin() ? null : $user->location_id;
-
-        // Base queries with location filter
-        $vehiclesQuery = Vehicle::query();
-        $rentalsQuery = Rental::query();
-        $expensesQuery = Expense::query();
-
-        if ($locationId) {
-            $vehiclesQuery->where('location_id', $locationId);
-            $rentalsQuery->whereHas('vehicle', function ($q) use ($locationId) {
-                $q->where('location_id', $locationId);
-            });
-            $expensesQuery->where('location_id', $locationId);
-        }
-
-        // Auto-complete expired orders
         try {
-            Order::whereIn('status', ['active', 'Active', 'ACTIVE'])
-                ->where('end_date', '<', Carbon::today())
-                ->update(['status' => 'completed', 'completed_at' => now()]);
-        } catch (\Exception $e) {
-            // Silently fail
-        }
+            $user = $request->user();
+            $locationId = $user->isAdmin() ? null : $user->location_id;
 
-        // Get statistics
-        $totalVehicles = $vehiclesQuery->count();
-        
-        $rentedVehicles = (clone $vehiclesQuery)->where('is_active', true)->where(function($query) {
-            $query->whereHas('rentals', function($q) {
-                $q->whereIn('status', ['active', 'Active', 'ACTIVE', 'booked', 'Booked', 'BOOKED']);
-            })->orWhereHas('orders', function($q) {
-                $q->whereIn('status', ['active', 'Active', 'ACTIVE']);
-            });
-        })->count();
+            // ── Vehicle counts ──────────────────────────────────────────
+            $totalVehicles     = $this->safeCount(fn() => $this->vehicleBase($locationId)->count());
+            $rentedVehicles    = $this->safeCount(fn() => $this->vehicleBase($locationId)
+                ->where('is_active', true)
+                ->where(function ($q) {
+                    $q->whereHas('rentals', fn($r) => $r->whereIn('status', ['active', 'Active', 'ACTIVE', 'booked', 'Booked', 'BOOKED']))
+                      ->orWhereHas('orders',  fn($o) => $o->whereIn('status', ['active', 'Active', 'ACTIVE']));
+                })->count());
 
-        $availableVehicles = (clone $vehiclesQuery)->where('is_active', true)
-            ->whereDoesntHave('rentals', function($query) {
-                $query->whereIn('status', ['active', 'Active', 'ACTIVE', 'booked', 'Booked', 'BOOKED']);
-            })
-            ->whereDoesntHave('orders', function($query) {
-                $query->whereIn('status', ['active', 'Active', 'ACTIVE']);
-            })->count();
-            
-        $maintenanceVehicles = (clone $vehiclesQuery)->where('status', 'maintenance')->count();
+            $availableVehicles = $this->safeCount(fn() => $this->vehicleBase($locationId)
+                ->where('is_active', true)
+                ->whereDoesntHave('rentals', fn($r) => $r->whereIn('status', ['active', 'Active', 'ACTIVE', 'booked', 'Booked', 'BOOKED']))
+                ->whereDoesntHave('orders',  fn($o) => $o->whereIn('status', ['active', 'Active', 'ACTIVE']))
+                ->count());
 
-        // Active rentals
-        $activeRentals = $rentalsQuery->whereIn('status', ['active', 'ongoing'])->count();
+            $maintenanceVehicles = $this->safeCount(fn() => $this->vehicleBase($locationId)
+                ->where('status', 'maintenance')->count());
 
-        // Monthly revenue (current month)
-        $monthlyRevenue = $rentalsQuery
-            ->where('status', 'completed')
-            ->whereYear('start_date', Carbon::now()->year)
-            ->whereMonth('start_date', Carbon::now()->month)
-            ->sum('total_amount');
+            // ── Rental counts ───────────────────────────────────────────
+            $activeRentals = $this->safeCount(fn() => $this->rentalBase($locationId)
+                ->whereIn('status', ['active', 'Active', 'ACTIVE'])->count());
 
-        // Monthly expenses
-        $monthlyExpenses = $expensesQuery
-            ->whereYear('expense_date', Carbon::now()->year)
-            ->whereMonth('expense_date', Carbon::now()->month)
-            ->sum('amount');
+            $overdueRentals = $this->safeCount(fn() => $this->rentalBase($locationId)
+                ->whereIn('status', ['active', 'Active', 'ACTIVE'])
+                ->whereDate('end_date', '<', Carbon::now())
+                ->count());
 
-        // Net income
-        $netIncome = $monthlyRevenue - $monthlyExpenses;
+            // ── Financial ───────────────────────────────────────────────
+            // Rental revenue uses 'total_amount' column (verified from Rental model)
+            $monthlyRevenue = $this->safeSum(fn() => $this->rentalBase($locationId)
+                ->whereIn('status', ['completed', 'Completed', 'COMPLETED'])
+                ->whereYear('start_date',  Carbon::now()->year)
+                ->whereMonth('start_date', Carbon::now()->month)
+                ->sum('total_amount'));
 
-        // Upcoming maintenance
-        $upcomingMaintenance = Maintenance::query()
-            ->whereHas('vehicle', function ($q) use ($locationId) {
-                if ($locationId) {
-                    $q->where('location_id', $locationId);
+            // Expense uses 'expense_date' + 'amount' columns (verified from Expense model)
+            $monthlyExpenses = $this->safeSum(fn() => $this->expenseBase($locationId)
+                ->whereYear('expense_date',  Carbon::now()->year)
+                ->whereMonth('expense_date', Carbon::now()->month)
+                ->sum('amount'));
+
+            $netIncome = $monthlyRevenue - $monthlyExpenses;
+
+            // ── Upcoming maintenance ────────────────────────────────────
+            // Maintenance uses 'service_date' + 'status' columns (verified from Maintenance model)
+            $upcomingMaintenance = $this->safeCount(fn() => Maintenance::query()
+                ->when($locationId, fn($q) => $q->whereHas('vehicle', fn($v) => $v->where('location_id', $locationId)))
+                ->whereIn('status', ['pending', 'Pending', 'Scheduled', 'scheduled'])
+                ->whereNotNull('service_date')
+                ->whereDate('service_date', '>=', Carbon::now())
+                ->whereDate('service_date', '<=', Carbon::now()->addDays(7))
+                ->count());
+
+            // ── STNK / KIR / GPS overdue ────────────────────────────────
+            $stnkOverdue = $this->safeCount(fn() => $this->freshVehicleBase($locationId)
+                ->whereNotNull('stnk_expiry_date')
+                ->whereDate('stnk_expiry_date', '<', Carbon::now())
+                ->count());
+
+            $kirOverdue = $this->safeCount(fn() => $this->freshVehicleBase($locationId)
+                ->whereNotNull('kir_expiry_date')
+                ->whereDate('kir_expiry_date', '<', Carbon::now())
+                ->count());
+
+            $gpsOverdue = $this->safeCount(fn() => $this->freshVehicleBase($locationId)
+                ->whereNotNull('gps_expiry_date')
+                ->whereDate('gps_expiry_date', '<', Carbon::now())
+                ->count());
+
+            // ── Recent activities ───────────────────────────────────────
+            $recentActivities = $this->safeActivities($locationId);
+
+            // ── Location stats (admin only) ─────────────────────────────
+            $locationStats = null;
+            if ($user->isAdmin()) {
+                try {
+                    $locationStats = Vehicle::select('location_id', DB::raw('count(*) as total'))
+                        ->with('location:id,name')
+                        ->groupBy('location_id')
+                        ->get()
+                        ->map(fn($item) => [
+                            'location'       => $item->location?->name ?? 'N/A',
+                            'total_vehicles' => $item->total,
+                        ]);
+                } catch (\Throwable $e) {
+                    Log::error('Dashboard locationStats error: ' . $e->getMessage());
+                    $locationStats = [];
                 }
-            })
-            ->where('status', 'pending')
-            ->whereDate('service_date', '>=', Carbon::now())
-            ->whereDate('service_date', '<=', Carbon::now()->addDays(7))
-            ->count();
+            }
 
-        // Overdue rentals
-        $overdueRentals = $rentalsQuery
-            ->where('status', 'active')
-            ->whereDate('end_date', '<', Carbon::now())
-            ->count();
+            return response()->json([
+                'success' => true,
+                'data'    => [
+                    'vehicles' => [
+                        'total'       => $totalVehicles,
+                        'available'   => $availableVehicles,
+                        'rented'      => $rentedVehicles,
+                        'maintenance' => $maintenanceVehicles,
+                    ],
+                    'rentals' => [
+                        'active'  => $activeRentals,
+                        'overdue' => $overdueRentals,
+                    ],
+                    'financial' => [
+                        'monthly_revenue'  => (float) $monthlyRevenue,
+                        'monthly_expenses' => (float) $monthlyExpenses,
+                        'net_income'       => (float) $netIncome,
+                    ],
+                    'alerts' => [
+                        'upcoming_maintenance' => $upcomingMaintenance,
+                        'overdue_rentals'      => $overdueRentals,
+                        'stnk_overdue'         => $stnkOverdue,
+                        'kir_overdue'          => $kirOverdue,
+                        'gps_overdue'          => $gpsOverdue,
+                    ],
+                    'location_stats'    => $locationStats,
+                    'recent_activities' => $recentActivities,
+                ],
+            ], 200);
 
-        // Monitoring Alerts - STNK, KIR, GPS Overdue
-        // Need fresh queries because $vehiclesQuery was modified by previous where() calls
-        $stnkQuery = Vehicle::query();
-        $kirQuery = Vehicle::query();
-        $gpsQuery = Vehicle::query();
-
-        if ($locationId) {
-            $stnkQuery->where('location_id', $locationId);
-            $kirQuery->where('location_id', $locationId);
-            $gpsQuery->where('location_id', $locationId);
+        } catch (\Throwable $e) {
+            Log::error('Dashboard index fatal error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return response()->json([
+                'success' => false,
+                'message' => 'Dashboard error: ' . $e->getMessage(),
+            ], 500);
         }
-
-        $stnkOverdue = $stnkQuery->whereNotNull('stnk_expiry_date')->whereDate('stnk_expiry_date', '<', Carbon::now())->count();
-        $kirOverdue = $kirQuery->whereNotNull('kir_expiry_date')->whereDate('kir_expiry_date', '<', Carbon::now())->count();
-        $gpsOverdue = $gpsQuery->whereNotNull('gps_expiry_date')->whereDate('gps_expiry_date', '<', Carbon::now())->count();
-
-        // Recent activities (last 10)
-        $recentActivities = $this->getRecentActivities($user, $locationId);
-
-        // Location breakdown (for admin only)
-        $locationStats = null;
-        if ($user->isAdmin()) {
-            $locationStats = Vehicle::select('location_id', DB::raw('count(*) as total'))
-                ->with('location:id,name')
-                ->groupBy('location_id')
-                ->get()
-                ->map(function ($item) {
-                    return [
-                        'location' => $item->location ? $item->location->name : 'N/A',
-                        'total_vehicles' => $item->total,
-                    ];
-                });
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'vehicles' => [
-                    'total' => $totalVehicles,
-                    'available' => $availableVehicles,
-                    'rented' => $rentedVehicles,
-                    'maintenance' => $maintenanceVehicles,
-                ],
-                'rentals' => [
-                    'active' => $activeRentals,
-                    'overdue' => $overdueRentals,
-                ],
-                'financial' => [
-                    'monthly_revenue' => (float) $monthlyRevenue,
-                    'monthly_expenses' => (float) $monthlyExpenses,
-                    'net_income' => (float) $netIncome,
-                ],
-                'alerts' => [
-                    'upcoming_maintenance' => $upcomingMaintenance,
-                    'overdue_rentals' => $overdueRentals,
-                    'stnk_overdue' => $stnkOverdue,
-                    'kir_overdue' => $kirOverdue,
-                    'gps_overdue' => $gpsOverdue,
-                ],
-                'location_stats' => $locationStats,
-                'recent_activities' => $recentActivities,
-            ],
-        ], 200);
     }
 
     /**
-     * Get monthly revenue chart data (last 6 months)
+     * Monthly revenue chart (last 6 months)
      */
     public function monthlyRevenue(Request $request)
     {
-        $user = $request->user();
-        $locationId = $user->isAdmin() ? null : $user->location_id;
+        try {
+            $user       = $request->user();
+            $locationId = $user->isAdmin() ? null : $user->location_id;
 
-        $months = [];
-        $revenues = [];
+            $months   = [];
+            $revenues = [];
 
-        for ($i = 5; $i >= 0; $i--) {
-            $date = Carbon::now()->subMonths($i);
+            for ($i = 5; $i >= 0; $i--) {
+                $date = Carbon::now()->subMonths($i);
 
-            $query = Rental::where('status', 'completed')
-                ->whereYear('start_date', $date->year)
-                ->whereMonth('start_date', $date->month);
+                $revenue = $this->safeSum(fn() => Rental::query()
+                    ->when($locationId, fn($q) => $q->whereHas('vehicle', fn($v) => $v->where('location_id', $locationId)))
+                    ->whereIn('status', ['completed', 'Completed', 'COMPLETED'])
+                    ->whereYear('start_date',  $date->year)
+                    ->whereMonth('start_date', $date->month)
+                    ->sum('total_amount'));
 
-            if ($locationId) {
-                $query->whereHas('vehicle', function ($q) use ($locationId) {
-                    $q->where('location_id', $locationId);
-                });
+                $months[]   = $date->format('M Y');
+                $revenues[] = (float) $revenue;
             }
 
-            $revenue = $query->sum('total_amount');
+            return response()->json([
+                'success' => true,
+                'data'    => [
+                    'labels' => $months,
+                    'values' => $revenues,
+                ],
+            ], 200);
 
-            $months[] = $date->format('M Y');
-            $revenues[] = (float) $revenue;
+        } catch (\Throwable $e) {
+            Log::error('Dashboard monthlyRevenue error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'labels' => $months,
-                'values' => $revenues,
-            ],
-        ], 200);
     }
 
-    /**
-     * Get recent activities
-     */
-    private function getRecentActivities($user, $locationId)
+    // ── Private helpers ──────────────────────────────────────────────────
+
+    private function vehicleBase($locationId)
     {
-        $activities = collect();
+        $q = Vehicle::query();
+        if ($locationId) {
+            $q->where('location_id', $locationId);
+        }
+        return $q;
+    }
 
-        // Recent rentals
-        $recentRentals = Rental::query()
-            ->with(['vehicle:id,brand,model,license_plate', 'customer:id,name'])
-            ->when($locationId, function ($q) use ($locationId) {
-                $q->whereHas('vehicle', function ($query) use ($locationId) {
-                    $query->where('location_id', $locationId);
-                });
-            })
-            ->latest()
-            ->take(5)
-            ->get()
-            ->map(function ($rental) {
-                return [
-                    'type' => 'rental',
-                    'title' => 'Rental Created',
-                    'description' => "{$rental->customer?->name} rented {$rental->vehicle?->brand} {$rental->vehicle?->model}",
-                    'vehicle' => $rental->vehicle?->license_plate,
-                    'time' => $rental->created_at->diffForHumans(),
-                    'timestamp' => $rental->created_at->toIso8601String(),
-                ];
-            });
+    private function freshVehicleBase($locationId)
+    {
+        return $this->vehicleBase($locationId);
+    }
 
-        // Recent maintenance
-        $recentMaintenance = Maintenance::query()
-            ->with(['vehicle:id,brand,model,license_plate'])
-            ->when($locationId, function ($q) use ($locationId) {
-                $q->whereHas('vehicle', function ($query) use ($locationId) {
-                    $query->where('location_id', $locationId);
-                });
-            })
-            ->latest()
-            ->take(5)
-            ->get()
-            ->map(function ($maintenance) {
-                return [
-                    'type' => 'maintenance',
-                    'title' => 'Maintenance Scheduled',
-                    'description' => "{$maintenance->vehicle?->brand} {$maintenance->vehicle?->model} - {$maintenance->type}",
-                    'vehicle' => $maintenance->vehicle?->license_plate,
-                    'time' => $maintenance->created_at->diffForHumans(),
-                    'timestamp' => $maintenance->created_at->toIso8601String(),
-                ];
-            });
+    private function rentalBase($locationId)
+    {
+        $q = Rental::query();
+        if ($locationId) {
+            $q->whereHas('vehicle', fn($v) => $v->where('location_id', $locationId));
+        }
+        return $q;
+    }
 
-        $activities = $activities->merge($recentRentals)->merge($recentMaintenance);
+    private function expenseBase($locationId)
+    {
+        $q = Expense::query();
+        if ($locationId) {
+            $q->where('location_id', $locationId);
+        }
+        return $q;
+    }
 
-        return $activities->sortByDesc('timestamp')->take(10)->values();
+    private function safeCount(callable $fn): int
+    {
+        try {
+            return (int) $fn();
+        } catch (\Throwable $e) {
+            Log::warning('Dashboard safeCount error: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+    private function safeSum(callable $fn): float
+    {
+        try {
+            return (float) $fn();
+        } catch (\Throwable $e) {
+            Log::warning('Dashboard safeSum error: ' . $e->getMessage());
+            return 0.0;
+        }
+    }
+
+    private function safeActivities($locationId): array
+    {
+        try {
+            $activities = collect();
+
+            $recentRentals = Rental::query()
+                ->with(['vehicle:id,brand,model,license_plate', 'customer:id,name'])
+                ->when($locationId, fn($q) => $q->whereHas('vehicle', fn($v) => $v->where('location_id', $locationId)))
+                ->latest()
+                ->take(5)
+                ->get()
+                ->map(fn($r) => [
+                    'type'        => 'rental',
+                    'title'       => 'Rental Created',
+                    'description' => trim("{$r->customer?->name} rented {$r->vehicle?->brand} {$r->vehicle?->model}"),
+                    'vehicle'     => $r->vehicle?->license_plate ?? '-',
+                    'time'        => $r->created_at->diffForHumans(),
+                    'timestamp'   => $r->created_at->toIso8601String(),
+                ]);
+
+            $recentMaintenance = Maintenance::query()
+                ->with(['vehicle:id,brand,model,license_plate'])
+                ->when($locationId, fn($q) => $q->whereHas('vehicle', fn($v) => $v->where('location_id', $locationId)))
+                ->latest()
+                ->take(5)
+                ->get()
+                ->map(fn($m) => [
+                    'type'        => 'maintenance',
+                    'title'       => 'Maintenance Scheduled',
+                    'description' => trim("{$m->vehicle?->brand} {$m->vehicle?->model} - {$m->type}"),
+                    'vehicle'     => $m->vehicle?->license_plate ?? '-',
+                    'time'        => $m->created_at->diffForHumans(),
+                    'timestamp'   => $m->created_at->toIso8601String(),
+                ]);
+
+            return $activities
+                ->merge($recentRentals)
+                ->merge($recentMaintenance)
+                ->sortByDesc('timestamp')
+                ->take(10)
+                ->values()
+                ->toArray();
+
+        } catch (\Throwable $e) {
+            Log::warning('Dashboard safeActivities error: ' . $e->getMessage());
+            return [];
+        }
     }
 }
