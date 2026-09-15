@@ -93,8 +93,8 @@ class DashboardController extends Controller
                 }
             })
             ->where('status', 'pending')
-            ->whereDate('due_date', '>=', Carbon::now())
-            ->whereDate('due_date', '<=', Carbon::now()->addDays(7))
+            ->whereDate('service_date', '>=', Carbon::now())
+            ->whereDate('service_date', '<=', Carbon::now()->addDays(7))
             ->count();
 
         // Overdue rentals
