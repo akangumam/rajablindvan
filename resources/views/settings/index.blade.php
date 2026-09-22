@@ -438,17 +438,6 @@ body {
         </ul>
     </div>
 
-    <!-- Note Section -->
-    <div class="settings-note">
-        <div class="settings-note-title">
-            Pada sub menu kategori Selection List terdiri atas beberapa fungsi sbb:
-        </div>
-        <div class="settings-note-text">
-            - TAMBAH BARU<br>
-            - Edit<br>
-            - Delete
-        </div>
-    </div>
 </div>
 @endsection
 
