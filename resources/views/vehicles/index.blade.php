@@ -711,7 +711,7 @@
                         @endif
                     </a>
                 </th>
-                <th>{{ __('common.license_plate') }}</th>
+                <th style="white-space: nowrap; min-width: 130px;">{{ __('common.license_plate') }}</th>
                 <th>{{ __('common.year') }}</th>
                 <th>{{ __('common.brand') }}</th>
                 <th>{{ __('common.model') }}</th>
@@ -731,29 +731,14 @@
                         {{ $vehicle->name }}
                     </a>
                 </td>
-                <td>
+                <td style="white-space: nowrap;">
                     <span style="font-weight: 500; color: #333; text-transform: uppercase;">{{ $vehicle->license_plate ?: '-' }}</span>
                 </td>
                 <td>
                     <span style="color: #666;">{{ $vehicle->year ?: '-' }}</span>
                 </td>
                 <td>
-                    <div class="d-flex align-items-center">
-                        <div class="brand-logo">
-                            @php
-                                $brandLower = strtolower(str_replace(' ', '-', $vehicle->brand));
-                                $logoPath = "assets/logos/brands/{$brandLower}.svg";
-                                $logoExists = file_exists(public_path($logoPath));
-                            @endphp
-
-                            @if($logoExists)
-                                <img src="{{ asset($logoPath) }}" alt="{{ $vehicle->brand }}" style="width: 28px; height: 28px; object-fit: contain;">
-                            @else
-                                <i class="fas fa-car" style="font-size: 16px; color: #999;"></i>
-                            @endif
-                        </div>
-                        <span class="brand-name">{{ $vehicle->brand }}</span>
-                    </div>
+                    <span class="brand-name" style="font-weight: 500; color: #333;">{{ $vehicle->brand }}</span>
                 </td>
                 <td class="model-text">{{ $vehicle->model }}</td>
                 <td>

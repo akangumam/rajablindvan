@@ -21,10 +21,14 @@
         <i class="fas fa-tachometer-alt me-2"></i>
         Dashboard Monitoring
     </h1>
-    <p class="dashboard-subtitle">Real-time fleet monitoring and expiry alerts</p>
+    <p class="dashboard-subtitle">Pemantauan armada dan peringatan masa berlaku secara real-time</p>
 </div>
 
-{{-- ===== FLEET STATUS: BOOKED & AVAILABLE (PALING ATAS) ===== --}}
+{{-- ===== STATUS ARMADA ===== --}}
+<div class="section-label mb-3">
+    <i class="fas fa-car me-2"></i>
+    Status Armada
+</div>
 <div class="row mb-4">
     <div class="col-md-4 col-sm-12 mb-3 mb-md-0">
         <div class="fleet-stat-card booked-card">
@@ -34,7 +38,7 @@
             <div class="fleet-stat-content">
                 <div class="fleet-stat-number">{{ $bookedVehicles }}</div>
                 <div class="fleet-stat-label">Kendaraan Dipesan</div>
-                <div class="fleet-stat-sub">BOOKED</div>
+                <div class="fleet-stat-sub">DIPESAN (BOOKED)</div>
             </div>
         </div>
     </div>
@@ -46,7 +50,7 @@
             <div class="fleet-stat-content">
                 <div class="fleet-stat-number">{{ $availableVehicles }}</div>
                 <div class="fleet-stat-label">Kendaraan Tersedia</div>
-                <div class="fleet-stat-sub">AVAILABLE</div>
+                <div class="fleet-stat-sub">TERSEDIA (AVAILABLE)</div>
             </div>
         </div>
     </div>
@@ -58,13 +62,13 @@
             <div class="fleet-stat-content">
                 <div class="fleet-stat-number">{{ $totalFleet }}</div>
                 <div class="fleet-stat-label">Total Armada</div>
-                <div class="fleet-stat-sub">TOTAL FLEET</div>
+                <div class="fleet-stat-sub">TOTAL ARMADA</div>
             </div>
         </div>
     </div>
 </div>
 
-{{-- ===== FINANCIAL SUMMARY - BULAN INI ===== --}}
+{{-- ===== RINGKASAN KEUANGAN BULAN INI ===== --}}
 <div class="section-label mb-3">
     <i class="fas fa-chart-pie me-2"></i>
     Ringkasan Keuangan Bulan Ini
@@ -74,7 +78,7 @@
         <div class="fleet-stat-card income-card">
             <div class="fleet-stat-icon"><i class="fas fa-arrow-up"></i></div>
             <div class="fleet-stat-content">
-                <div class="fleet-stat-number">{{ number_format($monthlyIncome, 0, ',', '.') }}</div>
+                <div class="fleet-stat-number" style="font-size: 20px;">Rp {{ number_format($monthlyIncome, 0, ',', '.') }}</div>
                 <div class="fleet-stat-label">Total Pendapatan</div>
                 <div class="fleet-stat-sub">{{ now()->format('F Y') }}</div>
             </div>
@@ -84,7 +88,7 @@
         <div class="fleet-stat-card expense-card">
             <div class="fleet-stat-icon"><i class="fas fa-arrow-down"></i></div>
             <div class="fleet-stat-content">
-                <div class="fleet-stat-number">{{ number_format($monthlyExpense, 0, ',', '.') }}</div>
+                <div class="fleet-stat-number" style="font-size: 20px;">Rp {{ number_format($monthlyExpense, 0, ',', '.') }}</div>
                 <div class="fleet-stat-label">Total Pengeluaran</div>
                 <div class="fleet-stat-sub">{{ now()->format('F Y') }}</div>
             </div>
@@ -96,7 +100,7 @@
                 <i class="fas {{ $monthlyProfit >= 0 ? 'fa-chart-line' : 'fa-chart-line fa-flip-vertical' }}"></i>
             </div>
             <div class="fleet-stat-content">
-                <div class="fleet-stat-number">{{ number_format(abs($monthlyProfit), 0, ',', '.') }}</div>
+                <div class="fleet-stat-number" style="font-size: 20px;">Rp {{ number_format(abs($monthlyProfit), 0, ',', '.') }}</div>
                 <div class="fleet-stat-label">{{ $monthlyProfit >= 0 ? 'Laba Bersih' : 'Rugi Bersih' }}</div>
                 <div class="fleet-stat-sub">{{ now()->format('F Y') }}</div>
             </div>
@@ -104,7 +108,7 @@
     </div>
 </div>
 
-{{-- ===== CHART PENDAPATAN VS PENGELUARAN ===== --}}
+{{-- ===== GRAFIK PENDAPATAN VS PENGELUARAN ===== --}}
 <div class="row mb-4">
     <div class="col-12">
         <div class="monitoring-card">
@@ -126,7 +130,7 @@
     </div>
 </div>
 
-{{-- ===== LOCATION STATS (Super Admin Only) ===== --}}
+{{-- ===== STATUS ARMADA PER LOKASI (Hanya Super Admin) ===== --}}
 @if(!empty($locationStats))
 <div class="section-label mb-3">
     <i class="fas fa-map-marker-alt me-2"></i>
@@ -182,7 +186,7 @@
 </div>
 @endif
 
-{{-- ===== RENTAL EXPIRY MONITORING ===== --}}
+{{-- ===== MONITORING MASA SEWA ===== --}}
 <div class="section-label mb-3">
     <i class="fas fa-calendar-alt me-2"></i>
     Monitoring Masa Sewa
@@ -198,7 +202,7 @@
                     <span>Sewa Akan Berakhir / Sudah Lewat</span>
                 </div>
                 <span class="badge-count {{ count($rentalExpiryMonitoring) > 0 ? 'bg-danger' : 'bg-success' }} text-white">
-                    {{ count($rentalExpiryMonitoring) > 0 ? count($rentalExpiryMonitoring) : '✓' }}
+                    {{ count($rentalExpiryMonitoring) > 0 ? count($rentalExpiryMonitoring) . ' item' : '✓ Aman' }}
                 </span>
             </div>
             <div class="vehicle-list">
@@ -227,9 +231,9 @@
                     <div class="d-flex align-items-center gap-2">
                         <span class="status-badge status-{{ $item['status'] }}">
                             @if($item['status'] === 'red')
-                                LEWAT
+                                TERLEWAT
                             @elseif($item['status'] === 'yellow')
-                                SEGERA
+                                SEGERA BERAKHIR
                             @else
                                 AMAN
                             @endif
@@ -251,13 +255,12 @@
     </div>
 </div>
 
-{{-- ===== SECTION LABEL ===== --}}
+{{-- ===== MONITORING MASA BERLAKU DOKUMEN ===== --}}
 <div class="section-label mb-3">
     <i class="fas fa-exclamation-triangle me-2"></i>
     Monitoring Masa Berlaku Dokumen
 </div>
 
-{{-- ===== MONITORING CARDS GRID ===== --}}
 <div class="row">
     {{-- STNK --}}
     <div class="col-lg-4 col-md-12 mb-4">
@@ -269,8 +272,8 @@
                     </div>
                     <span>Monitoring STNK</span>
                 </div>
-                 <span class="badge-count {{ count($stnkMonitoring) > 0 ? 'bg-danger' : 'bg-success' }} text-white">
-                    {{ count($stnkMonitoring) > 0 ? count($stnkMonitoring) : '✓' }}
+                <span class="badge-count {{ count($stnkMonitoring) > 0 ? 'bg-danger' : 'bg-success' }} text-white">
+                    {{ count($stnkMonitoring) > 0 ? count($stnkMonitoring) . ' item' : '✓ Aman' }}
                 </span>
             </div>
             <div class="vehicle-list">
@@ -280,14 +283,20 @@
                         <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
                         <div class="countdown-info">
                             <i class="fas fa-clock"></i>
-                            <span>{{ $item['days_until_expiry'] }} hari {{ $item['status'] == 'red' ? 'terlewat' : 'tersisa' }}</span>
+                            <span>
+                                @if($item['status'] == 'red')
+                                    <strong class="text-danger">{{ $item['days_until_expiry'] }} hari terlewat</strong>
+                                @else
+                                    {{ $item['days_until_expiry'] }} hari tersisa
+                                @endif
+                            </span>
                             <span class="text-muted">•</span>
-                            <span>{{ $item['expiry_date'] }}</span>
+                            <span>Berakhir: {{ $item['expiry_date'] }}</span>
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <span class="status-badge status-{{ $item['status'] }}">
-                            {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
+                            {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
                         </span>
                         <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
                             Detail <i class="fas fa-arrow-right"></i>
@@ -321,7 +330,7 @@
                     <span>Monitoring KIR</span>
                 </div>
                 <span class="badge-count {{ count($kirMonitoring) > 0 ? 'bg-danger' : 'bg-success' }} text-white">
-                    {{ count($kirMonitoring) > 0 ? count($kirMonitoring) : '✓' }}
+                    {{ count($kirMonitoring) > 0 ? count($kirMonitoring) . ' item' : '✓ Aman' }}
                 </span>
             </div>
             <div class="vehicle-list">
@@ -331,14 +340,20 @@
                         <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
                         <div class="countdown-info">
                             <i class="fas fa-clock"></i>
-                            <span>{{ $item['days_until_expiry'] }} hari {{ $item['status'] == 'red' ? 'terlewat' : 'tersisa' }}</span>
+                            <span>
+                                @if($item['status'] == 'red')
+                                    <strong class="text-danger">{{ $item['days_until_expiry'] }} hari terlewat</strong>
+                                @else
+                                    {{ $item['days_until_expiry'] }} hari tersisa
+                                @endif
+                            </span>
                             <span class="text-muted">•</span>
-                            <span>{{ $item['expiry_date'] }}</span>
+                            <span>Berakhir: {{ $item['expiry_date'] }}</span>
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <span class="status-badge status-{{ $item['status'] }}">
-                            {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
+                            {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
                         </span>
                         <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
                             Detail <i class="fas fa-arrow-right"></i>
@@ -372,7 +387,7 @@
                     <span>Monitoring GPS</span>
                 </div>
                 <span class="badge-count {{ count($gpsMonitoring) > 0 ? 'bg-danger' : 'bg-success' }} text-white">
-                    {{ count($gpsMonitoring) > 0 ? count($gpsMonitoring) : '✓' }}
+                    {{ count($gpsMonitoring) > 0 ? count($gpsMonitoring) . ' item' : '✓ Aman' }}
                 </span>
             </div>
             <div class="vehicle-list">
@@ -382,14 +397,20 @@
                         <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
                         <div class="countdown-info">
                             <i class="fas fa-clock"></i>
-                            <span>{{ $item['days_until_expiry'] }} hari {{ $item['status'] == 'red' ? 'terlewat' : 'tersisa' }}</span>
+                            <span>
+                                @if($item['status'] == 'red')
+                                    <strong class="text-danger">{{ $item['days_until_expiry'] }} hari terlewat</strong>
+                                @else
+                                    {{ $item['days_until_expiry'] }} hari tersisa
+                                @endif
+                            </span>
                             <span class="text-muted">•</span>
-                            <span>{{ $item['expiry_date'] }}</span>
+                            <span>Berakhir: {{ $item['expiry_date'] }}</span>
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <span class="status-badge status-{{ $item['status'] }}">
-                            {{ $item['status'] == 'yellow' ? 'WARNING' : 'URGENT' }}
+                            {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
                         </span>
                         <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
                             Detail <i class="fas fa-arrow-right"></i>
@@ -433,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 {
                     label: 'Pendapatan',
                     data: income,
-                    backgroundColor: 'rgba(67, 233, 123, 0.7)',
+                    backgroundColor: 'rgba(67, 233, 123, 0.75)',
                     borderColor: '#38f9d7',
                     borderWidth: 1,
                     borderRadius: 6,
@@ -441,8 +462,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 {
                     label: 'Pengeluaran',
                     data: expense,
-                    backgroundColor: 'rgba(250, 112, 154, 0.7)',
-                    borderColor: '#fee140',
+                    backgroundColor: 'rgba(250, 112, 154, 0.75)',
+                    borderColor: '#fa709a',
                     borderWidth: 1,
                     borderRadius: 6,
                 }
@@ -466,8 +487,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
-                            if (value >= 1000000) return 'Rp ' + (value / 1000000).toFixed(1) + 'Jt';
-                            if (value >= 1000) return 'Rp ' + (value / 1000).toFixed(0) + 'K';
+                            if (value >= 1000000) return 'Rp ' + (value / 1000000).toFixed(1) + ' Jt';
+                            if (value >= 1000) return 'Rp ' + (value / 1000).toFixed(0) + ' Rb';
                             return 'Rp ' + value;
                         }
                     }
@@ -478,30 +499,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

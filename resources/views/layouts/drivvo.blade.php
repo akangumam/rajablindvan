@@ -764,7 +764,7 @@
                 <div class="drivvo-nav-item">
                     <button type="button" class="drivvo-nav-link" onclick="showAddNewModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 12px 20px;">
                         <i class="fas fa-plus-circle"></i>
-                        <span class="nav-text">Tambah Baru</span>
+                        <span class="nav-text">{{ __('common.add_new') }}</span>
                     </button>
                 </div>
 
@@ -834,8 +834,8 @@
 
                 <!-- Logout -->
                 <div class="drivvo-nav-item">
-                    <button type="button" class="drivvo-nav-link" onclick="showLogoutModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: red; padding: 12px 20px;">
-                        <i class="fas fa-sign-out-alt"></i>
+                    <button type="button" class="drivvo-nav-link" onclick="showLogoutModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: #ff6b6b; padding: 12px 20px;">
+                        <i class="fas fa-sign-out-alt" style="color: #ff6b6b;"></i>
                         <span class="nav-text">{{ __('common.logout') }}</span>
                     </button>
 
@@ -872,7 +872,7 @@
                                 $selectedLocationId = session('selected_location_id');
                                 // Check if location_id in URL parameter (takes priority)
                                 if (request()->has('location_id')) {
-                                    $selectedLocationId = request()->get('location_id');
+                                    $selectedLocationId = request()->input('location_id');
                                 }
                             @endphp
                             <option value="" {{ empty($selectedLocationId) ? 'selected' : '' }}>Semua Lokasi</option>
@@ -901,14 +901,15 @@
                             'operator' => 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
                         ];
                         $roleNames = [
-                            'super_admin' => 'Administrator',
+                            'super_admin' => 'Super Admin',
+                            'admin' => 'Admin',
                             'manager' => 'Sales',
-                            'operator' => 'Operation',
+                            'operator' => 'Operasional',
                         ];
                         $userRole = Auth::user()->role ?? 'operator';
                     @endphp
                     <span class="role-badge" style="padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; color: white; background: {{ $roleColors[$userRole] ?? '#999' }}; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-                        <i class="fas fa-crown"></i> {{ $roleNames[$userRole] ?? 'User' }}
+                        <i class="fas fa-shield-alt"></i> {{ $roleNames[$userRole] ?? 'Pengguna' }}
                     </span>
                 </div>
             </div>
@@ -957,7 +958,7 @@
                             {{ __('vehicle.add_vehicle_new') }}
                         </button>
                         @php
-                            $currentVehicleId = request()->get('vehicle_id') ?? session('selected_vehicle_id');
+                            $currentVehicleId = request()->input('vehicle_id') ?? session('selected_vehicle_id');
                             if (!$currentVehicleId && isset($allVehicles) && $allVehicles->count() > 0) {
                                 $currentVehicleId = $allVehicles->first()->id;
                             }
@@ -981,15 +982,15 @@
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                <div class="modal-header" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; border: none;">
                     <h5 class="modal-title" id="logoutModalLabel">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Konfirmasi Logout
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        Konfirmasi Keluar
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="padding: 30px; text-align: center;">
-                    <div style="font-size: 60px; color: #667eea; margin-bottom: 20px;">
+                    <div style="font-size: 60px; color: #e74c3c; margin-bottom: 20px;">
                         <i class="fas fa-sign-out-alt"></i>
                     </div>
                     <h5 style="margin-bottom: 15px; color: #333;">Apakah Anda yakin ingin keluar?</h5>
@@ -997,26 +998,26 @@
                 </div>
                 <div class="modal-footer" style="border: none; padding: 0 30px 30px; justify-content: center; gap: 10px;">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="min-width: 120px; padding: 10px 20px;">
-                        <i class="fas fa-times"></i>
-                        Batal
+                        <i class="fas fa-times me-1"></i>
+                        {{ __('common.cancel') }}
                     </button>
                     <button type="button" class="btn btn-danger" onclick="confirmLogout()" style="min-width: 120px; padding: 10px 20px;">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Ya, Logout
+                        <i class="fas fa-sign-out-alt me-1"></i>
+                        Ya, Keluar
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Add New Modal -->
+    <!-- Tambah Baru Modal -->
     <div class="modal fade" id="addNewModal" tabindex="-1" aria-labelledby="addNewModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border: none; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.15);">
                 <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 16px 16px 0 0; padding: 20px 24px;">
                     <h5 class="modal-title" id="addNewModalLabel">
                         <i class="fas fa-plus-circle me-2"></i>
-                        Tambah Baru
+                        {{ __('common.add_new') }}
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -1024,14 +1025,14 @@
                     <p class="text-muted mb-4" style="font-size: 14px;">Pilih jenis data yang ingin Anda tambahkan:</p>
 
                     <div class="row g-3">
-                        <!-- Income Card -->
+                        <!-- Pendapatan -->
                         <div class="col-12">
                             <a href="{{ route('incomes.create') }}" class="add-new-card" style="display: flex; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border: 2px solid #667eea30; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; position: relative; overflow: hidden;">
                                 <div class="add-new-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
                                     <i class="fas fa-money-bill-wave" style="font-size: 22px; color: white;"></i>
                                 </div>
                                 <div class="add-new-content" style="flex: 1;">
-                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">Pendapatan</h6>
+                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">{{ __('common.income') }}</h6>
                                     <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Tambahkan pendapatan baru</p>
                                 </div>
                                 <div class="add-new-arrow" style="color: #667eea; font-size: 18px;">
@@ -1040,15 +1041,15 @@
                             </a>
                         </div>
 
-                        <!-- Service Card -->
+                        <!-- Servis -->
                         <div class="col-12">
                             <a href="{{ route('maintenances.create') }}" class="add-new-card" style="display: flex; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #4facfe15 0%, #00f2fe15 100%); border: 2px solid #4facfe30; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; position: relative; overflow: hidden;">
                                 <div class="add-new-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
                                     <i class="fas fa-wrench" style="font-size: 22px; color: white;"></i>
                                 </div>
                                 <div class="add-new-content" style="flex: 1;">
-                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">Servis</h6>
-                                    <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Tambahkan layanan maintenance</p>
+                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">{{ __('common.service_maintenance') }}</h6>
+                                    <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Tambahkan layanan perawatan kendaraan</p>
                                 </div>
                                 <div class="add-new-arrow" style="color: #4facfe; font-size: 18px;">
                                     <i class="fas fa-chevron-right"></i>
@@ -1056,17 +1057,33 @@
                             </a>
                         </div>
 
-                        <!-- Expense Card -->
+                        <!-- Pengeluaran -->
                         <div class="col-12">
                             <a href="{{ route('expenses.create') }}" class="add-new-card" style="display: flex; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #fa709a15 0%, #fee14015 100%); border: 2px solid #fa709a30; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; position: relative; overflow: hidden;">
                                 <div class="add-new-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
                                     <i class="fas fa-receipt" style="font-size: 22px; color: white;"></i>
                                 </div>
                                 <div class="add-new-content" style="flex: 1;">
-                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">Pengeluaran</h6>
-                                    <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Tambahkan pengeluaran baru</p>
+                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">{{ __('common.expense') }}</h6>
+                                    <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Tambahkan pengeluaran operasional</p>
                                 </div>
                                 <div class="add-new-arrow" style="color: #fa709a; font-size: 18px;">
+                                    <i class="fas fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Pesanan -->
+                        <div class="col-12">
+                            <a href="{{ route('orders.create') }}" class="add-new-card" style="display: flex; align-items: center; padding: 16px 20px; background: linear-gradient(135deg, #f7971e15 0%, #ffd20015 100%); border: 2px solid #f7971e30; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                                <div class="add-new-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px; flex-shrink: 0;">
+                                    <i class="fas fa-clipboard-list" style="font-size: 22px; color: white;"></i>
+                                </div>
+                                <div class="add-new-content" style="flex: 1;">
+                                    <h6 class="mb-1" style="color: #2c3e50; font-weight: 600; font-size: 16px;">{{ __('common.order_list') }}</h6>
+                                    <p class="mb-0" style="color: #7f8c8d; font-size: 13px;">Buat pesanan sewa baru</p>
+                                </div>
+                                <div class="add-new-arrow" style="color: #f7971e; font-size: 18px;">
                                     <i class="fas fa-chevron-right"></i>
                                 </div>
                             </a>

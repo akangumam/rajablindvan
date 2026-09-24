@@ -20,7 +20,45 @@ class DashboardController extends Controller
         $user = auth()->user();
         $locationId = LocationFilter::getLocationId();
         
-        // Auto-complete expired orders (safe - won't crash if column missing)
+        $this->autoCompleteOrders();
+        
+        if ($request->has('vehicle_id')) {
+            session(['selected_vehicle_id' => $request->vehicle_id]);
+        }
+        
+        $vehicles = $this->getVehicles($locationId);
+        
+        $locationStats = $this->getLocationStats($locationId);
+        
+        $stnkMonitoring = $this->getStnkMonitoring($vehicles);
+        $kirMonitoring = $this->getKirMonitoring($vehicles);
+        $gpsMonitoring = $this->getGpsMonitoring($vehicles);
+        
+        $fleetStats = $this->getFleetStats($locationId);
+        
+        $financialSummary = $this->getFinancialSummary($locationId);
+        
+        $fuelChartData = $this->getFuelExpensesChartData($locationId);
+        
+        $locations = Location::active()->get();
+        $selectedLocation = $locationId;
+        
+        $rentalExpiryMonitoring = $this->getRentalExpiryMonitoring($locationId);
+
+        return view('dashboard.main', array_merge([
+            'stnkMonitoring' => $stnkMonitoring,
+            'kirMonitoring' => $kirMonitoring,
+            'gpsMonitoring' => $gpsMonitoring,
+            'locationStats' => $locationStats,
+            'locations' => $locations,
+            'selectedLocation' => $selectedLocation,
+            'fuelChartData' => $fuelChartData,
+            'rentalExpiryMonitoring' => $rentalExpiryMonitoring
+        ], $fleetStats, $financialSummary));
+    }
+    
+    private function autoCompleteOrders()
+    {
         try {
             Order::whereIn('status', ['active', 'Active', 'ACTIVE'])
                 ->where('end_date', '<', Carbon::today())
@@ -28,13 +66,10 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             // Silently fail - completed_at column may not exist yet
         }
-        
-        // Persist selected vehicle to session
-        if ($request->has('vehicle_id')) {
-            session(['selected_vehicle_id' => $request->vehicle_id]);
-        }
-        
-        // Get vehicles based on location filter
+    }
+    
+    private function getVehicles($locationId)
+    {
         $vehiclesQuery = Vehicle::with(['maintenances' => function($query) {
             $query->where('service_date', '>=', Carbon::now())
                   ->orderBy('service_date', 'asc');
@@ -44,9 +79,11 @@ class DashboardController extends Controller
             $vehiclesQuery->where('location_id', $locationId);
         }
         
-        $vehicles = $vehiclesQuery->get();
-        
-        // Get location statistics for super admin
+        return $vehiclesQuery->get();
+    }
+    
+    private function getLocationStats($locationId)
+    {
         $locationStats = [];
         if (LocationFilter::canAccessAllLocations() && !$locationId) {
             $locations = Location::active()->get();
@@ -78,8 +115,11 @@ class DashboardController extends Controller
                 ];
             }
         }
-        
-        // Section 1: Monitoring STNK Journey Time
+        return $locationStats;
+    }
+    
+    private function getStnkMonitoring($vehicles)
+    {
         $stnkMonitoring = [];
         foreach($vehicles as $vehicle) {
             if($vehicle->stnk_expiry_date) {
@@ -95,13 +135,18 @@ class DashboardController extends Controller
                         'location' => $vehicle->location ? $vehicle->location->name : '-',
                         'days_until_expiry' => abs(round($daysUntilExpiry)),
                         'status' => $status,
-                        'expiry_date' => Carbon::parse($vehicle->stnk_expiry_date)->format('d M Y')
+                        'expiry_date' => Carbon::parse($vehicle->stnk_expiry_date)->format('d M Y'),
+                        'sort_key' => $daysUntilExpiry,
                     ];
                 }
             }
         }
-        
-        // Section 2: Monitoring KIR Journey Time
+        usort($stnkMonitoring, fn($a, $b) => $a['sort_key'] - $b['sort_key']);
+        return array_map(function($item) { unset($item['sort_key']); return $item; }, $stnkMonitoring);
+    }
+    
+    private function getKirMonitoring($vehicles)
+    {
         $kirMonitoring = [];
         foreach($vehicles as $vehicle) {
             if($vehicle->kir_expiry_date) {
@@ -117,19 +162,23 @@ class DashboardController extends Controller
                         'location' => $vehicle->location ? $vehicle->location->name : '-',
                         'days_until_expiry' => abs(round($daysUntilExpiry)),
                         'status' => $status,
-                        'expiry_date' => Carbon::parse($vehicle->kir_expiry_date)->format('d M Y')
+                        'expiry_date' => Carbon::parse($vehicle->kir_expiry_date)->format('d M Y'),
+                        'sort_key' => $daysUntilExpiry,
                     ];
                 }
             }
         }
-
-        // Section 3: Monitoring GPS Journey Time
+        usort($kirMonitoring, fn($a, $b) => $a['sort_key'] - $b['sort_key']);
+        return array_map(function($item) { unset($item['sort_key']); return $item; }, $kirMonitoring);
+    }
+    
+    private function getGpsMonitoring($vehicles)
+    {
         $gpsMonitoring = [];
         foreach($vehicles as $vehicle) {
             if($vehicle->gps_expiry_date) {
                 $daysUntilExpiry = Carbon::now()->diffInDays(Carbon::parse($vehicle->gps_expiry_date), false);
                 
-                // GPS warning 7 days before
                 if ($daysUntilExpiry <= 7) {
                     $status = $daysUntilExpiry < 0 ? 'red' : 'yellow';
                     
@@ -140,13 +189,18 @@ class DashboardController extends Controller
                         'location' => $vehicle->location ? $vehicle->location->name : '-',
                         'days_until_expiry' => abs(round($daysUntilExpiry)),
                         'status' => $status,
-                        'expiry_date' => Carbon::parse($vehicle->gps_expiry_date)->format('d M Y')
+                        'expiry_date' => Carbon::parse($vehicle->gps_expiry_date)->format('d M Y'),
+                        'sort_key' => $daysUntilExpiry,
                     ];
                 }
             }
         }
-        
-        // Section 4: Monitoring Vehicle BOOKED and AVAILABLE
+        usort($gpsMonitoring, fn($a, $b) => $a['sort_key'] - $b['sort_key']);
+        return array_map(function($item) { unset($item['sort_key']); return $item; }, $gpsMonitoring);
+    }
+    
+    private function getFleetStats($locationId)
+    {
         $bookedQuery = Vehicle::where('is_active', true)->where(function($query) {
             $query->whereHas('rentals', function($q) {
                 $q->whereIn('status', ['active', 'Active', 'ACTIVE'])
@@ -173,9 +227,16 @@ class DashboardController extends Controller
         
         $bookedVehicles = $bookedQuery->count();
         $availableVehicles = $availableQuery->count();
-        $totalFleet = $bookedVehicles + $availableVehicles;
         
-        // Section 5: Financial Summary - This Month
+        return [
+            'bookedVehicles' => $bookedVehicles,
+            'availableVehicles' => $availableVehicles,
+            'totalFleet' => $bookedVehicles + $availableVehicles,
+        ];
+    }
+    
+    private function getFinancialSummary($locationId)
+    {
         $incomeQuery = Income::whereYear('income_date', Carbon::now()->year)
             ->whereMonth('income_date', Carbon::now()->month);
         $expenseQuery = Expense::whereYear('expense_date', Carbon::now()->year)
@@ -188,16 +249,16 @@ class DashboardController extends Controller
 
         $monthlyIncome  = (float) $incomeQuery->sum('amount');
         $monthlyExpense = (float) $expenseQuery->sum('amount');
-        $monthlyProfit  = $monthlyIncome - $monthlyExpense;
-
-        // Section 6: Fuel/Expense chart data (6 months)
-        $fuelChartData = $this->getFuelExpensesChartData($locationId);
-
-        // Get locations for filter dropdown
-        $locations = Location::active()->get();
-        $selectedLocation = $locationId;
-
-        // Section 7: Rental Expiry Monitoring (Sewa yang akan berakhir)
+        
+        return [
+            'monthlyIncome' => $monthlyIncome,
+            'monthlyExpense' => $monthlyExpense,
+            'monthlyProfit' => $monthlyIncome - $monthlyExpense,
+        ];
+    }
+    
+    private function getRentalExpiryMonitoring($locationId)
+    {
         $rentalExpiryMonitoring = [];
         try {
             $rentalExpiryQuery = Order::with(['vehicle', 'customer'])
@@ -211,7 +272,6 @@ class DashboardController extends Controller
             foreach ($activeOrders as $order) {
                 $daysUntilEnd = Carbon::today()->diffInDays($order->end_date, false);
                 
-                // Show orders expiring within 7 days or already overdue
                 if ($daysUntilEnd <= 7) {
                     $status = $daysUntilEnd < 0 ? 'red' : ($daysUntilEnd <= 3 ? 'yellow' : 'green');
                     $rentalExpiryMonitoring[] = [
@@ -228,7 +288,6 @@ class DashboardController extends Controller
                 }
             }
 
-            // Sort: overdue first, then by days remaining ascending
             usort($rentalExpiryMonitoring, function ($a, $b) {
                 if ($a['is_overdue'] !== $b['is_overdue']) {
                     return $a['is_overdue'] ? -1 : 1;
@@ -236,25 +295,9 @@ class DashboardController extends Controller
                 return $a['days_remaining'] - $b['days_remaining'];
             });
         } catch (\Exception $e) {
-            // Silently fail if orders table structure differs
+            // Silently fail
         }
-
-        return view('dashboard.main', compact(
-            'stnkMonitoring',
-            'kirMonitoring',
-            'gpsMonitoring',
-            'bookedVehicles',
-            'availableVehicles',
-            'totalFleet',
-            'locationStats',
-            'locations',
-            'selectedLocation',
-            'monthlyIncome',
-            'monthlyExpense',
-            'monthlyProfit',
-            'fuelChartData',
-            'rentalExpiryMonitoring'
-        ));
+        return $rentalExpiryMonitoring;
     }
 
     private function getFuelExpensesChartData($locationId = null)

@@ -52,8 +52,8 @@ class VehicleController extends Controller
         $allowedSortColumns = ['created_at', 'name', 'brand', 'model', 'license_plate', 'year', 'vehicle_type'];
         $allowedSortOrders  = ['asc', 'desc'];
 
-        $sortBy    = in_array($request->get('sort_by'), $allowedSortColumns) ? $request->get('sort_by') : 'created_at';
-        $sortOrder = in_array(strtolower($request->get('sort_order')), $allowedSortOrders) ? strtolower($request->get('sort_order')) : 'desc';
+        $sortBy    = in_array($request->input('sort_by'), $allowedSortColumns) ? $request->input('sort_by') : 'created_at';
+        $sortOrder = in_array(strtolower($request->input('sort_order')), $allowedSortOrders) ? strtolower($request->input('sort_order')) : 'desc';
 
         $query->orderBy($sortBy, $sortOrder);
 
@@ -122,7 +122,7 @@ class VehicleController extends Controller
                 $locName = $validated['new_location_name'];
                 $locCode = strtoupper(substr(preg_replace('/[^a-zA-Z0-9]/', '', $locName), 0, 3)) . rand(100, 999);
                 
-                $location = \App\Models\Location::create([
+                $location = Location::create([
                     'name' => $locName,
                     'code' => $locCode,
                     'address' => '-',
@@ -130,7 +130,7 @@ class VehicleController extends Controller
                 ]);
                 $validated['location_id'] = $location->id;
             } else {
-                if (!\App\Models\Location::where('id', $validated['location_id'])->exists()) {
+                if (!Location::where('id', $validated['location_id'])->exists()) {
                     return redirect()->back()->withInput()->withErrors(['location_id' => 'Lokasi yang dipilih tidak valid.']);
                 }
             }
@@ -171,7 +171,7 @@ class VehicleController extends Controller
             $validated['transmission'] = $validated['transmission'] ?? 'Manual';
             $validated['odometer'] = $validated['odometer'] ?? 0;
             $validated['tank_capacity'] = $validated['tank_capacity'] ?? 45;
-            $validated['is_active'] = $validated['is_active'] ?? true;
+            $validated['is_active'] = $request->has('is_active');
 
             // Remove document_path from validated as we'll handle it separately
             unset($validated['vehicle_document']);
@@ -303,6 +303,7 @@ class VehicleController extends Controller
             'is_active' => 'boolean'
         ]);
 
+        $validated['is_active'] = $request->has('is_active');
 
         // Set investor_id to null if ownership_type is company
         if ($validated['ownership_type'] === 'company') {
@@ -314,7 +315,7 @@ class VehicleController extends Controller
             $locName = $validated['new_location_name'];
             $locCode = strtoupper(substr(preg_replace('/[^a-zA-Z0-9]/', '', $locName), 0, 3)) . rand(100, 999);
             
-            $location = \App\Models\Location::create([
+            $location = Location::create([
                 'name' => $locName,
                 'code' => $locCode,
                 'address' => '-',
@@ -322,7 +323,7 @@ class VehicleController extends Controller
             ]);
             $validated['location_id'] = $location->id;
         } else {
-            if (!\App\Models\Location::where('id', $validated['location_id'])->exists()) {
+            if (!Location::where('id', $validated['location_id'])->exists()) {
                 return redirect()->back()->withInput()->withErrors(['location_id' => 'Lokasi yang dipilih tidak valid.']);
             }
         }

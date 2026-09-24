@@ -1,21 +1,27 @@
+/* ================================================
+   Dashboard CSS - Radja Blind Van
+   ================================================ */
+
+/* Dashboard Header */
 .dashboard-header {
     background: white;
     padding: 30px;
-    border-radius: 8px;
-    margin-bottom: 30px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    margin-bottom: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 4px solid #667eea;
 }
 .dashboard-title {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
     color: #2c3e50;
-    margin: 0 0 8px 0;
+    margin: 0 0 6px 0;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
-.dashboard-title i { font-size: 28px; color: #007bff; }
-.dashboard-subtitle { color: #7f8c8d; font-size: 15px; margin: 0; }
+.dashboard-title i { font-size: 26px; color: #667eea; }
+.dashboard-subtitle { color: #7f8c8d; font-size: 14px; margin: 0; }
 
 /* Monitoring Cards */
 .monitoring-card {
@@ -25,9 +31,10 @@
     padding: 24px;
     margin-bottom: 24px;
     transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.04);
 }
 .monitoring-card:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
     transform: translateY(-2px);
 }
 .card-header-custom {
@@ -37,9 +44,11 @@
     margin-bottom: 20px;
     padding-bottom: 16px;
     border-bottom: 2px solid #f0f0f0;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 .card-title-custom {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #2c3e50;
     display: flex;
@@ -54,9 +63,10 @@
     align-items: center;
     justify-content: center;
     font-size: 18px;
+    flex-shrink: 0;
 }
 .icon-blue    { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-.icon-green   { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+.icon-green   { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
 .icon-orange  { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); color: white; }
 .icon-purple  { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: white; }
 .icon-income  { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; }
@@ -64,46 +74,62 @@
 .icon-profit  { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
 
 /* Vehicle List in Cards */
-.vehicle-list { display: flex; flex-direction: column; gap: 12px; }
+.vehicle-list { display: flex; flex-direction: column; gap: 10px; }
 .vehicle-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px;
+    padding: 14px 16px;
     background: #f8f9fa;
     border-radius: 12px;
     transition: all 0.2s ease;
+    border: 1px solid transparent;
+    gap: 12px;
 }
-.vehicle-item:hover { background: #e9ecef; transform: translateX(5px); }
-.vehicle-info { flex: 1; }
-.vehicle-name { font-weight: 600; color: #2c3e50; margin-bottom: 4px; }
+.vehicle-item:hover {
+    background: #e9ecef;
+    transform: translateX(4px);
+    border-color: #dee2e6;
+}
+.vehicle-info { flex: 1; min-width: 0; }
+.vehicle-name {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .countdown-info {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: 6px;
+    font-size: 12px;
     color: #7f8c8d;
+    flex-wrap: wrap;
 }
 .status-badge {
-    padding: 6px 16px;
+    padding: 5px 12px;
     border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
     white-space: nowrap;
+    letter-spacing: 0.5px;
 }
-.status-yellow  { background: #fff3cd; color: #856404; }
-.status-red     { background: #f8d7da; color: #721c24; }
-.status-green   { background: #d4edda; color: #155724; }
-.status-expired { background: #f8d7da; color: #721c24; }
+.status-yellow  { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+.status-red     { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.status-green   { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.status-expired { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 .action-link {
     color: #3498db;
     text-decoration: none;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 12px;
     display: flex;
     align-items: center;
     gap: 4px;
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 .action-link:hover { color: #2980b9; gap: 8px; }
 
@@ -112,69 +138,86 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 24px 28px;
+    padding: 22px 24px;
     border-radius: 16px;
     color: white;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     transition: all 0.3s ease;
     height: 100%;
-    min-height: 100px;
+    min-height: 110px;
+    border: 1px solid rgba(255,255,255,0.2);
 }
 .fleet-stat-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.22);
 }
 .booked-card    { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
 .available-card { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); }
 .total-card     { background: linear-gradient(135deg, #2980b9 0%, #1a5276 100%); }
-.income-card    { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-.expense-card   { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+.income-card    { background: linear-gradient(135deg, #20bf6b 0%, #01a3a4 100%); }
+.expense-card   { background: linear-gradient(135deg, #fa709a 0%, #e84393 100%); }
 .profit-card    { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
 .profit-card.loss { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
 
-.fleet-stat-icon   { font-size: 44px; opacity: 0.85; flex-shrink: 0; }
-.fleet-stat-content { flex: 1; }
-.fleet-stat-number  { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; word-break: break-word; }
-.fleet-stat-number.large { font-size: 48px; }
-.fleet-stat-label   { font-size: 15px; font-weight: 500; opacity: 0.9; margin-bottom: 2px; }
-.fleet-stat-sub     { font-size: 11px; font-weight: 700; opacity: 0.7; letter-spacing: 1.5px; text-transform: uppercase; }
+.fleet-stat-icon   { font-size: 40px; opacity: 0.9; flex-shrink: 0; }
+.fleet-stat-content { flex: 1; min-width: 0; }
+.fleet-stat-number  {
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+.fleet-stat-number.large { font-size: 44px; }
+.fleet-stat-label   { font-size: 14px; font-weight: 500; opacity: 0.92; margin-bottom: 2px; }
+.fleet-stat-sub     {
+    font-size: 10px;
+    font-weight: 700;
+    opacity: 0.72;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
 
 /* Section Label */
 .section-label {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
-    color: #7f8c8d;
+    color: #6c757d;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     display: flex;
     align-items: center;
-    padding: 0 4px;
-    border-left: 3px solid #e74c3c;
     padding-left: 12px;
+    border-left: 3px solid #667eea;
 }
 
 /* Badge Count */
 .badge-count {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     padding: 3px 10px;
     border-radius: 20px;
-    min-width: 28px;
+    min-width: 30px;
     text-align: center;
+    white-space: nowrap;
 }
 
 /* Empty State */
-.empty-state { text-align: center; padding: 40px 20px; color: #95a5a6; }
-.empty-icon  { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+.empty-state { text-align: center; padding: 36px 20px; color: #95a5a6; }
+.empty-icon  { font-size: 44px; margin-bottom: 14px; opacity: 0.6; }
 
 /* Location Stats Table */
-.location-stats-table th { background: #f8f9fa; font-weight: 600; color: #2c3e50; }
-.location-stats-table td { vertical-align: middle; }
-.location-badge-pill {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
+.location-stats-table th {
+    background: #f8f9fa;
     font-weight: 600;
+    color: #2c3e50;
+    font-size: 13px;
+    border-bottom: 2px solid #dee2e6;
+    padding: 12px 16px;
+}
+.location-stats-table td {
+    vertical-align: middle;
+    padding: 10px 16px;
 }
 
 /* Chart Container */
@@ -184,34 +227,76 @@
     width: 100%;
 }
 
-/* Responsive */
+/* ================================================
+   Responsive - Tablet (max 768px)
+   ================================================ */
 @media (max-width: 768px) {
-    .dashboard-header { padding: 20px 15px; }
-    .dashboard-title  { font-size: 24px; }
-    .dashboard-title i { font-size: 22px; }
+    .dashboard-header {
+        padding: 20px 18px;
+        margin-bottom: 20px;
+    }
+    .dashboard-title  { font-size: 22px; }
+    .dashboard-title i { font-size: 20px; }
     .dashboard-subtitle { font-size: 13px; }
+
     .monitoring-card { padding: 16px; margin-bottom: 16px; }
-    .card-header-custom { flex-direction: column; align-items: flex-start; gap: 10px; }
-    .card-title-custom { font-size: 16px; }
-    .card-icon { width: 36px; height: 36px; font-size: 16px; }
-    .vehicle-item { flex-direction: column; align-items: flex-start; gap: 12px; padding: 12px; }
+    .card-header-custom {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+    }
+    .card-title-custom { font-size: 14px; }
+    .card-icon { width: 34px; height: 34px; font-size: 15px; }
+
+    .vehicle-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+    }
     .vehicle-info { width: 100%; }
-    .vehicle-name { font-size: 15px; margin-bottom: 4px; }
-    .status-badge { font-size: 11px; padding: 4px 10px; }
-    .fleet-stat-card { padding: 18px 20px; gap: 16px; }
-    .fleet-stat-icon { font-size: 32px; }
-    .fleet-stat-number.large { font-size: 36px; }
+    .vehicle-name { font-size: 14px; white-space: normal; }
+    .countdown-info { font-size: 12px; }
+    .status-badge { font-size: 10px; padding: 4px 10px; }
+
+    .fleet-stat-card { padding: 16px 18px; gap: 14px; min-height: 90px; }
+    .fleet-stat-icon { font-size: 30px; }
     .fleet-stat-number { font-size: 24px; }
-    .fleet-stat-label { font-size: 13px; }
-    .empty-state { padding: 30px 15px; }
+    .fleet-stat-number.large { font-size: 32px; }
+    .fleet-stat-label { font-size: 12px; }
+    .fleet-stat-sub { font-size: 9px; }
+
+    .empty-state { padding: 28px 14px; }
     .empty-icon  { font-size: 36px; }
     .chart-container { height: 220px; }
+
+    .section-label { font-size: 11px; }
 }
 
+/* ================================================
+   Responsive - Mobile (max 480px)
+   ================================================ */
 @media (max-width: 480px) {
-    .dashboard-title  { font-size: 20px; }
+    .dashboard-header { padding: 16px 14px; }
+    .dashboard-title  { font-size: 18px; gap: 8px; }
+    .dashboard-title i { font-size: 18px; }
+
     .monitoring-card  { padding: 12px; }
-    .card-title-custom { font-size: 14px; }
-    .vehicle-name { font-size: 14px; }
-    .status-badge { font-size: 10px; padding: 3px 8px; }
+    .card-title-custom { font-size: 13px; }
+    .card-icon { width: 30px; height: 30px; font-size: 13px; }
+
+    .vehicle-name { font-size: 13px; }
+    .countdown-info { font-size: 11px; gap: 4px; }
+    .status-badge { font-size: 9px; padding: 3px 8px; }
+    .action-link { font-size: 11px; }
+
+    .fleet-stat-card { padding: 14px 16px; gap: 12px; }
+    .fleet-stat-icon { font-size: 26px; }
+    .fleet-stat-number { font-size: 20px; }
+    .fleet-stat-label { font-size: 11px; }
+
+    .chart-container { height: 180px; }
+    .location-stats-table th, .location-stats-table td { padding: 8px 10px; font-size: 12px; }
 }
