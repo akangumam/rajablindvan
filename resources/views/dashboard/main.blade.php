@@ -207,29 +207,12 @@
             </div>
             <div class="vehicle-list">
                 @forelse($rentalExpiryMonitoring as $item)
-                <div class="vehicle-item">
-                    <div class="vehicle-info">
-                        <div class="vehicle-name">{{ $item['vehicle_name'] }} <small class="text-muted">({{ $item['license_plate'] }})</small></div>
-                        <div class="countdown-info">
-                            <i class="fas fa-user"></i>
-                            <span>{{ $item['customer'] }}</span>
-                            <span class="text-muted">•</span>
-                            <span class="badge {{ $item['rental_type'] === 'Sewa Harian' ? 'bg-info' : 'bg-warning text-dark' }}" style="font-size:11px;">{{ $item['rental_type'] }}</span>
-                            <span class="text-muted">•</span>
-                            <i class="fas fa-clock"></i>
-                            <span>
-                                @if($item['is_overdue'])
-                                    <strong class="text-danger">{{ $item['days_remaining'] }} hari terlewat</strong>
-                                @else
-                                    {{ $item['days_remaining'] }} hari tersisa
-                                @endif
-                            </span>
-                            <span class="text-muted">•</span>
-                            <span>Berakhir: {{ $item['end_date'] }}</span>
+                <div class="vehicle-item flex-column align-items-start p-3">
+                    <div class="d-flex justify-content-between align-items-start w-100 mb-2 gap-2">
+                        <div class="vehicle-name mb-0" style="white-space: normal; word-break: break-word; line-height: 1.3;">
+                            {{ $item['vehicle_name'] }} <small class="text-muted">({{ $item['license_plate'] }})</small>
                         </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="status-badge status-{{ $item['status'] }}">
+                        <span class="status-badge status-{{ $item['status'] }} flex-shrink-0 mt-1">
                             @if($item['status'] === 'red')
                                 TERLEWAT
                             @elseif($item['status'] === 'yellow')
@@ -238,7 +221,25 @@
                                 AMAN
                             @endif
                         </span>
-                        <a href="{{ route('orders.index', ['status' => 'active']) }}" class="action-link">
+                    </div>
+                    <div class="d-flex justify-content-between align-items-end w-100">
+                        <div class="countdown-info flex-wrap">
+                            <i class="fas fa-user text-muted"></i>
+                            <span>{{ $item['customer'] }}</span>
+                            <span class="badge {{ $item['rental_type'] === 'Sewa Harian' ? 'bg-info' : 'bg-warning text-dark' }}" style="font-size:11px;">{{ $item['rental_type'] }}</span>
+                            <span class="text-muted mx-1">•</span>
+                            <i class="fas fa-clock text-muted"></i>
+                            <span>
+                                @if($item['is_overdue'])
+                                    <strong class="text-danger">{{ $item['days_remaining'] }} hari terlewat</strong>
+                                @else
+                                    {{ $item['days_remaining'] }} hari tersisa
+                                @endif
+                            </span>
+                            <span class="text-muted mx-1">•</span>
+                            <span>Berakhir: {{ $item['end_date'] }}</span>
+                        </div>
+                        <a href="{{ route('orders.index', ['status' => 'active']) }}" class="action-link ms-2 flex-shrink-0">
                             Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -278,9 +279,14 @@
             </div>
             <div class="vehicle-list">
                 @forelse($stnkMonitoring as $item)
-                <div class="vehicle-item">
-                    <div class="vehicle-info">
-                        <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
+                <div class="vehicle-item flex-column align-items-start p-3">
+                    <div class="d-flex justify-content-between align-items-start w-100 mb-2 gap-2">
+                        <div class="vehicle-name mb-0" style="white-space: normal; word-break: break-word; line-height: 1.3;">{{ $item['vehicle_name'] }}</div>
+                        <span class="status-badge status-{{ $item['status'] }} flex-shrink-0 mt-1">
+                            {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-end w-100">
                         <div class="countdown-info">
                             <i class="fas fa-clock"></i>
                             <span>
@@ -291,14 +297,9 @@
                                 @endif
                             </span>
                             <span class="text-muted">•</span>
-                            <span>Berakhir: {{ $item['expiry_date'] }}</span>
+                            <span>{{ $item['expiry_date'] }}</span>
                         </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="status-badge status-{{ $item['status'] }}">
-                            {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
-                        </span>
-                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
+                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link ms-2 flex-shrink-0">
                             Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -335,9 +336,14 @@
             </div>
             <div class="vehicle-list">
                 @forelse($kirMonitoring as $item)
-                <div class="vehicle-item">
-                    <div class="vehicle-info">
-                        <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
+                <div class="vehicle-item flex-column align-items-start p-3">
+                    <div class="d-flex justify-content-between align-items-start w-100 mb-2 gap-2">
+                        <div class="vehicle-name mb-0" style="white-space: normal; word-break: break-word; line-height: 1.3;">{{ $item['vehicle_name'] }}</div>
+                        <span class="status-badge status-{{ $item['status'] }} flex-shrink-0 mt-1">
+                            {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-end w-100">
                         <div class="countdown-info">
                             <i class="fas fa-clock"></i>
                             <span>
@@ -348,14 +354,9 @@
                                 @endif
                             </span>
                             <span class="text-muted">•</span>
-                            <span>Berakhir: {{ $item['expiry_date'] }}</span>
+                            <span>{{ $item['expiry_date'] }}</span>
                         </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="status-badge status-{{ $item['status'] }}">
-                            {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
-                        </span>
-                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
+                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link ms-2 flex-shrink-0">
                             Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -392,9 +393,14 @@
             </div>
             <div class="vehicle-list">
                 @forelse($gpsMonitoring as $item)
-                <div class="vehicle-item">
-                    <div class="vehicle-info">
-                        <div class="vehicle-name">{{ $item['vehicle_name'] }}</div>
+                <div class="vehicle-item flex-column align-items-start p-3">
+                    <div class="d-flex justify-content-between align-items-start w-100 mb-2 gap-2">
+                        <div class="vehicle-name mb-0" style="white-space: normal; word-break: break-word; line-height: 1.3;">{{ $item['vehicle_name'] }}</div>
+                        <span class="status-badge status-{{ $item['status'] }} flex-shrink-0 mt-1">
+                            {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-end w-100">
                         <div class="countdown-info">
                             <i class="fas fa-clock"></i>
                             <span>
@@ -405,14 +411,9 @@
                                 @endif
                             </span>
                             <span class="text-muted">•</span>
-                            <span>Berakhir: {{ $item['expiry_date'] }}</span>
+                            <span>{{ $item['expiry_date'] }}</span>
                         </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="status-badge status-{{ $item['status'] }}">
-                            {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
-                        </span>
-                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link">
+                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link ms-2 flex-shrink-0">
                             Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
