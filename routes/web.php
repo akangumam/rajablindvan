@@ -197,8 +197,15 @@ Route::prefix('reports')->name('reports.')->group(function () {
     Route::get('rentals/excel', [\App\Http\Controllers\ReportController::class, 'exportRentalsExcel'])->name('rentals.excel');
 });
 
-// Settings routes
+// Settings routes - General Users
 Route::prefix('settings')->name('settings.')->group(function () {
+    // Account
+    Route::get('/account', [\App\Http\Controllers\SettingsController::class, 'account'])->name('account');
+    Route::post('/account/password', [\App\Http\Controllers\SettingsController::class, 'updatePassword'])->name('account.password');
+});
+
+// Settings routes - Admin/Manager Only
+Route::prefix('settings')->name('settings.')->middleware('role:super_admin,manager')->group(function () {
     Route::get('/', [\App\Http\Controllers\SettingsController::class, 'index'])->name('index');
 
     // Pengaturan sub-menu
@@ -206,10 +213,6 @@ Route::prefix('settings')->name('settings.')->group(function () {
     Route::get('/reminders', [\App\Http\Controllers\SettingsController::class, 'reminders'])->name('reminders');
     Route::get('/format', [\App\Http\Controllers\SettingsController::class, 'format'])->name('format');
     Route::post('/format', [\App\Http\Controllers\SettingsController::class, 'saveFormat'])->name('format.save');
-
-    // Account
-    Route::get('/account', [\App\Http\Controllers\SettingsController::class, 'account'])->name('account');
-    Route::post('/account/password', [\App\Http\Controllers\SettingsController::class, 'updatePassword'])->name('account.password');
 
     // File and Storage
     Route::get('/file-storage', [\App\Http\Controllers\SettingsController::class, 'fileStorage'])->name('file-storage');
