@@ -253,6 +253,7 @@ class VehicleController extends Controller
             'total_cost' => $totalMaintenance + $totalExpenses,
             'total_income' => $totalIncome,
             'total_income_count' => $vehicle->incomes->count(),
+            'balance' => $totalIncome - ($totalMaintenance + $totalExpenses),
             'avg_fuel_efficiency' => $vehicle->getAverageFuelEfficiency(),
             'latest_odometer' => $vehicle->getLatestOdometer()
         ];

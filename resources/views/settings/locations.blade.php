@@ -119,7 +119,7 @@
     color: #333;
     font-size: 14px;
     display: grid;
-    grid-template-columns: 240px 1fr 240px auto;
+    grid-template-columns: minmax(220px, 1.2fr) minmax(250px, 2fr) minmax(180px, 1fr) auto;
     align-items: center;
     gap: 20px;
 }
@@ -138,7 +138,7 @@
     padding: 15px 20px;
     border-top: 1px solid #e9ecef;
     display: grid;
-    grid-template-columns: 240px 1fr 240px auto;
+    grid-template-columns: minmax(220px, 1.2fr) minmax(250px, 2fr) minmax(180px, 1fr) auto;
     align-items: center;
     gap: 20px;
     transition: background 0.2s;
@@ -678,7 +678,12 @@
                                 <div class="Lokasi-icon">
                                     <i class="fas fa-map-marker-alt"></i>
                                 </div>
-                                <div class="Lokasi-name">{{ $location->name }}</div>
+                                <div class="Lokasi-name">
+                                    {{ $location->name }}
+                                    @if($location->code)
+                                        <span style="color: #6c757d; font-weight: normal;">({{ $location->code }})</span>
+                                    @endif
+                                </div>
                             </div>
                             <div class="Lokasi-address">
                                 {{ $location->address ?? 'Tidak ada alamat' }}

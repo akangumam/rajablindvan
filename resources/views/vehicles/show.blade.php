@@ -14,22 +14,22 @@
                     </h5>
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-plus me-1"></i>Add Data
+                            <i class="fas fa-plus me-1"></i>Tambah Data
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="{{ route('fuel-fills.create-for-vehicle', $vehicle) }}">
-                                    <i class="fas fa-gas-pump me-2"></i>Isi Bensin
-                                </a>
-                            </li>
-                            <li>
                                 <a class="dropdown-item" href="{{ route('maintenances.create-for-vehicle', $vehicle) }}">
-                                    <i class="fas fa-wrench me-2"></i>Service
+                                    <i class="fas fa-wrench me-2"></i>Servis
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ route('expenses.create-for-vehicle', $vehicle) }}">
-                                    <i class="fas fa-receipt me-2"></i>Expenses
+                                    <i class="fas fa-receipt me-2"></i>Pengeluaran
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('incomes.create-for-vehicle', $vehicle) }}">
+                                    <i class="fas fa-money-bill-wave me-2"></i>Pendapatan
                                 </a>
                             </li>
                         </ul>
@@ -421,33 +421,27 @@
                                 <div class="card-body">
                                     <div class="row g-2">
                                         <div class="col-6">
-                                            <div class="text-center p-2 bg-light rounded">
+                                            <div class="text-center p-2 bg-light rounded h-100">
                                                 <div class="text-primary fw-bold h5 mb-0">{{ number_format($stats['latest_odometer']) }}</div>
                                                 <small class="text-muted">Odometer Terakhir (km)</small>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="text-center p-2 bg-light rounded">
-                                                <div class="text-success fw-bold h5 mb-0">{{ $stats['avg_fuel_efficiency'] ? number_format($stats['avg_fuel_efficiency'], 1) : '-' }}</div>
-                                                <small class="text-muted">Fuel Efficiency (km/L)</small>
+                                            <div class="text-center p-2 bg-light rounded h-100">
+                                                <div class="text-success fw-bold h5 mb-0">Rp {{ number_format($stats['total_income']) }}</div>
+                                                <small class="text-muted">Pendapatan</small>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="text-center p-2 bg-light rounded">
-                                                <div class="text-warning fw-bold h5 mb-0">{{ $stats['total_fuel_fills'] }}</div>
-                                                <small class="text-muted">Total Fuel Fills</small>
+                                            <div class="text-center p-2 bg-light rounded h-100">
+                                                <div class="text-danger fw-bold h5 mb-0">Rp {{ number_format($stats['total_cost']) }}</div>
+                                                <small class="text-muted">Biaya (Servis + Pengeluaran)</small>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="text-center p-2 bg-light rounded">
-                                                <div class="text-danger fw-bold h5 mb-0">{{ $stats['total_maintenance_count'] }}</div>
-                                                <small class="text-muted">Total Servis</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="text-center p-2 bg-light rounded">
-                                                <div class="text-dark fw-bold h5 mb-0">Rp {{ number_format($stats['total_cost']) }}</div>
-                                                <small class="text-muted">Total Biaya</small>
+                                            <div class="text-center p-2 bg-light rounded h-100">
+                                                <div class="{{ $stats['balance'] >= 0 ? 'text-success' : 'text-danger' }} fw-bold h5 mb-0">Rp {{ number_format($stats['balance']) }}</div>
+                                                <small class="text-muted">Balance (Pendapatan - Biaya)</small>
                                             </div>
                                         </div>
                                     </div>
