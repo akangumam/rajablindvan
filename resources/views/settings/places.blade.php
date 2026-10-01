@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Pengaturan - Jenis Service')
+@section('title', 'Pengaturan - Tempat')
 
 @push('styles')
 <style>
@@ -86,29 +86,13 @@
     margin: 0;
 }
 
-.service-section {
-    margin-bottom: 30px;
-}
-
-.service-field {
-    margin-bottom: 20px;
-}
-
-.service-field-label {
-    font-size: 13px;
-    color: #6c757d;
-    margin-bottom: 10px;
-    display: block;
-    font-weight: 500;
-}
-
-.service-list {
+.place-list {
     border: 1px solid #e9ecef;
     border-radius: 8px;
     overflow: hidden;
 }
 
-.service-list-header {
+.place-list-header {
     background: #f8f9fa;
     padding: 15px 20px;
     font-weight: 600;
@@ -119,8 +103,8 @@
     align-items: center;
 }
 
-.service-list-item {
-    padding: 15px 20px;
+.place-list-item {
+    padding: 14px 20px;
     border-top: 1px solid #e9ecef;
     display: flex;
     justify-content: space-between;
@@ -128,42 +112,36 @@
     transition: background 0.2s;
 }
 
-.service-list-item:hover {
+.place-list-item:hover {
     background: #f8f9fa;
 }
 
-.service-info {
+.place-info {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.service-icon {
-    width: 40px;
-    height: 40px;
-    background: #f1f3f5;
+.place-icon {
+    width: 36px;
+    height: 36px;
+    background: #fff3e0;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #95a5a6;
-    font-size: 18px;
+    color: #e67e22;
+    font-size: 16px;
+    flex-shrink: 0;
 }
 
-.service-name {
+.place-name {
     font-size: 15px;
     color: #333;
     font-weight: 500;
 }
 
-.service-price {
-    font-size: 13px;
-    color: #28a745;
-    margin-top: 2px;
-    font-weight: 500;
-}
-
-.service-actions {
+.place-actions {
     display: flex;
     gap: 10px;
 }
@@ -182,9 +160,7 @@
     transition: all 0.3s ease;
 }
 
-.btn-add:hover {
-    background: #0056b3;
-}
+.btn-add:hover { background: #0056b3; }
 
 .btn-edit {
     background: transparent;
@@ -195,14 +171,10 @@
     font-weight: 500;
     cursor: pointer;
     font-size: 13px;
-    letter-spacing: 0.5px;
     transition: all 0.3s ease;
 }
 
-.btn-edit:hover {
-    background: #007bff;
-    color: white;
-}
+.btn-edit:hover { background: #007bff; color: white; }
 
 .btn-delete {
     background: transparent;
@@ -213,26 +185,10 @@
     font-weight: 500;
     cursor: pointer;
     font-size: 13px;
-    letter-spacing: 0.5px;
     transition: all 0.3s ease;
 }
 
-.btn-delete:hover {
-    background: #dc3545;
-    color: white;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 40px;
-    color: #6c757d;
-}
-
-.empty-icon {
-    font-size: 48px;
-    margin-bottom: 15px;
-    opacity: 0.5;
-}
+.btn-delete:hover { background: #dc3545; color: white; }
 
 .alert {
     padding: 15px;
@@ -271,20 +227,8 @@
     padding: 0;
     border-radius: 8px;
     width: 90%;
-    max-width: 500px;
+    max-width: 480px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 .modal-header {
@@ -317,18 +261,11 @@
     justify-content: center;
 }
 
-.close:hover,
-.close:focus {
-    color: #000;
-}
+.close:hover { color: #000; }
 
-.modal-body {
-    padding: 24px;
-}
+.modal-body { padding: 24px; }
 
-.form-group {
-    margin-bottom: 20px;
-}
+.form-group { margin-bottom: 20px; }
 
 .form-label {
     display: block;
@@ -344,6 +281,7 @@
     border: 1px solid #dee2e6;
     border-radius: 4px;
     font-size: 14px;
+    box-sizing: border-box;
     transition: border-color 0.2s;
 }
 
@@ -352,6 +290,19 @@
     border-color: #007bff;
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
 }
+
+.form-control.error {
+    border-color: #dc3545;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.error-message.show { display: block; }
 
 .modal-footer {
     padding: 16px 24px;
@@ -373,9 +324,7 @@
     transition: background 0.2s;
 }
 
-.btn-secondary:hover {
-    background: #5a6268;
-}
+.btn-secondary:hover { background: #5a6268; }
 
 .btn-primary {
     background: #007bff;
@@ -389,9 +338,7 @@
     transition: background 0.2s;
 }
 
-.btn-primary:hover {
-    background: #0056b3;
-}
+.btn-primary:hover { background: #0056b3; }
 </style>
 @endpush
 
@@ -436,7 +383,7 @@
                 </a>
             </li>
             <li class="settings-page-menu-item">
-                <a href="{{ route('settings.places') }}" class="settings-page-menu-link">
+                <a href="{{ route('settings.places') }}" class="settings-page-menu-link active">
                     <i class="fas fa-store-alt" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
                     Tempat
                 </a>
@@ -448,9 +395,9 @@
                 </a>
             </li>
             <li class="settings-page-menu-item">
-                <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link active">
+                <a href="{{ route('settings.service-types') }}" class="settings-page-menu-link">
                     <i class="fas fa-wrench" style="color: #3498db; font-size: 14px; margin-right: 12px;"></i>
-                    Jenis Service
+                    Jenis Services
                 </a>
             </li>
             <li class="settings-page-menu-item">
@@ -478,89 +425,72 @@
 
     <div class="settings-page-content">
         <div class="settings-page-content-header">
-            <h1 class="settings-page-content-title">Jenis Service</h1>
+            <h1 class="settings-page-content-title">Tempat</h1>
+            <p style="margin: 6px 0 0; color: #6c757d; font-size: 14px;">Daftar tempat yang tersedia sebagai pilihan pada form Servis dan Pengeluaran.</p>
         </div>
 
         @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
+            <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <div class="service-section">
-            <div class="service-field">
-                <label class="service-field-label">Daftar Jenis Service</label>
-                <div class="service-list">
-                    <div class="service-list-header">
-                        <span>Jenis Service</span>
-                        <button class="btn-add" onclick="openAddModal()">
-                            <i class="fas fa-plus me-1"></i> TAMBAH BARU SERVICE
+        <div class="place-list">
+            <div class="place-list-header">
+                <span>Nama Tempat</span>
+                <button class="btn-add" onclick="openAddModal()">
+                    <i class="fas fa-plus me-1"></i> TAMBAH TEMPAT BARU
+                </button>
+            </div>
+
+            @if($places->isEmpty())
+                <div class="place-list-item" style="justify-content: center; color: #999;">
+                    Belum ada tempat. Klik "TAMBAH TEMPAT BARU" untuk menambahkan.
+                </div>
+            @else
+                @foreach($places as $place)
+                <div class="place-list-item" data-id="{{ $place->id }}">
+                    <div class="place-info">
+                        <div class="place-icon">
+                            <i class="fas fa-store-alt"></i>
+                        </div>
+                        <div class="place-name">{{ $place->name }}</div>
+                    </div>
+                    <div class="place-actions">
+                        <button class="btn-edit" onclick='openEditModal(@json($place))'>
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-delete" onclick="confirmDelete({{ $place->id }}, '{{ addslashes($place->name) }}')">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </div>
-
-                    @if($serviceTypes->isEmpty())
-                        <div class="service-list-item" style="justify-content: center; color: #999;">
-                            Belum ada jenis service. Klik "TAMBAH BARU SERVICE" untuk menambahkan.
-                        </div>
-                    @else
-                        @foreach($serviceTypes as $serviceType)
-                        <div class="service-list-item" data-id="{{ $serviceType->id }}">
-                            <div class="service-info">
-                                <div class="service-icon">
-                                    <i class="fas fa-wrench"></i>
-                                </div>
-                                <div>
-                                    <div class="service-name">{{ $serviceType->name }}</div>
-                                    @if($serviceType->price)
-                                    <div class="service-price">Harga Referensi: Rp {{ number_format($serviceType->price, 0, ',', '.') }}</div>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="service-actions">
-                                <button class="btn-edit" onclick="openEditModal({{ $serviceType->id }}, '{{ $serviceType->name }}', '{{ $serviceType->description }}', '{{ $serviceType->price }}')">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-delete" onclick="confirmDelete({{ $serviceType->id }}, '{{ $serviceType->name }}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                        @endforeach
-                    @endif
                 </div>
-            </div>
+                @endforeach
+            @endif
         </div>
     </div>
 </div>
 
 <!-- Add/Edit Modal -->
-<div id="serviceModal" class="modal">
+<div id="PlaceModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title" id="modalTitle">TAMBAH BARU SERVICE</h2>
+            <h2 class="modal-title" id="modalTitle">Tambah Tempat Baru</h2>
             <button class="close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="serviceForm">
-                <input type="hidden" id="serviceId" value="">
+            <form id="PlaceForm">
+                <input type="hidden" id="PlaceId" value="">
                 <div class="form-group">
-                    <label class="form-label">Nama Jenis Service *</label>
-                    <input type="text" class="form-control" id="serviceName" placeholder="Masukkan nama jenis service" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Harga Referensi (Rp)</label>
-                    <input type="text" class="form-control" id="servicePrice" placeholder="Masukkan harga referensi (opsional)" oninput="formatPriceInput(this)">
-                    <small class="form-text text-muted">Harga ini akan menjadi referensi saat membuat servis baru</small>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Deskripsi</label>
-                    <textarea class="form-control" id="serviceDescription" placeholder="Masukkan deskripsi (opsional)" rows="3"></textarea>
+                    <label class="form-label">Nama Tempat <span style="color:#dc3545">*</span></label>
+                    <input type="text" class="form-control" id="PlaceName" placeholder="Masukkan nama tempat" required>
+                    <div class="error-message" id="errorPlaceName">
+                        <i class="fas fa-exclamation-circle"></i> Nama tempat harus diisi
+                    </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn-secondary" onclick="closeModal()">BATAL</button>
-            <button type="button" class="btn-primary" onclick="SIMPANService()">SIMPAN</button>
+            <button type="button" class="btn-primary" onclick="savePlace()">SIMPAN</button>
         </div>
     </div>
 </div>
@@ -571,62 +501,41 @@ let isEditMode = false;
 
 function openAddModal() {
     isEditMode = false;
-    document.getElementById('modalTitle').textContent = 'TAMBAH BARU SERVICE';
-    document.getElementById('serviceId').value = '';
-    document.getElementById('serviceName').value = '';
-    document.getElementById('servicePrice').value = '';
-    document.getElementById('serviceDescription').value = '';
-    document.getElementById('serviceModal').classList.add('show');
+    document.getElementById('modalTitle').textContent = 'Tambah Tempat Baru';
+    document.getElementById('PlaceId').value = '';
+    document.getElementById('PlaceName').value = '';
+    clearErrors();
+    document.getElementById('PlaceModal').classList.add('show');
 }
 
-function openEditModal(id, name, description, price) {
+function openEditModal(place) {
     isEditMode = true;
-    document.getElementById('modalTitle').textContent = 'Edit Jenis Service';
-    document.getElementById('serviceId').value = id;
-    document.getElementById('serviceName').value = name;
-    const priceInput = document.getElementById('servicePrice');
-    if (price) {
-        priceInput.value = formatNumberWithDots(price);
-    } else {
-        priceInput.value = '';
-    }
-    document.getElementById('serviceDescription').value = description || '';
-    document.getElementById('serviceModal').classList.add('show');
+    document.getElementById('modalTitle').textContent = 'Edit Tempat';
+    document.getElementById('PlaceId').value = place.id;
+    document.getElementById('PlaceName').value = place.name || '';
+    clearErrors();
+    document.getElementById('PlaceModal').classList.add('show');
 }
 
 function closeModal() {
-    document.getElementById('serviceModal').classList.remove('show');
+    document.getElementById('PlaceModal').classList.remove('show');
 }
 
-function formatPriceInput(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value) {
-        value = formatNumberWithDots(value);
-    }
-    input.value = value;
-}
+function savePlace() {
+    const id   = document.getElementById('PlaceId').value;
+    const name = document.getElementById('PlaceName').value.trim();
 
-function formatNumberWithDots(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-
-function SIMPANService() {
-    const id = document.getElementById('serviceId').value;
-    const name = document.getElementById('serviceName').value.trim();
-    const priceFormatted = document.getElementById('servicePrice').value.trim();
-    // Remove dots from formatted price
-    const price = priceFormatted.replace(/\./g, '');
-    const description = document.getElementById('serviceDescription').value.trim();
+    clearErrors();
 
     if (!name) {
-        alert('Mohon masukkan nama jenis service');
+        document.getElementById('PlaceName').classList.add('error');
+        document.getElementById('errorPlaceName').classList.add('show');
         return;
     }
 
-    const url = isEditMode
-        ? '{{ route("settings.service-types.update", ":id") }}'.replace(':id', id)
-        : '{{ route("settings.service-types.store") }}';
-
+    const url    = isEditMode
+        ? '{{ route("settings.places.update", ":id") }}'.replace(':id', id)
+        : '{{ route("settings.places.store") }}';
     const method = isEditMode ? 'PUT' : 'POST';
 
     fetch(url, {
@@ -636,18 +545,9 @@ function SIMPANService() {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({
-            name: name,
-            price: price || null,
-            description: description
-        })
+        body: JSON.stringify({ name: name })
     })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => Promise.reject(err));
-        }
-        return response.json();
-    })
+    .then(r => r.json())
     .then(data => {
         if (data.success) {
             alert(data.message);
@@ -657,26 +557,19 @@ function SIMPANService() {
             alert('Error: ' + (data.message || 'Terjadi kesalahan'));
         }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        if (error.message) {
-            alert('Error: ' + error.message);
-        } else {
-            alert('Gagal menyimpan jenis service. Silakan coba lagi.');
-        }
-    });
+    .catch(() => alert('Gagal menyimpan data. Silakan coba lagi.'));
 }
 
 function confirmDelete(id, name) {
     if (confirm('Apakah Anda yakin ingin menghapus "' + name + '"?')) {
-        fetch('{{ route("settings.service-types.destroy", ":id") }}'.replace(':id', id), {
+        fetch('{{ route("settings.places.destroy", ":id") }}'.replace(':id', id), {
             method: 'DELETE',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'Accept': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
             if (data.success) {
                 alert(data.message);
@@ -685,19 +578,17 @@ function confirmDelete(id, name) {
                 alert('Error: ' + (data.message || 'Terjadi kesalahan'));
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Gagal menghapus jenis service. Silakan coba lagi.');
-        });
+        .catch(() => alert('Gagal menghapus data. Silakan coba lagi.'));
     }
 }
 
-// Close modal when clicking outside
+function clearErrors() {
+    document.querySelectorAll('.form-control.error').forEach(el => el.classList.remove('error'));
+    document.querySelectorAll('.error-message.show').forEach(el => el.classList.remove('show'));
+}
+
 window.onclick = function(event) {
-    const modal = document.getElementById('serviceModal');
-    if (event.target == modal) {
-        closeModal();
-    }
+    if (event.target == document.getElementById('PlaceModal')) closeModal();
 }
 </script>
 @endpush

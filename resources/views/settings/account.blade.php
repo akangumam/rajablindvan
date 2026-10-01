@@ -192,7 +192,13 @@
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.locations') }}" class="settings-page-menu-link">
                     <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 14px; margin-right: 12px;"></i>
-                    Lokasi
+                    Lokasi Cabang
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.places') }}" class="settings-page-menu-link">
+                    <i class="fas fa-store-alt" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
+                    Tempat
                 </a>
             </li>
             <li class="settings-page-menu-item">

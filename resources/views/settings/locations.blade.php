@@ -1,6 +1,6 @@
 @extends('layouts.drivvo')
 
-@section('title', 'Pengaturan - Tempat')
+@section('title', 'Pengaturan - Lokasi Cabang')
 
 @push('styles')
 <!-- Leaflet CSS -->
@@ -605,6 +605,12 @@
             <li class="settings-page-menu-item">
                 <a href="{{ route('settings.locations') }}" class="settings-page-menu-link active">
                     <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 14px; margin-right: 12px;"></i>
+                    Lokasi Cabang
+                </a>
+            </li>
+            <li class="settings-page-menu-item">
+                <a href="{{ route('settings.places') }}" class="settings-page-menu-link">
+                    <i class="fas fa-store-alt" style="color: #e67e22; font-size: 14px; margin-right: 12px;"></i>
                     Tempat
                 </a>
             </li>
@@ -645,7 +651,7 @@
 
     <div class="settings-page-content">
         <div class="settings-page-content-header">
-            <h1 class="settings-page-content-title">Tempat</h1>
+            <h1 class="settings-page-content-title">Lokasi Cabang</h1>
         </div>
 
         @if(session('success'))
@@ -656,7 +662,7 @@
 
         <div class="lokasi-section">
             <div class="Lokasi-field">
-                <label class="Lokasi-field-label">Daftar Tempat</label>
+                <label class="Lokasi-field-label">Daftar Lokasi Cabang</label>
                 <div class="Lokasi-list">
                     <div class="Lokasi-list-header">
                         <span>Tempat</span>

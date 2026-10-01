@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Setting;
 use App\Models\UploadedFile;
 use App\Models\Location;
+use App\Models\Place;
 use App\Models\ServiceType;
 use App\Models\ExpenseType;
 use App\Models\IncomeType;
@@ -407,6 +408,67 @@ class SettingsController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Place deleted successfully'
+        ]);
+    }
+
+    /**
+     * Tempat Aksi Settings (dropdown for Service & Expense forms)
+     */
+    public function places()
+    {
+        $places = Place::orderBy('name')->get();
+        return view('settings.places', compact('places'));
+    }
+
+    public function storePlace(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:places,name',
+        ], [
+            'name.unique' => 'Nama tempat sudah digunakan.',
+            'name.required' => 'Nama tempat harus diisi.',
+        ]);
+
+        $place = Place::create([
+            'name'      => $validated['name'],
+            'is_active' => true,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tempat berhasil disimpan.',
+            'data'    => $place,
+        ]);
+    }
+
+    public function updatePlace(Request $request, $id)
+    {
+        $place = Place::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:places,name,' . $id,
+        ], [
+            'name.unique' => 'Nama tempat sudah digunakan.',
+            'name.required' => 'Nama tempat harus diisi.',
+        ]);
+
+        $place->update(['name' => $validated['name']]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tempat berhasil diperbarui.',
+            'data'    => $place,
+        ]);
+    }
+
+    public function destroyPlace($id)
+    {
+        $place = Place::findOrFail($id);
+        $place->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tempat berhasil dihapus.',
         ]);
     }
 

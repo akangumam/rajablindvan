@@ -287,13 +287,13 @@
                                     required>
                                 <option value="">Pilih Tempat</option>
                                 @php
-                                    $locations = \App\Models\Location::active()->orderBy('name')->get();
+                                    $places = \App\Models\Place::active()->orderBy('name')->get();
                                 @endphp
                                 <option value="new" class="fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#quickAddLocationModal">+ Tambah Tempat Baru</option>
-                                @if($locations->count() > 0)
-                                    @foreach($locations as $location)
-                                        <option value="{{ $location->name }}" {{ old('place') == $location->name ? 'selected' : '' }}>
-                                            {{ $location->name }}
+                                @if($places->count() > 0)
+                                    @foreach($places as $place)
+                                        <option value="{{ $place->name }}" {{ old('place') == $place->name ? 'selected' : '' }}>
+                                            {{ $place->name }}
                                         </option>
                                     @endforeach
                                 @else
@@ -443,12 +443,12 @@
     </div>
 </div>
 
-<!-- Modal Quick Add Location -->
+<!-- Modal Quick Add Tempat -->
 <div class="modal fade" id="quickAddLocationModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="fas fa-map-marker-alt me-2"></i>Tambah Tempat Baru</h5>
+                <h5 class="modal-title"><i class="fas fa-store-alt me-2"></i>Tambah Tempat Baru</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <form id="quickAddLocationForm">
@@ -457,16 +457,6 @@
                         <label class="form-label">Nama Tempat <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control" required placeholder="Contoh: Bengkel Maju">
                         <div class="invalid-feedback" id="locationNameError"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Kode <span class="text-danger">*</span></label>
-                        <input type="text" name="code" class="form-control" required placeholder="Contoh: BM01">
-                        <div class="invalid-feedback" id="locationCodeError"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Alamat <span class="text-danger">*</span></label>
-                        <textarea name="address" class="form-control" required placeholder="Alamat lengkap bengkel"></textarea>
-                        <div class="invalid-feedback" id="locationAddressError"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -820,7 +810,7 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
 
-        fetch("{{ route('settings.locations.store') }}", {
+        fetch("{{ route('settings.places.store') }}", {
             method: 'POST',
             body: formData,
             headers: {

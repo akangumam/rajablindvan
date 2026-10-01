@@ -225,11 +225,17 @@ Route::prefix('settings')->name('settings.')->middleware('role:super_admin,manag
     Route::get('/fuel-grades', [\App\Http\Controllers\SettingsController::class, 'fuelGrades'])->name('fuel-grades');
     Route::get('/fuel-stations', [\App\Http\Controllers\SettingsController::class, 'fuelStations'])->name('fuel-stations');
 
-    // Locations
+    // Locations (Lokasi Cabang)
     Route::get('/locations', [\App\Http\Controllers\SettingsController::class, 'locations'])->name('locations');
     Route::post('/locations', [\App\Http\Controllers\SettingsController::class, 'storeLocation'])->name('locations.store');
     Route::put('/locations/{id}', [\App\Http\Controllers\SettingsController::class, 'updateLocation'])->name('locations.update');
     Route::delete('/locations/{id}', [\App\Http\Controllers\SettingsController::class, 'destroyLocation'])->name('locations.destroy');
+
+    // Places (Tempat Aksi — dropdown for Service & Expense forms)
+    Route::get('/places', [\App\Http\Controllers\SettingsController::class, 'places'])->name('places');
+    Route::post('/places', [\App\Http\Controllers\SettingsController::class, 'storePlace'])->name('places.store');
+    Route::put('/places/{id}', [\App\Http\Controllers\SettingsController::class, 'updatePlace'])->name('places.update');
+    Route::delete('/places/{id}', [\App\Http\Controllers\SettingsController::class, 'destroyPlace'])->name('places.destroy');
 
     // Service Types
     Route::get('/service-types', [\App\Http\Controllers\SettingsController::class, 'serviceTypes'])->name('service-types');

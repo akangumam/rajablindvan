@@ -214,7 +214,7 @@ class HistoryRecord extends Model
     }
 
     /**
-     * Find matching registered location by name
+     * Find matching registered place name by text
      */
     private static function findMatchingLocation($locationText)
     {
@@ -223,21 +223,21 @@ class HistoryRecord extends Model
         }
 
         // Try exact match first
-        $location = \App\Models\Location::where('is_active', true)
+        $place = \App\Models\Place::where('is_active', true)
             ->where('name', $locationText)
             ->first();
 
-        if ($location) {
-            return $location->name . ($location->address ? ' - ' . $location->address : '');
+        if ($place) {
+            return $place->name;
         }
 
         // Try partial match (case insensitive)
-        $location = \App\Models\Location::where('is_active', true)
+        $place = \App\Models\Place::where('is_active', true)
             ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($locationText) . '%'])
             ->first();
 
-        if ($location) {
-            return $location->name . ($location->address ? ' - ' . $location->address : '');
+        if ($place) {
+            return $place->name;
         }
 
         // No match found, return original text
