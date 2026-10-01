@@ -695,27 +695,58 @@
 <div class="vehicle-table-container">
     <table class="vehicle-table">
         <thead>
+            @php
+                $sortBase = request()->except(['sort_by', 'sort_order', 'page']);
+                $mkSort = fn($field) => route('vehicles.index', array_merge($sortBase, [
+                    'sort_by'    => $field,
+                    'sort_order' => (request('sort_by') == $field && request('sort_order') == 'asc') ? 'desc' : 'asc',
+                ]));
+                $sortIcon = function($field) {
+                    if (request('sort_by') == $field || (!request('sort_by') && $field == 'name')) {
+                        return '<i class="fas fa-arrow-up sort-icon ' . (request('sort_order') == 'desc' ? 'desc' : '') . '"></i>';
+                    }
+                    return '<i class="fas fa-sort sort-icon" style="opacity:0.3;"></i>';
+                };
+            @endphp
             <tr>
                 <th>#</th>
-                <th>{{ __('common.type') }}</th>
                 <th>
-                    <a href="{{ route('vehicles.index', array_merge(request()->except(['sort_by', 'sort_order', 'page']), [
-                        'sort_by' => 'name',
-                        'sort_order' => (request('sort_by') == 'name' && request('sort_order') == 'asc') ? 'desc' : 'asc'
-                    ])) }}" class="sortable-header">
+                    <a href="{{ $mkSort('name') }}" class="sortable-header">
                         {{ __('common.nickname') }}
-                        @if(request('sort_by') == 'name' || !request('sort_by'))
-                            <i class="fas fa-arrow-up sort-icon {{ request('sort_order') == 'desc' ? 'desc' : '' }}"></i>
-                        @else
-                            <i class="fas fa-sort sort-icon" style="opacity: 0.3;"></i>
-                        @endif
+                        {!! $sortIcon('name') !!}
                     </a>
                 </th>
                 <th style="white-space: nowrap; min-width: 130px;">{{ __('common.license_plate') }}</th>
-                <th>{{ __('common.year') }}</th>
-                <th>{{ __('common.brand') }}</th>
-                <th>{{ __('common.model') }}</th>
-                <th>{{ __('common.status') }}</th>
+                <th>
+                    <a href="{{ $mkSort('year') }}" class="sortable-header">
+                        {{ __('common.year') }}
+                        {!! $sortIcon('year') !!}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ $mkSort('brand') }}" class="sortable-header">
+                        {{ __('common.brand') }}
+                        {!! $sortIcon('brand') !!}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ $mkSort('model') }}" class="sortable-header">
+                        {{ __('common.model') }}
+                        {!! $sortIcon('model') !!}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ $mkSort('vehicle_type') }}" class="sortable-header">
+                        {{ __('common.type') }}
+                        {!! $sortIcon('vehicle_type') !!}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ $mkSort('is_active') }}" class="sortable-header">
+                        {{ __('common.status') }}
+                        {!! $sortIcon('is_active') !!}
+                    </a>
+                </th>
                 <th>{{ __('common.actions') }}</th>
             </tr>
         </thead>
@@ -723,9 +754,6 @@
             @foreach($vehicles as $index => $vehicle)
             <tr>
                 <td class="vehicle-icon-cell">{{ ($vehicles->currentPage() - 1) * $vehicles->perPage() + $index + 1 }}</td>
-                <td>
-                    <span style="font-weight: 500; color: #333;">{{ $vehicle->vehicle_type ?: '-' }}</span>
-                </td>
                 <td>
                     <a href="{{ route('vehicles.show', $vehicle->id) }}" class="vehicle-name">
                         {{ $vehicle->name }}
@@ -741,6 +769,9 @@
                     <span class="brand-name" style="font-weight: 500; color: #333;">{{ $vehicle->brand }}</span>
                 </td>
                 <td class="model-text">{{ $vehicle->model }}</td>
+                <td>
+                    <span style="font-weight: 500; color: #333;">{{ $vehicle->vehicle_type ?: '-' }}</span>
+                </td>
                 <td>
                     @if(!$vehicle->is_active)
                         <span class="Status-badge Status-nonActive">{{ __('common.inactive') }}</span>

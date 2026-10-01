@@ -50,7 +50,7 @@ class VehicleController extends Controller
         }
 
         // Sorting functionality — whitelist kolom yang boleh diurutkan
-        $allowedSortColumns = ['created_at', 'name', 'brand', 'model', 'license_plate', 'year', 'vehicle_type'];
+        $allowedSortColumns = ['created_at', 'name', 'brand', 'model', 'license_plate', 'year', 'vehicle_type', 'is_active'];
         $allowedSortOrders  = ['asc', 'desc'];
 
         $sortBy    = in_array($request->input('sort_by'), $allowedSortColumns) ? $request->input('sort_by') : 'created_at';
