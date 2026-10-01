@@ -108,6 +108,31 @@
     .sort-icon {
         font-size: 0.8em;
     }
+    .btn-add-new {
+        background-color: #1a73e8;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(26, 115, 232, 0.45);
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .btn-add-new:hover {
+        background-color: #1558b0;
+        color: #ffffff;
+        box-shadow: 0 6px 18px rgba(26, 115, 232, 0.6);
+        transform: translateY(-1px);
+    }
+    .btn-add-new:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(26, 115, 232, 0.4);
+    }
 </style>
 
 <div class="page-header">
@@ -118,7 +143,7 @@
         </h1>
         <p class="page-subtitle">List of order based on Vehicle</p>
     </div>
-    <a href="{{ route('orders.create') }}" class="btn btn-primary">
+    <a href="{{ route('orders.create') }}" class="btn btn-add-new">
         <i class="fas fa-plus-circle"></i> Add New Order
     </a>
 </div>
@@ -184,7 +209,7 @@
                             <th>No</th>
                             <th>
                                 <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'vehicle_name', 'sort_order' => request('sort_by') == 'vehicle_name' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
-                                    Vehicle Name
+                                    Kendaraan
                                     <i class="fas fa-sort{{ request('sort_by') == 'vehicle_name' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'vehicle_name' ? 'text-muted opacity-25' : '' }}"></i>
                                 </a>
                             </th>
@@ -202,7 +227,7 @@
                             </th>
                             <th>
                                 <a href="{{ route('orders.index', array_merge(request()->query(), ['sort_by' => 'customer_name', 'sort_order' => request('sort_by') == 'customer_name' && request('sort_order') == 'asc' ? 'desc' : 'asc'])) }}" class="sortable-header">
-                                    Customer
+                                    Pelanggan
                                     <i class="fas fa-sort{{ request('sort_by') == 'customer_name' ? (request('sort_order') == 'asc' ? '-up' : '-down') : '' }} sort-icon {{ request('sort_by') != 'customer_name' ? 'text-muted opacity-25' : '' }}"></i>
                                 </a>
                             </th>
@@ -237,10 +262,10 @@
                         @forelse($orders as $index => $order)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td data-label="Vehicle Name">{{ $order->vehicle->name ?? '-' }}</td>
+                            <td data-label="Kendaraan">{{ $order->vehicle->name ?? '-' }}</td>
                             <td data-label="License Plate">{{ $order->vehicle->license_plate ?? '-' }}</td>
                             <td data-label="Year">{{ $order->vehicle->year ?? '-' }}</td>
-                            <td data-label="Customer">
+                            <td data-label="Pelanggan">
                                 {{ $order->customer->name ?? '-' }}
                                 <a href="{{ route('customers.index') }}" class="btn btn-sm btn-link p-0 ms-1" title="Manage Customer">
                                     <i class="bi bi-person-gear"></i>
