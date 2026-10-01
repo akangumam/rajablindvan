@@ -9,6 +9,7 @@ use App\Models\UploadedFile;
 use App\Http\Middleware\LocationFilter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class VehicleController extends Controller
 {
@@ -234,31 +235,75 @@ class VehicleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Vehicle $vehicle)
+    public function show(Request $request, Vehicle $vehicle)
     {
         $vehicle->load(['fuelFills', 'maintenances', 'expenses', 'documents', 'incomes']);
 
-        // Calculate statistics
-        $totalMaintenance = $vehicle->maintenances->sum('cost');
-        $totalExpenses = $vehicle->expenses->sum('amount');
-        $totalIncome = $vehicle->incomes->sum('amount');
+        // Period filter for financial stats
+        $period    = $request->get('stat_period', 'all');
+        $statStart = $request->get('stat_start');
+        $statEnd   = $request->get('stat_end');
+
+        [$periodLabel, $dateFrom, $dateTo] = $this->resolveStatPeriod($period, $statStart, $statEnd);
+
+        if ($dateFrom && $dateTo) {
+            $totalMaintenance = $vehicle->maintenances()->whereBetween('maintenance_date', [$dateFrom, $dateTo])->sum('cost');
+            $totalExpenses    = $vehicle->expenses()->whereBetween('expense_date', [$dateFrom, $dateTo])->sum('amount');
+            $totalIncome      = $vehicle->incomes()->whereBetween('income_date', [$dateFrom, $dateTo])->sum('amount');
+        } else {
+            $totalMaintenance = $vehicle->maintenances->sum('cost');
+            $totalExpenses    = $vehicle->expenses->sum('amount');
+            $totalIncome      = $vehicle->incomes->sum('amount');
+        }
 
         $stats = [
-            'total_fuel_fills' => $vehicle->fuelFills->count(),
-            'total_fuel_cost' => $vehicle->fuelFills->sum('total_cost'),
-            'total_maintenance' => $totalMaintenance,
-            'total_maintenance_count' => $vehicle->maintenances->count(),
-            'total_expenses' => $totalExpenses,
-            'total_expenses_count' => $vehicle->expenses->count(),
-            'total_cost' => $totalMaintenance + $totalExpenses,
-            'total_income' => $totalIncome,
-            'total_income_count' => $vehicle->incomes->count(),
-            'balance' => $totalIncome - ($totalMaintenance + $totalExpenses),
-            'avg_fuel_efficiency' => $vehicle->getAverageFuelEfficiency(),
-            'latest_odometer' => $vehicle->getLatestOdometer()
+            'total_fuel_fills'         => $vehicle->fuelFills->count(),
+            'total_fuel_cost'          => $vehicle->fuelFills->sum('total_cost'),
+            'total_maintenance'        => $totalMaintenance,
+            'total_maintenance_count'  => $vehicle->maintenances->count(),
+            'total_expenses'           => $totalExpenses,
+            'total_expenses_count'     => $vehicle->expenses->count(),
+            'total_cost'               => $totalMaintenance + $totalExpenses,
+            'total_income'             => $totalIncome,
+            'total_income_count'       => $vehicle->incomes->count(),
+            'balance'                  => $totalIncome - ($totalMaintenance + $totalExpenses),
+            'avg_fuel_efficiency'      => $vehicle->getAverageFuelEfficiency(),
+            'latest_odometer'          => $vehicle->getLatestOdometer(),
         ];
 
-        return view('vehicles.show', compact('vehicle', 'stats'));
+        return view('vehicles.show', compact('vehicle', 'stats', 'period', 'periodLabel', 'statStart', 'statEnd'));
+    }
+
+    private function resolveStatPeriod($period, $statStart, $statEnd): array
+    {
+        $now = Carbon::now();
+
+        switch ($period) {
+            case 'this_month':
+                return [
+                    'Bulan Ini (' . $now->format('F Y') . ')',
+                    $now->copy()->startOfMonth(),
+                    $now->copy(),
+                ];
+            case 'last_month':
+                $lm = $now->copy()->subMonth();
+                return [
+                    'Bulan Lalu (' . $lm->format('F Y') . ')',
+                    $lm->copy()->startOfMonth(),
+                    $lm->copy()->endOfMonth(),
+                ];
+            case 'custom':
+                if ($statStart && $statEnd) {
+                    return [
+                        Carbon::parse($statStart)->format('d M Y') . ' – ' . Carbon::parse($statEnd)->format('d M Y'),
+                        Carbon::parse($statStart)->startOfDay(),
+                        Carbon::parse($statEnd)->endOfDay(),
+                    ];
+                }
+                return ['Custom', null, null];
+            default: // all
+                return ['Semua Waktu', null, null];
+        }
     }
 
     /**

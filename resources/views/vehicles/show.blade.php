@@ -415,9 +415,30 @@
 
                             <!-- Vehicle Statistics -->
                             <div class="card border-info mt-3">
-                                <div class="card-header bg-info text-white">
+                                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
                                     <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Statistik Kendaraan</h6>
+                                    <form method="GET" action="{{ route('vehicles.show', $vehicle->id) }}" id="statPeriodForm" class="d-flex align-items-center gap-2 flex-wrap">
+                                        <select name="stat_period" class="form-select form-select-sm" style="width:auto;min-width:130px;font-size:12px;" onchange="handleStatPeriod(this)">
+                                            <option value="all"        {{ $period == 'all'        ? 'selected' : '' }}>Semua</option>
+                                            <option value="this_month" {{ $period == 'this_month' ? 'selected' : '' }}>Bulan Ini</option>
+                                            <option value="last_month" {{ $period == 'last_month' ? 'selected' : '' }}>Bulan Lalu</option>
+                                            <option value="custom"     {{ $period == 'custom'     ? 'selected' : '' }}>Custom</option>
+                                        </select>
+                                        <div id="statCustomDateRow" class="{{ $period == 'custom' ? 'd-flex' : 'd-none' }} align-items-center gap-1">
+                                            <input type="date" name="stat_start" value="{{ $statStart }}" max="{{ date('Y-m-d') }}"
+                                                   class="form-control form-control-sm" style="font-size:12px;width:130px;">
+                                            <span>–</span>
+                                            <input type="date" name="stat_end" value="{{ $statEnd }}" max="{{ date('Y-m-d') }}"
+                                                   class="form-control form-control-sm" style="font-size:12px;width:130px;">
+                                            <button type="submit" class="btn btn-sm btn-light" style="font-size:12px;">Terapkan</button>
+                                        </div>
+                                    </form>
                                 </div>
+                                @if($period != 'all')
+                                <div class="px-3 pt-2 pb-0">
+                                    <small class="text-muted"><i class="fas fa-filter me-1"></i>Periode: <strong>{{ $periodLabel }}</strong></small>
+                                </div>
+                                @endif
                                 <div class="card-body">
                                     <div class="row g-2">
                                         <div class="col-6">
@@ -1114,6 +1135,19 @@ document.getElementById('uploadDocumentForm')?.addEventListener('submit', functi
         submitBtn.innerHTML = originalText;
     });
 });
+
+// Stat Period Filter
+function handleStatPeriod(select) {
+    const customRow = document.getElementById('statCustomDateRow');
+    if (select.value === 'custom') {
+        customRow.classList.remove('d-none');
+        customRow.classList.add('d-flex');
+    } else {
+        customRow.classList.add('d-none');
+        customRow.classList.remove('d-flex');
+        select.form.submit();
+    }
+}
 
 // Handle Update Expiry Dates Form
 document.getElementById('updateExpiryDatesForm')?.addEventListener('submit', function(e) {
