@@ -406,12 +406,17 @@
                 </div>
             </div>
 
-            <!-- Row 6.5: GPS Expiry Date -->
+            <!-- Row 6.5: GPS Expiry Date & Warna -->
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <label class="form-label">GPS Expiry Date/Masa Berlaku GPS</label>
                     <input type="date" class="form-control" name="gps_expiry_date" value="{{ old('gps_expiry_date') }}">
                     <small class="text-muted">Warning akan muncul 7 hari sebelum expired</small>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <label class="form-label">Warna Kendaraan</label>
+                    <input type="text" class="form-control" name="color" value="{{ old('color') }}" placeholder="Contoh: Putih, Hitam, Silver...">
                 </div>
             </div>
 
