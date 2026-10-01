@@ -18,23 +18,26 @@ class HistoryController extends Controller
 
         $selectedVehicle = null;
         $groupedHistory = [];
-        $lastMonthPerformance = null;
+        $performance = null;
 
         if ($request->has('vehicle_id') && $request->vehicle_id) {
             $selectedVehicle = Vehicle::findOrFail($request->vehicle_id);
 
-            // Get all history data for selected vehicle
             $groupedHistory = $this->getVehicleHistory($selectedVehicle->id);
 
-            // Get last month performance
-            $lastMonthPerformance = $this->getLastMonthPerformance($selectedVehicle->id);
+            $performance = $this->getPerformance(
+                $selectedVehicle->id,
+                $request->get('period', 'last_month'),
+                $request->get('start_date'),
+                $request->get('end_date')
+            );
         }
 
         return view('history.index', compact(
             'vehicles',
             'selectedVehicle',
             'groupedHistory',
-            'lastMonthPerformance'
+            'performance'
         ));
     }
 
@@ -54,34 +57,45 @@ class HistoryController extends Controller
         return $grouped;
     }
 
-    private function getLastMonthPerformance($vehicleId)
+    private function getPerformance($vehicleId, $period = 'last_month', $customStart = null, $customEnd = null)
     {
-        // Get the most recent month that has transactions
-        $latestRecord = HistoryRecord::where('vehicle_id', $vehicleId)
-            ->orderBy('date', 'desc')
-            ->first();
+        $now = Carbon::now();
 
-        if (!$latestRecord) {
-            return null;
+        if ($period === 'all') {
+            $records = HistoryRecord::where('vehicle_id', $vehicleId)->get();
+            $label = 'Semua Waktu';
+        } elseif ($period === 'custom' && $customStart && $customEnd) {
+            $start = Carbon::parse($customStart)->startOfDay();
+            $end   = Carbon::parse($customEnd)->endOfDay();
+            $label = $start->format('d M Y') . ' – ' . $end->format('d M Y');
+            $records = HistoryRecord::where('vehicle_id', $vehicleId)
+                ->whereBetween('date', [$start, $end])
+                ->get();
+        } elseif ($period === 'this_month') {
+            $start = $now->copy()->startOfMonth();
+            $end   = $now->copy();
+            $label = 'Bulan Ini (' . $start->format('F Y') . ')';
+            $records = HistoryRecord::where('vehicle_id', $vehicleId)
+                ->whereBetween('date', [$start, $end])
+                ->get();
+        } else {
+            // default: last_month
+            $start = $now->copy()->subMonth()->startOfMonth();
+            $end   = $now->copy()->subMonth()->endOfMonth();
+            $label = 'Bulan Lalu (' . $start->format('F Y') . ')';
+            $records = HistoryRecord::where('vehicle_id', $vehicleId)
+                ->whereBetween('date', [$start, $end])
+                ->get();
         }
 
-        $latestDate = Carbon::parse($latestRecord->date);
-        $startDate = $latestDate->copy()->startOfMonth();
-        $endDate = $latestDate->copy()->endOfMonth();
-
-        $records = HistoryRecord::where('vehicle_id', $vehicleId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->get();
-
-        $totalCost = $records->sum('cost');
+        $totalCost         = $records->sum('cost');
         $totalTransactions = $records->count();
-        $avgCost = $totalTransactions > 0 ? $totalCost / $totalTransactions : 0;
 
         return [
-            'month' => $startDate->format('F Y'),
-            'total_cost' => $totalCost,
+            'label'              => $label,
+            'total_cost'         => $totalCost,
             'total_transactions' => $totalTransactions,
-            'avg_cost' => $avgCost,
+            'avg_cost'           => $totalTransactions > 0 ? $totalCost / $totalTransactions : 0,
         ];
     }
 

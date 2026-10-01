@@ -18,10 +18,10 @@
 
     .section-card {
         background: white;
-        border-radius: 16px;
+        border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        padding: 24px;
-        margin-bottom: 24px;
+        padding: 16px 20px;
+        margin-bottom: 16px;
         transition: all 0.3s ease;
     }
 
@@ -33,28 +33,30 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 16px;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+        padding-bottom: 12px;
         border-bottom: 2px solid #f0f0f0;
     }
 
     .section-title {
-        font-size: 18px;
+        font-size: 15px;
         font-weight: 600;
         color: #2c3e50;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
     }
 
     .section-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 18px;
+        font-size: 14px;
     }
 
     .icon-primary {
@@ -75,11 +77,11 @@
     /* Vehicle Selection Button */
     .vehicle-select-btn {
         width: 100%;
-        padding: 16px 20px;
+        padding: 10px 14px;
         background: white;
         border: 2px solid #e0e0e0;
-        border-radius: 12px;
-        font-size: 16px;
+        border-radius: 10px;
+        font-size: 14px;
         font-weight: 500;
         color: #7f8c8d;
         cursor: pointer;
@@ -404,6 +406,66 @@
         font-size: 14px;
         color: #bdc3c7;
     }
+
+    /* Period Filter */
+    .period-filter-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .period-select {
+        padding: 6px 10px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #2c3e50;
+        background: #f8f9fa;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+
+    .period-select:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .custom-date-row {
+        display: none;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .custom-date-row.show {
+        display: flex;
+    }
+
+    .custom-date-row input[type="date"] {
+        padding: 5px 8px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #2c3e50;
+    }
+
+    .btn-apply-period {
+        padding: 5px 12px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-apply-period:hover {
+        background: #5a6fd6;
+    }
 </style>
 
 <div class="row">
@@ -462,7 +524,65 @@
     </div>
 
     @if($selectedVehicle)
-    <!-- Section 2: History View -->
+    <!-- Section 2: Performance -->
+    <div class="col-12">
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-title">
+                    <div class="section-icon icon-info">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span>Performance</span>
+                    @if($performance)
+                    <small class="text-muted fw-normal" style="font-size:12px;">— {{ $performance['label'] }}</small>
+                    @endif
+                </div>
+                <!-- Period Filter -->
+                <form method="GET" action="{{ route('history.index') }}" id="periodForm" class="period-filter-wrap">
+                    <input type="hidden" name="vehicle_id" value="{{ $selectedVehicle->id }}">
+                    <select name="period" class="period-select" onchange="handlePeriodChange(this)">
+                        <option value="this_month" {{ request('period', 'last_month') == 'this_month' ? 'selected' : '' }}>Bulan Ini</option>
+                        <option value="last_month" {{ request('period', 'last_month') == 'last_month' ? 'selected' : '' }}>Bulan Lalu</option>
+                        <option value="all" {{ request('period') == 'all' ? 'selected' : '' }}>Semua</option>
+                        <option value="custom" {{ request('period') == 'custom' ? 'selected' : '' }}>Custom</option>
+                    </select>
+                    <div class="custom-date-row {{ request('period') == 'custom' ? 'show' : '' }}" id="customDateRow">
+                        <input type="date" name="start_date" value="{{ request('start_date') }}" max="{{ date('Y-m-d') }}">
+                        <span style="color:#7f8c8d;">–</span>
+                        <input type="date" name="end_date" value="{{ request('end_date') }}" max="{{ date('Y-m-d') }}">
+                        <button type="submit" class="btn-apply-period">Terapkan</button>
+                    </div>
+                </form>
+            </div>
+
+            @if($performance)
+            <div class="performance-grid">
+                <div class="performance-item">
+                    <div class="performance-label">Total Transaksi</div>
+                    <div class="performance-value">
+                        {{ $performance['total_transactions'] }}
+                    </div>
+                </div>
+                <div class="performance-item">
+                    <div class="performance-label">Total Biaya</div>
+                    <div class="performance-value value-expense">
+                        Rp {{ number_format($performance['total_cost'], 0, ',', '.') }}
+                    </div>
+                </div>
+                <div class="performance-item">
+                    <div class="performance-label">Rata-rata per Transaksi</div>
+                    <div class="performance-value">
+                        Rp {{ number_format($performance['avg_cost'], 0, ',', '.') }}
+                    </div>
+                </div>
+            </div>
+            @else
+            <p class="text-muted mb-0" style="font-size:13px;">Pilih rentang tanggal untuk melihat data.</p>
+            @endif
+        </div>
+    </div>
+
+    <!-- Section 3: History View -->
     <div class="col-12">
         <div class="section-card">
             <div class="section-header">
@@ -610,43 +730,6 @@
             @endif
         </div>
     </div>
-
-    <!-- Section 3: Last Month Performance Capture -->
-    @if($lastMonthPerformance)
-    <div class="col-12">
-        <div class="section-card">
-            <div class="section-header">
-                <div class="section-title">
-                    <div class="section-icon icon-info">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <span>Last Month Performance - {{ $lastMonthPerformance['month'] }}</span>
-                </div>
-            </div>
-
-            <div class="performance-grid">
-                <div class="performance-item">
-                    <div class="performance-label">Total Transactions</div>
-                    <div class="performance-value">
-                        {{ $lastMonthPerformance['total_transactions'] }}
-                    </div>
-                </div>
-                <div class="performance-item">
-                    <div class="performance-label">Total Cost</div>
-                    <div class="performance-value value-expense">
-                        Rp {{ number_format($lastMonthPerformance['total_cost'], 0, ',', '.') }}
-                    </div>
-                </div>
-                <div class="performance-item">
-                    <div class="performance-label">Avg Cost per Transaction</div>
-                    <div class="performance-value">
-                        Rp {{ number_format($lastMonthPerformance['avg_cost'], 0, ',', '.') }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
     @else
     <!-- Empty State: No Vehicle Selected -->
     <div class="col-12">
@@ -770,6 +853,17 @@ document.addEventListener('DOMContentLoaded', function() {
 // Select Vehicle Function
 function selectVehicle(vehicleId) {
     window.location.href = '{{ route("history.index") }}?vehicle_id=' + vehicleId;
+}
+
+// Period Filter
+function handlePeriodChange(select) {
+    const customRow = document.getElementById('customDateRow');
+    if (select.value === 'custom') {
+        customRow.classList.add('show');
+    } else {
+        customRow.classList.remove('show');
+        select.form.submit();
+    }
 }
 </script>
 @endsection

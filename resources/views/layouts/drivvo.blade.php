@@ -315,29 +315,29 @@
         /* Page Header Styles */
         .page-header {
             background: white;
-            padding: 30px;
+            padding: 16px 24px;
             border-radius: 8px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .page-title {
-            font-size: 32px;
+            font-size: 22px;
             font-weight: 700;
             color: #2c3e50;
-            margin: 0 0 8px 0;
+            margin: 0 0 4px 0;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .page-title i {
-            font-size: 28px;
+            font-size: 20px;
             color: #007bff;
         }
 
         .page-subtitle {
-            font-size: 15px;
+            font-size: 13px;
             color: #7f8c8d;
             margin: 0;
             font-weight: 400;
