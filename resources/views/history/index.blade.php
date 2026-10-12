@@ -478,58 +478,144 @@
         align-items: center;
         gap: 8px;
         flex-wrap: wrap;
+        margin: 0;
     }
 
     .period-select {
-        padding: 6px 10px;
-        border: 1.5px solid #e0e0e0;
+        height: 36px;
+        padding: 0 12px;
+        border: 1.5px solid #cbd5e1;
         border-radius: 8px;
         font-size: 13px;
         font-weight: 500;
-        color: #2c3e50;
-        background: #f8f9fa;
+        color: #334155;
+        background: #ffffff;
         cursor: pointer;
-        transition: border-color 0.2s;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     }
 
     .period-select:focus {
         outline: none;
         border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
     }
 
     .custom-date-row {
         display: none;
         align-items: center;
         gap: 6px;
-        flex-wrap: wrap;
+        background: #f8fafc;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 2px 4px 2px 6px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
 
     .custom-date-row.show {
-        display: flex;
+        display: inline-flex;
+        flex-wrap: nowrap;
     }
 
-    .custom-date-row input[type="date"] {
-        padding: 5px 8px;
-        border: 1.5px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 13px;
-        color: #2c3e50;
+    /* Target all inputs inside custom-date-row including Flatpickr-injected inputs */
+    .custom-date-row input,
+    .custom-date-row .form-control,
+    .custom-date-row .flatpickr-input {
+        width: 125px !important;
+        min-width: 110px !important;
+        max-width: 135px !important;
+        height: 30px !important;
+        padding: 4px 8px !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        color: #1e293b !important;
+        background-color: #ffffff !important;
+        display: inline-block !important;
+        box-shadow: none !important;
+        line-height: normal !important;
+        text-align: center;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .custom-date-row input:focus,
+    .custom-date-row .form-control:focus,
+    .custom-date-row .flatpickr-input:focus {
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2) !important;
+        outline: none !important;
+    }
+
+    .custom-date-sep {
+        color: #94a3b8;
+        font-size: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 3px;
+        user-select: none;
+        flex-shrink: 0;
     }
 
     .btn-apply-period {
-        padding: 5px 12px;
-        background: #667eea;
-        color: white;
+        height: 30px;
+        padding: 0 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #ffffff;
         border: none;
-        border-radius: 8px;
-        font-size: 13px;
+        border-radius: 6px;
+        font-size: 12px;
         font-weight: 600;
         cursor: pointer;
-        transition: background 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.25);
     }
 
     .btn-apply-period:hover {
-        background: #5a6fd6;
+        opacity: 0.95;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.35);
+        color: #ffffff;
+    }
+
+    .btn-apply-period:active {
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .period-filter-wrap {
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+        .custom-date-row.show {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            padding: 8px;
+            gap: 8px;
+        }
+
+        .custom-date-row input,
+        .custom-date-row .form-control,
+        .custom-date-row .flatpickr-input {
+            width: calc(50% - 15px) !important;
+            min-width: 100px !important;
+            max-width: none !important;
+            flex: 1;
+        }
+
+        .btn-apply-period {
+            width: 100%;
+            justify-content: center;
+            margin-top: 4px;
+        }
     }
 </style>
 
@@ -612,10 +698,12 @@
                         <option value="custom" {{ request('period') == 'custom' ? 'selected' : '' }}>Custom</option>
                     </select>
                     <div class="custom-date-row {{ request('period') == 'custom' ? 'show' : '' }}" id="customDateRow">
-                        <input type="date" name="start_date" value="{{ request('start_date') }}" max="{{ date('Y-m-d') }}">
-                        <span style="color:#7f8c8d;">–</span>
-                        <input type="date" name="end_date" value="{{ request('end_date') }}" max="{{ date('Y-m-d') }}">
-                        <button type="submit" class="btn-apply-period">Terapkan</button>
+                        <input type="date" name="start_date" value="{{ request('start_date') }}" max="{{ date('Y-m-d') }}" placeholder="Tgl Mulai">
+                        <span class="custom-date-sep"><i class="fas fa-arrow-right"></i></span>
+                        <input type="date" name="end_date" value="{{ request('end_date') }}" max="{{ date('Y-m-d') }}" placeholder="Tgl Akhir">
+                        <button type="submit" class="btn-apply-period">
+                            <i class="fas fa-filter"></i> Terapkan
+                        </button>
                     </div>
                 </form>
             </div>
@@ -1214,5 +1302,17 @@ function handlePeriodChange(select) {
         select.form.submit();
     }
 }
+
+document.getElementById('periodForm')?.addEventListener('submit', function(e) {
+    const period = this.querySelector('select[name="period"]').value;
+    if (period === 'custom') {
+        const start = this.querySelector('input[name="start_date"]').value;
+        const end = this.querySelector('input[name="end_date"]').value;
+        if (!start || !end) {
+            e.preventDefault();
+            alert('Silakan tentukan tanggal mulai dan tanggal akhir terlebih dahulu.');
+        }
+    }
+});
 </script>
 @endsection
