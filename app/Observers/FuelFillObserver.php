@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Models\FuelFill;
 use App\Models\HistoryRecord;
-use App\Models\Location;
 
 class FuelFillObserver
 {
@@ -32,8 +31,8 @@ class FuelFillObserver
             $history->update([
                 'vehicle_id' => $fuelFill->vehicle_id,
                 'description' => $fuelFill->notes,
-                'location' => $fuelFill->location ?? $fuelFill->station_name,
-                'cost' => $fuelFill->cost,
+                'location' => $fuelFill->gas_station ?? $fuelFill->spbu ?? $fuelFill->location ?? $fuelFill->station_name,
+                'cost' => $fuelFill->total_cost ?? $fuelFill->cost,
                 'odometer' => $fuelFill->odometer,
                 'date' => $fuelFill->fill_date,
                 'extra_data' => [
