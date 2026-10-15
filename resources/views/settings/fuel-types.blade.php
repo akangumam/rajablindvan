@@ -105,7 +105,7 @@
                         <span class="input-group-text bg-white">
                             <i class="bi bi-search"></i>
                         </span>
-                        <input type="text" class="form-control" id="searchInput" Tempatholder="Search fuel...">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search fuel...">
                     </div>
                 </div>
 
@@ -247,7 +247,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="fuelName" class="form-label">Name fuel <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="fuelName" name="name" required Tempatholder="Contoh: Pertalite">
+                        <input type="text" class="form-control" id="fuelName" name="name" required placeholder="Contoh: Pertalite">
                     </div>
                     <div class="mb-3">
                         <label for="fuelType" class="form-label">Type BBM <span class="text-danger">*</span></label>

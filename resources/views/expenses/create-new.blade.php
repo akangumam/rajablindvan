@@ -287,7 +287,7 @@
                                     required>
                                 <option value="">Pilih Tempat</option>
                                 @php
-                                    $places = \App\Models\Place::active()->orderBy('name')->get();
+                                    $places = \App\Models\Place::getAllActive();
                                 @endphp
                                 <option value="new" class="fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#quickAddLocationModal">+ Tambah Tempat Baru</option>
                                 @if($places->count() > 0)

@@ -665,17 +665,17 @@
                 <label class="Lokasi-field-label">Daftar Lokasi Cabang</label>
                 <div class="Lokasi-list">
                     <div class="Lokasi-list-header">
-                        <span>Tempat</span>
+                        <span>Lokasi Cabang</span>
                         <span>Alamat</span>
                         <span>Koordinat</span>
                         <button class="btn-add" onclick="openAddModal()">
-                            <i class="fas fa-plus me-1"></i> TAMBAH TEMPAT BARU
+                            <i class="fas fa-plus me-1"></i> TAMBAH LOKASI CABANG
                         </button>
                     </div>
 
                     @if($locations->isEmpty())
                         <div class="Lokasi-list-item" style="grid-column: 1 / -1; justify-self: center; color: #999;">
-                            Belum ada tempat. Klik "TAMBAH TEMPAT BARU" untuk menambahkan.
+                            Belum ada lokasi cabang. Klik "TAMBAH LOKASI CABANG" untuk menambahkan.
                         </div>
                     @else
                         @foreach($locations as $location)
@@ -728,7 +728,7 @@
 <div id="LokasiModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title" id="modalTitle">TAMBAH BARU Lokasi</h2>
+            <h2 class="modal-title" id="modalTitle">TAMBAH BARU Lokasi Cabang</h2>
             <button class="close" onclick="closeModal()">&times;</button>
         </div>
         <div class="modal-body">
@@ -738,20 +738,20 @@
                 <input type="hidden" id="LokasiLongitude" value="">
 
                 <div class="form-group">
-                    <label class="form-label">Nama Tempat <span class="required">*</span></label>
-                    <input type="text" class="form-control" id="LokasiName" placeholder="Masukkan nama tempat" required>
+                    <label class="form-label">Nama Lokasi Cabang <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="LokasiName" placeholder="Masukkan nama lokasi cabang" required>
                     <div class="error-message" id="errorLokasiName">
                         <i class="fas fa-exclamation-circle"></i>
-                        Nama tempat harus diisi
+                        Nama lokasi cabang harus diisi
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Kode Tempat <span class="required">*</span></label>
+                    <label class="form-label">Kode Lokasi Cabang <span class="required">*</span></label>
                     <input type="text" class="form-control" id="LokasiCode" placeholder="Contoh: JKT, BDG" required>
                     <div class="error-message" id="errorLokasiCode">
                         <i class="fas fa-exclamation-circle"></i>
-                        Kode tempat harus diisi
+                        Kode lokasi cabang harus diisi
                     </div>
                 </div>
 
@@ -871,7 +871,7 @@ function placeMarker(latlng) {
 
 function openAddModal() {
     isEditMode = false;
-    document.getElementById('modalTitle').textContent = 'Tambah Tempat Baru';
+    document.getElementById('modalTitle').textContent = 'Tambah Lokasi Cabang Baru';
     document.getElementById('LokasiId').value = '';
     document.getElementById('LokasiName').value = '';
     document.getElementById('LokasiCode').value = '';
@@ -893,7 +893,7 @@ function openAddModal() {
 
 function openEditModal(location) {
     isEditMode = true;
-    document.getElementById('modalTitle').textContent = 'Edit Tempat';
+    document.getElementById('modalTitle').textContent = 'Edit Lokasi Cabang';
     document.getElementById('LokasiId').value = location.id;
     document.getElementById('LokasiName').value = location.name || '';
     document.getElementById('LokasiCode').value = location.code || '';
@@ -947,13 +947,13 @@ function SIMPANLokasi() {
 
     let hasError = false;
 
-    // Validate nama tempat
+    // Validate nama lokasi cabang
     if (!name) {
         showValidationError('LokasiName', 'errorLokasiName');
         hasError = true;
     }
 
-    // Validate kode tempat
+    // Validate kode lokasi cabang
     if (!code) {
         showValidationError('LokasiCode', 'errorLokasiCode');
         hasError = true;

@@ -236,6 +236,21 @@ Route::prefix('settings')->name('settings.')->middleware('role:super_admin,manag
     Route::post('/places', [\App\Http\Controllers\SettingsController::class, 'storePlace'])->name('places.store');
     Route::put('/places/{id}', [\App\Http\Controllers\SettingsController::class, 'updatePlace'])->name('places.update');
     Route::delete('/places/{id}', [\App\Http\Controllers\SettingsController::class, 'destroyPlace'])->name('places.destroy');
+    Route::get('/run-migrations', function() {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            \App\Models\Place::ensureTableExists();
+            return response()->json([
+                'success' => true,
+                'message' => 'Migrasi berhasil dijalankan: ' . \Illuminate\Support\Facades\Artisan::output(),
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    })->name('run-migrations');
 
     // Service Types
     Route::get('/service-types', [\App\Http\Controllers\SettingsController::class, 'serviceTypes'])->name('service-types');

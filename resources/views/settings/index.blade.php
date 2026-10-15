@@ -332,7 +332,7 @@ body {
 <div class="settings-container">
     <!-- Header -->
     <div class="settings-header">
-        <h4>Pengaturan <span class="settings-count">- (9)</span></h4>
+        <h4>Pengaturan <span class="settings-count">- (10)</span></h4>
     </div>
 
     <!-- Section 1-3: Apps Pengaturan -->
@@ -380,6 +380,16 @@ body {
                     <div class="settings-link-content">
                         <span class="settings-number">4.</span>
                         <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 16px;"></i>
+                        <span class="settings-label">Lokasi Cabang</span>
+                    </div>
+                    <i class="fas fa-chevron-right Pengaturan-arrow"></i>
+                </a>
+            </li>
+            <li class="settings-item">
+                <a href="{{ route('settings.places') }}" class="settings-link">
+                    <div class="settings-link-content">
+                        <span class="settings-number">5.</span>
+                        <i class="fas fa-store-alt" style="color: #e67e22; font-size: 16px;"></i>
                         <span class="settings-label">Tempat</span>
                     </div>
                     <i class="fas fa-chevron-right Pengaturan-arrow"></i>
@@ -388,7 +398,7 @@ body {
             <li class="settings-item">
                 <a href="{{ route('settings.income-types') }}" class="settings-link">
                     <div class="settings-link-content">
-                        <span class="settings-number">5.</span>
+                        <span class="settings-number">6.</span>
                         <i class="fas fa-wallet" style="color: #9b59b6; font-size: 16px;"></i>
                         <span class="settings-label">Jenis Pendapatan</span>
                     </div>
@@ -398,7 +408,7 @@ body {
             <li class="settings-item">
                 <a href="{{ route('settings.service-types') }}" class="settings-link">
                     <div class="settings-link-content">
-                        <span class="settings-number">6.</span>
+                        <span class="settings-number">7.</span>
                         <i class="fas fa-wrench" style="color: #3498db; font-size: 16px;"></i>
                         <span class="settings-label">Jenis Service</span>
                     </div>
@@ -408,7 +418,7 @@ body {
             <li class="settings-item">
                 <a href="{{ route('settings.expense-types') }}" class="settings-link">
                     <div class="settings-link-content">
-                        <span class="settings-number">7.</span>
+                        <span class="settings-number">8.</span>
                         <i class="fas fa-receipt" style="color: #e67e22; font-size: 16px;"></i>
                         <span class="settings-label">Jenis Pengeluaran</span>
                     </div>
@@ -418,7 +428,7 @@ body {
             <li class="settings-item">
                 <a href="{{ route('settings.investors.index') }}" class="settings-link">
                     <div class="settings-link-content">
-                        <span class="settings-number">8.</span>
+                        <span class="settings-number">9.</span>
                         <i class="fas fa-user-tie" style="color: #f39c12; font-size: 16px;"></i>
                         <span class="settings-label">Investor</span>
                     </div>
@@ -428,7 +438,7 @@ body {
             <li class="settings-item">
                 <a href="{{ route('settings.payment-methods') }}" class="settings-link">
                     <div class="settings-link-content">
-                        <span class="settings-number">9.</span>
+                        <span class="settings-number">10.</span>
                         <i class="fas fa-credit-card" style="color: #9b59b6; font-size: 16px;"></i>
                         <span class="settings-label">Metode Pembayaran</span>
                     </div>

@@ -222,22 +222,33 @@ class HistoryRecord extends Model
             return null;
         }
 
-        // Try exact match first
-        $place = \App\Models\Place::where('is_active', true)
-            ->where('name', $locationText)
-            ->first();
+        try {
+            \App\Models\Place::ensureTableExists();
 
-        if ($place) {
-            return $place->name;
-        }
+            // Try exact match first
+            $place = \App\Models\Place::where('is_active', true)
+                ->where('name', $locationText)
+                ->first();
 
-        // Try partial match (case insensitive)
-        $place = \App\Models\Place::where('is_active', true)
-            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($locationText) . '%'])
-            ->first();
+            if ($place) {
+                return $place->name;
+            }
 
-        if ($place) {
-            return $place->name;
+            // Try partial match (case insensitive)
+            $place = \App\Models\Place::where('is_active', true)
+                ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($locationText) . '%'])
+                ->first();
+
+            if ($place) {
+                return $place->name;
+            }
+        } catch (\Throwable $e) {
+            try {
+                $location = \App\Models\Location::where('is_active', true)
+                    ->where('name', $locationText)
+                    ->first();
+                if ($location) return $location->name;
+            } catch (\Throwable $e2) {}
         }
 
         // No match found, return original text

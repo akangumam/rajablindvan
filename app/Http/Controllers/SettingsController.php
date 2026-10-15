@@ -416,12 +416,14 @@ class SettingsController extends Controller
      */
     public function places()
     {
+        Place::ensureTableExists();
         $places = Place::orderBy('name')->get();
         return view('settings.places', compact('places'));
     }
 
     public function storePlace(Request $request)
     {
+        Place::ensureTableExists();
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:places,name',
         ], [

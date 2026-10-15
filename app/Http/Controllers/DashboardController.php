@@ -87,10 +87,24 @@ class DashboardController extends Controller
         $locationStats = [];
         if (LocationFilter::canAccessAllLocations() && !$locationId) {
             $locations = Location::active()->get();
+
+            // Place names (workshops) to avoid showing them in fleet operational stats
+            $placeNames = [];
+            try {
+                if (\Illuminate\Support\Facades\Schema::hasTable('places')) {
+                    $placeNames = \App\Models\Place::pluck('name')->toArray();
+                }
+            } catch (\Throwable $e) {}
+
             foreach ($locations as $location) {
                 $locationVehicles = Vehicle::where('location_id', $location->id)
                     ->where('is_active', true)
                     ->count();
+
+                // Skip if this location is a workshop/place and has no fleet vehicles assigned
+                if ($locationVehicles === 0 && in_array($location->name, $placeNames)) {
+                    continue;
+                }
                 
                 $locationBooked = Vehicle::where('location_id', $location->id)
                     ->where('is_active', true)

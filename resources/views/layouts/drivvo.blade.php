@@ -802,11 +802,30 @@
 
                 <!-- Order List -->
                 <div class="drivvo-nav-item">
-                    <a href="{{ route('orders.index') }}" class="drivvo-nav-link {{ request()->routeIs('orders.*') ? 'active' : '' }}">
+                    <a href="{{ route('orders.index') }}" class="drivvo-nav-link {{ request()->routeIs('orders.*') ? 'active' : '' }}" title="{{ __('common.order_list') }}">
                         <i class="fas fa-clipboard-list"></i>
                         <span class="nav-text">{{ __('common.order_list') }}</span>
                     </a>
                 </div>
+
+                <!-- Lokasi Cabang & Tempat -->
+                @auth
+                @if(Auth::user()->hasRole(['super_admin', 'manager']))
+                <div class="drivvo-nav-item">
+                    <a href="{{ route('settings.locations') }}" class="drivvo-nav-link {{ request()->routeIs('settings.locations*') ? 'active' : '' }}" title="Lokasi Cabang">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span class="nav-text">Lokasi Cabang</span>
+                    </a>
+                </div>
+
+                <div class="drivvo-nav-item">
+                    <a href="{{ route('settings.places') }}" class="drivvo-nav-link {{ request()->routeIs('settings.places*') ? 'active' : '' }}" title="Tempat">
+                        <i class="fas fa-store-alt"></i>
+                        <span class="nav-text">Tempat</span>
+                    </a>
+                </div>
+                @endif
+                @endauth
 
 
 

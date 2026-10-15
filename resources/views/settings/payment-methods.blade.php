@@ -689,11 +689,11 @@
                 <input type="hidden" id="paymentId" value="">
                 <div class="form-group">
                     <label class="form-label">Payment Method Name *</label>
-                    <input type="text" class="form-control" id="paymentName" Tempatholder="Enter payment method name" required>
+                    <input type="text" class="form-control" id="paymentName" placeholder="Enter payment method name" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description</label>
-                    <textarea class="form-control" id="paymentDescription" Tempatholder="Enter description (optional)" rows="3"></textarea>
+                    <textarea class="form-control" id="paymentDescription" placeholder="Enter description (optional)" rows="3"></textarea>
                 </div>
             </form>
         </div>
