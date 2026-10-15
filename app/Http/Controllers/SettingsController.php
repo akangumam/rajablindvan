@@ -319,7 +319,7 @@ class SettingsController extends Controller
      */
     public function locations()
     {
-        $locations = Location::orderBy('name')->get();
+        $locations = Location::where('is_active', true)->orderBy('name')->get();
         return view('settings.locations', compact('locations'));
     }
 
@@ -403,11 +403,53 @@ class SettingsController extends Controller
     public function destroyLocation($id)
     {
         $location = Location::findOrFail($id);
-        $location->delete();
+
+        // Check if there are active vehicles assigned to this location
+        $activeVehiclesCount = \App\Models\Vehicle::where('location_id', $location->id)
+            ->where('is_active', true)
+            ->count();
+
+        if ($activeVehiclesCount > 0) {
+            return response()->json([
+                'success' => false,
+                'message' => "Lokasi '{$location->name}' tidak dapat dihapus karena masih digunakan oleh {$activeVehiclesCount} armada kendaraan aktif. Silakan pindahkan armada kendaraan ke cabang lain terlebih dahulu."
+            ], 422);
+        }
+
+        $locationName = $location->name;
+
+        // Ensure this place is registered in the places table (so it remains available as a workshop/tempat if needed)
+        try {
+            Place::ensureTableExists();
+            Place::firstOrCreate(['name' => $locationName], ['is_active' => true]);
+        } catch (\Throwable $e) {}
+
+        // Find a fallback location to safely reassign historical foreign keys
+        $fallbackLocation = Location::where('id', '!=', $location->id)
+            ->where('is_active', true)
+            ->orderBy('id')
+            ->first();
+
+        $fallbackId = $fallbackLocation ? $fallbackLocation->id : 1;
+
+        try {
+            \Illuminate\Support\Facades\DB::transaction(function () use ($location, $fallbackId) {
+                // Safely reassign any historical or inactive references to the fallback branch
+                \App\Models\Vehicle::where('location_id', $location->id)->update(['location_id' => $fallbackId]);
+                \App\Models\Expense::where('location_id', $location->id)->update(['location_id' => $fallbackId]);
+                \App\Models\Rental::where('location_id', $location->id)->update(['location_id' => $fallbackId]);
+                \App\Models\User::where('location_id', $location->id)->update(['location_id' => $fallbackId]);
+
+                $location->delete();
+            });
+        } catch (\Throwable $e) {
+            // If hard delete still fails due to database constraints, deactivate instead
+            $location->update(['is_active' => false]);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Place deleted successfully'
+            'message' => "Lokasi cabang '{$locationName}' berhasil dihapus."
         ]);
     }
 

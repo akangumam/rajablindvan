@@ -1046,7 +1046,7 @@ function clearValidationErrors() {
 }
 
 function confirmDelete(id, name) {
-    if (confirm('Apakah Anda yakin ingin menghapus "' + name + '"?')) {
+    if (confirm('Apakah Anda yakin ingin menghapus lokasi cabang "' + name + '"?')) {
         fetch('{{ route("settings.locations.destroy", ":id") }}'.replace(':id', id), {
             method: 'DELETE',
             headers: {
@@ -1054,18 +1054,18 @@ function confirmDelete(id, name) {
                 'Accept': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.message);
+        .then(async response => {
+            const data = await response.json().catch(() => ({}));
+            if (response.ok && data.success) {
+                alert(data.message || 'Lokasi cabang berhasil dihapus.');
                 location.reload();
             } else {
-                alert('Error: ' + (data.message || 'Something went wrong'));
+                alert(data.message || 'Gagal menghapus data lokasi cabang.');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Gagal menghapus data. Silakan coba lagi.');
+            alert('Gagal menghubungkan ke server. Silakan coba lagi.');
         });
     }
 }
