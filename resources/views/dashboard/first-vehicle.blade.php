@@ -13,7 +13,7 @@
                         <div class="text-center mb-4">
                             <div class="logo-wrapper mb-3">
                                 <div class="brand-logo">
-                                    <img src="{{ asset('assets/logos/brands/Radja-Blind-Van-Logo.png') }}" alt="Radja Blind Van" class="logo-image">
+                                    <img src="{{ asset('assets/logos/brands/Raja-Fleet-Transparan.png') }}" alt="Raja Fleet" class="logo-image">
                                 </div>
                             </div>
                             <h3 class="fw-semibold text-dark mb-2" style="font-size: 1.5rem;">Add Vehicle pertama you</h3>

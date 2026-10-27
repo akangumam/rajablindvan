@@ -10,8 +10,8 @@
     <title>Radja Blind Van - @yield('title', 'Dashboard')</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/logos/brands/Radja-Blind-Van-Logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/logos/brands/Radja-Blind-Van-Logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/logos/brands/Raja-Fleet-Transparan.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/logos/brands/Raja-Fleet-Transparan.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -735,8 +735,8 @@
             <!-- Brand -->
             <div class="drivvo-brand">
                 <a href="{{ route('dashboard') }}" class="app-logo" style="text-decoration: none; color: inherit; cursor: pointer;">
-                    <img src="{{ asset('assets/logos/brands/Radja-Blind-Van-Logo.png') }}"
-                         alt="Radja Blind Van"
+                    <img src="{{ asset('assets/logos/brands/Raja-Fleet-Transparan.png') }}"
+                         alt="Raja Fleet"
                          class="app-brand-logo"
                          style="filter: brightness(0) invert(1);">
                 </a>
