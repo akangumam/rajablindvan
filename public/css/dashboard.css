@@ -300,3 +300,7 @@
     .chart-container { height: 180px; }
     .location-stats-table th, .location-stats-table td { padding: 8px 10px; font-size: 12px; }
 }
+
+/* Utility aliases */
+.shrink-0 { flex-shrink: 0 !important; }
+.grow { flex-grow: 1 !important; }

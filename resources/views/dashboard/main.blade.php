@@ -68,125 +68,7 @@
     </div>
 </div>
 
-{{-- ===== RINGKASAN KEUANGAN BULAN INI ===== --}}
-<div class="section-label mb-3">
-    <i class="fas fa-chart-pie me-2"></i>
-    Ringkasan Keuangan Bulan Ini
-</div>
-<div class="row mb-4">
-    <div class="col-md-4 col-sm-12 mb-3 mb-md-0">
-        <div class="fleet-stat-card income-card">
-            <div class="fleet-stat-icon"><i class="fas fa-arrow-up"></i></div>
-            <div class="fleet-stat-content">
-                <div class="fleet-stat-number" style="font-size: 20px;">Rp {{ number_format($monthlyIncome, 0, ',', '.') }}</div>
-                <div class="fleet-stat-label">Total Pendapatan</div>
-                <div class="fleet-stat-sub">{{ now()->format('F Y') }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-sm-12 mb-3 mb-md-0">
-        <div class="fleet-stat-card expense-card">
-            <div class="fleet-stat-icon"><i class="fas fa-arrow-down"></i></div>
-            <div class="fleet-stat-content">
-                <div class="fleet-stat-number" style="font-size: 20px;">Rp {{ number_format($monthlyExpense, 0, ',', '.') }}</div>
-                <div class="fleet-stat-label">Total Pengeluaran</div>
-                <div class="fleet-stat-sub">{{ now()->format('F Y') }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-sm-12">
-        <div class="fleet-stat-card profit-card {{ $monthlyProfit < 0 ? 'loss' : '' }}">
-            <div class="fleet-stat-icon">
-                <i class="fas {{ $monthlyProfit >= 0 ? 'fa-chart-line' : 'fa-chart-line fa-flip-vertical' }}"></i>
-            </div>
-            <div class="fleet-stat-content">
-                <div class="fleet-stat-number" style="font-size: 20px;">Rp {{ number_format(abs($monthlyProfit), 0, ',', '.') }}</div>
-                <div class="fleet-stat-label">{{ $monthlyProfit >= 0 ? 'Laba Bersih' : 'Rugi Bersih' }}</div>
-                <div class="fleet-stat-sub">{{ now()->format('F Y') }}</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- ===== GRAFIK PENDAPATAN VS PENGELUARAN ===== --}}
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="monitoring-card">
-            <div class="card-header-custom">
-                <div class="card-title-custom">
-                    <div class="card-icon icon-profit">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <span>Pendapatan vs Pengeluaran (6 Bulan Terakhir)</span>
-                </div>
-                <a href="{{ route('reports.index') }}" class="action-link">
-                    Lihat Laporan <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            <div class="chart-container">
-                <canvas id="incomeExpenseChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- ===== STATUS ARMADA PER LOKASI (Hanya Super Admin) ===== --}}
-@if(!empty($locationStats))
-<div class="section-label mb-3">
-    <i class="fas fa-map-marker-alt me-2"></i>
-    Status Armada Per Lokasi
-</div>
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="monitoring-card">
-            <div class="table-responsive">
-                <table class="table table-hover location-stats-table mb-0">
-                    <thead>
-                        <tr>
-                            <th>Lokasi</th>
-                            <th class="text-center">Total Armada</th>
-                            <th class="text-center">Dipesan</th>
-                            <th class="text-center">Tersedia</th>
-                            <th class="text-center">Utilisasi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($locationStats as $stat)
-                        @php $utilization = $stat['total'] > 0 ? round(($stat['booked'] / $stat['total']) * 100) : 0; @endphp
-                        <tr>
-                            <td>
-                                <span class="fw-semibold">{{ $stat['name'] }}</span>
-                                @if($stat['code'])<small class="text-muted ms-1">({{ $stat['code'] }})</small>@endif
-                            </td>
-                            <td class="text-center">
-                                <span class="badge-count bg-primary text-white">{{ $stat['total'] }}</span>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge-count {{ $stat['booked'] > 0 ? 'bg-danger' : 'bg-secondary' }} text-white">{{ $stat['booked'] }}</span>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge-count {{ $stat['available'] > 0 ? 'bg-success' : 'bg-secondary' }} text-white">{{ $stat['available'] }}</span>
-                            </td>
-                            <td class="text-center" style="min-width:120px;">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="progress flex-grow-1" style="height:8px; border-radius:4px;">
-                                        <div class="progress-bar {{ $utilization >= 80 ? 'bg-danger' : ($utilization >= 50 ? 'bg-warning' : 'bg-success') }}"
-                                             style="width:{{ $utilization }}%"></div>
-                                    </div>
-                                    <small class="fw-bold" style="min-width:36px;">{{ $utilization }}%</small>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-
-{{-- ===== MONITORING MASA SEWA ===== --}}
+{{-- ===== 2. MONITORING MASA SEWA ===== --}}
 <div class="section-label mb-3">
     <i class="fas fa-calendar-alt me-2"></i>
     Monitoring Masa Sewa
@@ -212,7 +94,7 @@
                         <div class="vehicle-name mb-0" style="white-space: normal; word-break: break-word; line-height: 1.3;">
                             {{ $item['vehicle_name'] }} <small class="text-muted">({{ $item['license_plate'] }})</small>
                         </div>
-                        <span class="status-badge status-{{ $item['status'] }} flex-shrink-0 mt-1">
+                        <span class="status-badge status-{{ $item['status'] }} shrink-0 mt-1">
                             @if($item['status'] === 'red')
                                 TERLEWAT
                             @elseif($item['status'] === 'yellow')
@@ -239,7 +121,7 @@
                             <span class="text-muted mx-1">•</span>
                             <span>Berakhir: {{ $item['end_date'] }}</span>
                         </div>
-                        <a href="{{ route('orders.index', ['status' => 'active']) }}" class="action-link ms-2 flex-shrink-0">
+                        <a href="{{ route('orders.index', ['status' => 'active']) }}" class="action-link ms-2 shrink-0">
                             Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -256,13 +138,13 @@
     </div>
 </div>
 
-{{-- ===== MONITORING MASA BERLAKU DOKUMEN ===== --}}
+{{-- ===== 3. MONITORING BERLAKU DOKUMEN ===== --}}
 <div class="section-label mb-3">
     <i class="fas fa-exclamation-triangle me-2"></i>
-    Monitoring Masa Berlaku Dokumen
+    Monitoring Berlaku Dokumen
 </div>
 
-<div class="row">
+<div class="row mb-4">
     {{-- STNK --}}
     <div class="col-lg-4 col-md-12 mb-4">
         <div class="monitoring-card h-100">
@@ -282,7 +164,7 @@
                 <div class="vehicle-item flex-column align-items-start p-3">
                     <div class="d-flex justify-content-between align-items-start w-100 mb-2 gap-2">
                         <div class="vehicle-name mb-0" style="white-space: normal; word-break: break-word; line-height: 1.3;">{{ $item['vehicle_name'] }}</div>
-                        <span class="status-badge status-{{ $item['status'] }} flex-shrink-0 mt-1">
+                        <span class="status-badge status-{{ $item['status'] }} shrink-0 mt-1">
                             {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
                         </span>
                     </div>
@@ -299,7 +181,7 @@
                             <span class="text-muted">•</span>
                             <span>{{ $item['expiry_date'] }}</span>
                         </div>
-                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link ms-2 flex-shrink-0">
+                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link ms-2 shrink-0">
                             Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -339,7 +221,7 @@
                 <div class="vehicle-item flex-column align-items-start p-3">
                     <div class="d-flex justify-content-between align-items-start w-100 mb-2 gap-2">
                         <div class="vehicle-name mb-0" style="white-space: normal; word-break: break-word; line-height: 1.3;">{{ $item['vehicle_name'] }}</div>
-                        <span class="status-badge status-{{ $item['status'] }} flex-shrink-0 mt-1">
+                        <span class="status-badge status-{{ $item['status'] }} shrink-0 mt-1">
                             {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
                         </span>
                     </div>
@@ -356,7 +238,7 @@
                             <span class="text-muted">•</span>
                             <span>{{ $item['expiry_date'] }}</span>
                         </div>
-                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link ms-2 flex-shrink-0">
+                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link ms-2 shrink-0">
                             Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -396,7 +278,7 @@
                 <div class="vehicle-item flex-column align-items-start p-3">
                     <div class="d-flex justify-content-between align-items-start w-100 mb-2 gap-2">
                         <div class="vehicle-name mb-0" style="white-space: normal; word-break: break-word; line-height: 1.3;">{{ $item['vehicle_name'] }}</div>
-                        <span class="status-badge status-{{ $item['status'] }} flex-shrink-0 mt-1">
+                        <span class="status-badge status-{{ $item['status'] }} shrink-0 mt-1">
                             {{ $item['status'] == 'yellow' ? 'PERINGATAN' : 'MENDESAK' }}
                         </span>
                     </div>
@@ -413,7 +295,7 @@
                             <span class="text-muted">•</span>
                             <span>{{ $item['expiry_date'] }}</span>
                         </div>
-                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link ms-2 flex-shrink-0">
+                        <a href="{{ route('vehicles.show', ['vehicle' => $item['id']]) }}" class="action-link ms-2 shrink-0">
                             Detail <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -430,6 +312,128 @@
                     </div>
                 </div>
                 @endforelse
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ===== 4. STATUS ARMADA PER LOKASI (Hanya Super Admin) ===== --}}
+@if(!empty($locationStats))
+<div class="section-label mb-3">
+    <i class="fas fa-map-marker-alt me-2"></i>
+    Status Armada Per Lokasi
+</div>
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="monitoring-card">
+            <div class="table-responsive">
+                <table class="table table-hover location-stats-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Lokasi</th>
+                            <th class="text-center">Total Armada</th>
+                            <th class="text-center">Dipesan</th>
+                            <th class="text-center">Tersedia</th>
+                            <th class="text-center">Utilisasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($locationStats as $stat)
+                        @php $utilization = $stat['total'] > 0 ? round(($stat['booked'] / $stat['total']) * 100) : 0; @endphp
+                        <tr>
+                            <td>
+                                <span class="fw-semibold">{{ $stat['name'] }}</span>
+                                @if($stat['code'])<small class="text-muted ms-1">({{ $stat['code'] }})</small>@endif
+                            </td>
+                            <td class="text-center">
+                                <span class="badge-count bg-primary text-white">{{ $stat['total'] }}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge-count {{ $stat['booked'] > 0 ? 'bg-danger' : 'bg-secondary' }} text-white">{{ $stat['booked'] }}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge-count {{ $stat['available'] > 0 ? 'bg-success' : 'bg-secondary' }} text-white">{{ $stat['available'] }}</span>
+                            </td>
+                            <td class="text-center" style="min-width:120px;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="progress grow" style="height:8px; border-radius:4px;">
+                                        <div class="progress-bar {{ $utilization >= 80 ? 'bg-danger' : ($utilization >= 50 ? 'bg-warning' : 'bg-success') }}"
+                                             style="width:{{ $utilization }}%"></div>
+                                    </div>
+                                    <small class="fw-bold" style="min-width:36px;">{{ $utilization }}%</small>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+{{-- ===== 5. RINGKASAN KEUANGAN BULAN INI ===== --}}
+<div class="section-label mb-3">
+    <i class="fas fa-chart-pie me-2"></i>
+    Ringkasan Keuangan Bulan Ini
+</div>
+<div class="row mb-4">
+    <div class="col-md-4 col-sm-12 mb-3 mb-md-0">
+        <div class="fleet-stat-card income-card">
+            <div class="fleet-stat-icon"><i class="fas fa-arrow-up"></i></div>
+            <div class="fleet-stat-content">
+                <div class="fleet-stat-number" style="font-size: 20px;">Rp {{ number_format($monthlyIncome, 0, ',', '.') }}</div>
+                <div class="fleet-stat-label">Total Pendapatan</div>
+                <div class="fleet-stat-sub">{{ now()->format('F Y') }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-12 mb-3 mb-md-0">
+        <div class="fleet-stat-card expense-card">
+            <div class="fleet-stat-icon"><i class="fas fa-arrow-down"></i></div>
+            <div class="fleet-stat-content">
+                <div class="fleet-stat-number" style="font-size: 20px;">Rp {{ number_format($monthlyExpense, 0, ',', '.') }}</div>
+                <div class="fleet-stat-label">Total Pengeluaran</div>
+                <div class="fleet-stat-sub">{{ now()->format('F Y') }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+        <div class="fleet-stat-card profit-card {{ $monthlyProfit < 0 ? 'loss' : '' }}">
+            <div class="fleet-stat-icon">
+                <i class="fas {{ $monthlyProfit >= 0 ? 'fa-chart-line' : 'fa-chart-line fa-flip-vertical' }}"></i>
+            </div>
+            <div class="fleet-stat-content">
+                <div class="fleet-stat-number" style="font-size: 20px;">Rp {{ number_format(abs($monthlyProfit), 0, ',', '.') }}</div>
+                <div class="fleet-stat-label">{{ $monthlyProfit >= 0 ? 'Laba Bersih' : 'Rugi Bersih' }}</div>
+                <div class="fleet-stat-sub">{{ now()->format('F Y') }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ===== 6. PENDAPATAN VS PENGELUARAN ===== --}}
+<div class="section-label mb-3">
+    <i class="fas fa-chart-bar me-2"></i>
+    Pendapatan Vs Pengeluaran
+</div>
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="monitoring-card">
+            <div class="card-header-custom">
+                <div class="card-title-custom">
+                    <div class="card-icon icon-profit">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <span>Pendapatan vs Pengeluaran (6 Bulan Terakhir)</span>
+                </div>
+                <a href="{{ route('reports.index') }}" class="action-link">
+                    Lihat Laporan <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="chart-container">
+                <canvas id="incomeExpenseChart"></canvas>
             </div>
         </div>
     </div>
