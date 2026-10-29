@@ -60,7 +60,10 @@
                                     <div class="form-control bg-light" style="cursor: not-allowed;">
                                         <strong>{{ $vehicle->name }}</strong> - {{ $vehicle->license_plate }}
                                     </div>
-                                    <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ $vehicle->id }}" required>
+                                    <input type="hidden" name="vehicle_id" id="vehicle_id"
+                                           value="{{ $vehicle->id }}"
+                                           data-odometer="{{ $vehicle->getLatestOdometer() }}"
+                                           required>
                                     <small class="text-muted d-block mt-1">
                                         <i class="fas fa-lock me-1"></i>
                                         Kendaraan terkunci untuk pendapatan ini
@@ -545,6 +548,36 @@ document.addEventListener('DOMContentLoaded', function() {
         const option = document.querySelector(`.vehicle-option[data-value="${vehicleId}"]`);
         if (option) {
             selectVehicle(option, { preventDefault: () => {} });
+        }
+    }
+
+    // Init odometer for locked vehicle (pre-selected from vehicle detail page)
+    const lockedVehicleInput = document.getElementById('vehicle_id');
+    if (lockedVehicleInput && lockedVehicleInput.getAttribute('data-odometer')) {
+        const lockedOdo = parseFloat(lockedVehicleInput.getAttribute('data-odometer')) || 0;
+        const odometerInput = document.getElementById('odometer');
+        const odometerHelp = document.getElementById('odometerHelp');
+        const lastOdometerDisplay = document.getElementById('lastOdometerDisplay');
+        const lastOdometerValue = document.getElementById('lastOdometerValue');
+        if (odometerInput) {
+            odometerInput.value = lockedOdo;
+            odometerInput.min = lockedOdo;
+            if (lastOdometerDisplay && lastOdometerValue && lockedOdo > 0) {
+                lastOdometerDisplay.style.display = 'inline-block';
+                lastOdometerValue.textContent = lockedOdo + ' KM';
+            }
+            if (odometerHelp) {
+                odometerHelp.textContent = lockedOdo > 0 ? `Minimal input: ${lockedOdo} KM` : '';
+            }
+            odometerInput.oninput = function() {
+                if (parseFloat(this.value) < lockedOdo) {
+                    this.classList.add('is-invalid');
+                    if (odometerHelp) odometerHelp.textContent = `Error: Nilai tidak boleh di bawah ${lockedOdo} KM`;
+                } else {
+                    this.classList.remove('is-invalid');
+                    if (odometerHelp) odometerHelp.textContent = `Minimal input: ${lockedOdo} KM`;
+                }
+            };
         }
     }
 

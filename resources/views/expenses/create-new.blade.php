@@ -60,7 +60,10 @@
                                     <div class="form-control bg-light" style="cursor: not-allowed;">
                                         <strong>{{ $vehicle->name }}</strong> - {{ $vehicle->license_plate }}
                                     </div>
-                                    <input type="hidden" name="vehicle_id" id="vehicle_id" value="{{ $vehicle->id }}" required>
+                                    <input type="hidden" name="vehicle_id" id="vehicle_id"
+                                           value="{{ $vehicle->id }}"
+                                           data-odometer="{{ $vehicle->getLatestOdometer() }}"
+                                           required>
                                     <small class="text-muted d-block mt-1">
                                         <i class="fas fa-lock me-1"></i>
                                         Kendaraan terkunci untuk pengeluaran ini
@@ -641,6 +644,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const option = document.querySelector(`.vehicle-option[data-value="${vehicleId}"]`);
         if (option) {
             selectVehicle(option, { preventDefault: () => {} });
+        }
+    }
+
+    // Init odometer for locked vehicle (pre-selected from vehicle detail page)
+    const lockedVehicleInput = document.getElementById('vehicle_id');
+    if (lockedVehicleInput && lockedVehicleInput.getAttribute('data-odometer')) {
+        const lockedOdo = parseFloat(lockedVehicleInput.getAttribute('data-odometer')) || 0;
+        const odometerInput = document.getElementById('odometer');
+        const lastOdometerDisplay = document.getElementById('lastOdometerDisplay');
+        const lastOdometerValue = document.getElementById('lastOdometerValue');
+        if (odometerInput) {
+            const formattedOdo = typeof formatCurrency === 'function' ? formatCurrency(lockedOdo) : lockedOdo;
+            odometerInput.value = formattedOdo;
+            if (lastOdometerDisplay && lastOdometerValue && lockedOdo > 0) {
+                lastOdometerDisplay.style.display = 'inline-block';
+                lastOdometerValue.textContent = formattedOdo + ' KM';
+            }
         }
     }
 
