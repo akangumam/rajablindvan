@@ -228,8 +228,8 @@ class ExpenseController extends Controller
 
         Expense::create($validated);
 
-        return redirect()->route('expenses.index')
-            ->with('success', 'Expense data successfully added!');
+        return redirect()->route('history.index', ['vehicle_id' => $vehicle->id])
+            ->with('success', 'Pengeluaran berhasil ditambahkan!');
     }
 
     /**

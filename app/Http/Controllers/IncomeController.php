@@ -170,8 +170,9 @@ class IncomeController extends Controller
             $vehicle->update(['odometer' => $validated['odometer']]);
         }
 
-        return redirect()->route('incomes.index')
-            ->with('success', 'Income has been added successfully!');
+        // Redirect back to history page for the selected vehicle
+        return redirect()->route('history.index', ['vehicle_id' => $vehicle->id])
+            ->with('success', 'Pendapatan berhasil ditambahkan!');
     }
 
     /**

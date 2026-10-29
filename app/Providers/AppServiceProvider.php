@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\FuelFill::observe(\App\Observers\FuelFillObserver::class);
         \App\Models\Maintenance::observe(\App\Observers\MaintenanceObserver::class);
         \App\Models\Expense::observe(\App\Observers\ExpenseObserver::class);
+        \App\Models\Income::observe(\App\Observers\IncomeObserver::class);
 
         // Share vehicle data with all views using drivvo layout
         view()->composer('layouts.drivvo', \App\View\Composers\VehicleComposer::class);

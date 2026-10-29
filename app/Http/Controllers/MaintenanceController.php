@@ -234,8 +234,8 @@ class MaintenanceController extends Controller
 
         Maintenance::create($validated);
 
-        return redirect()->route('maintenances.index')
-            ->with('success', 'Service data has been added successfully!');
+        return redirect()->route('history.index', ['vehicle_id' => $vehicle->id])
+            ->with('success', 'Data servis berhasil ditambahkan!');
     }
 
     /**

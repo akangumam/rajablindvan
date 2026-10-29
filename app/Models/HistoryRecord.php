@@ -214,6 +214,29 @@ class HistoryRecord extends Model
     }
 
     /**
+     * Create history record from Income
+     */
+    public static function createFromIncome($income)
+    {
+        return static::create([
+            'vehicle_id'   => $income->vehicle_id,
+            'type'         => 'income',
+            'title'        => $income->type ?? 'Pendapatan',
+            'description'  => $income->notes ?? $income->description,
+            'location'     => null,
+            'cost'         => $income->amount,
+            'odometer'     => $income->odometer ?? null,
+            'date'         => $income->income_date,
+            'extra_data'   => [
+                'income_type'    => $income->type,
+                'payment_method' => null,
+            ],
+            'related_id'   => $income->id,
+            'related_type' => 'App\Models\Income',
+        ]);
+    }
+
+    /**
      * Find matching registered place name by text
      */
     private static function findMatchingLocation($locationText)
