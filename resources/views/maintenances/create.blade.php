@@ -28,7 +28,7 @@
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <div class="d-flex align-items-start">
                     <i class="fas fa-exclamation-triangle me-3 mt-1" style="font-size: 20px;"></i>
-                    <div class="flex-grow-1">
+                    <div style="flex-grow: 1;">
                         <h6 class="alert-heading mb-2">Terdapat kesalahan dalam pengisian form:</h6>
                         <ul class="mb-0 ps-3">
                             @foreach($errors->all() as $error)
@@ -507,7 +507,7 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <div class="d-flex align-items-center gap-3 flex-grow-1">
+                <div class="d-flex align-items-center gap-3" style="flex-grow: 1;">
                     <h5 class="modal-title mb-0" id="serviceSelectionModalLabel">
                         <i class="fas fa-wrench me-2"></i>
                         Jenis Servis
