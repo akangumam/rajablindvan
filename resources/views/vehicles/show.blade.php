@@ -415,22 +415,22 @@
 
                             <!-- Vehicle Statistics -->
                             <div class="card border-info mt-3">
-                                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                    <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Statistik Kendaraan</h6>
-                                    <form method="GET" action="{{ route('vehicles.show', $vehicle->id) }}" id="statPeriodForm" class="d-flex align-items-center gap-2 flex-wrap">
-                                        <select name="stat_period" class="form-select form-select-sm" style="width:auto;min-width:130px;font-size:12px;" onchange="handleStatPeriod(this)">
+                                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center flex-wrap gap-2 py-2">
+                                    <h6 class="mb-0 text-nowrap"><i class="fas fa-chart-bar me-2"></i>Statistik Kendaraan</h6>
+                                    <form method="GET" action="{{ route('vehicles.show', $vehicle->id) }}" id="statPeriodForm" class="d-flex align-items-center gap-1 flex-nowrap m-0">
+                                        <select name="stat_period" class="form-select form-select-sm" style="width:auto;min-width:95px;font-size:12px;height:30px;padding:2px 24px 2px 8px;" onchange="handleStatPeriod(this)">
                                             <option value="all"        {{ $period == 'all'        ? 'selected' : '' }}>Semua</option>
                                             <option value="this_month" {{ $period == 'this_month' ? 'selected' : '' }}>Bulan Ini</option>
                                             <option value="last_month" {{ $period == 'last_month' ? 'selected' : '' }}>Bulan Lalu</option>
                                             <option value="custom"     {{ $period == 'custom'     ? 'selected' : '' }}>Custom</option>
                                         </select>
-                                        <div id="statCustomDateRow" class="{{ $period == 'custom' ? 'd-flex' : 'd-none' }} align-items-center gap-1">
+                                        <div id="statCustomDateRow" class="{{ $period == 'custom' ? 'd-flex' : 'd-none' }} align-items-center gap-1 flex-nowrap">
                                             <input type="date" name="stat_start" value="{{ $statStart }}" max="{{ date('Y-m-d') }}"
-                                                   class="form-control form-control-sm" style="font-size:12px;width:130px;">
-                                            <span>–</span>
+                                                   class="form-control form-control-sm" style="font-size:11px;width:115px;height:30px;padding:2px 6px;">
+                                            <span class="text-white-50 px-1">–</span>
                                             <input type="date" name="stat_end" value="{{ $statEnd }}" max="{{ date('Y-m-d') }}"
-                                                   class="form-control form-control-sm" style="font-size:12px;width:130px;">
-                                            <button type="submit" class="btn btn-sm btn-light" style="font-size:12px;">Terapkan</button>
+                                                   class="form-control form-control-sm" style="font-size:11px;width:115px;height:30px;padding:2px 6px;">
+                                            <button type="submit" class="btn btn-sm btn-light fw-bold text-info" style="font-size:11px;height:30px;padding:2px 8px;white-space:nowrap;">Terapkan</button>
                                         </div>
                                     </form>
                                 </div>
@@ -1142,6 +1142,18 @@ function handleStatPeriod(select) {
     if (select.value === 'custom') {
         customRow.classList.remove('d-none');
         customRow.classList.add('d-flex');
+        const startInput = customRow.querySelector('input[name="stat_start"]');
+        const endInput = customRow.querySelector('input[name="stat_end"]');
+        if (startInput && !startInput.value) {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            startInput.value = `${yyyy}-${mm}-01`;
+            if (endInput && !endInput.value) {
+                endInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+        }
     } else {
         customRow.classList.add('d-none');
         customRow.classList.remove('d-flex');
