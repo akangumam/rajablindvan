@@ -467,14 +467,20 @@ class SettingsController extends Controller
     {
         Place::ensureTableExists();
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:places,name',
+            'name'      => 'required|string|max:255|unique:places,name',
+            'address'   => 'nullable|string',
+            'latitude'  => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ], [
-            'name.unique' => 'Nama tempat sudah digunakan.',
+            'name.unique'   => 'Nama tempat sudah digunakan.',
             'name.required' => 'Nama tempat harus diisi.',
         ]);
 
         $place = Place::create([
             'name'      => $validated['name'],
+            'address'   => $validated['address'] ?? null,
+            'latitude'  => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
             'is_active' => true,
         ]);
 
@@ -490,13 +496,21 @@ class SettingsController extends Controller
         $place = Place::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:places,name,' . $id,
+            'name'      => 'required|string|max:255|unique:places,name,' . $id,
+            'address'   => 'nullable|string',
+            'latitude'  => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ], [
-            'name.unique' => 'Nama tempat sudah digunakan.',
+            'name.unique'   => 'Nama tempat sudah digunakan.',
             'name.required' => 'Nama tempat harus diisi.',
         ]);
 
-        $place->update(['name' => $validated['name']]);
+        $place->update([
+            'name'      => $validated['name'],
+            'address'   => $validated['address'] ?? null,
+            'latitude'  => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
+        ]);
 
         return response()->json([
             'success' => true,

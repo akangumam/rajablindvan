@@ -3,6 +3,10 @@
 @section('title', 'Pengaturan - Tempat')
 
 @push('styles')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
 <style>
 .settings-page-layout {
     display: flex;
@@ -86,6 +90,22 @@
     margin: 0;
 }
 
+.place-section {
+    margin-bottom: 30px;
+}
+
+.place-field {
+    margin-bottom: 20px;
+}
+
+.place-field-label {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 500;
+}
+
 .place-list {
     border: 1px solid #e9ecef;
     border-radius: 8px;
@@ -98,18 +118,46 @@
     font-weight: 600;
     color: #333;
     font-size: 14px;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(220px, 1.2fr) minmax(250px, 2fr) minmax(180px, 1fr) auto;
     align-items: center;
+    gap: 20px;
+}
+
+.place-list-header > span {
+    text-align: left;
+    padding: 0;
+    margin: 0;
+}
+
+.place-list-header > button {
+    justify-self: end;
 }
 
 .place-list-item {
-    padding: 14px 20px;
+    padding: 15px 20px;
     border-top: 1px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(220px, 1.2fr) minmax(250px, 2fr) minmax(180px, 1fr) auto;
     align-items: center;
+    gap: 20px;
     transition: background 0.2s;
+    position: relative;
+}
+
+.place-list-item > * {
+    align-self: center;
+    padding: 0;
+    margin: 0;
+}
+
+.place-list-item > .place-info {
+    padding: 0;
+    margin: 0;
+}
+
+.place-list-item > .place-actions {
+    justify-self: end;
 }
 
 .place-list-item:hover {
@@ -120,18 +168,21 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    padding: 0;
+    margin: 0;
+    text-align: left;
 }
 
 .place-icon {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     background: #fff3e0;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #e67e22;
-    font-size: 16px;
+    font-size: 18px;
     flex-shrink: 0;
 }
 
@@ -139,6 +190,58 @@
     font-size: 15px;
     color: #333;
     font-weight: 500;
+    text-align: left;
+}
+
+.place-address {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+}
+
+.place-coordinates {
+    font-size: 13px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: flex-start;
+    padding: 0;
+    margin: 0;
+}
+
+.coordinate-link {
+    color: #007bff;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #e7f3ff;
+    width: fit-content;
+}
+
+.coordinate-link:hover {
+    color: #0056b3;
+    background: #cce5ff;
+    text-decoration: none;
+}
+
+.coordinate-link i {
+    font-size: 11px;
+}
+
+.no-coordinates {
+    color: #999;
+    font-style: italic;
+    font-size: 13px;
 }
 
 .place-actions {
@@ -160,7 +263,9 @@
     transition: all 0.3s ease;
 }
 
-.btn-add:hover { background: #0056b3; }
+.btn-add:hover {
+    background: #0056b3;
+}
 
 .btn-edit {
     background: transparent;
@@ -171,10 +276,16 @@
     font-weight: 500;
     cursor: pointer;
     font-size: 13px;
+    letter-spacing: 0.5px;
     transition: all 0.3s ease;
+    pointer-events: auto;
+    z-index: 10;
 }
 
-.btn-edit:hover { background: #007bff; color: white; }
+.btn-edit:hover {
+    background: #007bff;
+    color: white;
+}
 
 .btn-delete {
     background: transparent;
@@ -185,10 +296,16 @@
     font-weight: 500;
     cursor: pointer;
     font-size: 13px;
+    letter-spacing: 0.5px;
     transition: all 0.3s ease;
+    pointer-events: auto;
+    z-index: 10;
 }
 
-.btn-delete:hover { background: #dc3545; color: white; }
+.btn-delete:hover {
+    background: #dc3545;
+    color: white;
+}
 
 .alert {
     padding: 15px;
@@ -227,8 +344,20 @@
     padding: 0;
     border-radius: 8px;
     width: 90%;
-    max-width: 480px;
+    max-width: 700px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .modal-header {
@@ -261,11 +390,18 @@
     justify-content: center;
 }
 
-.close:hover { color: #000; }
+.close:hover,
+.close:focus {
+    color: #000;
+}
 
-.modal-body { padding: 24px; }
+.modal-body {
+    padding: 24px;
+}
 
-.form-group { margin-bottom: 20px; }
+.form-group {
+    margin-bottom: 20px;
+}
 
 .form-label {
     display: block;
@@ -281,7 +417,6 @@
     border: 1px solid #dee2e6;
     border-radius: 4px;
     font-size: 14px;
-    box-sizing: border-box;
     transition: border-color 0.2s;
 }
 
@@ -290,19 +425,6 @@
     border-color: #007bff;
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
 }
-
-.form-control.error {
-    border-color: #dc3545;
-}
-
-.error-message {
-    color: #dc3545;
-    font-size: 12px;
-    margin-top: 5px;
-    display: none;
-}
-
-.error-message.show { display: block; }
 
 .modal-footer {
     padding: 16px 24px;
@@ -324,7 +446,9 @@
     transition: background 0.2s;
 }
 
-.btn-secondary:hover { background: #5a6268; }
+.btn-secondary:hover {
+    background: #5a6268;
+}
 
 .btn-primary {
     background: #007bff;
@@ -338,7 +462,85 @@
     transition: background 0.2s;
 }
 
-.btn-primary:hover { background: #0056b3; }
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+/* Map Styles */
+#map {
+    width: 100%;
+    height: 350px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #dee2e6;
+}
+
+.map-info {
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    color: #666;
+}
+
+.map-info i {
+    margin-right: 8px;
+    color: #007bff;
+}
+
+.coordinates-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.coordinate-box {
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    font-size: 12px;
+}
+
+.coordinate-label {
+    color: #6c757d;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.coordinate-value {
+    color: #333;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
+
+/* Error state */
+.form-control.error {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.form-control.error:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.error-message i {
+    margin-right: 5px;
+}
 </style>
 @endpush
 
@@ -426,45 +628,71 @@
     <div class="settings-page-content">
         <div class="settings-page-content-header">
             <h1 class="settings-page-content-title">Tempat</h1>
-            <p style="margin: 6px 0 0; color: #6c757d; font-size: 14px;">Daftar tempat yang tersedia sebagai pilihan pada form Servis dan Pengeluaran.</p>
         </div>
 
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
         @endif
 
-        <div class="place-list">
-            <div class="place-list-header">
-                <span>Nama Tempat</span>
-                <button class="btn-add" onclick="openAddModal()">
-                    <i class="fas fa-plus me-1"></i> TAMBAH TEMPAT BARU
-                </button>
-            </div>
+        <div class="place-section">
+            <div class="place-field">
+                <label class="place-field-label">Daftar tempat yang digunakan pada form Servis dan Pengeluaran.</label>
+                <div class="place-list">
+                    <div class="place-list-header">
+                        <span>Tempat</span>
+                        <span>Alamat</span>
+                        <span>Koordinat</span>
+                        <button class="btn-add" onclick="openAddModal()">
+                            <i class="fas fa-plus me-1"></i> TAMBAH TEMPAT BARU
+                        </button>
+                    </div>
 
-            @if($places->isEmpty())
-                <div class="place-list-item" style="justify-content: center; color: #999;">
-                    Belum ada tempat. Klik "TAMBAH TEMPAT BARU" untuk menambahkan.
-                </div>
-            @else
-                @foreach($places as $place)
-                <div class="place-list-item" data-id="{{ $place->id }}">
-                    <div class="place-info">
-                        <div class="place-icon">
-                            <i class="fas fa-store-alt"></i>
+                    @if($places->isEmpty())
+                        <div class="place-list-item" style="grid-column: 1 / -1; justify-self: center; color: #999; padding: 30px;">
+                            Belum ada tempat. Klik "TAMBAH TEMPAT BARU" untuk menambahkan.
                         </div>
-                        <div class="place-name">{{ $place->name }}</div>
-                    </div>
-                    <div class="place-actions">
-                        <button class="btn-edit" onclick='openEditModal(@json($place))'>
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-delete" onclick="confirmDelete({{ $place->id }}, '{{ addslashes($place->name) }}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
+                    @else
+                        @foreach($places as $place)
+                        <div class="place-list-item" data-id="{{ $place->id }}">
+                            <div class="place-info">
+                                <div class="place-icon">
+                                    <i class="fas fa-store-alt"></i>
+                                </div>
+                                <div class="place-name">
+                                    {{ $place->name }}
+                                </div>
+                            </div>
+                            <div class="place-address">
+                                {{ $place->address ?? 'Tidak ada alamat' }}
+                            </div>
+                            <div class="place-coordinates">
+                                @if($place->latitude && $place->longitude)
+                                    <a href="https://www.google.com/maps?q={{ $place->latitude }},{{ $place->longitude }}"
+                                       target="_blank"
+                                       class="coordinate-link"
+                                       title="Buka di Google Maps">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        {{ number_format($place->latitude, 6) }}, {{ number_format($place->longitude, 6) }}
+                                    </a>
+                                @else
+                                    <span class="no-coordinates">Belum ada koordinat</span>
+                                @endif
+                            </div>
+                            <div class="place-actions">
+                                <button class="btn-edit" onclick='openEditModal(@json($place))'>
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-delete" onclick="confirmDelete({{ $place->id }}, '{{ addslashes($place->name) }}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        @endforeach
+                    @endif
                 </div>
-                @endforeach
-            @endif
+            </div>
         </div>
     </div>
 </div>
@@ -479,11 +707,38 @@
         <div class="modal-body">
             <form id="PlaceForm">
                 <input type="hidden" id="PlaceId" value="">
+                <input type="hidden" id="PlaceLatitude" value="">
+                <input type="hidden" id="PlaceLongitude" value="">
+
                 <div class="form-group">
                     <label class="form-label">Nama Tempat <span style="color:#dc3545">*</span></label>
                     <input type="text" class="form-control" id="PlaceName" placeholder="Masukkan nama tempat" required>
                     <div class="error-message" id="errorPlaceName">
                         <i class="fas fa-exclamation-circle"></i> Nama tempat harus diisi
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Alamat</label>
+                    <textarea class="form-control" id="PlaceAddress" placeholder="Masukkan alamat lengkap (opsional)" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Pin Lokasi pada Peta</label>
+                    <div class="map-info">
+                        <i class="fas fa-info-circle"></i>
+                        Klik pada peta untuk menandai lokasi. Pin akan menunjukkan koordinat yang tepat.
+                    </div>
+                    <div id="map"></div>
+                    <div class="coordinates-display">
+                        <div class="coordinate-box">
+                            <div class="coordinate-label">Latitude</div>
+                            <div class="coordinate-value" id="displayLatitude">-</div>
+                        </div>
+                        <div class="coordinate-box">
+                            <div class="coordinate-label">Longitude</div>
+                            <div class="coordinate-value" id="displayLongitude">-</div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -496,16 +751,85 @@
 </div>
 
 @push('scripts')
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
 <script>
 let isEditMode = false;
+let map = null;
+let marker = null;
+let currentLat = -6.2088;  // Default to Jakarta
+let currentLng = 106.8456;
+
+// Initialize map
+function initMap(lat = -6.2088, lng = 106.8456, hasMarker = false) {
+    if (map !== null) {
+        map.remove();
+        map = null;
+        marker = null;
+    }
+
+    map = L.map('map').setView([lat, lng], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+    }).addTo(map);
+
+    map.on('click', function(e) {
+        placeMarker(e.latlng);
+    });
+
+    if (hasMarker && lat && lng) {
+        placeMarker(L.latLng(lat, lng));
+    }
+
+    setTimeout(function() {
+        if (map) {
+            map.invalidateSize();
+        }
+    }, 200);
+}
+
+// Place marker on map
+function placeMarker(latlng) {
+    if (marker !== null && map !== null) {
+        map.removeLayer(marker);
+    }
+
+    if (map !== null) {
+        marker = L.marker(latlng).addTo(map);
+    }
+
+    currentLat = latlng.lat;
+    currentLng = latlng.lng;
+
+    document.getElementById('PlaceLatitude').value = currentLat.toFixed(8);
+    document.getElementById('PlaceLongitude').value = currentLng.toFixed(8);
+
+    document.getElementById('displayLatitude').textContent = currentLat.toFixed(8);
+    document.getElementById('displayLongitude').textContent = currentLng.toFixed(8);
+}
 
 function openAddModal() {
     isEditMode = false;
     document.getElementById('modalTitle').textContent = 'Tambah Tempat Baru';
     document.getElementById('PlaceId').value = '';
     document.getElementById('PlaceName').value = '';
+    document.getElementById('PlaceAddress').value = '';
+    document.getElementById('PlaceLatitude').value = '';
+    document.getElementById('PlaceLongitude').value = '';
+    document.getElementById('displayLatitude').textContent = '-';
+    document.getElementById('displayLongitude').textContent = '-';
     clearErrors();
+
     document.getElementById('PlaceModal').classList.add('show');
+
+    setTimeout(function() {
+        initMap(-6.2088, 106.8456, false);
+    }, 200);
 }
 
 function openEditModal(place) {
@@ -513,17 +837,44 @@ function openEditModal(place) {
     document.getElementById('modalTitle').textContent = 'Edit Tempat';
     document.getElementById('PlaceId').value = place.id;
     document.getElementById('PlaceName').value = place.name || '';
+    document.getElementById('PlaceAddress').value = place.address || '';
+    document.getElementById('PlaceLatitude').value = place.latitude || '';
+    document.getElementById('PlaceLongitude').value = place.longitude || '';
+
+    const hasCoords = place.latitude && place.longitude;
+    if (hasCoords) {
+        document.getElementById('displayLatitude').textContent = parseFloat(place.latitude).toFixed(8);
+        document.getElementById('displayLongitude').textContent = parseFloat(place.longitude).toFixed(8);
+    } else {
+        document.getElementById('displayLatitude').textContent = '-';
+        document.getElementById('displayLongitude').textContent = '-';
+    }
+
     clearErrors();
     document.getElementById('PlaceModal').classList.add('show');
+
+    setTimeout(function() {
+        const lat = hasCoords ? parseFloat(place.latitude) : -6.2088;
+        const lng = hasCoords ? parseFloat(place.longitude) : 106.8456;
+        initMap(lat, lng, hasCoords);
+    }, 200);
 }
 
 function closeModal() {
     document.getElementById('PlaceModal').classList.remove('show');
+    if (map !== null) {
+        map.remove();
+        map = null;
+        marker = null;
+    }
 }
 
 function savePlace() {
-    const id   = document.getElementById('PlaceId').value;
-    const name = document.getElementById('PlaceName').value.trim();
+    const id        = document.getElementById('PlaceId').value;
+    const name      = document.getElementById('PlaceName').value.trim();
+    const address   = document.getElementById('PlaceAddress').value.trim();
+    const latitude  = document.getElementById('PlaceLatitude').value;
+    const longitude = document.getElementById('PlaceLongitude').value;
 
     clearErrors();
 
@@ -545,7 +896,12 @@ function savePlace() {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json'
         },
-        body: JSON.stringify({ name: name })
+        body: JSON.stringify({
+            name: name,
+            address: address || null,
+            latitude: latitude ? parseFloat(latitude) : null,
+            longitude: longitude ? parseFloat(longitude) : null
+        })
     })
     .then(r => r.json())
     .then(data => {

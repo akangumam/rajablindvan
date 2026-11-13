@@ -10,10 +10,18 @@ use Illuminate\Support\Facades\Log;
 
 class Place extends Model
 {
-    protected $fillable = ['name', 'is_active'];
+    protected $fillable = [
+        'name',
+        'address',
+        'latitude',
+        'longitude',
+        'is_active',
+    ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'latitude'  => 'decimal:8',
+        'longitude' => 'decimal:8',
     ];
 
     public function scopeActive($query)
@@ -27,6 +35,29 @@ class Place extends Model
     public static function ensureTableExists(): bool
     {
         if (Schema::hasTable('places')) {
+            // Check if address/coordinates columns exist, add if missing
+            try {
+                $needAddress = !Schema::hasColumn('places', 'address');
+                $needLat     = !Schema::hasColumn('places', 'latitude');
+                $needLng     = !Schema::hasColumn('places', 'longitude');
+
+                if ($needAddress || $needLat || $needLng) {
+                    Schema::table('places', function ($table) use ($needAddress, $needLat, $needLng) {
+                        if ($needAddress) {
+                            $table->text('address')->nullable()->after('name');
+                        }
+                        if ($needLat) {
+                            $table->decimal('latitude', 10, 8)->nullable()->after('address');
+                        }
+                        if ($needLng) {
+                            $table->decimal('longitude', 11, 8)->nullable()->after('latitude');
+                        }
+                    });
+                }
+            } catch (\Throwable $e) {
+                Log::warning('Ensuring places columns failed: ' . $e->getMessage());
+            }
+
             return true;
         }
 
@@ -44,6 +75,9 @@ class Place extends Model
                 Schema::create('places', function ($table) {
                     $table->id();
                     $table->string('name')->unique();
+                    $table->text('address')->nullable();
+                    $table->decimal('latitude', 10, 8)->nullable();
+                    $table->decimal('longitude', 11, 8)->nullable();
                     $table->boolean('is_active')->default(true);
                     $table->timestamps();
                 });
@@ -53,6 +87,9 @@ class Place extends Model
                     foreach ($locations as $loc) {
                         DB::table('places')->insertOrIgnore([
                             'name'       => $loc->name,
+                            'address'    => $loc->address ?? null,
+                            'latitude'   => $loc->latitude ?? null,
+                            'longitude'  => $loc->longitude ?? null,
                             'is_active'  => true,
                             'created_at' => now(),
                             'updated_at' => now(),
