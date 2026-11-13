@@ -3,13 +3,13 @@
 return [
     // Navigation
     'dashboard' => 'Dashboard',
-    'vehicles' => 'Vehicles',
+    'vehicles' => 'Kendaraan',
     'fuel_fills' => 'Fuel Fills',
     'maintenances' => 'Maintenances',
     'expenses' => 'Expenses',
     'incomes' => 'Incomes',
     'rentals' => 'Rentals',
-    'customers' => 'Customers',
+    'customers' => 'Pelanggan',
     'reports' => 'Reports',
     'settings' => 'Settings',
     'reminders' => 'Reminders',

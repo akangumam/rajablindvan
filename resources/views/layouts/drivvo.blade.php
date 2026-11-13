@@ -203,6 +203,28 @@
             color: white;
         }
 
+        .drivvo-nav-link.btn-highlight-blue {
+            background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+        }
+
+        .drivvo-nav-link.btn-highlight-blue i {
+            color: #ffffff !important;
+        }
+
+        .drivvo-nav-link.btn-highlight-blue:hover {
+            background: linear-gradient(135deg, #0b5ed7 0%, #004494 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 6px 16px rgba(13, 110, 253, 0.55);
+            transform: translateY(-1px);
+        }
+
+        .drivvo-nav-link.btn-highlight-blue:active {
+            transform: translateY(0);
+        }
+
         .drivvo-nav-link i {
             width: 20px;
             margin-right: 12px;
@@ -762,9 +784,9 @@
 
                 <!-- Tambah Baru -->
                 <div class="drivvo-nav-item">
-                    <button type="button" class="drivvo-nav-link" onclick="showAddNewModal()" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 12px 20px;">
+                    <button type="button" class="drivvo-nav-link btn-highlight-blue" onclick="showAddNewModal()" style="width: 100%; text-align: left; border: none; cursor: pointer; padding: 12px 16px;">
                         <i class="fas fa-plus-circle"></i>
-                        <span class="nav-text">{{ __('common.add_new') }}</span>
+                        <span class="nav-text">Add New</span>
                     </button>
                 </div>
 
@@ -789,14 +811,14 @@
                 <div class="drivvo-nav-item">
                     <a href="{{ route('vehicles.index') }}" class="drivvo-nav-link {{ request()->routeIs('vehicles.*') ? 'active' : '' }}">
                         <i class="fas fa-car"></i>
-                        <span class="nav-text">{{ __('common.vehicles') }}</span>
+                        <span class="nav-text">Kendaraan</span>
                     </a>
                 </div>
 
                 <div class="drivvo-nav-item">
                     <a href="{{ route('customers.index') }}" class="drivvo-nav-link {{ request()->routeIs('customers.*') ? 'active' : '' }}">
                         <i class="fas fa-users"></i>
-                        <span class="nav-text">{{ __('common.customers') }}</span>
+                        <span class="nav-text">Pelanggan</span>
                     </a>
                 </div>
 

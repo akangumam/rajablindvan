@@ -144,7 +144,7 @@
                             <a class="nav-link {{ request()->routeIs('vehicles.*') ? 'active' : '' }}" 
                                href="{{ route('vehicles.index') }}">
                                 <i class="bi bi-car-front me-2"></i>
-                                Vehicle
+                                Kendaraan
                             </a>
                         </li>
                         
@@ -184,7 +184,7 @@
                             <a class="nav-link {{ request()->routeIs('customers.*') ? 'active' : '' }}" 
                                href="{{ route('customers.index') }}">
                                 <i class="bi bi-people me-2"></i>
-                                Customer
+                                Pelanggan
                             </a>
                         </li>
                         
