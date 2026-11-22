@@ -21,17 +21,51 @@ class HistoryController extends Controller
         $groupedHistory = [];
         $performance = null;
 
-        if ($request->has('vehicle_id') && $request->vehicle_id) {
-            $selectedVehicle = Vehicle::findOrFail($request->vehicle_id);
+        $vehicleId = $request->input('vehicle_id');
 
-            $groupedHistory = $this->getVehicleHistory($selectedVehicle->id);
+        // Jika tidak ada parameter vehicle_id di URL, gunakan kendaraan default yang cerdas
+        if (!$vehicleId) {
+            // 1. Ambil dari session atau cookie kendaraan terakhir yang diakses
+            $rememberedId = session('last_active_vehicle_id') ?: $request->cookie('last_active_vehicle_id');
+            if ($rememberedId && $vehicles->contains('id', (int) $rememberedId)) {
+                $vehicleId = (int) $rememberedId;
+            }
 
-            $performance = $this->getPerformance(
-                $selectedVehicle->id,
-                $request->input('period', 'last_month'),
-                $request->input('start_date'),
-                $request->input('end_date')
-            );
+            // 2. Fallback: Kendaraan dengan aktivitas/transaksi paling baru di history
+            if (!$vehicleId) {
+                $latestActiveVehicleId = HistoryRecord::whereIn('vehicle_id', $vehicles->pluck('id'))
+                    ->orderBy('date', 'desc')
+                    ->orderBy('created_at', 'desc')
+                    ->value('vehicle_id');
+
+                if ($latestActiveVehicleId && $vehicles->contains('id', (int) $latestActiveVehicleId)) {
+                    $vehicleId = (int) $latestActiveVehicleId;
+                }
+            }
+
+            // 3. Fallback: Kendaraan aktif pertama
+            if (!$vehicleId && $vehicles->isNotEmpty()) {
+                $vehicleId = $vehicles->first()->id;
+            }
+        }
+
+        if ($vehicleId) {
+            $selectedVehicle = $vehicles->firstWhere('id', $vehicleId) ?: Vehicle::find($vehicleId);
+
+            if ($selectedVehicle) {
+                // Simpan kendaraan aktif ke session & cookie (30 hari)
+                session(['last_active_vehicle_id' => $selectedVehicle->id]);
+                cookie()->queue(cookie('last_active_vehicle_id', $selectedVehicle->id, 60 * 24 * 30));
+
+                $groupedHistory = $this->getVehicleHistory($selectedVehicle->id);
+
+                $performance = $this->getPerformance(
+                    $selectedVehicle->id,
+                    $request->input('period', 'last_month'),
+                    $request->input('start_date'),
+                    $request->input('end_date')
+                );
+            }
         }
 
         return view('history.index', compact(

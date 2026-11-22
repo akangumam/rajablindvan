@@ -237,6 +237,10 @@ class VehicleController extends Controller
      */
     public function show(Request $request, Vehicle $vehicle)
     {
+        // Remember as last accessed vehicle (session & 30-day cookie)
+        session(['last_active_vehicle_id' => $vehicle->id]);
+        cookie()->queue(cookie('last_active_vehicle_id', $vehicle->id, 60 * 24 * 30));
+
         $vehicle->load(['fuelFills', 'maintenances', 'expenses', 'documents', 'incomes']);
 
         // Period filter for financial stats

@@ -964,7 +964,7 @@
                 <!-- Vehicle List -->
                 <div class="vehicle-list" id="vehicleList">
                     @foreach($vehicles as $vehicle)
-                    <div class="vehicle-item" data-vehicle-id="{{ $vehicle->id }}"
+                    <div class="vehicle-item {{ $selectedVehicle && $selectedVehicle->id == $vehicle->id ? 'selected' : '' }}" data-vehicle-id="{{ $vehicle->id }}"
                          data-vehicle-name="{{ strtolower($vehicle->name . ' ' . $vehicle->license_plate) }}"
                          onclick="selectVehicle({{ $vehicle->id }})">
                         <div class="vehicle-brand-logo">
