@@ -433,6 +433,10 @@
         font-weight: 700;
     }
 
+    .value-primary {
+        color: #0d6efd;
+    }
+
     .value-income {
         color: #27ae60;
     }
@@ -442,11 +446,11 @@
     }
 
     .value-expense {
-        color: #e67e22;
+        color: #e74c3c;
     }
 
     .value-balance {
-        color: #9b59b6;
+        color: #27ae60;
     }
 
     .empty-state {
@@ -712,8 +716,14 @@
             <div class="performance-grid">
                 <div class="performance-item">
                     <div class="performance-label">Total Transaksi</div>
-                    <div class="performance-value">
-                        {{ $performance['total_transactions'] }}
+                    <div class="performance-value value-primary">
+                        {{ number_format($performance['total_transactions']) }}
+                    </div>
+                </div>
+                <div class="performance-item">
+                    <div class="performance-label">Total Pendapatan</div>
+                    <div class="performance-value value-income">
+                        Rp {{ number_format($performance['total_income'], 0, ',', '.') }}
                     </div>
                 </div>
                 <div class="performance-item">
@@ -723,9 +733,9 @@
                     </div>
                 </div>
                 <div class="performance-item">
-                    <div class="performance-label">Rata-rata per Transaksi</div>
-                    <div class="performance-value">
-                        Rp {{ number_format($performance['avg_cost'], 0, ',', '.') }}
+                    <div class="performance-label">Balance (Total pendapatan - Total Biaya)</div>
+                    <div class="performance-value {{ $performance['balance'] >= 0 ? 'value-income' : 'value-expense' }}">
+                        Rp {{ number_format($performance['balance'], 0, ',', '.') }}
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\FuelFill;
 use App\Models\Maintenance;
 use App\Models\Expense;
+use App\Models\Income;
 use App\Models\HistoryRecord;
 
 class MigrateHistoryData extends Command
@@ -88,6 +89,24 @@ class MigrateHistoryData extends Command
         $bar->finish();
         $this->newLine();
         $this->info("Migrated {$expenses->count()} expense records.");
+
+        $this->info('Migrating Income records...');
+        $incomes = Income::whereNotNull('vehicle_id')->get();
+        $bar = $this->output->createProgressBar($incomes->count());
+
+        foreach ($incomes as $income) {
+            $exists = HistoryRecord::where('related_id', $income->id)
+                ->where('related_type', 'App\Models\Income')
+                ->exists();
+
+            if (!$exists) {
+                HistoryRecord::createFromIncome($income);
+            }
+            $bar->advance();
+        }
+        $bar->finish();
+        $this->newLine();
+        $this->info("Migrated {$incomes->count()} income records.");
 
         $total = HistoryRecord::count();
         $this->newLine();

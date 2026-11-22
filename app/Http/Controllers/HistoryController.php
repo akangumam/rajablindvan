@@ -44,6 +44,18 @@ class HistoryController extends Controller
 
     private function getVehicleHistory($vehicleId)
     {
+        // Auto-sync any unsynced incomes for this vehicle
+        $unsyncedIncomes = \App\Models\Income::where('vehicle_id', $vehicleId)
+            ->whereNotIn('id', function($q) {
+                $q->select('related_id')
+                  ->from('history_records')
+                  ->where('related_type', 'App\\Models\\Income');
+            })->get();
+
+        foreach ($unsyncedIncomes as $income) {
+            HistoryRecord::createFromIncome($income);
+        }
+
         $records = HistoryRecord::where('vehicle_id', $vehicleId)
             ->with('vehicle')
             ->orderBy('date', 'desc')
@@ -89,13 +101,17 @@ class HistoryController extends Controller
                 ->get();
         }
 
-        $totalCost         = $records->sum('cost');
         $totalTransactions = $records->count();
+        $totalIncome       = (float) $records->where('type', 'income')->sum('cost');
+        $totalCost         = (float) $records->where('type', '!=', 'income')->sum('cost');
+        $balance           = $totalIncome - $totalCost;
 
         return [
             'label'              => $label,
-            'total_cost'         => $totalCost,
             'total_transactions' => $totalTransactions,
+            'total_income'       => $totalIncome,
+            'total_cost'         => $totalCost,
+            'balance'            => $balance,
             'avg_cost'           => $totalTransactions > 0 ? $totalCost / $totalTransactions : 0,
         ];
     }
