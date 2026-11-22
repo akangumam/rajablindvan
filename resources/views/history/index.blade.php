@@ -621,6 +621,71 @@
             margin-top: 4px;
         }
     }
+
+    /* History Timeline Search Box */
+    .history-search-wrapper {
+        position: relative;
+        min-width: 280px;
+    }
+
+    @media (max-width: 576px) {
+        .history-search-wrapper {
+            min-width: 100%;
+            width: 100%;
+        }
+    }
+
+    .history-search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 13px;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .history-search-input {
+        padding-left: 34px !important;
+        padding-right: 32px !important;
+        height: 38px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+        font-size: 13px;
+        transition: all 0.2s ease;
+    }
+
+    .history-search-input:focus {
+        background-color: #ffffff;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        outline: none;
+    }
+
+    .btn-clear-history-search {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0;
+        width: 22px;
+        height: 22px;
+        border: none;
+        background: transparent;
+        color: #94a3b8;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .btn-clear-history-search:hover {
+        color: #e74c3c;
+    }
 </style>
 
 <div class="row">
@@ -755,17 +820,63 @@
                     </div>
                     <span>History View - {{ $selectedVehicle->name }}</span>
                 </div>
-                <form method="GET" action="{{ route('history.download') }}" style="display: inline;">
-                    <input type="hidden" name="vehicle_id" value="{{ $selectedVehicle->id }}">
-                    <button type="submit" class="btn-action btn-download">
-                        <i class="fas fa-download"></i>
-                        Download Detail
-                    </button>
-                </form>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <!-- History Item Live Search Box -->
+                    <div class="history-search-wrapper">
+                        <i class="fas fa-search history-search-icon"></i>
+                        <input type="text" 
+                               id="historyItemSearch" 
+                               class="form-control form-control-sm history-search-input" 
+                               placeholder="Cari riwayat (misal: aki, oli, servis)..."
+                               autocomplete="off">
+                        <button type="button" 
+                                id="clearHistoryItemSearch" 
+                                class="btn-clear-history-search" 
+                                title="Hapus pencarian" 
+                                style="display: none;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <form method="GET" action="{{ route('history.download') }}" style="display: inline;">
+                        <input type="hidden" name="vehicle_id" value="{{ $selectedVehicle->id }}">
+                        <button type="submit" class="btn-action btn-download">
+                            <i class="fas fa-download"></i>
+                            Download Detail
+                        </button>
+                    </form>
+                </div>
             </div>
 
             @if($groupedHistory && count($groupedHistory) > 0)
-            <div class="history-timeline">
+            <!-- Search Results Notice -->
+            <div id="historySearchNotice" class="alert alert-light py-2 px-3 border mb-3 d-flex align-items-center justify-content-between" style="display: none; border-radius: 8px; font-size: 13px;">
+                <div>
+                    <i class="fas fa-filter text-primary me-2"></i>
+                    Menampilkan <strong id="historyMatchCount" class="text-primary">0</strong> riwayat transaksi untuk "<strong id="historyMatchQuery"></strong>"
+                </div>
+                <button type="button" class="btn btn-sm btn-link text-muted p-0 text-decoration-none" onclick="document.getElementById('clearHistoryItemSearch').click()">
+                    <i class="fas fa-times me-1"></i>Hapus Filter
+                </button>
+            </div>
+
+            <!-- Empty Search Results State -->
+            <div id="historySearchEmpty" class="empty-state" style="display: none; padding: 40px 20px; text-align: center;">
+                <div class="empty-icon" style="font-size: 36px; color: #cbd5e1; margin-bottom: 12px;">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="empty-message" style="font-weight: 600; color: #475569; font-size: 15px;">
+                    Tidak ditemukan riwayat untuk kata kunci "<span id="historySearchKeyword" class="text-primary"></span>"
+                </div>
+                <div class="empty-hint" style="color: #94a3b8; font-size: 13px; margin-top: 6px;">
+                    Coba gunakan kata kunci lain seperti: oli, aki, ban, bbm, servis, dsb.
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary mt-3" onclick="document.getElementById('clearHistoryItemSearch').click()">
+                    <i class="fas fa-undo me-1"></i> Reset Pencarian
+                </button>
+            </div>
+
+            <div class="history-timeline" id="historyTimelineContainer">
                 @foreach($groupedHistory as $month => $records)
                 <div class="timeline-month">
                     <div class="month-header">
@@ -774,7 +885,32 @@
                     </div>
 
                     @foreach($records as $index => $record)
-                    <div class="timeline-item">
+                    @php
+                        $recordDetails = is_string($record->extra_data) ? json_decode($record->extra_data, true) : $record->extra_data;
+                        if (!is_array($recordDetails)) {
+                            $recordDetails = [];
+                        }
+                        $searchTokens = [
+                            $record->title,
+                            $record->type,
+                            str_replace('_', ' ', $record->type),
+                            $record->description,
+                            $record->location,
+                            \Carbon\Carbon::parse($record->date)->format('d M Y'),
+                            \Carbon\Carbon::parse($record->date)->format('d F Y'),
+                            \Carbon\Carbon::parse($record->date)->format('d-m-Y'),
+                            $record->odometer ? $record->odometer . ' km' : null,
+                            $record->cost ? 'rp ' . number_format($record->cost, 0, ',', '.') : null,
+                            $recordDetails['service_type'] ?? null,
+                            $recordDetails['workshop'] ?? null,
+                            $recordDetails['category'] ?? null,
+                            $recordDetails['income_type'] ?? null,
+                            $recordDetails['fuel_type'] ?? null,
+                            isset($recordDetails['liters']) ? $recordDetails['liters'] . ' liter' : null,
+                        ];
+                        $searchKeywords = strtolower(implode(' ', array_filter($searchTokens)));
+                    @endphp
+                    <div class="timeline-item" data-search-text="{{ $searchKeywords }}">
                         <div class="timeline-indicator">
                             @if($index > 0)
                             <div class="timeline-line-top"></div>
@@ -863,7 +999,7 @@
 
                             <div class="timeline-details">
                                 @if($record->extra_data)
-                                    @php $details = is_string($record->extra_data) ? json_decode($record->extra_data, true) : $record->extra_data; @endphp
+                                    @php $details = $recordDetails; @endphp
 
                                     @if(isset($details['service_type']))
                                     <div class="detail-item">
@@ -1324,5 +1460,85 @@ document.getElementById('periodForm')?.addEventListener('submit', function(e) {
         }
     }
 });
+
+// History Item Live Search (Instant Filter without reload)
+const historyItemSearch = document.getElementById('historyItemSearch');
+const clearHistorySearchBtn = document.getElementById('clearHistoryItemSearch');
+const historyNotice = document.getElementById('historySearchNotice');
+const historyEmpty = document.getElementById('historySearchEmpty');
+const historyTimelineContainer = document.getElementById('historyTimelineContainer');
+
+if (historyItemSearch) {
+    historyItemSearch.addEventListener('input', function() {
+        const query = this.value.toLowerCase().trim();
+        const words = query ? query.split(/\s+/).filter(Boolean) : [];
+        let totalMatches = 0;
+
+        if (clearHistorySearchBtn) {
+            clearHistorySearchBtn.style.display = query ? 'flex' : 'none';
+        }
+
+        const months = document.querySelectorAll('.timeline-month');
+        months.forEach(function(month) {
+            const items = month.querySelectorAll('.timeline-item');
+            let monthMatches = 0;
+
+            items.forEach(function(item) {
+                const searchText = item.getAttribute('data-search-text') || item.innerText.toLowerCase();
+                const matches = words.length === 0 || words.every(word => searchText.includes(word));
+
+                if (matches) {
+                    item.style.display = 'flex';
+                    monthMatches++;
+                    totalMatches++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            if (words.length === 0 || monthMatches > 0) {
+                month.style.display = 'block';
+            } else {
+                month.style.display = 'none';
+            }
+        });
+
+        // Handle notices & empty states
+        if (words.length > 0) {
+            if (totalMatches > 0) {
+                if (historyNotice) {
+                    historyNotice.style.removeProperty('display');
+                    historyNotice.style.display = 'flex';
+                    const countEl = document.getElementById('historyMatchCount');
+                    const queryEl = document.getElementById('historyMatchQuery');
+                    if (countEl) countEl.textContent = totalMatches;
+                    if (queryEl) queryEl.textContent = query;
+                }
+                if (historyEmpty) historyEmpty.style.display = 'none';
+                if (historyTimelineContainer) historyTimelineContainer.style.display = 'block';
+            } else {
+                if (historyNotice) historyNotice.style.display = 'none';
+                if (historyEmpty) {
+                    historyEmpty.style.display = 'block';
+                    const keywordEl = document.getElementById('historySearchKeyword');
+                    if (keywordEl) keywordEl.textContent = query;
+                }
+                if (historyTimelineContainer) historyTimelineContainer.style.display = 'none';
+            }
+        } else {
+            if (historyNotice) historyNotice.style.display = 'none';
+            if (historyEmpty) historyEmpty.style.display = 'none';
+            if (historyTimelineContainer) historyTimelineContainer.style.display = 'block';
+        }
+    });
+
+    if (clearHistorySearchBtn) {
+        clearHistorySearchBtn.addEventListener('click', function() {
+            historyItemSearch.value = '';
+            historyItemSearch.dispatchEvent(new Event('input'));
+            historyItemSearch.focus();
+        });
+    }
+}
 </script>
 @endsection
