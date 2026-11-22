@@ -30,6 +30,6 @@ class AutoCompleteOrders extends Command
 
         $this->info("Auto-completed {$count} expired order(s).");
 
-        return Command::SUCCESS;
+        return 0;
     }
 }

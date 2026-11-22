@@ -112,6 +112,6 @@ class MigrateHistoryData extends Command
         $this->newLine();
         $this->info("✓ Migration completed! Total history records: {$total}");
 
-        return Command::SUCCESS;
+        return 0;
     }
 }

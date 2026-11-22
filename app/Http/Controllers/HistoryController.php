@@ -174,10 +174,12 @@ class HistoryController extends Controller
 
         // Merge extra_data safely
         $extraData = [];
-        if (is_array($record->extra_data)) {
-            $extraData = $record->extra_data;
-        } elseif (is_string($record->extra_data)) {
-            $extraData = json_decode($record->extra_data, true) ?: [];
+        $rawExtra = $record->extra_data;
+        if (is_array($rawExtra)) {
+            $extraData = $rawExtra;
+        } elseif (is_string($rawExtra)) {
+            $decoded = json_decode((string) $rawExtra, true);
+            $extraData = is_array($decoded) ? $decoded : [];
         }
 
         if ($request->filled('liters')) {
