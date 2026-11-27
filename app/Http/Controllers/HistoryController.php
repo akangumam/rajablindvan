@@ -23,80 +23,79 @@ class HistoryController extends Controller
 {
     public function index(Request $request)
     {
-        $vehicles = Vehicle::where('is_active', true)
-            ->orderBy('name')
-            ->get();
+        $vehicles        = Vehicle::where('is_active', true)->orderBy('name')->get();
+        $selectedVehicle = $this->resolveSelectedVehicle($request, $vehicles);
+        $groupedHistory  = [];
+        $performance     = null;
 
-        $selectedVehicle = null;
-        $groupedHistory = [];
-        $performance = null;
+        if ($selectedVehicle) {
+            session(['last_active_vehicle_id' => $selectedVehicle->id]);
+            cookie()->queue(cookie('last_active_vehicle_id', $selectedVehicle->id, 60 * 24 * 30));
 
+            $groupedHistory = $this->getVehicleHistory($selectedVehicle->id);
+            $performance    = $this->getPerformance(
+                $selectedVehicle->id,
+                $request->input('period', 'last_month'),
+                $request->input('start_date'),
+                $request->input('end_date')
+            );
+        }
+
+        return view('history.index', array_merge(
+            compact('vehicles', 'selectedVehicle', 'groupedHistory', 'performance'),
+            $this->getEditReferenceData()
+        ));
+    }
+
+    /**
+     * Resolve selected vehicle from query, session/cookie, latest activity, or first active vehicle.
+     */
+    private function resolveSelectedVehicle(Request $request, $vehicles): ?Vehicle
+    {
         $vehicleId = $request->input('vehicle_id');
 
-        // Jika tidak ada parameter vehicle_id di URL, gunakan kendaraan default yang cerdas
         if (!$vehicleId) {
-            // 1. Ambil dari session atau cookie kendaraan terakhir yang diakses
             $rememberedId = session('last_active_vehicle_id') ?: $request->cookie('last_active_vehicle_id');
             if ($rememberedId && $vehicles->contains('id', (int) $rememberedId)) {
                 $vehicleId = (int) $rememberedId;
             }
 
-            // 2. Fallback: Kendaraan dengan aktivitas/transaksi paling baru di history
             if (!$vehicleId) {
-                $latestActiveVehicleId = HistoryRecord::whereIn('vehicle_id', $vehicles->pluck('id'))
+                $latestId = HistoryRecord::whereIn('vehicle_id', $vehicles->pluck('id'))
                     ->orderBy('date', 'desc')
                     ->orderBy('created_at', 'desc')
                     ->value('vehicle_id');
 
-                if ($latestActiveVehicleId && $vehicles->contains('id', (int) $latestActiveVehicleId)) {
-                    $vehicleId = (int) $latestActiveVehicleId;
+                if ($latestId && $vehicles->contains('id', (int) $latestId)) {
+                    $vehicleId = (int) $latestId;
                 }
             }
 
-            // 3. Fallback: Kendaraan aktif pertama
             if (!$vehicleId && $vehicles->isNotEmpty()) {
                 $vehicleId = $vehicles->first()->id;
             }
         }
 
-        if ($vehicleId) {
-            $selectedVehicle = $vehicles->firstWhere('id', $vehicleId) ?: Vehicle::find($vehicleId);
-
-            if ($selectedVehicle) {
-                // Simpan kendaraan aktif ke session & cookie (30 hari)
-                session(['last_active_vehicle_id' => $selectedVehicle->id]);
-                cookie()->queue(cookie('last_active_vehicle_id', $selectedVehicle->id, 60 * 24 * 30));
-
-                $groupedHistory = $this->getVehicleHistory($selectedVehicle->id);
-
-                $performance = $this->getPerformance(
-                    $selectedVehicle->id,
-                    $request->input('period', 'last_month'),
-                    $request->input('start_date'),
-                    $request->input('end_date')
-                );
-            }
+        if (!$vehicleId) {
+            return null;
         }
 
-        $serviceTypes   = ServiceType::active()->orderBy('name')->get(['id', 'name', 'price']);
-        $places         = Place::getAllActive();
-        $paymentMethods = PaymentMethod::active()->orderBy('name')->get(['id', 'name']);
-        $users          = User::active()->orderBy('name')->get(['id', 'name', 'user_type']);
-        $expenseTypes   = ExpenseType::active()->orderBy('name')->get(['id', 'name']);
-        $incomeTypes    = IncomeType::active()->orderBy('name')->get(['id', 'name']);
+        return $vehicles->firstWhere('id', $vehicleId) ?: Vehicle::find($vehicleId);
+    }
 
-        return view('history.index', compact(
-            'vehicles',
-            'selectedVehicle',
-            'groupedHistory',
-            'performance',
-            'serviceTypes',
-            'places',
-            'paymentMethods',
-            'users',
-            'expenseTypes',
-            'incomeTypes'
-        ));
+    /**
+     * Load active master reference options for the history edit modal.
+     */
+    private function getEditReferenceData(): array
+    {
+        return [
+            'serviceTypes'   => ServiceType::active()->orderBy('name')->get(['id', 'name', 'price']),
+            'places'         => Place::getAllActive(),
+            'paymentMethods' => PaymentMethod::active()->orderBy('name')->get(['id', 'name']),
+            'users'          => User::active()->orderBy('name')->get(['id', 'name', 'user_type']),
+            'expenseTypes'   => ExpenseType::active()->orderBy('name')->get(['id', 'name']),
+            'incomeTypes'    => IncomeType::active()->orderBy('name')->get(['id', 'name']),
+        ];
     }
 
     private function getVehicleHistory($vehicleId)
@@ -132,6 +131,7 @@ class HistoryController extends Controller
         $userNames    = User::pluck('name', 'id');
 
         foreach ($records as $record) {
+            /** @var HistoryRecord $record */
             $extra = is_array($record->extra_data) ? $record->extra_data : (json_decode((string)$record->extra_data, true) ?: []);
 
             if (str_ends_with((string)$record->related_type, 'Maintenance') && isset($maintenances[$record->related_id])) {
@@ -197,7 +197,7 @@ class HistoryController extends Controller
                 }
             }
 
-            $record->setAttribute('enriched_extra', $extra);
+            $record->enriched_extra = $extra;
         }
 
         // Group by month
