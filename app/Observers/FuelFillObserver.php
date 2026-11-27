@@ -39,6 +39,9 @@ class FuelFillObserver
                     'fuel_type' => $fuelFill->fuel_type,
                     'liters' => $fuelFill->liters,
                     'price_per_liter' => $fuelFill->price_per_liter,
+                    'time' => $fuelFill->time,
+                    'driver' => $fuelFill->driver,
+                    'payment_method' => $fuelFill->payment_method,
                 ],
             ]);
         }

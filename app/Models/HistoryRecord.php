@@ -75,7 +75,7 @@ class HistoryRecord extends Model
     public static function createFromFuelFill($fuelFill)
     {
         // Try to match location with registered locations
-        $locationText = $fuelFill->location ?? $fuelFill->gas_station ?? $fuelFill->station_name;
+        $locationText = $fuelFill->location ?? $fuelFill->gas_station ?? $fuelFill->spbu ?? $fuelFill->station_name;
         $matchedLocation = static::findMatchingLocation($locationText);
 
         return static::create([
@@ -91,10 +91,59 @@ class HistoryRecord extends Model
                 'fuel_type' => $fuelFill->fuel_type,
                 'liters' => $fuelFill->liters,
                 'price_per_liter' => $fuelFill->price_per_liter,
+                'time' => $fuelFill->time,
+                'driver' => $fuelFill->driver,
+                'payment_method' => static::findMatchingPaymentMethod($fuelFill->payment_method) ?: $fuelFill->payment_method,
             ],
             'related_id' => $fuelFill->id,
             'related_type' => 'App\Models\FuelFill',
         ]);
+    }
+
+    /**
+     * Parse itemized service breakdown from a Maintenance model.
+     */
+    public static function parseServiceItemsFromMaintenance($maintenance): array
+    {
+        $items = [];
+        $description = (string) ($maintenance->description ?? '');
+
+        if (preg_match('/Service Breakdown:\s*\R([\s\S]*?)(?:\R\R|$)/i', $description, $matches)) {
+            $lines = preg_split('/\R/', trim($matches[1]));
+            foreach ($lines as $line) {
+                $line = trim($line);
+                if ($line === '') continue;
+
+                if (preg_match('/^(.+?)\s*\(Rp\s*([0-9.,]+)\)$/i', $line, $m)) {
+                    $price = (float) str_replace(['.', ','], ['', ''], $m[2]);
+                    $items[] = [
+                        'name' => trim($m[1]),
+                        'price' => $price,
+                    ];
+                } else {
+                    $items[] = [
+                        'name' => $line,
+                        'price' => null,
+                    ];
+                }
+            }
+        }
+
+        if (empty($items)) {
+            $serviceTypeText = (string) ($maintenance->service_type ?? $maintenance->type ?? '');
+            if ($serviceTypeText !== '') {
+                $parts = array_filter(array_map('trim', explode(',', $serviceTypeText)));
+                $totalCost = (float) ($maintenance->total_cost ?? $maintenance->cost ?? 0);
+                foreach ($parts as $part) {
+                    $items[] = [
+                        'name' => $part,
+                        'price' => count($parts) === 1 ? $totalCost : null,
+                    ];
+                }
+            }
+        }
+
+        return $items;
     }
 
     /**
@@ -112,15 +161,16 @@ class HistoryRecord extends Model
             $title = 'Ganti Oli';
         }
 
-        $date = $maintenance->maintenance_date ?? $maintenance->service_date;
+        $date = $maintenance->service_date ?? $maintenance->maintenance_date;
 
         // Try to match location with registered locations
-        $locationText = $maintenance->workshop ?? $maintenance->workshop_name ?? $maintenance->location;
+        $locationText = $maintenance->place ?? $maintenance->workshop ?? $maintenance->workshop_name ?? $maintenance->location;
         $matchedLocation = static::findMatchingLocation($locationText);
 
         // Try to match service type with registered service types
         $serviceTypeText = $maintenance->service_type ?? $maintenance->type;
         $matchedServiceType = static::findMatchingServiceType($serviceTypeText);
+        $serviceItems = static::parseServiceItemsFromMaintenance($maintenance);
 
         return static::create([
             'vehicle_id' => $maintenance->vehicle_id,
@@ -128,12 +178,16 @@ class HistoryRecord extends Model
             'title' => $title,
             'description' => $maintenance->notes,
             'location' => $matchedLocation ?: $locationText,
-            'cost' => $maintenance->cost ?? $maintenance->total_cost,
+            'cost' => $maintenance->total_cost ?? $maintenance->cost,
             'odometer' => $maintenance->odometer,
             'date' => $date,
             'extra_data' => [
                 'service_type' => $matchedServiceType ?: $serviceTypeText,
-                'workshop' => $matchedLocation ?: ($maintenance->workshop ?? $maintenance->workshop_name),
+                'service_items' => $serviceItems,
+                'workshop' => $matchedLocation ?: ($maintenance->place ?? $maintenance->workshop ?? $maintenance->workshop_name),
+                'time' => $maintenance->service_time,
+                'user_id' => $maintenance->user_id,
+                'payment_method' => static::findMatchingPaymentMethod($maintenance->payment_method) ?: $maintenance->payment_method,
                 'checklist' => 'checklist',
             ],
             'related_id' => $maintenance->id,
@@ -207,6 +261,8 @@ class HistoryRecord extends Model
             'extra_data' => [
                 'category' => $matchedExpenseType ?: $expense->category,
                 'payment_method' => $matchedPaymentMethod ?: $expense->payment_method,
+                'time' => $expense->expense_time,
+                'user_id' => $expense->user_id,
             ],
             'related_id' => $expense->id,
             'related_type' => 'App\Models\Expense',
@@ -230,6 +286,8 @@ class HistoryRecord extends Model
             'extra_data'   => [
                 'income_type'    => $income->type,
                 'payment_method' => null,
+                'time'           => $income->income_time,
+                'user_id'        => $income->user_id,
             ],
             'related_id'   => $income->id,
             'related_type' => 'App\Models\Income',

@@ -43,17 +43,25 @@ class ExpenseObserver
                 }
             }
 
+            $locationName = is_object($expense->location) ? ($expense->location->name ?? null) : $expense->location;
+            if (empty($locationName) && !empty($expense->place)) {
+                $locationName = $expense->place;
+            }
+
             $history->update([
                 'vehicle_id' => $expense->vehicle_id,
                 'type' => $type,
                 'title' => $expense->description ?? $expense->category,
                 'description' => $expense->notes,
-                'location' => $expense->location,
-                'cost' => $expense->amount,
+                'location' => $locationName,
+                'cost' => $expense->amount ?? $expense->total_cost,
+                'odometer' => $expense->odometer,
                 'date' => $expense->expense_date,
                 'extra_data' => [
                     'category' => $expense->category,
                     'payment_method' => $expense->payment_method,
+                    'time' => $expense->expense_time,
+                    'user_id' => $expense->user_id,
                 ],
             ]);
         }

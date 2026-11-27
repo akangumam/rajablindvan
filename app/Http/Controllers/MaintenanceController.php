@@ -262,33 +262,67 @@ class MaintenanceController extends Controller
     public function update(Request $request, Maintenance $maintenance)
     {
         $vehicle = Vehicle::findOrFail($request->vehicle_id);
-        // For updates, we need to consider if we're updating the same record
-        $minOdometer = $maintenance->odometer == $vehicle->getLatestOdometer() ?
-                      $maintenance->odometer : $vehicle->getMinimumOdometer();
 
         $validated = $request->validate([
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'maintenance_date' => 'required|date',
-            'odometer' => [
-                'required',
-                'numeric',
-                'min:' . $minOdometer,
-            ],
-            'type' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'description' => 'required|string',
-            'workshop' => 'nullable|string|max:255',
-            'cost' => 'required|numeric|min:0',
-            'next_maintenance_date' => 'nullable|date|after:maintenance_date',
+            'vehicle_id'        => 'required|exists:vehicles,id',
+            'service_date'      => 'nullable|date',
+            'maintenance_date'  => 'nullable|date',
+            'service_time'      => 'nullable',
+            'odometer'          => 'required|numeric|min:0',
+            'selected_services' => 'nullable|json',
+            'type'              => 'nullable|string|max:255',
+            'category'          => 'nullable|string|max:255',
+            'description'       => 'nullable|string',
+            'workshop'          => 'nullable|string|max:255',
+            'place'             => 'nullable|string|max:255',
+            'user_id'           => 'nullable|exists:users,id',
+            'payment_method'    => 'nullable|string|max:255',
+            'cost'              => 'nullable|numeric|min:0',
+            'total_cost'        => 'nullable|numeric|min:0',
+            'next_maintenance_date'     => 'nullable|date',
             'next_maintenance_odometer' => 'nullable|numeric|min:0',
-            'parts_replaced' => 'nullable|string',
-            'status' => 'required|in:Completed,Scheduled,Overdue',
-            'notes' => 'nullable|string'
+            'parts_replaced'    => 'nullable|string',
+            'status'            => 'nullable|in:Completed,Scheduled,Overdue',
+            'notes'             => 'nullable|string',
         ]);
+
+        if (!empty($validated['service_date'])) {
+            $validated['maintenance_date'] = $validated['service_date'];
+        } elseif (!empty($validated['maintenance_date'])) {
+            $validated['service_date'] = $validated['maintenance_date'];
+        }
+
+        if ($request->filled('selected_services')) {
+            $selectedServices = json_decode($request->selected_services, true);
+            $serviceNames = [];
+            $serviceDetails = [];
+            $calculatedTotalCost = 0;
+
+            if (is_array($selectedServices)) {
+                foreach ($selectedServices as $service) {
+                    $name = $service['name'] ?? 'Unknown Service';
+                    $price = isset($service['price']) ? (float) $service['price'] : 0;
+                    $serviceNames[] = $name;
+                    $serviceDetails[] = "$name (Rp " . number_format($price, 0, ',', '.') . ")";
+                    $calculatedTotalCost += $price;
+                }
+            }
+
+            $validated['service_type'] = Str::limit(implode(', ', $serviceNames), 250);
+            $validated['description'] = "Service Breakdown:\n" . implode("\n", $serviceDetails);
+            $validated['total_cost'] = $calculatedTotalCost;
+            $validated['cost'] = $calculatedTotalCost;
+        } elseif (isset($validated['cost']) && !isset($validated['total_cost'])) {
+            $validated['total_cost'] = $validated['cost'];
+        }
+
+        if (!empty($validated['place'])) {
+            $validated['workshop'] = $validated['place'];
+        }
 
         $maintenance->update($validated);
 
-        return redirect()->route('maintenances.index')
+        return redirect()->route('history.index', ['vehicle_id' => $vehicle->id])
             ->with('success', 'Data perawatan berhasil diperbarui!');
     }
 

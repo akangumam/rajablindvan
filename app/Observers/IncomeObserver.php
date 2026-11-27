@@ -38,6 +38,8 @@ class IncomeObserver
                 'extra_data'  => [
                     'income_type'    => $income->type,
                     'payment_method' => null,
+                    'time'           => $income->income_time,
+                    'user_id'        => $income->user_id,
                 ],
             ]);
         }

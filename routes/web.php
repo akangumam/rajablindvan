@@ -92,9 +92,9 @@ Route::middleware(['auth', LocationFilter::class])->group(function () {
 
     // ... (rest of the routes)
 
-    // History - All can view
-    Route::resource('history', HistoryController::class);
+    // History - All can view (specific routes BEFORE resource wildcard!)
     Route::get('history/download', [HistoryController::class, 'downloadDetail'])->name('history.download');
+    Route::resource('history', HistoryController::class);
 
     // Fuel Fills - All can view, Operation can create
     Route::resource('fuel-fills', FuelFillController::class);

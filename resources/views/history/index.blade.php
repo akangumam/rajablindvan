@@ -686,6 +686,101 @@
     .btn-clear-history-search:hover {
         color: #e74c3c;
     }
+
+    /* Drivvo-style Service Breakdown inside Timeline Card */
+    .service-breakdown-box {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed #e2e8f0;
+    }
+
+    .service-breakdown-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 6px;
+    }
+
+    .service-breakdown-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: #334155;
+        padding: 3px 0;
+    }
+
+    .service-breakdown-price {
+        font-weight: 600;
+        color: #1e293b;
+        white-space: nowrap;
+        margin-left: 12px;
+    }
+
+    /* Drivvo-style Edit Service Item Rows in Modal */
+    .edit-service-item-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        background: #ffffff;
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .edit-service-item-row .service-name-col {
+        flex: 1 1 55%;
+        min-width: 140px;
+    }
+
+    .edit-service-item-row .service-price-col {
+        flex: 0 0 150px;
+    }
+
+    .btn-remove-service-row {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: #fee2e2;
+        color: #dc2626;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: all 0.15s ease;
+    }
+
+    .btn-remove-service-row:hover {
+        background: #dc2626;
+        color: #ffffff;
+    }
+
+    .service-total-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 10px;
+        margin-top: 8px;
+        border-top: 1px solid #cbd5e1;
+        font-size: 14px;
+    }
+
+    @media (max-width: 576px) {
+        .edit-service-item-row {
+            flex-wrap: wrap;
+        }
+        .edit-service-item-row .service-name-col {
+            flex: 1 1 100%;
+        }
+        .edit-service-item-row .service-price-col {
+            flex: 1 1 calc(100% - 40px);
+        }
+    }
 </style>
 
 <div class="row">
@@ -886,10 +981,12 @@
 
                     @foreach($records as $index => $record)
                     @php
-                        $recordDetails = is_string($record->extra_data) ? json_decode($record->extra_data, true) : $record->extra_data;
+                        $recordDetails = $record->enriched_extra ?? (is_string($record->extra_data) ? json_decode($record->extra_data, true) : $record->extra_data);
                         if (!is_array($recordDetails)) {
                             $recordDetails = [];
                         }
+                        $serviceItems = is_array($recordDetails['service_items'] ?? null) ? $recordDetails['service_items'] : [];
+                        $serviceItemNames = collect($serviceItems)->pluck('name')->filter()->implode(' ');
                         $searchTokens = [
                             $record->title,
                             $record->type,
@@ -902,7 +999,10 @@
                             $record->odometer ? $record->odometer . ' km' : null,
                             $record->cost ? 'rp ' . number_format($record->cost, 0, ',', '.') : null,
                             $recordDetails['service_type'] ?? null,
+                            $serviceItemNames ?: null,
                             $recordDetails['workshop'] ?? null,
+                            $recordDetails['driver_name'] ?? null,
+                            $recordDetails['payment_method'] ?? null,
                             $recordDetails['category'] ?? null,
                             $recordDetails['income_type'] ?? null,
                             $recordDetails['fuel_type'] ?? null,
@@ -925,6 +1025,9 @@
                                         @break
                                     @case('service')
                                         <i class="fas fa-tools"></i>
+                                        @break
+                                    @case('income')
+                                        <i class="fas fa-wallet"></i>
                                         @break
                                     @case('registration')
                                         <i class="fas fa-file-alt"></i>
@@ -965,21 +1068,33 @@
                         <div class="timeline-content">
                             <div class="timeline-header">
                                 <div>
-                                    <h4 class="mb-1">{{ $record->title ?: ucwords(str_replace('_', ' ', $record->type)) }}</h4>
-                                    <span class="timeline-date"><i class="far fa-calendar-alt me-1"></i>{{ \Carbon\Carbon::parse($record->date)->format('d M Y') }}</span>
+                                    <h4 class="mb-1">
+                                        {{ $record->title ?: ucwords(str_replace('_', ' ', $record->type)) }}
+                                        @if(count($serviceItems) > 1)
+                                            <span class="badge bg-primary bg-opacity-10 text-primary ms-1" style="font-size: 11px; font-weight: 600;">+{{ count($serviceItems) - 1 }}</span>
+                                        @endif
+                                    </h4>
+                                    <span class="timeline-date">
+                                        <i class="far fa-calendar-alt me-1"></i>{{ \Carbon\Carbon::parse($record->date)->format('d M Y') }}
+                                        @if(!empty($recordDetails['time']))
+                                            <span class="ms-1 text-muted">· {{ $recordDetails['time'] }}</span>
+                                        @endif
+                                    </span>
                                 </div>
                                 <div class="timeline-actions d-flex align-items-center gap-1">
                                     <button type="button" 
                                             class="btn-timeline-edit" 
                                             data-id="{{ $record->id }}"
                                             data-type="{{ $record->type }}"
+                                            data-related-type="{{ $record->related_type ?? '' }}"
                                             data-title="{{ $record->title ?: ucwords(str_replace('_', ' ', $record->type)) }}"
                                             data-date="{{ \Carbon\Carbon::parse($record->date)->format('Y-m-d') }}"
+                                            data-time="{{ $recordDetails['time'] ?? '' }}"
                                             data-odometer="{{ $record->odometer ?? '' }}"
                                             data-cost="{{ (float) $record->cost }}"
                                             data-location="{{ $record->location ?? '' }}"
                                             data-description="{{ $record->description ?? '' }}"
-                                            data-extra="{{ is_string($record->extra_data) ? $record->extra_data : json_encode($record->extra_data) }}"
+                                            data-extra="{{ json_encode($recordDetails) }}"
                                             title="Edit Catatan Riwayat">
                                         <i class="fas fa-pencil-alt"></i>
                                         <span>Edit</span>
@@ -998,36 +1113,41 @@
                             </div>
 
                             <div class="timeline-details">
-                                @if($record->extra_data)
-                                    @php $details = $recordDetails; @endphp
+                                @php $details = $recordDetails; @endphp
 
-                                    @if(isset($details['service_type']))
-                                    <div class="detail-item">
-                                        <i class="fas fa-wrench"></i>
-                                        <span><strong>{{ $details['service_type'] }}</strong></span>
-                                    </div>
-                                    @endif
+                                @if(!empty($details['liters']))
+                                <div class="detail-item">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span>{{ $details['liters'] }} Liter @if(!empty($details['fuel_type']))({{ $details['fuel_type'] }})@endif</span>
+                                </div>
+                                @endif
 
-                                    @if(isset($details['liters']))
-                                    <div class="detail-item">
-                                        <i class="fas fa-tachometer-alt"></i>
-                                        <span>{{ $details['liters'] }} Liter</span>
-                                    </div>
-                                    @endif
+                                @if($record->odometer)
+                                <div class="detail-item">
+                                    <i class="fas fa-road"></i>
+                                    <span>{{ number_format($record->odometer) }} km</span>
+                                </div>
+                                @endif
 
-                                    @if($record->odometer)
-                                    <div class="detail-item">
-                                        <i class="fas fa-road"></i>
-                                        <span>{{ number_format($record->odometer) }} km</span>
-                                    </div>
-                                    @endif
+                                @if($record->location)
+                                <div class="detail-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ $record->location }}</span>
+                                </div>
+                                @endif
 
-                                    @if($record->location)
-                                    <div class="detail-item">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span>{{ $record->location }}</span>
-                                    </div>
-                                    @endif
+                                @if(!empty($details['driver_name']))
+                                <div class="detail-item">
+                                    <i class="fas fa-user"></i>
+                                    <span>{{ $details['driver_name'] }}</span>
+                                </div>
+                                @endif
+
+                                @if(!empty($details['payment_method']))
+                                <div class="detail-item">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>{{ $details['payment_method'] }}</span>
+                                </div>
                                 @endif
 
                                 @if($record->description)
@@ -1038,8 +1158,34 @@
                                 @endif
                             </div>
 
-                            <div class="timeline-cost">
-                                Rp {{ number_format($record->cost, 0, ',', '.') }}
+                            @if(count($serviceItems) > 0)
+                            <div class="service-breakdown-box">
+                                <div class="service-breakdown-title">Jenis Servis</div>
+                                @foreach($serviceItems as $sItem)
+                                <div class="service-breakdown-row">
+                                    <span>{{ $sItem['name'] ?? '-' }}</span>
+                                    <span class="service-breakdown-price">
+                                        @if(isset($sItem['price']) && $sItem['price'] !== null && $sItem['price'] !== '')
+                                            Rp {{ number_format((float)$sItem['price'], 0, ',', '.') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </span>
+                                </div>
+                                @endforeach
+                            </div>
+                            @elseif(!empty($details['service_type']))
+                            <div class="service-breakdown-box">
+                                <div class="service-breakdown-title">Jenis Servis</div>
+                                <div class="service-breakdown-row">
+                                    <span>{{ $details['service_type'] }}</span>
+                                    <span class="service-breakdown-price">Rp {{ number_format($record->cost, 0, ',', '.') }}</span>
+                                </div>
+                            </div>
+                            @endif
+
+                            <div class="timeline-cost {{ $record->type === 'income' ? 'text-success' : '' }}">
+                                {{ $record->type === 'income' ? '+' : '' }}Rp {{ number_format($record->cost, 0, ',', '.') }}
                             </div>
                         </div>
                     </div>
@@ -1152,38 +1298,62 @@
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id" id="edit_record_id">
-                <div class="modal-body" style="padding: 24px; background: #fafbfe;">
+                <input type="hidden" name="service_items_json" id="edit_service_items_json">
+                <div class="modal-body" style="padding: 24px; background: #fafbfe; max-height: 75vh; overflow-y: auto;">
                     <div class="row g-3">
-                        <!-- Tipe & Judul -->
+                        <!-- Tanggal & Waktu (Drivvo Style) -->
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">Judul Transaksi <span class="text-danger">*</span></label>
-                            <input type="text" name="title" id="edit_title" class="form-control" required style="border-radius: 10px; padding: 10px 14px;">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">Tanggal Transaksi <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">
+                                <i class="far fa-calendar-alt me-1 text-primary"></i>Tanggal <span class="text-danger">*</span>
+                            </label>
                             <input type="date" name="date" id="edit_date" class="form-control" required style="border-radius: 10px; padding: 10px 14px;">
                         </div>
-
-                        <!-- Odometer & Biaya -->
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">Kilometer (Odometer)</label>
+                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">
+                                <i class="far fa-clock me-1 text-primary"></i>Waktu
+                            </label>
+                            <input type="time" name="time" id="edit_time" class="form-control" style="border-radius: 10px; padding: 10px 14px;">
+                        </div>
+
+                        <!-- Odometer & Judul -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">
+                                <i class="fas fa-tachometer-alt me-1 text-primary"></i>Odometer (km)
+                            </label>
                             <div class="input-group">
-                                <input type="number" name="odometer" id="edit_odometer" class="form-control" min="0" placeholder="Contoh: 45000" style="border-radius: 10px 0 0 10px; padding: 10px 14px;">
+                                <input type="number" name="odometer" id="edit_odometer" class="form-control" min="0" placeholder="Contoh: 77300" style="border-radius: 10px 0 0 10px; padding: 10px 14px;">
                                 <span class="input-group-text" style="border-radius: 0 10px 10px 0; background: #f0f2f5;">km</span>
                             </div>
+                            <small class="text-muted" style="font-size: 11.5px;">Odometer terakhir kendaraan: <strong>{{ number_format($selectedVehicle->getLatestOdometer(), 0, ',', '.') }} km</strong></small>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">Total Biaya (Rp) <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text" style="border-radius: 10px 0 0 10px; background: #f0f2f5; font-weight: 600;">Rp</span>
-                                <input type="number" step="any" name="cost" id="edit_cost" class="form-control" required min="0" placeholder="0" style="border-radius: 0 10px 10px 0; padding: 10px 14px;">
-                            </div>
+                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">
+                                <i class="fas fa-heading me-1 text-primary"></i>Judul Transaksi
+                            </label>
+                            <input type="text" name="title" id="edit_title" class="form-control" placeholder="Otomatis dari jenis transaksi / isi manual" style="border-radius: 10px; padding: 10px 14px;">
                         </div>
 
-                        <!-- Lokasi / Tempat -->
-                        <div class="col-12">
-                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;" id="label_location">Lokasi / SPBU / Bengkel</label>
-                            <input type="text" name="location" id="edit_location" class="form-control" placeholder="Nama tempat / alamat" style="border-radius: 10px; padding: 10px 14px;">
+                        <!-- Extra: Service Fields (Drivvo Style Multi-Item + Individual Prices) -->
+                        <div id="serviceExtraSection" class="col-12" style="display: none;">
+                            <div style="background: #f0f7ff; border: 1px solid #dbeafe; border-radius: 12px; padding: 16px;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold mb-0" style="color: #2563eb; font-size: 14px;">
+                                        <i class="fas fa-wrench me-1"></i> Rincian Jenis Servis
+                                    </h6>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="btnAddServiceItem" style="border-radius: 8px; font-weight: 600;">
+                                        <i class="fas fa-plus me-1"></i> Tambah Jenis Servis
+                                    </button>
+                                </div>
+
+                                <div id="editServiceItemsList" class="mt-2">
+                                    <!-- Dynamic service rows rendered by JS -->
+                                </div>
+
+                                <div class="service-total-bar">
+                                    <span class="text-muted fw-semibold">Total Biaya Servis</span>
+                                    <span class="fw-bold text-primary" id="editServiceTotalDisplay" style="font-size: 16px;">Rp 0</span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Extra: Fuel Fields -->
@@ -1209,28 +1379,90 @@
                             </div>
                         </div>
 
-                        <!-- Extra: Service Fields -->
-                        <div id="serviceExtraSection" class="col-12" style="display: none;">
-                            <div style="background: #f0f7ff; border: 1px solid #dbeafe; border-radius: 12px; padding: 16px;">
-                                <h6 class="fw-bold mb-3" style="color: #2563eb; font-size: 14px;">
-                                    <i class="fas fa-wrench me-1"></i> Rincian Servis
-                                </h6>
-                                <div class="row g-2">
-                                    <div class="col-md-6">
-                                        <label class="form-label" style="font-size: 12px;">Jenis Servis / Tindakan</label>
-                                        <input type="text" name="service_type" id="edit_service_type" class="form-control form-control-sm" placeholder="AC, Ganti Oli, Rem, dll" style="border-radius: 8px;">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label" style="font-size: 12px;">Nama Bengkel</label>
-                                        <input type="text" name="workshop" id="edit_workshop" class="form-control form-control-sm" placeholder="Nama bengkel" style="border-radius: 8px;">
-                                    </div>
-                                </div>
+                        <!-- Extra: Income Type -->
+                        <div id="incomeExtraSection" class="col-12" style="display: none;">
+                            <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; padding: 16px;">
+                                <label class="form-label fw-semibold mb-1" style="font-size: 13px; color: #059669;">
+                                    <i class="fas fa-wallet me-1"></i> Jenis Pendapatan
+                                </label>
+                                <select name="income_type" id="edit_income_type" class="form-select form-select-sm" style="border-radius: 8px;">
+                                    <option value="">-- Pilih Jenis Pendapatan --</option>
+                                    @foreach($incomeTypes ?? [] as $it)
+                                        <option value="{{ $it->name }}">{{ $it->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+                        </div>
+
+                        <!-- Extra: Expense Type -->
+                        <div id="expenseExtraSection" class="col-12" style="display: none;">
+                            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 16px;">
+                                <label class="form-label fw-semibold mb-1" style="font-size: 13px; color: #dc2626;">
+                                    <i class="fas fa-receipt me-1"></i> Jenis Pengeluaran
+                                </label>
+                                <select name="expense_type" id="edit_expense_type" class="form-select form-select-sm" style="border-radius: 8px;">
+                                    <option value="">-- Pilih Jenis Pengeluaran --</option>
+                                    @foreach($expenseTypes ?? [] as $et)
+                                        <option value="{{ $et->name }}">{{ $et->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Total Biaya & Tempat -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;" id="label_cost">
+                                <i class="fas fa-money-bill-wave me-1 text-primary"></i>Total Biaya (Rp) <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="border-radius: 10px 0 0 10px; background: #f0f2f5; font-weight: 600;">Rp</span>
+                                <input type="number" step="any" name="cost" id="edit_cost" class="form-control" required min="0" placeholder="0" style="border-radius: 0 10px 10px 0; padding: 10px 14px;">
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="locationWrapper">
+                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;" id="label_location">
+                                <i class="fas fa-map-marker-alt me-1 text-primary"></i>Tempat / Lokasi
+                            </label>
+                            <select id="edit_location_select" class="form-select" style="border-radius: 10px; padding: 10px 14px;">
+                                <option value="">-- Pilih Tempat --</option>
+                                @foreach($places ?? [] as $pl)
+                                    <option value="{{ $pl->name }}">{{ $pl->name }}</option>
+                                @endforeach
+                                <option value="__custom__">+ Ketik Nama Tempat Manual...</option>
+                            </select>
+                            <input type="text" id="edit_location_manual" class="form-control mt-2" placeholder="Ketik nama tempat / bengkel..." style="display: none; border-radius: 10px; padding: 10px 14px;">
+                            <input type="hidden" name="location" id="edit_location">
+                        </div>
+
+                        <!-- Pengemudi / Penanggung Jawab & Metode Pembayaran -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">
+                                <i class="fas fa-user me-1 text-primary"></i>Pengemudi / Penanggung Jawab
+                            </label>
+                            <select name="user_id" id="edit_user_id" class="form-select" style="border-radius: 10px; padding: 10px 14px;">
+                                <option value="">-- Pilih Pengemudi / Pengguna --</option>
+                                @foreach($users ?? [] as $u)
+                                    <option value="{{ $u->id }}">{{ $u->name }} @if($u->user_type)({{ $u->user_type }})@endif</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6" id="paymentMethodWrapper">
+                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">
+                                <i class="fas fa-credit-card me-1 text-primary"></i>Metode Pembayaran
+                            </label>
+                            <select name="payment_method" id="edit_payment_method" class="form-select" style="border-radius: 10px; padding: 10px 14px;">
+                                <option value="">-- Pilih Metode Pembayaran --</option>
+                                @foreach($paymentMethods ?? [] as $pm)
+                                    <option value="{{ $pm->name }}">{{ $pm->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <!-- Catatan / Deskripsi -->
                         <div class="col-12">
-                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">Catatan / Deskripsi</label>
+                            <label class="form-label fw-semibold" style="font-size: 13px; color: #2c3e50;">
+                                <i class="fas fa-sticky-note me-1 text-primary"></i>Catatan / Deskripsi
+                            </label>
                             <textarea name="description" id="edit_description" class="form-control" rows="2" placeholder="Catatan tambahan (opsional)..." style="border-radius: 10px;"></textarea>
                         </div>
                     </div>
@@ -1343,19 +1575,233 @@ document.addEventListener('DOMContentLoaded', function() {
         priceInput.addEventListener('input', calcFuelCost);
     }
 
+    // Master service types for dynamic Drivvo-style edit rows
+    const masterServiceTypes = @json($serviceTypes ?? []);
+    let editServiceItems = [];
+
+    function syncEditServiceItems() {
+        const listEl = document.getElementById('editServiceItemsList');
+        const hiddenJson = document.getElementById('edit_service_items_json');
+        const totalDisplay = document.getElementById('editServiceTotalDisplay');
+        const costInput = document.getElementById('edit_cost');
+
+        if (!listEl) return;
+
+        let total = 0;
+        let hasAnyPrice = false;
+        editServiceItems.forEach(item => {
+            const p = parseFloat(item.price);
+            if (!isNaN(p) && p >= 0 && item.price !== '' && item.price !== null) {
+                total += p;
+                hasAnyPrice = true;
+            }
+        });
+
+        if (totalDisplay) {
+            totalDisplay.textContent = 'Rp ' + total.toLocaleString('id-ID');
+        }
+        if (hasAnyPrice && costInput && document.getElementById('serviceExtraSection').style.display !== 'none') {
+            costInput.value = Math.round(total);
+        }
+        if (hiddenJson) {
+            hiddenJson.value = JSON.stringify(editServiceItems);
+        }
+    }
+
+    function renderEditServiceRows() {
+        const listEl = document.getElementById('editServiceItemsList');
+        if (!listEl) return;
+
+        listEl.innerHTML = '';
+
+        if (editServiceItems.length === 0) {
+            editServiceItems.push({ name: '', price: '' });
+        }
+
+        editServiceItems.forEach((item, idx) => {
+            const row = document.createElement('div');
+            row.className = 'edit-service-item-row';
+
+            const nameCol = document.createElement('div');
+            nameCol.className = 'service-name-col';
+
+            const select = document.createElement('select');
+            select.className = 'form-select form-select-sm';
+            select.style.borderRadius = '8px';
+
+            const emptyOpt = document.createElement('option');
+            emptyOpt.value = '';
+            emptyOpt.textContent = '-- Pilih Jenis Servis --';
+            select.appendChild(emptyOpt);
+
+            let matchedMaster = false;
+            masterServiceTypes.forEach(st => {
+                const opt = document.createElement('option');
+                opt.value = st.name;
+                opt.textContent = st.name;
+                opt.dataset.price = st.price || '';
+                if (item.name && st.name.toLowerCase() === item.name.toLowerCase()) {
+                    opt.selected = true;
+                    matchedMaster = true;
+                }
+                select.appendChild(opt);
+            });
+
+            const customOpt = document.createElement('option');
+            customOpt.value = '__custom__';
+            customOpt.textContent = '+ Ketik Nama Servis Manual...';
+            if (item.name && !matchedMaster) {
+                customOpt.selected = true;
+            }
+            select.appendChild(customOpt);
+
+            const customInput = document.createElement('input');
+            customInput.type = 'text';
+            customInput.className = 'form-control form-control-sm mt-1';
+            customInput.placeholder = 'Nama servis...';
+            customInput.style.borderRadius = '8px';
+            customInput.value = (!matchedMaster && item.name) ? item.name : '';
+            customInput.style.display = (item.name && !matchedMaster) ? 'block' : 'none';
+
+            select.addEventListener('change', function() {
+                if (this.value === '__custom__') {
+                    customInput.style.display = 'block';
+                    customInput.focus();
+                    editServiceItems[idx].name = customInput.value.trim();
+                } else {
+                    customInput.style.display = 'none';
+                    editServiceItems[idx].name = this.value;
+                    const selectedOption = this.options[this.selectedIndex];
+                    const refPrice = selectedOption ? selectedOption.dataset.price : '';
+                    if ((editServiceItems[idx].price === '' || editServiceItems[idx].price === null) && refPrice) {
+                        editServiceItems[idx].price = refPrice;
+                        priceInput.value = refPrice;
+                    }
+                }
+                syncEditServiceItems();
+            });
+
+            customInput.addEventListener('input', function() {
+                editServiceItems[idx].name = this.value;
+                syncEditServiceItems();
+            });
+
+            nameCol.appendChild(select);
+            nameCol.appendChild(customInput);
+
+            const priceCol = document.createElement('div');
+            priceCol.className = 'service-price-col input-group input-group-sm';
+
+            const rpSpan = document.createElement('span');
+            rpSpan.className = 'input-group-text';
+            rpSpan.textContent = 'Rp';
+
+            const priceInput = document.createElement('input');
+            priceInput.type = 'number';
+            priceInput.step = 'any';
+            priceInput.min = '0';
+            priceInput.className = 'form-control';
+            priceInput.placeholder = '0';
+            priceInput.value = (item.price !== null && item.price !== undefined) ? item.price : '';
+            priceInput.addEventListener('input', function() {
+                editServiceItems[idx].price = this.value;
+                syncEditServiceItems();
+            });
+
+            priceCol.appendChild(rpSpan);
+            priceCol.appendChild(priceInput);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn-remove-service-row';
+            removeBtn.title = 'Hapus item';
+            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            removeBtn.addEventListener('click', function() {
+                editServiceItems.splice(idx, 1);
+                renderEditServiceRows();
+                syncEditServiceItems();
+            });
+
+            row.appendChild(nameCol);
+            row.appendChild(priceCol);
+            row.appendChild(removeBtn);
+            listEl.appendChild(row);
+        });
+
+        syncEditServiceItems();
+    }
+
+    document.getElementById('btnAddServiceItem')?.addEventListener('click', function() {
+        editServiceItems.push({ name: '', price: '' });
+        renderEditServiceRows();
+    });
+
+    // Location Select <-> Manual sync
+    const locSelect = document.getElementById('edit_location_select');
+    const locManual = document.getElementById('edit_location_manual');
+    const locHidden = document.getElementById('edit_location');
+
+    function setModalLocationValue(val) {
+        if (!locSelect || !locManual || !locHidden) return;
+        const cleanVal = (val || '').trim();
+        locHidden.value = cleanVal;
+
+        if (!cleanVal) {
+            locSelect.value = '';
+            locManual.style.display = 'none';
+            locManual.value = '';
+            return;
+        }
+
+        let found = false;
+        Array.from(locSelect.options).forEach(opt => {
+            if (opt.value && opt.value !== '__custom__' && opt.value.toLowerCase() === cleanVal.toLowerCase()) {
+                locSelect.value = opt.value;
+                found = true;
+            }
+        });
+
+        if (found) {
+            locManual.style.display = 'none';
+            locManual.value = '';
+        } else {
+            locSelect.value = '__custom__';
+            locManual.style.display = 'block';
+            locManual.value = cleanVal;
+        }
+    }
+
+    if (locSelect && locManual && locHidden) {
+        locSelect.addEventListener('change', function() {
+            if (this.value === '__custom__') {
+                locManual.style.display = 'block';
+                locManual.focus();
+                locHidden.value = locManual.value.trim();
+            } else {
+                locManual.style.display = 'none';
+                locHidden.value = this.value;
+            }
+        });
+        locManual.addEventListener('input', function() {
+            locHidden.value = this.value.trim();
+        });
+    }
+
     // Bind Edit Button Clicks
     document.querySelectorAll('.btn-timeline-edit').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
 
-            const id = this.getAttribute('data-id');
-            const type = this.getAttribute('data-type');
-            const title = this.getAttribute('data-title');
-            const date = this.getAttribute('data-date');
-            const odometer = this.getAttribute('data-odometer');
-            const cost = this.getAttribute('data-cost');
-            const location = this.getAttribute('data-location');
+            const id          = this.getAttribute('data-id');
+            const type        = this.getAttribute('data-type');
+            const relatedType = this.getAttribute('data-related-type') || '';
+            const title       = this.getAttribute('data-title');
+            const date        = this.getAttribute('data-date');
+            const time        = this.getAttribute('data-time');
+            const odometer    = this.getAttribute('data-odometer');
+            const cost        = this.getAttribute('data-cost');
+            const location    = this.getAttribute('data-location');
             const description = this.getAttribute('data-description');
             let extra = {};
             try {
@@ -1368,42 +1814,134 @@ document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('editHistoryForm');
             form.action = '{{ url("history") }}/' + id;
 
-            // Fill Form Inputs
+            // Fill Common Form Inputs
             document.getElementById('edit_record_id').value = id;
             document.getElementById('edit_title').value = title || '';
-            
+
             const dateInput = document.getElementById('edit_date');
             dateInput.value = date || '';
             if (dateInput._flatpickr) {
                 dateInput._flatpickr.setDate(date, true);
             }
 
+            document.getElementById('edit_time').value = time || extra.time || '';
             document.getElementById('edit_odometer').value = odometer || '';
             document.getElementById('edit_cost').value = cost || '';
-            document.getElementById('edit_location').value = location || '';
             document.getElementById('edit_description').value = description || '';
 
-            // Handle Type Specific Sections
-            const fuelSection = document.getElementById('fuelExtraSection');
+            // Set Location (Place)
+            setModalLocationValue(location || extra.workshop || '');
+
+            // Set Driver / User
+            const userSelect = document.getElementById('edit_user_id');
+            if (userSelect) {
+                userSelect.value = extra.user_id || '';
+            }
+
+            // Set Payment Method (preserve custom option if missing from master list)
+            const pmSelect = document.getElementById('edit_payment_method');
+            if (pmSelect) {
+                const pmVal = (extra.payment_method || '').trim();
+                if (pmVal) {
+                    let matchedPm = Array.from(pmSelect.options).find(o => o.value.toLowerCase() === pmVal.toLowerCase());
+                    if (!matchedPm) {
+                        const tmpOpt = document.createElement('option');
+                        tmpOpt.value = pmVal;
+                        tmpOpt.textContent = pmVal;
+                        pmSelect.appendChild(tmpOpt);
+                        matchedPm = tmpOpt;
+                    }
+                    pmSelect.value = matchedPm.value;
+                } else {
+                    pmSelect.value = '';
+                }
+            }
+
+            // Toggle Type-Specific Sections
+            const fuelSection    = document.getElementById('fuelExtraSection');
             const serviceSection = document.getElementById('serviceExtraSection');
+            const incomeSection  = document.getElementById('incomeExtraSection');
+            const expenseSection = document.getElementById('expenseExtraSection');
+            const locWrapper     = document.getElementById('locationWrapper');
+            const pmWrapper      = document.getElementById('paymentMethodWrapper');
+            const labelCost      = document.getElementById('label_cost');
+            const labelLocation  = document.getElementById('label_location');
+
+            fuelSection.style.display    = 'none';
+            serviceSection.style.display = 'none';
+            incomeSection.style.display  = 'none';
+            expenseSection.style.display = 'none';
+            document.getElementById('edit_service_items_json').value = '';
 
             if (type === 'refueling') {
                 fuelSection.style.display = 'block';
-                serviceSection.style.display = 'none';
+                locWrapper.style.display  = 'block';
+                pmWrapper.style.display   = 'block';
                 document.getElementById('edit_fuel_type').value = extra.fuel_type || '';
                 document.getElementById('edit_liters').value = extra.liters || '';
                 document.getElementById('edit_price_per_liter').value = extra.price_per_liter || '';
-                document.getElementById('label_location').innerText = 'Nama SPBU / Lokasi';
-            } else if (type === 'service' || type === 'oil_change') {
-                fuelSection.style.display = 'none';
+                labelLocation.innerHTML = '<i class="fas fa-gas-pump me-1 text-primary"></i>Nama SPBU / Tempat';
+                labelCost.innerHTML     = '<i class="fas fa-money-bill-wave me-1 text-primary"></i>Total Biaya (Rp) <span class="text-danger">*</span>';
+            } else if (type === 'service' || type === 'oil_change' || relatedType.endsWith('Maintenance')) {
                 serviceSection.style.display = 'block';
-                document.getElementById('edit_service_type').value = extra.service_type || (type === 'oil_change' ? 'Ganti Oli' : '');
-                document.getElementById('edit_workshop').value = extra.workshop || location || '';
-                document.getElementById('label_location').innerText = 'Nama Bengkel / Lokasi';
+                locWrapper.style.display     = 'block';
+                pmWrapper.style.display      = 'block';
+                labelLocation.innerHTML = '<i class="fas fa-map-marker-alt me-1 text-primary"></i>Tempat / Bengkel';
+                labelCost.innerHTML     = '<i class="fas fa-money-bill-wave me-1 text-primary"></i>Total Biaya (Rp) <span class="text-danger">*</span>';
+
+                // Populate itemized services
+                if (Array.isArray(extra.service_items) && extra.service_items.length > 0) {
+                    editServiceItems = extra.service_items.map(s => ({
+                        name: s.name || '',
+                        price: (s.price !== null && s.price !== undefined) ? s.price : ''
+                    }));
+                } else if (extra.service_type) {
+                    const parts = extra.service_type.split(',').map(p => p.trim()).filter(Boolean);
+                    editServiceItems = parts.map((p, i) => ({
+                        name: p,
+                        price: (parts.length === 1 && cost) ? cost : ''
+                    }));
+                } else {
+                    editServiceItems = [];
+                }
+                renderEditServiceRows();
+            } else if (type === 'income' || relatedType.endsWith('Income')) {
+                incomeSection.style.display = 'block';
+                locWrapper.style.display    = 'none';
+                pmWrapper.style.display     = 'none';
+                labelCost.innerHTML = '<i class="fas fa-money-bill-wave me-1 text-success"></i>Nilai Pendapatan (Rp) <span class="text-danger">*</span>';
+
+                const incSelect = document.getElementById('edit_income_type');
+                const incVal = (extra.income_type || title || '').trim();
+                if (incSelect) {
+                    if (incVal && !Array.from(incSelect.options).some(o => o.value.toLowerCase() === incVal.toLowerCase())) {
+                        const opt = document.createElement('option');
+                        opt.value = incVal;
+                        opt.textContent = incVal;
+                        incSelect.appendChild(opt);
+                    }
+                    const matched = Array.from(incSelect.options).find(o => o.value.toLowerCase() === incVal.toLowerCase());
+                    incSelect.value = matched ? matched.value : '';
+                }
             } else {
-                fuelSection.style.display = 'none';
-                serviceSection.style.display = 'none';
-                document.getElementById('label_location').innerText = 'Lokasi / Tempat';
+                expenseSection.style.display = 'block';
+                locWrapper.style.display     = 'block';
+                pmWrapper.style.display      = 'block';
+                labelLocation.innerHTML = '<i class="fas fa-map-marker-alt me-1 text-primary"></i>Tempat / Lokasi';
+                labelCost.innerHTML     = '<i class="fas fa-money-bill-wave me-1 text-primary"></i>Total Biaya (Rp) <span class="text-danger">*</span>';
+
+                const expSelect = document.getElementById('edit_expense_type');
+                const expVal = (extra.category || '').trim();
+                if (expSelect) {
+                    if (expVal && !Array.from(expSelect.options).some(o => o.value.toLowerCase() === expVal.toLowerCase())) {
+                        const opt = document.createElement('option');
+                        opt.value = expVal;
+                        opt.textContent = expVal;
+                        expSelect.appendChild(opt);
+                    }
+                    const matched = Array.from(expSelect.options).find(o => o.value.toLowerCase() === expVal.toLowerCase());
+                    expSelect.value = matched ? matched.value : '';
+                }
             }
 
             const editModal = new bootstrap.Modal(document.getElementById('editHistoryModal'));

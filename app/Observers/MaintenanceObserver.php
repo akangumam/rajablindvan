@@ -27,27 +27,43 @@ class MaintenanceObserver
             ->first();
 
         if ($history) {
-            $type = 'service';
-            $title = 'Servis';
+            $type = $history->type ?: 'service';
+            $title = $history->title ?: 'Servis';
 
-            // Detect oil change
-            if (str_contains(strtolower($maintenance->service_type ?? ''), 'oli')) {
-                $type = 'oil_change';
-                $title = 'Ganti Oli';
+            if (!in_array($type, ['service', 'oil_change'])) {
+                $type = 'service';
             }
+            if (empty($history->title) || in_array($history->title, ['Servis', 'Ganti Oli'])) {
+                if (str_contains(strtolower($maintenance->service_type ?? ''), 'oli') ||
+                    str_contains(strtolower($maintenance->type ?? ''), 'oil')) {
+                    $type = 'oil_change';
+                    $title = 'Ganti Oli';
+                } else {
+                    $type = 'service';
+                    $title = 'Servis';
+                }
+            }
+
+            $location = $maintenance->place ?? $maintenance->workshop ?? $maintenance->workshop_name ?? $maintenance->location;
+            $serviceItems = HistoryRecord::parseServiceItemsFromMaintenance($maintenance);
 
             $history->update([
                 'vehicle_id' => $maintenance->vehicle_id,
                 'type' => $type,
                 'title' => $title,
                 'description' => $maintenance->notes,
-                'location' => $maintenance->workshop_name ?? $maintenance->location,
-                'cost' => $maintenance->total_cost,
+                'location' => $location,
+                'cost' => $maintenance->total_cost ?? $maintenance->cost,
                 'odometer' => $maintenance->odometer,
-                'date' => $maintenance->service_date,
+                'date' => $maintenance->service_date ?? $maintenance->maintenance_date,
                 'extra_data' => [
-                    'service_type' => $maintenance->service_type,
-                    'workshop' => $maintenance->workshop_name,
+                    'service_type' => $maintenance->service_type ?? $maintenance->type,
+                    'service_items' => $serviceItems,
+                    'workshop' => $location,
+                    'time' => $maintenance->service_time,
+                    'user_id' => $maintenance->user_id,
+                    'payment_method' => $maintenance->payment_method,
+                    'checklist' => 'checklist',
                 ],
             ]);
         }
