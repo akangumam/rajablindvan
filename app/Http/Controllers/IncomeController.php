@@ -180,7 +180,8 @@ class IncomeController extends Controller
      */
     public function show(Income $income)
     {
-        //
+        $income->load(['vehicle', 'user']);
+        return view('incomes.show', compact('income'));
     }
 
     /**
@@ -188,7 +189,18 @@ class IncomeController extends Controller
      */
     public function edit(Income $income)
     {
-        //
+        $income->load('vehicle');
+        $user = auth()->user();
+
+        if ($user && $user->isSopir() && $income->vehicle_id && !$user->hasAccessToVehicle($income->vehicle_id)) {
+            abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
+        }
+
+        $vehicles    = Vehicle::active()->orderBy('name')->get();
+        $incomeTypes = \App\Models\IncomeType::active()->orderBy('name')->get();
+        $users       = \App\Models\User::active()->orderBy('name')->get();
+
+        return view('incomes.edit', compact('income', 'vehicles', 'incomeTypes', 'users'));
     }
 
     /**
@@ -196,7 +208,50 @@ class IncomeController extends Controller
      */
     public function update(Request $request, Income $income)
     {
-        //
+        $vehicle = Vehicle::findOrFail($request->vehicle_id);
+
+        $validated = $request->validate([
+            'vehicle_id'  => 'required|exists:vehicles,id',
+            'income_date' => 'required|date',
+            'income_time' => 'nullable',
+            'odometer'    => 'nullable|numeric|min:0',
+            'type'        => 'required|string|max:255',
+            'amount'      => 'required|numeric|min:0',
+            'user_id'     => 'nullable|exists:users,id',
+            'notes'       => 'nullable|string',
+            'attachment'  => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
+        ]);
+
+        $validated['description'] = $validated['notes'] ?? ($validated['type'] ?? 'Income entry');
+
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $originalName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $storedName = Str::uuid() . '.' . $extension;
+
+            $path = $file->storeAs('incomes', $storedName, 'public');
+            $validated['attachment'] = $path;
+
+            UploadedFile::create([
+                'original_name' => $originalName,
+                'stored_name' => $storedName,
+                'file_path' => $path,
+                'mime_type' => $file->getMimeType(),
+                'file_size' => $file->getSize(),
+                'file_type' => $this->determineFileType($file->getMimeType(), $extension),
+                'category' => 'income',
+            ]);
+        }
+
+        $income->update($validated);
+
+        if (!empty($validated['odometer']) && $validated['odometer'] > ($vehicle->odometer ?? 0)) {
+            $vehicle->update(['odometer' => $validated['odometer']]);
+        }
+
+        return redirect()->route('incomes.show', $income)
+            ->with('success', 'Data pendapatan berhasil diperbarui!');
     }
 
     /**
@@ -204,7 +259,16 @@ class IncomeController extends Controller
      */
     public function destroy(Income $income)
     {
-        //
+        if (!auth()->user()->canDeleteRecords()) {
+            abort(403, 'Anda tidak memiliki hak akses untuk menghapus data pendapatan.');
+        }
+
+        $vehicleId = $income->vehicle_id;
+        $income->delete();
+
+        return $vehicleId
+            ? redirect()->route('vehicles.show', $vehicleId)->with('success', 'Data pendapatan berhasil dihapus!')
+            : redirect()->route('incomes.index')->with('success', 'Data pendapatan berhasil dihapus!');
     }
 
     /**

@@ -424,7 +424,7 @@
             @endif
 
             <!-- Actions Section -->
-            @if(auth()->user()->hasRole('Administrator'))
+            @if(auth()->user() && auth()->user()->canDeleteRecords())
             <div class="info-section">
                 <h3 class="section-title">
                     <i class="fas fa-cog"></i>

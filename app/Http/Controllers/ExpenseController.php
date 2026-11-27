@@ -237,7 +237,8 @@ class ExpenseController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $expense = Expense::with(['vehicle', 'user', 'location'])->findOrFail($id);
+        return view('expenses.show', compact('expense'));
     }
 
     /**
@@ -245,7 +246,27 @@ class ExpenseController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $expense = Expense::with('vehicle')->findOrFail($id);
+        $user = auth()->user();
+
+        if ($user && $user->isSopir() && $expense->vehicle_id && !$user->hasAccessToVehicle($expense->vehicle_id)) {
+            abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
+        }
+
+        $vehicles       = Vehicle::where('is_active', true)->orderBy('name')->get();
+        $expenseTypes   = \App\Models\ExpenseType::active()->orderBy('name')->get();
+        $places         = \App\Models\Place::getAllActive();
+        $paymentMethods = \App\Models\PaymentMethod::active()->orderBy('name')->get();
+        $users          = \App\Models\User::active()->orderBy('name')->get();
+
+        return view('expenses.edit', compact(
+            'expense',
+            'vehicles',
+            'expenseTypes',
+            'places',
+            'paymentMethods',
+            'users'
+        ));
     }
 
     /**
@@ -253,7 +274,73 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $expense = Expense::findOrFail($id);
+        $vehicle = Vehicle::findOrFail($request->vehicle_id);
+
+        $validated = $request->validate([
+            'vehicle_id'        => 'required|exists:vehicles,id',
+            'expense_date'      => 'required|date',
+            'expense_time'      => 'nullable',
+            'odometer'          => 'nullable|numeric|min:0',
+            'expense_type_id'   => 'nullable|exists:expense_types,id',
+            'category'          => 'nullable|string|max:255',
+            'place'             => 'nullable|string|max:255',
+            'user_id'           => 'nullable|exists:users,id',
+            'amount'            => 'required|numeric|min:0',
+            'notes'             => 'nullable|string',
+            'payment_method_id' => 'nullable|exists:payment_methods,id',
+            'payment_method'    => 'nullable|string|max:255',
+            'attachment'        => 'nullable|file|max:5120|mimes:jpg,jpeg,png,pdf,doc,docx',
+        ]);
+
+        if ($request->filled('expense_type_id')) {
+            $expenseType = \App\Models\ExpenseType::find($validated['expense_type_id']);
+            if ($expenseType) {
+                $validated['category'] = $expenseType->name;
+                $validated['expense_type'] = $expenseType->name;
+            }
+        } elseif (!empty($validated['category'])) {
+            $validated['expense_type'] = $validated['category'];
+        }
+
+        if ($request->filled('payment_method_id')) {
+            $pm = \App\Models\PaymentMethod::find($validated['payment_method_id']);
+            if ($pm) {
+                $validated['payment_method'] = $pm->name;
+            }
+        }
+
+        $validated['total_cost'] = $validated['amount'];
+        $validated['description'] = $request->notes ?: ($validated['category'] ?? $expense->category) . ' - ' . $vehicle->license_plate;
+
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $originalName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $storedName = Str::uuid() . '.' . $extension;
+
+            $path = $file->storeAs('expenses', $storedName, 'public');
+            $validated['attachment'] = $path;
+
+            UploadedFile::create([
+                'original_name' => $originalName,
+                'stored_name' => $storedName,
+                'file_path' => $path,
+                'mime_type' => $file->getMimeType(),
+                'file_size' => $file->getSize(),
+                'file_type' => $this->determineFileType($file->getMimeType(), $extension),
+                'category' => 'expense',
+            ]);
+        }
+
+        $expense->update($validated);
+
+        if (!empty($validated['odometer']) && $validated['odometer'] > ($vehicle->odometer ?? 0)) {
+            $vehicle->update(['odometer' => $validated['odometer']]);
+        }
+
+        return redirect()->route('expenses.show', $expense)
+            ->with('success', 'Data pengeluaran berhasil diperbarui!');
     }
 
     /**
@@ -261,7 +348,17 @@ class ExpenseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (!auth()->user()->canDeleteRecords()) {
+            abort(403, 'Anda tidak memiliki hak akses untuk menghapus data pengeluaran.');
+        }
+
+        $expense = Expense::findOrFail($id);
+        $vehicleId = $expense->vehicle_id;
+        $expense->delete();
+
+        return $vehicleId
+            ? redirect()->route('vehicles.show', $vehicleId)->with('success', 'Data pengeluaran berhasil dihapus!')
+            : redirect()->route('expenses.index')->with('success', 'Data pengeluaran berhasil dihapus!');
     }
 
     /**
